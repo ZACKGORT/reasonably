@@ -389,7 +389,7 @@ function initBlur() {
 
 const projects = [
     { id: 1, title: "Phenom", year: "UX Strategist", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
-    { id: 2, title: "Independent", year: "Paradigm Shift, again", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
+    { id: 2, title: "Independent", year: "UX+Product, Consultant", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
     { id: 3, title: "Publicis Sapient", year: "Sr. Product Designer", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
     { id: 4, title: "Code & Theory", year: "ACD, Interactive", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
     { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
