@@ -213,6 +213,8 @@ popover;
     }
 
     body {
+        display: grid;
+        place-items: center;
         background: var(--warm-off-black);
         font-family: "Poppins", Helvetica, Arial, sans-serif;
         text-transform: none;
@@ -263,7 +265,7 @@ popover;
     position: fixed;
     top: 1.85rem;
     left: 0;
-    width: 100vw;
+    width: 100%;       /* Use 100% instead of 100vw */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -274,16 +276,11 @@ popover;
 }
 
 .logo-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: auto;
-}
-
-.logo-wrapper {
-    display: flex;
-    justify-content: center;
-    filter: none;
+  display: flex;
+  margin: 0 0 0 2.5%;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
 }
 
 .logo-wrapper:hover {
@@ -338,7 +335,7 @@ nav {
     display: flex;
     align-items: center;
     width: fit-content;
-    margin: 0 auto;
+    margin: 0 0 0 2.5%; /* push nav to the right */
     border-radius: 100px;
     background: hsla(0, 0%, 100%, 0.05);
     border: 0.5px solid rgba(255, 255, 255, 0.35);
@@ -2814,7 +2811,24 @@ h1 span,
 
   .project-year {
     font-size: 0.8em;  /* Adjusted font size for mobile */
-    letter-spacing: 0.01em;
+    letter-spacing: 0.01em;nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 0 0 auto; /* push nav to the right */
+    border-radius: 100px;
+    background: hsla(0, 0%, 100%, 0.05);
+    border: 0.5px solid rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 2px 12px 0 rgba(0, 0, 0, 0.02),
+        0 1.5px 8px 0 rgba(255, 255, 255, 0.06) inset;
+    backdrop-filter: blur(0px) saturate(80%);
+    -webkit-backdrop-filter: blur(0px) saturate(80%);
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    z-index: 200;
+}.nav
     /* additional mobile adjustments if needed */
   }
 }
@@ -2838,4 +2852,10 @@ h2::before,
 label::before,
 .sr-only::before {
     content: "" !important;
+}
+
+
+#page-life.active .page-inner {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
