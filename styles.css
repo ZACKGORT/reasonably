@@ -2811,7 +2811,28 @@ h1 span,
 }
 
 
+.project-title {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 1.4em;
+  letter-spacing: 0.2em;
+  overflow: hidden;
+  white-space: nowrap; /* Prevents line breaks */
 
+}
+
+
+.project-year {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: camel-case;
+  font-size: .92em;
+  letter-spacing: 0.2em;
+  overflow: hidden;
+  white-space: nowrap; /* Prevents line breaks */
+
+}
 
 
 /* Prevent tap highlight on mobile */
@@ -2825,5 +2846,3 @@ body {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none;      /* IE/Edge */
 }
-
-
