@@ -388,18 +388,21 @@ function initBlur() {
 }
 
 const projects = [
-    { id: 1, title: "Phenom", year: "UX Strategist", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
-    { id: 2, title: "Independent", year: "UX Consultant", image: "https://i.ibb.co/Wk6n0kx/603d61b96ca6f0c336165b6e-DSC09310.jpg" },
-    { id: 3, title: "Publicis Sapient", year: "Sr. Product Designer", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
+    { id: 1, title: "Phenom", year: "UX Strategist", image: "https://i.ibb.co/Wk6n0kx/603d61b96ca6f0c336165b6e-DSC09310.jpg" },
+    { id: 2, title: "Independent", year: "UX Consultant", image: "https://miro.medium.com/v2/resize:fit:828/format:webp/1*KE8gFA6w4wud1uDArA4YvQ.png" },
+    { id: 3, title: "Publicis Sapient", year: "Sr. Product Designer", image: "https://miro.medium.com/v2/resize:fit:2560/format:webp/1*OenHCQmGa10wpCzR8o9PtA.png" },
     { id: 4, title: "Code & Theory", year: "ACD, Interactive", image: "https://miro.medium.com/v2/resize:fit:1100/format:webp/1*1gjrEffBioJYoEAvMWHfKQ.png" },
-    { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
-    { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://miro.medium.com/v2/resize:fit:1120/format:webp/1*I_nHQKs7BIXoY0onfNxnOg.png" },
-    { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://miro.medium.com/v2/resize:fit:828/format:webp/1*KE8gFA6w4wud1uDArA4YvQ.png" },
+    { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://i.ibb.co/bgmCG0qb/ZAX02330.jpg" },
+    { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://i.ibb.co/B6vFwH6/zoom-zack.gif" },
+    { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://i.ibb.co/0xgw5R8/DSC06055-1.jpg" },
     { id: 8, title: "PHI → NYC", year: "Paradigm Shift", image: "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*UATKEet6VtcLkA8rYspjFQ.png" },
     { id: 9, title: "Workarea", year: "UX Designer", image: "https://miro.medium.com/v2/resize:fit:3044/format:webp/1*lEJetjUt85CTbb24dBTFkA.png" },
-    { id: 10, title: "O3 World", year: "UX Designer", image: "https://miro.medium.com/v2/resize:fit:882/format:webp/1*7wEKA8duSccOZwImA_6jSQ.png" },
-    { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://miro.medium.com/v2/resize:fit:750/format:webp/1*pch6xhEpFoXxliAGbNnr7Q.png" }
+    { id: 10, title: "O3 World", year: "UX Designer", image: "https://i.ibb.co/PswtrTff/IMG-20170104-184947-650.jpg" },
+    { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://i.ibb.co/HfY8Pg6y/IMG-20151206-143245434-01.jpg" }
 ];
+
+
+
 
 function renderProjects(container) {
     if (container) {
