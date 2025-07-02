@@ -2831,3 +2831,11 @@ body {
   -webkit-user-select: none; /* Safari */
   -ms-user-select: none;      /* IE/Edge */
 }
+
+
+
+h2::before,
+label::before,
+.sr-only::before {
+    content: "" !important;
+}
