@@ -389,16 +389,16 @@ function initBlur() {
 
 const projects = [
     { id: 1, title: "Phenom", year: "UX Strategist", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
-    { id: 2, title: "Independent", year: "UX+Product, Consultant", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
+    { id: 2, title: "Independent", year: "UX Consultant", image: "https://i.ibb.co/Wk6n0kx/603d61b96ca6f0c336165b6e-DSC09310.jpg" },
     { id: 3, title: "Publicis Sapient", year: "Sr. Product Designer", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
     { id: 4, title: "Code & Theory", year: "ACD, Interactive", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
     { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
-    { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/7712fe42-42ca-4fc5-9590-c89f2db99978?format=jpeg" },
-    { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://cdn.cosmos.so/cbee1ec5-01b6-4ffe-9f34-7da7980454cf?format=jpeg" },
-    { id: 8, title: "PHI → NYC", year: "Paradigm Shift", image: "https://cdn.cosmos.so/2e91a9d1-db85-4499-ad37-6222a6fea23b?format=jpeg" },
-    { id: 9, title: "Workarea", year: "UX Designer", image: "https://cdn.cosmos.so/ff2ac3d3-fa94-4811-89f6-0d008b27e439?format=jpeg" },
-    { id: 10, title: "O3 World", year: "UX Designer", image: "https://cdn.cosmos.so/c39a4043-f489-4406-8018-a103a3f89802?format=jpeg" },
-    { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
+    { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://miro.medium.com/v2/resize:fit:1120/format:webp/1*I_nHQKs7BIXoY0onfNxnOg.png" },
+    { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://miro.medium.com/v2/resize:fit:828/format:webp/1*KE8gFA6w4wud1uDArA4YvQ.png" },
+    { id: 8, title: "PHI → NYC", year: "Paradigm Shift", image: "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*UATKEet6VtcLkA8rYspjFQ.png" },
+    { id: 9, title: "Workarea", year: "UX Designer", image: "https://miro.medium.com/v2/resize:fit:3044/format:webp/1*lEJetjUt85CTbb24dBTFkA.png" },
+    { id: 10, title: "O3 World", year: "UX Designer", image: "https://miro.medium.com/v2/resize:fit:882/format:webp/1*7wEKA8duSccOZwImA_6jSQ.png" },
+    { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://miro.medium.com/v2/resize:fit:750/format:webp/1*pch6xhEpFoXxliAGbNnr7Q.png" }
 ];
 
 function renderProjects(container) {
@@ -514,54 +514,58 @@ document.addEventListener("DOMContentLoaded", () => {
     initLife();
     new GooeyCursor("cursor", 16);
     const isMobile = window.matchMedia("(max-width: 600px)").matches;
-    new HomeGallery({
-        items: [
-            "Gallery Image 1",
-            "Gallery Image 2",
-            "Gallery Image 3",
-            "Gallery Image 4",
-            "Gallery Image 5",
-            "Gallery Image 6",
-            "Gallery Image 7",
-            "Gallery Image 8",
-            "Gallery Image 9",
-            "Gallery Image 10",
-            "Gallery Image 11",
-            "Gallery Image 12",
-            "Gallery Image 13",
-            "Gallery Image 14",
-            "Gallery Image 15",
-            "Gallery Image 16",
-            "Gallery Image 17",
-            "Gallery Image 18"
-        ],
-        imageUrls: [
-            "https://i.ibb.co/Q82WBds/2299765761344742582-5144774570.jpg",
-            "https://i.ibb.co/nDNfQPD/2302763344874937579-5144774570.jpg",
-            "https://i.ibb.co/mSR1GDc/2309287483437628607-5144774570.jpg",
-            "https://i.ibb.co/SBBFq8g/2321694150817073052-5144774570.jpg",
-            "https://i.ibb.co/BjZQ8KG/2322060064540385797-5144774570.jpg",
-            "https://i.ibb.co/Jxbs7jg/2344081181031306274-5144774570.jpg",
-            "https://i.ibb.co/zsxNHK7/2448148266170177557-5144774570.jpg",
-            "https://i.ibb.co/XbnBHmg/2886095297461903371-5144774570.jpg",
-            "https://i.ibb.co/3yjTzkp/2448137532291865865-5144774570.jpg",
-            "https://i.ibb.co/RcN0rLM/2302765161788654866-5144774570.jpg",
-            "https://i.ibb.co/dr55NKK/2288089293770285108-5144774570.jpg",
-            "https://i.ibb.co/WP03r4g/2285335292767225477-5144774570.jpg",
-            "https://i.ibb.co/3rh0JJT/2280253723450838291-5144774570.jpg",
-            "https://i.ibb.co/jJTKpGZ/2282470733853463286-5144774570.jpg",
-            "https://i.ibb.co/L5LMqCn/2300677912070660005-5144774570.jpg",
-            "https://i.ibb.co/vv5PM3t/2302790243734907282-5144774570.jpg",
-            "https://i.ibb.co/9vFZk6n/2327892796382234206-5144774570.jpg",
-            "https://i.ibb.co/nQLGwrN/2270020016525965844-5144774570.jpg",
-            "https://i.ibb.co/jJTKpGZ/2282470733853463286-5144774570.jpg",
-
-            "https://i.ibb.co/9HPBnC6/2278045066214592879-5144774570.jpg",
-            "https://i.ibb.co/ZJwdQTK/2318713579686042693-5144774570.jpg",
-
-
-            
-        ],
+new HomeGallery({
+    items: [
+        "Gallery Image 1",  "Gallery Image 2",  "Gallery Image 3",  "Gallery Image 4",  "Gallery Image 5",
+        "Gallery Image 6",  "Gallery Image 7",  "Gallery Image 8",  "Gallery Image 9",  "Gallery Image 10",
+        "Gallery Image 11", "Gallery Image 12", "Gallery Image 13", "Gallery Image 14", "Gallery Image 15",
+        "Gallery Image 16", "Gallery Image 17", "Gallery Image 18", "Gallery Image 19", "Gallery Image 20",
+        "Gallery Image 21", "Gallery Image 22", "Gallery Image 23", "Gallery Image 24", "Gallery Image 25",
+        "Gallery Image 26", "Gallery Image 27", "Gallery Image 28", "Gallery Image 29", "Gallery Image 30",
+        "Gallery Image 31", "Gallery Image 32", "Gallery Image 33", "Gallery Image 34", "Gallery Image 35",
+        "Gallery Image 36", "Gallery Image 37", "Gallery Image 38", "Gallery Image 39"
+    ],
+    imageUrls: [
+        "https://i.ibb.co/Px9Q8Z8/603a93eddcd3ab104d64fcbb-ZAX09767.jpg",
+        "https://i.ibb.co/4FTCpS4/603a93eea83b1aab7a98c35b-DSC08228.jpg",
+        "https://i.ibb.co/86ttzgf/603a93eedcd3ab4b2e64fcbc-IMG-4204.jpg",
+        "https://i.ibb.co/L9BB3tR/603a93eedce047078935438a-IMG-5686.jpg",
+        "https://i.ibb.co/R06yg5v/603a93eef8754819192222f7-DSC09720.jpg",
+        "https://i.ibb.co/pRmd9Zm/603a93efdfd184c21ef2d238-IMG-3352.jpg",
+        "https://i.ibb.co/t39khXB/603a93f0e815e830d1783e07-IMG-2033.jpg",
+        "https://i.ibb.co/PQ9YX7n/603a93f1d03490ae9d2aa64a-IMG-3824.jpg",
+        "https://i.ibb.co/jGTSmfL/603a93f06a41f45766a3361a-DSC09212.jpg",
+        "https://i.ibb.co/VjL9WVq/603a95ed29478f4bc91875b5-DSC08933.jpg",
+        "https://i.ibb.co/VSR31GQ/603a95edd9a3b56723de7edc-DSC00910.jpg",
+        "https://i.ibb.co/rGrnbHx/603a95edd03490eb412aaedc-DSC08676.jpg",
+        "https://i.ibb.co/gZvcbZg/603a95ee83ba30ff4ac9bc6a-DSC00423-1.jpg",
+        "https://i.ibb.co/BcHnnYn/603a967a5dc3e982f571b744-ZAX00968.jpg",
+        "https://i.ibb.co/8NTKmhb/603a967a6a41f4d56ca33b1a-ZAX00794.jpg",
+        "https://i.ibb.co/xMkCQV2/603a967ac64cec73069e2454-ZAX09877.jpg",
+        "https://i.ibb.co/xF2LH5G/603a967ad03490104c2aaefe-ZAX01042-2.jpg",
+        "https://i.ibb.co/PDfrrFn/603a967916b10d5bef5a6dd8-ZAX02712-1.jpg",
+        "https://i.ibb.co/822VPp7/603afe37ba16f8f9174cf501-IMG-1878.jpg",
+        "https://i.ibb.co/ZKyTxwb/603b3890dcd3ab104d67d405-ZAX01233-2.jpg",
+        "https://i.ibb.co/CWGK0nM/603d0b8abf1990616037cc35-ZAX03810.jpg",
+        "https://i.ibb.co/6vNxPX3/603d0b8b04655c6fd42d2253-DSC08281.jpg",
+        "https://i.ibb.co/ssmRNbp/603d0b8b038105ae6904872a-DSC08334.jpg",
+        "https://i.ibb.co/J5QxB6X/603d0b5635e8053bc120bec7-DSC09034.jpg",
+        "https://i.ibb.co/zbBCNWs/603d0bb2331da47ee88db089-DSC02085.jpg",
+        "https://i.ibb.co/S3TS0Pf/603d8d7a3a6df470a4a661a1-DSC00726.jpg",
+        "https://i.ibb.co/Wk6n0kx/603d61b96ca6f0c336165b6e-DSC09310.jpg",
+        "https://i.ibb.co/8N3kCwc/603d100d889053cc334ee5fc-IMG-2083.jpg",
+        "https://i.ibb.co/HPGPtSh/603d102d0f02c70fdf7d84eb-IMG-4696.jpg",
+        "https://i.ibb.co/zPb1n9z/603d102d9f59a611886a6893-IMG-2151.jpg",
+        "https://i.ibb.co/yXWQ24Y/603d102dae26b192aef6ab4a-IMG-3023.jpg",
+        "https://i.ibb.co/qRFbHHN/603d138e1d5ed053b509992a-IMG-5199.jpg",
+        "https://i.ibb.co/tKNg11x/603d1185b8ec32082f451ba9-IMG-3882.jpg",
+        "https://i.ibb.co/Q9q4d4Z/603d1185cafcb2591f42b1ad-IMG-3932.jpg",
+        "https://i.ibb.co/44FjcDL/603d6207dcd0225713fe1549-IMG-4484.jpg",
+        "https://i.ibb.co/XY4nvpm/603d10120fba838e599b6b5e-IMG-1563.jpg",
+        "https://i.ibb.co/Y0gQL7f/603d6216612acc7c7e54bef2-IMG-1158.jpg",
+        "https://i.ibb.co/MZbMqsT/6039d4bbb15be328fc33b54d-IMG-6478.jpg",
+        "https://i.ibb.co/hM1jbkQ/603985613b870e6cd6c49a29-IMG-3457.jpg"
+    ],
         settings: isMobile
             ? {
                   baseWidth: 320,
