@@ -2822,7 +2822,6 @@ h1 span,
 
 }
 
-
 .project-year {
   position: relative;
   font-family: sans-serif;
@@ -2832,6 +2831,21 @@ h1 span,
   overflow: hidden;
   white-space: nowrap; /* Prevents line breaks */
 
+}
+
+/* Mobile media queries */
+@media only screen and (max-width: 600px) {
+  .project-title {
+    font-size: 1em;  /* Adjusted font size for mobile */
+    letter-spacing: 0.01em;
+    /* additional mobile adjustments if needed */
+  }
+
+  .project-year {
+    font-size: 0.8em;  /* Adjusted font size for mobile */
+    letter-spacing: 0.01em;
+    /* additional mobile adjustments if needed */
+  }
 }
 
 
