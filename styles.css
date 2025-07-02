@@ -69,7 +69,7 @@ popover;
 }
 
 #page-life .scroll-spacer {
-    height: calc(var(--trigger-offset) + env(safe-area-inset-bottom) + 40vh);
+    height: calc(var(--trigger-offset) + env(safe-area-inset-bottom) + 20vh);
     flex-shrink: 0;
 }
 
