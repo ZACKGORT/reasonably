@@ -1,28 +1,33 @@
 class Navigation {
-    constructor(t, e, i = 54, s = 82) {
-        (this.nav = document.querySelector(t)), (this.links = this.nav ? this.nav.querySelectorAll("a") : []), (this.navLight = document.querySelector(e)), (this.NAV_Y = i), (this.NAV_Z = s), this.init();
+    constructor(selector, lightSelector, navY = 54, navZ = 82) {
+        this.nav = document.querySelector(selector);
+        this.links = this.nav ? this.nav.querySelectorAll("a") : [];
+        this.navLight = document.querySelector(lightSelector);
+        this.NAV_Y = navY;
+        this.NAV_Z = navZ;
+        this.init();
     }
-    centerX(t) {
-        const e = this.nav.getBoundingClientRect(),
-            i = t.getBoundingClientRect();
-        return i.left - e.left + i.width / 2;
+    centerX(el) {
+        const navRect = this.nav.getBoundingClientRect();
+        const elRect = el.getBoundingClientRect();
+        return elRect.left - navRect.left + elRect.width / 2;
     }
-    moveNavLight(t, e = false) {
+    moveNavLight(x, animate = false) {
         if (this.navLight) {
-            this.navLight.setAttribute("x", t);
+            this.navLight.setAttribute("x", x);
             this.navLight.setAttribute("y", this.NAV_Y);
             this.navLight.setAttribute("z", this.NAV_Z);
         }
     }
-    setActivePage(t) {
-        document.querySelectorAll(".page").forEach((t) => t.classList.remove("active"));
-        const e = document.getElementById(t);
-        e && e.classList.add("active");
+    setActivePage(pageId) {
+        document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
+        const target = document.getElementById(pageId);
+        if (target) target.classList.add("active");
         document.body.className = document.body.className
             .split(" ")
-            .filter((t) => !t.endsWith("-active"))
+            .filter((cls) => !cls.endsWith("-active"))
             .join(" ");
-        document.body.classList.add(`${t.replace("page-", "")}-active`);
+        document.body.classList.add(`${pageId.replace("page-", "")}-active`);
     }
     attachEvents(callback) {
         this.links.forEach((link) => {
@@ -62,10 +67,11 @@ class Navigation {
         }
     }
 }
+
 class LogoSpotlight {
-    constructor(t, e) {
-        this.logoWrap = document.querySelector(t);
-        this.logoLight = document.getElementById(e);
+    constructor(wrapperSelector, lightId) {
+        this.logoWrap = document.querySelector(wrapperSelector);
+        this.logoLight = document.getElementById(lightId);
         this.centreLogo();
         this.attachEvents();
     }
@@ -89,10 +95,11 @@ class LogoSpotlight {
         }
     }
 }
+
 class GooeyCursor {
-    constructor(t, e = 16) {
-        this.cursor = document.getElementById(t);
-        this.TAIL = e;
+    constructor(cursorId, tail = 16) {
+        this.cursor = document.getElementById(cursorId);
+        this.TAIL = tail;
         this.cx = window.innerWidth / 2;
         this.cy = window.innerHeight / 2;
         this.history = Array.from({ length: this.TAIL }, () => ({ x: this.cx, y: this.cy }));
@@ -100,37 +107,36 @@ class GooeyCursor {
         this.init();
     }
     init() {
-        if (this.cursor) {
-            if (this.cursor.children.length < this.TAIL) {
-                for (let i = 0; i < this.TAIL; i++) {
-                    const div = document.createElement("div");
-                    div.className = "cursor-circle";
-                    div.style.willChange = "transform";
-                    this.cursor.appendChild(div);
-                }
+        if (!this.cursor) return;
+        if (this.cursor.children.length < this.TAIL) {
+            for (let i = 0; i < this.TAIL; i++) {
+                const div = document.createElement("div");
+                div.className = "cursor-circle";
+                div.style.willChange = "transform";
+                this.cursor.appendChild(div);
             }
-            this.dots = [...this.cursor.children];
-            window.addEventListener(
-                "pointermove",
-                (e) => {
-                    this.cx = e.clientX;
-                    this.cy = e.clientY;
-                },
-                { passive: true }
-            );
-            window.addEventListener(
-                "touchmove",
-                (e) => {
-                    const touch = e.touches[0];
-                    this.cx = touch.clientX;
-                    this.cy = touch.clientY;
-                },
-                { passive: true }
-            );
-            if (!this.gooLoopStarted) {
-                this.gooLoopStarted = true;
-                this.gooLoop();
-            }
+        }
+        this.dots = [...this.cursor.children];
+        window.addEventListener(
+            "pointermove",
+            (e) => {
+                this.cx = e.clientX;
+                this.cy = e.clientY;
+            },
+            { passive: true }
+        );
+        window.addEventListener(
+            "touchmove",
+            (e) => {
+                const touch = e.touches[0];
+                this.cx = touch.clientX;
+                this.cy = touch.clientY;
+            },
+            { passive: true }
+        );
+        if (!this.gooLoopStarted) {
+            this.gooLoopStarted = true;
+            this.gooLoop();
         }
     }
     gooLoop = () => {
@@ -148,14 +154,15 @@ class GooeyCursor {
         requestAnimationFrame(this.gooLoop);
     };
 }
+
 class HomeGallery {
-    constructor({ items: t, imageUrls: e, settings: i, containerSelector: s, canvasSelector: n }) {
-        // Shuffle the arrays so the gallery images display in a random order each time
-        this.items = this.shuffleArray(t);
-        this.imageUrls = this.shuffleArray(e);
-        this.settings = i;
-        this.container = document.querySelector(s);
-        this.canvas = document.getElementById(n);
+    constructor({ items, imageUrls, settings, containerSelector, canvasSelector }) {
+        // Shuffle so the gallery images display in random order each time.
+        this.items = this.shuffleArray(items);
+        this.imageUrls = this.shuffleArray(imageUrls);
+        this.settings = settings;
+        this.container = document.querySelector(containerSelector);
+        this.canvas = document.getElementById(canvasSelector);
         this.visibleItems = new Set();
         this.isDragging = false;
         this.startX = 0;
@@ -174,7 +181,7 @@ class HomeGallery {
         this.cellHeight = Math.max(this.settings.smallHeight, this.settings.largeHeight) + this.settings.itemGap;
         this.init();
     }
-    // Simple shuffle function using the Fisher-Yates algorithm
+    // Simple Fisher-Yates Shuffle.
     shuffleArray(array) {
         let currentIndex = array.length, temporaryValue, randomIndex;
         while (currentIndex !== 0) {
@@ -186,18 +193,18 @@ class HomeGallery {
         }
         return array;
     }
-    getItemId(t, e) {
-        return `${t},${e}`;
+    getItemId(col, row) {
+        return `${col},${row}`;
     }
-    getItemSize(t, e) {
+    getItemSize(row, col) {
         const sizes = [
             { width: this.settings.baseWidth, height: this.settings.smallHeight },
             { width: this.settings.baseWidth, height: this.settings.largeHeight }
         ];
-        return sizes[Math.abs((t * this.columns + e) % sizes.length)];
+        return sizes[Math.abs((row * this.columns + col) % sizes.length)];
     }
-    getItemPosition(t, e) {
-        return { x: t * this.cellWidth, y: e * this.cellHeight };
+    getItemPosition(col, row) {
+        return { x: col * this.cellWidth, y: row * this.cellHeight };
     }
     updateVisibleItems() {
         const bufferZone = this.settings.bufferZone,
@@ -208,13 +215,13 @@ class HomeGallery {
             startRow = Math.floor((-this.currentY - heightBuffer / 2) / this.cellHeight),
             endRow = Math.ceil((-this.currentY + 1.5 * heightBuffer) / this.cellHeight),
             newVisible = new Set();
-        
-        // Array storing processed cell data: { col, row, candidate }
+
+        // Array storing processed cell data for duplicate checking.
         let processedCells = [];
-        // Optionally use a larger duplicate-check radius on mobile
+        // Increase duplicate-check radius on mobile.
         const mobileQuery = window.matchMedia("(max-width: 600px)");
         const duplicateRadius = mobileQuery.matches ? 5 : 4;
-        
+
         for (let row = startRow; row <= endRow; row++) {
             for (let col = startCol; col <= endCol; col++) {
                 const id = this.getItemId(col, row);
@@ -224,17 +231,25 @@ class HomeGallery {
                 const pos = this.getItemPosition(col, row);
                 let baseIndex = Math.abs((row * this.columns + col) % this.itemCount);
                 let candidate = baseIndex % this.imageUrls.length;
-                // Check nearby cells (within duplicateRadius grid cells) to avoid duplicate images.
-                processedCells.forEach((cell) => {
-                    const dx = col - cell.col;
-                    const dy = row - cell.row;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist <= duplicateRadius && candidate === cell.candidate) {
-                        candidate = (candidate + 1) % this.imageUrls.length;
+                // Use a while loop to ensure no duplicate images in the nearby cells.
+                let iterations = 0;
+                while (iterations < this.imageUrls.length) {
+                    let conflict = false;
+                    for (let cell of processedCells) {
+                        const dx = col - cell.col;
+                        const dy = row - cell.row;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist <= duplicateRadius && candidate === cell.candidate) {
+                            conflict = true;
+                            break;
+                        }
                     }
-                });
+                    if (!conflict) break;
+                    candidate = (candidate + 1) % this.imageUrls.length;
+                    iterations++;
+                }
                 processedCells.push({ col, row, candidate });
-                
+
                 const itemDiv = document.createElement("div");
                 itemDiv.className = "item";
                 itemDiv.id = id;
@@ -246,7 +261,7 @@ class HomeGallery {
                 itemDiv.style.willChange = "transform";
                 itemDiv.dataset.col = col;
                 itemDiv.dataset.row = row;
-                
+
                 const containerDiv = document.createElement("div");
                 containerDiv.className = "item-image-container";
                 const imgElem = document.createElement("img");
@@ -255,7 +270,7 @@ class HomeGallery {
                 imgElem.loading = "lazy";
                 containerDiv.appendChild(imgElem);
                 itemDiv.appendChild(containerDiv);
-                
+
                 const captionDiv = document.createElement("div");
                 captionDiv.className = "item-caption";
                 const nameDiv = document.createElement("div");
@@ -275,7 +290,9 @@ class HomeGallery {
         this.visibleItems.forEach((id) => {
             if (!newVisible.has(id)) {
                 const elem = document.getElementById(id);
-                if (elem && elem.parentNode === this.canvas) this.canvas.removeChild(elem);
+                if (elem && elem.parentNode === this.canvas) {
+                    this.canvas.removeChild(elem);
+                }
                 this.visibleItems.delete(id);
             }
         });
@@ -361,6 +378,7 @@ class HomeGallery {
         }
     }
 }
+
 function initBlur() {
     const root = document.documentElement;
     document.querySelectorAll(".blur").forEach((elem) => {
@@ -368,6 +386,7 @@ function initBlur() {
         elem.innerHTML = Array.from({ length: layers }, (v, i) => `<div style="--i:${i}"></div>`).join("");
     });
 }
+
 const projects = [
     { id: 1, title: "Phenom", year: "2024", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
     { id: 2, title: "Independent", year: "2023", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
@@ -380,6 +399,7 @@ const projects = [
     { id: 9, title: "O3 World", year: "2017-18", image: "https://cdn.cosmos.so/c39a4043-f489-4406-8018-a103a3f89802?format=jpeg" },
     { id: 10, title: "One Sixty Over Ninety", year: "2014-16", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
 ];
+
 function renderProjects(container) {
     if (container) {
         container.innerHTML = "";
@@ -396,6 +416,7 @@ function renderProjects(container) {
         });
     }
 }
+
 function initialAnimation() {
     document.querySelectorAll(".project-item").forEach((item, index) => {
         item.style.opacity = "0";
@@ -407,6 +428,7 @@ function initialAnimation() {
         }, 60 * index);
     });
 }
+
 function setupHoverEvents(previewImage, container) {
     projects.forEach((proj) => {
         const img = new Image();
@@ -433,6 +455,7 @@ function setupHoverEvents(previewImage, container) {
         });
     }
 }
+
 function preloadImages() {
     projects.forEach((proj) => {
         const img = new Image();
@@ -440,6 +463,7 @@ function preloadImages() {
         img.src = proj.image;
     });
 }
+
 function onNavigateToHome() {
     document.body.classList.add("homepage");
     document.querySelectorAll(
@@ -450,9 +474,11 @@ function onNavigateToHome() {
         elem.style.display = "";
     });
 }
+
 function onNavigateAwayFromHome() {
     document.body.classList.remove("homepage");
 }
+
 document.addEventListener("DOMContentLoaded", () => {
     const nav = new Navigation("nav", "#spotlight fePointLight");
     const logoSpot = new LogoSpotlight(".logo-wrapper", "logoLight");
@@ -578,6 +604,7 @@ document.addEventListener("DOMContentLoaded", () => {
     preloadImages();
     setupHoverEvents(bgImage, projContainer);
 });
+
 const button = document.querySelector(".spotlight-button");
 const ellipse = button ? button.querySelector(".spotlight-ellipse") : null;
 if (button && ellipse) {
@@ -593,6 +620,7 @@ if (button && ellipse) {
         ellipse.setAttribute("cy", "54");
     });
 }
+
 (function () {
     const elem = document.getElementById("back-to-top-life");
     const pageLife = document.getElementById("page-life");
@@ -608,6 +636,7 @@ if (button && ellipse) {
         });
     }
 })();
+
 (function (minWidth = 375) {
     function adjust() {
         document.documentElement.style.minWidth = minWidth + "px";
@@ -630,6 +659,7 @@ if (button && ellipse) {
     window.addEventListener("DOMContentLoaded", adjust);
     adjust();
 })(375);
+
 (function () {
     const container = document.getElementById("back-to-glassy-container");
     const btn = document.getElementById("back-to-glassy");
@@ -654,6 +684,7 @@ if (button && ellipse) {
     });
     updateVisibility();
 })();
+
 (function () {
     const btn = document.getElementById("back-to-top-life");
     const pageLife = document.getElementById("page-life");
@@ -667,15 +698,16 @@ if (button && ellipse) {
         });
     }
 })();
+
 const vertex =
     "\nvarying vec3 pos;\nuniform float time;\n\nvarying float v_noise;\nvarying vec2 vUv;\n\nvoid main(){\n    pos=position;\n    vUv=uv;\n    vec3 newPosition=position;\n\n    gl_Position=projectionMatrix*modelViewMatrix*vec4(newPosition,1.);\n}\n";
 const fragment =
     "\nvarying vec3 pos;\nvarying vec2 vUv;\nvarying float v_noise;\n\nuniform float time;\nuniform sampler2D matCap;\nuniform vec4 resolution;\nuniform vec2 mouse;\nuniform float progress;\nuniform float particleNumber;\n\n#define PI 3.14159265359\n\nmat4 rotationMatrix(vec3 axis,float angle){\n    axis=normalize(axis);\n    float s=sin(angle);\n    float c=cos(angle);\n    float oc=1.-c;\n\n    return mat4(oc*axis.x*axis.x+c,oc*axis.x*axis.y-axis.z*s,oc*axis.z*axis.x+axis.y*s,0.,\n        oc*axis.x*axis.y+axis.z*s,oc*axis.y*axis.y+c,oc*axis.y*axis.z-axis.x*s,0.,\n        oc*axis.z*axis.x-axis.y*s,oc*axis.y*axis.z+axis.x*s,oc*axis.z*axis.z+c,0.,\n    0.,0.,0.,1.);\n}\n\nvec3 rotate(vec3 v,vec3 axis,float angle){\n    mat4 m=rotationMatrix(axis,angle);\n    return(m*vec4(v,1.)).xyz;\n}\n\nvec2 getmatcap(vec3 eye,vec3 normal){\n    vec3 reflected=reflect(eye,normal);\n    float m=2.8284271247461903*sqrt(reflected.z+1.);\n    return reflected.xy/m+.5;\n}\n\nfloat sdSphere(vec3 p,float s){\n    return length(p)-s;\n}\n\nfloat sdBox(vec3 p,vec3 b){\n    vec3 q=abs(p)-b;\n    return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);\n}\n\nfloat smin(float a,float b,float k){\n    float h=clamp(.5+.5*(b-a)/k,0.,1.);\n    return mix(b,a,h)-k*h*(1.-h);\n}\n\nfloat rand(vec2 co){\n    return fract(sin(dot(co,vec2(12.9898,78.233)))*43758.5453);\n}\n\nfloat sdf(vec3 p){\n    vec3 p1=rotate(p,vec3(.1),time/5.);\n    float box=smin(sdBox(p1,vec3(.3)),sdSphere(p,.4),.3);\n    float final=mix(box,sdSphere(p,.2+progress/4.),progress);\n\n    for(int i=0;i<int(particleNumber);i++){\n        float randOffset=rand(vec2(i,0.));\n        float progr=fract(time/4.+randOffset*5.);\n        vec3 rPos=vec3(sin(randOffset*2.*PI)*2.,cos(randOffset*2.*PI)*2.,0.);\n        float gotoCenter=sdSphere(p-rPos*progr,.12);\n        final=smin(final,gotoCenter,.3);\n    }\n\n    float mouseSphere=sdSphere(p-vec3(mouse*resolution.zw*2.,0.),.25);\n    return smin(final,mouseSphere,.4);\n}\n\nvec3 calcNormal(in vec3 p){\n    const float eps=.0001;\n    const vec2 h=vec2(eps,0);\n    return normalize(\n        vec3(\n            sdf(p+h.xyy)-sdf(p-h.xyy),\n            sdf(p+h.yxy)-sdf(p-h.yxy),\n            sdf(p+h.yyx)-sdf(p-h.yyx)\n        )\n    );\n}\n\nvoid main(){\n    float dist=length(vUv-vec2(.5));\n    vec3 bg=vec3(mix(vec3(.1),vec3(0.),dist));\n    vec2 newUv=(vUv-vec2(.5))*resolution.zw+vec2(.5);\n    vec3 cameraPos=vec3(0.,0.,2.);\n    vec3 ray=normalize(vec3((vUv-vec2(.5))*resolution.zw,-1.));\n\n    vec3 rayPos=cameraPos;\n    float t=0.;\n    float tMax=5.;\n    for(int i=0;i<256;i++){\n        vec3 pos=cameraPos+t*ray;\n        float h=sdf(pos);\n        if(h<.001||t>tMax){\n            break;\n        }\n        t+=h;\n    }\n\n    vec4 color=vec4(bg,1.);\n    if(t<tMax){\n        vec3 pos=cameraPos+t*ray;\n        vec3 normal=calcNormal(pos);\n        float diff=dot(vec3(1.),normal);\n        vec2 matCapUv=getmatcap(ray,normal);\n        color=texture2D(matCap,matCapUv);\n        float fresnel=pow(1.+dot(ray,normal),3.);\n        color=mix(color,vec4(bg,.5),fresnel);\n    }\n    gl_FragColor=vec4(color);\n}\n";
 const matCap = "https://raw.githubusercontent.com/nidorx/matcaps/master/1024/293534_B2BFC5_738289_8A9AA7.png";
 class Sketch {
-    constructor(t) {
+    constructor({ dom }) {
         this.time = 0;
-        this.container = t.dom;
+        this.container = dom;
         this.scene = new THREE.Scene();
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
@@ -692,12 +724,12 @@ class Sketch {
     }
     resize() {
         if (!this.material) return;
-        let t, e;
         this.width = this.container.offsetWidth;
         this.height = this.container.offsetHeight;
         this.renderer.setSize(this.width, this.height);
         this.camera.aspect = this.width / this.height;
         this.camera.updateProjectionMatrix();
+        let t, e;
         this.imageAspect = 1;
         if (this.width / this.height > this.imageAspect) {
             t = (this.width / this.height) * this.imageAspect;
@@ -713,9 +745,9 @@ class Sketch {
     }
     mouseEvents() {
         this.mouse = new THREE.Vector2();
-        document.addEventListener("mousemove", (t) => {
-            this.mouse.x = t.pageX / this.width - 0.5;
-            this.mouse.y = -t.pageY / this.height + 0.5;
+        document.addEventListener("mousemove", (e) => {
+            this.mouse.x = e.pageX / this.width - 0.5;
+            this.mouse.y = -e.pageY / this.height + 0.5;
         });
     }
     addObjects() {
@@ -763,48 +795,52 @@ class Sketch {
 }
 new Sketch({ dom: document.getElementById("webgl-bg") });
 $(function () {
-    function t(elem, delay) {
+    function spanize(elem, delay) {
         var original = elem.data("original") || elem.text();
         elem.data("original", original);
         var result = "";
         var splitArr = original.split("");
-        for (var i = 0; i < splitArr.length; i++)
-            result += '<span style="animation-delay:' + delay * i + 's">' + (splitArr[i] === " " ? " " : $("<div/>").text(splitArr[i]).html()) + "</span>";
+        for (var i = 0; i < splitArr.length; i++) {
+            result += '<span style="animation-delay:' + delay * i + 's">' +
+                      (splitArr[i] === " " ? " " : $("<div/>").text(splitArr[i]).html()) +
+                      "</span>";
+        }
         elem.html(result);
         return splitArr.length;
     }
-    function e(type, activate) {
+    function activate(type, active) {
         $(".mast__title, .mast__text").removeClass("active");
         let titleElem = $('.mast__title[data-type="' + type + '"]').addClass("active"),
             textElem = $('.mast__text[data-type="' + type + '"]');
-        if (activate) textElem.addClass("active");
+        if (active) textElem.addClass("active");
         else textElem.removeClass("active");
-        t(titleElem, 0.05);
-        if (activate) t(textElem, 0.02);
+        spanize(titleElem, 0.05);
+        if (active) spanize(textElem, 0.02);
     }
     $(".mast__title.js-spanize").each(function () {
-        t($(this), 0.05);
+        spanize($(this), 0.05);
     });
     $(".mast__text.js-spanize").each(function () {
-        t($(this), 0.02);
+        spanize($(this), 0.02);
     });
     $(".mast__title, .mast__text").removeClass("active");
-    e("reason", true);
+    activate("reason", true);
     $(".mast__title").on("click", function () {
-        e($(this).data("type"), true);
+        activate($(this).data("type"), true);
     });
 });
 document.addEventListener("DOMContentLoaded", function () {
     const elem = document.getElementById("back-to-glassy-container");
-    function e() {
+    function toggleBlur() {
         window.scrollY > 64 ? elem.classList.add("active") : elem.classList.remove("active");
     }
     if (elem) {
         elem.addEventListener("click", function (e) {
-            if (e.target.closest(".back-to-glassy-btn")) window.scrollTo({ top: 0, behavior: "smooth" });
+            if (e.target.closest(".back-to-glassy-btn"))
+                window.scrollTo({ top: 0, behavior: "smooth" });
         });
-        window.addEventListener("scroll", e, { passive: true });
-        e();
+        window.addEventListener("scroll", toggleBlur, { passive: true });
+        toggleBlur();
     }
 });
 document.addEventListener("DOMContentLoaded", function () {
@@ -829,7 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const pageLife = document.getElementById("page-life");
     if (!container || !btn || !pageLife) return;
     const content = pageLife.querySelector(".content");
-    function n() {
+    function toggleVisibility() {
         content.scrollTop > 0 ? container.classList.add("visible") : container.classList.remove("visible");
     }
     if (content) {
@@ -837,8 +873,8 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             content.scrollTo({ top: 0, behavior: "smooth" });
         });
-        content.addEventListener("scroll", n, { passive: true });
-        n();
+        content.addEventListener("scroll", toggleVisibility, { passive: true });
+        toggleVisibility();
     }
 })();
 (function () {
@@ -846,7 +882,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const pageLife = document.getElementById("page-life");
     if (btn && pageLife) {
         window.addEventListener("scroll", function () {
-            (window.scrollY || document.documentElement.scrollTop) > 200 ? btn.classList.add("visible") : btn.classList.remove("visible");
+            (window.scrollY || document.documentElement.scrollTop) > 200 ?
+                btn.classList.add("visible") : btn.classList.remove("visible");
         });
         btn.addEventListener("click", function (e) {
             e.preventDefault();
