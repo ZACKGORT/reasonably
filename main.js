@@ -395,10 +395,10 @@ const projects = [
     { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
     { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/7712fe42-42ca-4fc5-9590-c89f2db99978?format=jpeg" },
     { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://cdn.cosmos.so/cbee1ec5-01b6-4ffe-9f34-7da7980454cf?format=jpeg" },
-    { id: 8, title: "PHI to NYC", year: "Paradigm Shift", image: "https://cdn.cosmos.so/2e91a9d1-db85-4499-ad37-6222a6fea23b?format=jpeg" },
+    { id: 8, title: "PHI → NYC", year: "Paradigm Shift", image: "https://cdn.cosmos.so/2e91a9d1-db85-4499-ad37-6222a6fea23b?format=jpeg" },
     { id: 9, title: "Workarea", year: "UX Designer", image: "https://cdn.cosmos.so/ff2ac3d3-fa94-4811-89f6-0d008b27e439?format=jpeg" },
     { id: 10, title: "O3 World", year: "UX Designer", image: "https://cdn.cosmos.so/c39a4043-f489-4406-8018-a103a3f89802?format=jpeg" },
-    { id: 11, title: "One Sixty Over Ninety", year: "Interactive Designer", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
+    { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
 ];
 
 function renderProjects(container) {
