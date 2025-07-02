@@ -2816,9 +2816,9 @@ h1 span,
   font-family: sans-serif;
   text-transform: uppercase;
   font-size: 1.4em;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.05em;
   overflow: hidden;
-  white-space: nowrap; /* Prevents line breaks */
+
 
 }
 
@@ -2828,7 +2828,7 @@ h1 span,
   font-family: sans-serif;
   text-transform: camel-case;
   font-size: .92em;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.05em;
   overflow: hidden;
   white-space: nowrap; /* Prevents line breaks */
 
