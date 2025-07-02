@@ -388,16 +388,17 @@ function initBlur() {
 }
 
 const projects = [
-    { id: 1, title: "Phenom", year: "2024", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
-    { id: 2, title: "Independent", year: "2023", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
-    { id: 3, title: "Publicis Sapient", year: "2022", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
-    { id: 4, title: "Elva Design Group", year: "2021", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
-    { id: 5, title: "Huge", year: "2021", image: "https://cdn.cosmos.so/7712fe42-42ca-4fc5-9590-c89f2db99978?format=jpeg" },
-    { id: 6, title: "LiveArea", year: "2020-21", image: "https://cdn.cosmos.so/cbee1ec5-01b6-4ffe-9f34-7da7980454cf?format=jpeg" },
-    { id: 7, title: "PHI to NYC", year: "2019-20", image: "https://cdn.cosmos.so/2e91a9d1-db85-4499-ad37-6222a6fea23b?format=jpeg" },
-    { id: 8, title: "Workarea", year: "2018-19", image: "https://cdn.cosmos.so/ff2ac3d3-fa94-4811-89f6-0d008b27e439?format=jpeg" },
-    { id: 9, title: "O3 World", year: "2017-18", image: "https://cdn.cosmos.so/c39a4043-f489-4406-8018-a103a3f89802?format=jpeg" },
-    { id: 10, title: "One Sixty Over Ninety", year: "2014-16", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
+    { id: 1, title: "Phenom", year: "UX Strategist", image: "https://cdn.cosmos.so/7d47d4e2-0eff-4e2f-9734-9d24a8ba067e?format=jpeg" },
+    { id: 2, title: "Independent", year: "Paradigm Shift, again", image: "https://cdn.cosmos.so/5eee2d2d-3d4d-4ae5-96d4-cdbae70a2387?format=jpeg" },
+    { id: 3, title: "Publicis Sapient", year: "Senior Product Designer", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
+    { id: 4, title: "Code & Theory", year: "ACD, Interactive", image: "https://cdn.cosmos.so/def30e8a-34b2-48b1-86e1-07ec5c28f225?format=jpeg" },
+    { id: 5, title: "Elva Design Group", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/44d7cb23-6759-49e4-9dc1-acf771b3a0d1?format=jpeg" },
+    { id: 6, title: "Huge", year: "Sr. UX Designer", image: "https://cdn.cosmos.so/7712fe42-42ca-4fc5-9590-c89f2db99978?format=jpeg" },
+    { id: 7, title: "LiveArea", year: "Manager, UX", image: "https://cdn.cosmos.so/cbee1ec5-01b6-4ffe-9f34-7da7980454cf?format=jpeg" },
+    { id: 8, title: "PHI to NYC", year: "Paradigm Shift", image: "https://cdn.cosmos.so/2e91a9d1-db85-4499-ad37-6222a6fea23b?format=jpeg" },
+    { id: 9, title: "Workarea", year: "UX Designer", image: "https://cdn.cosmos.so/ff2ac3d3-fa94-4811-89f6-0d008b27e439?format=jpeg" },
+    { id: 10, title: "O3 World", year: "UX Designer", image: "https://cdn.cosmos.so/c39a4043-f489-4406-8018-a103a3f89802?format=jpeg" },
+    { id: 11, title: "One Sixty Over Ninety", year: "Interactive Designer", image: "https://cdn.cosmos.so/e5e399f2-4050-463b-a781-4f5a1615f28e?format=jpeg" }
 ];
 
 function renderProjects(container) {
@@ -553,7 +554,13 @@ document.addEventListener("DOMContentLoaded", () => {
             "https://i.ibb.co/vv5PM3t/2302790243734907282-5144774570.jpg",
             "https://i.ibb.co/9vFZk6n/2327892796382234206-5144774570.jpg",
             "https://i.ibb.co/nQLGwrN/2270020016525965844-5144774570.jpg",
-            "https://i.ibb.co/jJTKpGZ/2282470733853463286-5144774570.jpg"
+            "https://i.ibb.co/jJTKpGZ/2282470733853463286-5144774570.jpg",
+
+            "https://i.ibb.co/9HPBnC6/2278045066214592879-5144774570.jpg",
+            "https://i.ibb.co/ZJwdQTK/2318713579686042693-5144774570.jpg",
+
+
+            
         ],
         settings: isMobile
             ? {
