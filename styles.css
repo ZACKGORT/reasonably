@@ -1776,7 +1776,6 @@ li:has(input:checked) {
     inset: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
     background-size: cover;
     background-position: center;
     pointer-events: none;
@@ -1785,7 +1784,7 @@ li:has(input:checked) {
 /* ====== MAST HEADER & LAYOUT ====== */
 .mast__header {
     position: relative;
-    z-index: 2;
+    z-index: 7654321;
     width: 100%;
     padding: 0;
     display: flex;
@@ -1812,7 +1811,7 @@ li:has(input:checked) {
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: #fff;
-    opacity: 0.65;
+    opacity: 0.96;
     margin-bottom: 0.1em;
     /* tightened from 0.3em */
     background: transparent !important;
@@ -1826,7 +1825,6 @@ li:has(input:checked) {
     box-shadow: none;
     border-radius: 0;
     position: relative;
-    z-index: 10;
 }
 
 .mast__title.js-spanize {
@@ -1894,12 +1892,11 @@ h2:focus {
     flex-direction: column;
     align-items: flex-start;
     position: relative;
-    z-index: 10;
 }
 
 .mast__text {
     font-size: .9em;
-    font-weight: 100;
+    font-weight: 200;
     margin: 0 0 0.2em 0;
     letter-spacing: .4em;
     line-height: 1.6;
@@ -1912,7 +1909,6 @@ h2:focus {
     overflow-wrap: break-word;
     max-width: 100%;
     position: relative;
-    z-index: 10;
 }
 
 .mast__text.active {
@@ -1947,7 +1943,6 @@ h1,
     box-shadow: none;
     border-radius: 0;
     position: relative;
-    z-index: 10;
 }
 
 h1 span,
@@ -1988,25 +1983,22 @@ h3 {
 
 
 
-/* Life Page Paragraphs */
-.life-paragraph {
-    font-size: 1.4em;
-    color: #fff;
-    line-height: 1.8;
-    margin: 0 0 1.1em 0;
-    /* or whatever fits your design */
-    /* Add any other life-page specific styles */
-}
 
-/* Balance Page Paragraphs */
-.balance-paragraph {
-    font-size: 1.1em;
-    color: #fff;
-    line-height: 1.4;
-    margin: 0 0 0.6em 0;
-    /* for example, tighter */
-    /* Add any other balance-page specific styles */
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /* ====== LIFE PAGE PARAGRAPH ====== */
@@ -2051,27 +2043,6 @@ h3 {
 }
 
 
-
-
-/* ====== MASTHEAD STUFF ======= */
-
-.mast__text {
-  font-size: 0.9em;
-  font-weight: 100;
-  margin: 0;            /* Ensure margins are reset */
-  letter-spacing: 0.4em;
-  line-height: 1.6;
-  color: #fff;
-  background: transparent;
-  text-align: center;   /* Center the text inside each paragraph */
-  position: relative;
-  z-index: 1000000;
-}
-
-p:not(:last-of-type),
-.mast__text:not(:last-of-type) {
-  margin-bottom: 0.5rem;
-}
 
 /* ====== RESPONSIVE MATCH ====== */
 @media (max-width: 900px) {
@@ -2207,8 +2178,8 @@ p:not(:last-of-type),
   .mast {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     width: 100%;
     position: relative;
   }
@@ -2219,8 +2190,8 @@ p:not(:last-of-type),
     width: 100%;
     height: 100%;
     z-index: 1;
-    background-size: cover;
-    background-position: center;
+    background-size: left;
+    background-position: left;
     pointer-events: none;
   }
 }
@@ -2241,8 +2212,8 @@ p:not(:last-of-type),
   .mast {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: left;
     width: 100%;
     position: relative;
   }
