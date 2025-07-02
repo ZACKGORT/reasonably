@@ -1238,7 +1238,7 @@ body.balance-lock-scroll {
     linear-gradient(to bottom,
       rgba(0, 0, 0, 0.30) 0%,     /* strongest at the very top */
       rgba(0, 0, 0, 0.12) 18%,    /* gentle midpoint */
-      rgba(0, 0, 0, 0) 40%),      /* fully transparent by 40% down */
+      rgba(0, 0, 0, 0) 25%),      /* fully transparent by 40% down */
 
     /* Radial center vignette (darkens edges/corners) */
     radial-gradient(ellipse at center,
@@ -2812,7 +2812,7 @@ h1 span,
 
 
 .marquee-container {
-  margin: 20px 0 0 0;
+  margin: 40px 0 40px 0;
 }
 
 
