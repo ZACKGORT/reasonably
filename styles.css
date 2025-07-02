@@ -101,6 +101,11 @@ popover;
     max-width: 100%;
 }
 
+
+#page-life .section-image {
+  padding: 1.5em 0 1.5em 0; /* adjust as needed */
+}
+
 /* Ensure image sits above h2 and fits content constraints */
 .heading {
     display: flex;
@@ -519,7 +524,7 @@ nav ul.content a:is(:hover, :focus-visible, [data-active="true"]) {
 .item-image-container {
     position: relative;
     width: 100%;
-    height: 100%;
+    height: 100%;    
 }
 
 .item-image-container::after {
