@@ -2784,6 +2784,38 @@ h1 span,
 }
 
 
+
+.connect-marquee {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: normal;
+  font-size: .92em;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  white-space: nowrap; /* Prevents line breaks */
+  background: linear-gradient(90deg, #000, #fff, #000);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: zackgort-animate 10s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);
+}
+
+@keyframes connect-marquee {
+  0% {
+    background-position: -500%;
+  }
+  100% {
+    background-position: 500%;
+  }
+}
+
+
+.marquee-container {
+  margin: 20px 0 0 0;
+}
+
+
 .project-title {
   position: relative;
   font-family: sans-serif;
@@ -2794,6 +2826,18 @@ h1 span,
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 .project-year {
   position: relative;
