@@ -557,18 +557,16 @@
                                 </p>
                             </div>
 
-                            <!-- Glassy Button (Centered) -->
+                          <!-- Using an anchor tag with mailto: to open email client -->
                             <div class="glassy-button-container">
-                                <div class="glassy-button-wrap">
-                                    <div class="glassy-button-shadow"></div>
-                                    <button class="glassy-button" type="button">
-                                        <span>zack@reasonbly.cc</span>
-                                    </button>
+                              <div class="glassy-button-wrap">
+                                <div class="glassy-button-shadow"></div>
+                                  <a href="mailto:zack@reasonably.cc" class="glassy-button">
+                                    <span>zack@reasonably.cc</span>
+                                  </a>
                                 </div>
                             </div>
-                    <!--    <div class="marquee-container">   
-                         <p class="connect-marquee">Say hello!</p> -->
-                         </div>     
+
                         </header>
                     </section>
                 </main>
@@ -608,6 +606,30 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="main.js"></script>
-    </body></html>
+
+<script>
+/* copy-to-clipboard for any element with data-email */
+document.addEventListener('click', async (e) => {
+  const btn = e.target.closest('[data-email]');
+  if (!btn) return;
+
+  const email = btn.getAttribute('data-email');
+  try {
+    await navigator.clipboard.writeText(email);
+    // Optional visual feedback
+    btn.classList.add('copied');
+    setTimeout(() => btn.classList.remove('copied'), 1200);
+  } catch (err) {
+    console.error('Clipboard write failed:', err);
+    alert('Copy failed — please copy manually.');
+  }
+});
+</script>
+
+
+    </body>
+    
+    
+    </html>
 
 <!-- Main JS file (Remove this if using CodePen/JSFiddle JS panel) -->
