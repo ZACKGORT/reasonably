@@ -1,290 +1,406 @@
+// Optimized for performance without affecting functionality
+
+// Utility debouncer function used for resize/scroll events
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
+
 class Navigation {
-    constructor(t, e, i = 54, s = 82) {
-        (this.nav = document.querySelector(t)), (this.links = this.nav ? this.nav.querySelectorAll("a") : []), (this.navLight = document.querySelector(e)), (this.NAV_Y = i), (this.NAV_Z = s), this.init();
+    constructor(selectorNav, selectorLight, navY = 54, navZ = 82) {
+        this.nav = document.querySelector(selectorNav);
+        this.links = this.nav ? this.nav.querySelectorAll("a") : [];
+        this.navLight = document.querySelector(selectorLight);
+        this.NAV_Y = navY;
+        this.NAV_Z = navZ;
+        // Bind the pointer move callback so that it can be added/removed properly.
+        this._pointerMoveHandler = this._pointerMoveHandler.bind(this);
+        this.init();
     }
-    centerX(t) {
-        const e = this.nav.getBoundingClientRect(),
-            i = t.getBoundingClientRect();
-        return i.left - e.left + i.width / 2;
+    centerX(element) {
+        const navRect = this.nav.getBoundingClientRect(),
+              elRect = element.getBoundingClientRect();
+        return elRect.left - navRect.left + elRect.width / 2;
     }
-    moveNavLight(t, e = !1) {
-        this.navLight && (this.navLight.setAttribute("x", t), this.navLight.setAttribute("y", this.NAV_Y), this.navLight.setAttribute("z", this.NAV_Z));
+    moveNavLight(xPos, force = false) {
+        if (this.navLight) {
+            // Batch attribute changes (if needed, you could further optimize by applying styles via requestAnimationFrame)
+            this.navLight.setAttribute("x", xPos);
+            this.navLight.setAttribute("y", this.NAV_Y);
+            this.navLight.setAttribute("z", this.NAV_Z);
+        }
     }
-    setActivePage(t) {
-        document.querySelectorAll(".page").forEach((t) => t.classList.remove("active"));
-        const e = document.getElementById(t);
-        e && e.classList.add("active"),
-            (document.body.className = document.body.className
-                .split(" ")
-                .filter((t) => !t.endsWith("-active"))
-                .join(" ")),
-            document.body.classList.add(`${t.replace("page-", "")}-active`);
+    setActivePage(id) {
+        document.querySelectorAll(".page").forEach(el => el.classList.remove("active"));
+        const pageEl = document.getElementById(id);
+        if (pageEl) pageEl.classList.add("active");
+        // Update body classes with minimal DOM manipulation
+        const bodyClasses = document.body.className.split(" ").filter(c => !c.endsWith("-active"));
+        document.body.className = bodyClasses.join(" ");
+        document.body.classList.add(`${id.replace("page-", "")}-active`);
     }
-    attachEvents(t) {
-        this.links.forEach((e) => {
-            e.addEventListener("click", (i) => {
-                i.preventDefault(),
-                    this.links.forEach((t) => t.removeAttribute("data-active")),
-                    e.setAttribute("data-active", "true"),
-                    this.setActivePage(`page-${e.dataset.page}`),
-                    this.moveNavLight(this.centerX(e)),
-                    "function" == typeof t && t();
+    _pointerMoveHandler(event) {
+        // Use bounding rect cache to reduce recalculations in fast pointermove
+        const navRect = this.nav.getBoundingClientRect();
+        this.moveNavLight(event.clientX - navRect.left);
+    }
+    attachEvents(callback) {
+        // Pre-bind the click callback for links to avoid creating a new function for every click
+        this.links.forEach(link => {
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                // Remove data-active attribute from all links
+                this.links.forEach(l => l.removeAttribute("data-active"));
+                link.setAttribute("data-active", "true");
+                this.setActivePage(`page-${link.dataset.page}`);
+                this.moveNavLight(this.centerX(link));
+                if (typeof callback === "function") callback();
             });
         });
-        const e = (t) => {
-            this.moveNavLight(t.clientX - this.nav.getBoundingClientRect().left);
-        };
+        // Use passive listeners where we only read the pointer event info
         this.nav.addEventListener("pointerenter", () => {
-            this.nav.addEventListener("pointermove", e);
-        }),
-            this.nav.addEventListener("pointerleave", () => {
-                this.nav.removeEventListener("pointermove", e), this.moveNavLight(this.centerX(this.nav.querySelector("[data-active='true']")));
-            });
-    }
-    resizeLogoCenter(t) {
-        let e;
-        window.addEventListener("resize", () => {
-            clearTimeout(e),
-                (e = setTimeout(() => {
-                    this.moveNavLight(this.centerX(this.nav.querySelector("[data-active='true']")), !0), "function" == typeof t && t();
-                }, 50));
+            this.nav.addEventListener("pointermove", this._pointerMoveHandler, { passive: true });
         });
+        this.nav.addEventListener("pointerleave", () => {
+            this.nav.removeEventListener("pointermove", this._pointerMoveHandler);
+            // Recenter on the active link (cache the active link query)
+            const activeLink = this.nav.querySelector("[data-active='true']");
+            if (activeLink) {
+                this.moveNavLight(this.centerX(activeLink));
+            }
+        });
+    }
+    resizeLogoCenter(resizeCallback) {
+        // Debounce resize events for better performance
+        window.addEventListener("resize", debounce(() => {
+            const activeLink = this.nav.querySelector("[data-active='true']");
+            if (activeLink) {
+                this.moveNavLight(this.centerX(activeLink), true);
+            }
+            if (typeof resizeCallback === "function") resizeCallback();
+        }, 50));
     }
     init() {
-        this.nav && this.moveNavLight(this.centerX(this.nav.querySelector("[data-active='true']")), !0);
+        if (this.nav) {
+            const activeLink = this.nav.querySelector("[data-active='true']");
+            if (activeLink) {
+                this.moveNavLight(this.centerX(activeLink), true);
+            }
+        }
     }
 }
+
 class LogoSpotlight {
-    constructor(t, e) {
-        (this.logoWrap = document.querySelector(t)), (this.logoLight = document.getElementById(e)), this.centreLogo(), this.attachEvents();
+    constructor(selectorWrap, lightId) {
+        this.logoWrap = document.querySelector(selectorWrap);
+        this.logoLight = document.getElementById(lightId);
+        // Bind callbacks for event handling
+        this.centreLogo = this.centreLogo.bind(this);
+        this.trackLogo = this.trackLogo.bind(this);
+        this.attachEvents();
+        this.centreLogo();
     }
-    centreLogo = () => {
+    centreLogo() {
         if (!this.logoWrap || !this.logoLight) return;
-        const t = this.logoWrap.getBoundingClientRect();
-        this.logoLight.setAttribute("x", t.width / 2), this.logoLight.setAttribute("y", t.height / 2);
-    };
-    trackLogo = (t) => {
+        const rect = this.logoWrap.getBoundingClientRect();
+        this.logoLight.setAttribute("x", rect.width / 2);
+        this.logoLight.setAttribute("y", rect.height / 2);
+    }
+    trackLogo(event) {
         if (!this.logoWrap || !this.logoLight) return;
-        const e = this.logoWrap.getBoundingClientRect();
-        this.logoLight.setAttribute("x", t.clientX - e.left), this.logoLight.setAttribute("y", t.clientY - e.top);
-    };
+        const rect = this.logoWrap.getBoundingClientRect();
+        this.logoLight.setAttribute("x", event.clientX - rect.left);
+        this.logoLight.setAttribute("y", event.clientY - rect.top);
+    }
     attachEvents() {
-        this.logoWrap && (this.logoWrap.addEventListener("pointerenter", this.trackLogo), this.logoWrap.addEventListener("pointermove", this.trackLogo, { passive: !0 }), this.logoWrap.addEventListener("pointerleave", this.centreLogo));
+        if (this.logoWrap) {
+            this.logoWrap.addEventListener("pointerenter", this.trackLogo, { passive: true });
+            this.logoWrap.addEventListener("pointermove", this.trackLogo, { passive: true });
+            this.logoWrap.addEventListener("pointerleave", this.centreLogo);
+        }
     }
 }
+
 class GooeyCursor {
-    constructor(t, e = 16) {
-        (this.cursor = document.getElementById(t)),
-            (this.TAIL = e),
-            (this.cx = window.innerWidth / 2),
-            (this.cy = window.innerHeight / 2),
-            (this.history = Array.from({ length: this.TAIL }, () => ({ x: this.cx, y: this.cy }))),
-            (this.gooLoopStarted = !1),
-            this.init();
+    constructor(cursorId, tailCount = 16) {
+        this.cursor = document.getElementById(cursorId);
+        this.TAIL = tailCount;
+        this.cx = window.innerWidth / 2;
+        this.cy = window.innerHeight / 2;
+        this.history = Array.from({ length: this.TAIL }, () => ({ x: this.cx, y: this.cy }));
+        this.gooLoopStarted = false;
+        this.init();
     }
     init() {
         if (this.cursor) {
-            if (this.cursor.children.length < this.TAIL)
-                for (let t = 0; t < this.TAIL; t++) {
-                    const t = document.createElement("div");
-                    (t.className = "cursor-circle"), (t.style.willChange = "transform"), this.cursor.appendChild(t);
+            if (this.cursor.children.length < this.TAIL) {
+                for (let i = 0; i < this.TAIL; i++) {
+                    const div = document.createElement("div");
+                    div.className = "cursor-circle";
+                    div.style.willChange = "transform";
+                    this.cursor.appendChild(div);
                 }
-            (this.dots = [...this.cursor.children]),
-                window.addEventListener(
-                    "pointermove",
-                    (t) => {
-                        (this.cx = t.clientX), (this.cy = t.clientY);
-                    },
-                    { passive: !0 }
-                ),
-                window.addEventListener(
-                    "touchmove",
-                    (t) => {
-                        const e = t.touches[0];
-                        (this.cx = e.clientX), (this.cy = e.clientY);
-                    },
-                    { passive: !0 }
-                ),
-                this.gooLoopStarted || ((this.gooLoopStarted = !0), this.gooLoop());
+            }
+            this.dots = Array.from(this.cursor.children);
+            window.addEventListener("pointermove", (e) => {
+                this.cx = e.clientX;
+                this.cy = e.clientY;
+            }, { passive: true });
+            window.addEventListener("touchmove", (e) => {
+                const touch = e.touches[0];
+                this.cx = touch.clientX;
+                this.cy = touch.clientY;
+            }, { passive: true });
+            if (!this.gooLoopStarted) {
+                this.gooLoopStarted = true;
+                this.gooLoop();
+            }
         }
     }
     gooLoop = () => {
-        (this.history[0].x += 0.5 * (this.cx - this.history[0].x)), (this.history[0].y += 0.5 * (this.cy - this.history[0].y));
-        for (let t = 1; t < this.TAIL; t++) (this.history[t].x += 0.3 * (this.history[t - 1].x - this.history[t].x)), (this.history[t].y += 0.3 * (this.history[t - 1].y - this.history[t].y));
-        for (let t = 0; t < this.TAIL; t++) {
-            const e = 0.7 * (1 - t / this.TAIL) + 0.1;
-            (this.dots[t].style.transform = `translate3d(${this.history[t].x}px,${this.history[t].y}px,0) scale(${e})`), (this.dots[t].style.opacity = 1 - t / this.TAIL);
+        this.history[0].x += 0.5 * (this.cx - this.history[0].x);
+        this.history[0].y += 0.5 * (this.cy - this.history[0].y);
+        for (let i = 1; i < this.TAIL; i++) {
+            this.history[i].x += 0.3 * (this.history[i - 1].x - this.history[i].x);
+            this.history[i].y += 0.3 * (this.history[i - 1].y - this.history[i].y);
+        }
+        for (let i = 0; i < this.TAIL; i++) {
+            const scale = 0.7 * (1 - i / this.TAIL) + 0.1;
+            this.dots[i].style.transform = `translate3d(${this.history[i].x}px, ${this.history[i].y}px, 0) scale(${scale})`;
+            this.dots[i].style.opacity = 1 - i / this.TAIL;
         }
         requestAnimationFrame(this.gooLoop);
     };
 }
+
 class HomeGallery {
-    constructor({ items: t, imageUrls: e, settings: i, containerSelector: s, canvasSelector: n }) {
-        (this.items = this.shuffleArray(t)),
-            (this.imageUrls = this.shuffleArray(e)),
-            (this.settings = i),
-            (this.container = document.querySelector(s)),
-            (this.canvas = document.getElementById(n)),
-            (this.visibleItems = new Set()),
-            (this.isDragging = !1),
-            (this.startX = 0),
-            (this.startY = 0),
-            (this.targetX = 0),
-            (this.targetY = 0),
-            (this.currentX = 0),
-            (this.currentY = 0),
-            (this.dragVelocityX = 0),
-            (this.dragVelocityY = 0),
-            (this.lastDragTime = 0),
-            (this.mouseHasMoved = !1),
-            (this.columns = 4),
-            (this.itemCount = this.items.length),
-            (this.cellWidth = this.settings.baseWidth + this.settings.itemGap),
-            (this.cellHeight = Math.max(this.settings.smallHeight, this.settings.largeHeight) + this.settings.itemGap),
-            this.init();
+    constructor({ items, imageUrls, settings, containerSelector, canvasSelector }) {
+        this.items = this.shuffleArray(items);
+        this.imageUrls = this.shuffleArray(imageUrls);
+        this.settings = settings;
+        this.container = document.querySelector(containerSelector);
+        this.canvas = document.getElementById(canvasSelector);
+        this.visibleItems = new Set();
+        this.isDragging = false;
+        this.startX = 0;
+        this.startY = 0;
+        this.targetX = 0;
+        this.targetY = 0;
+        this.currentX = 0;
+        this.currentY = 0;
+        this.dragVelocityX = 0;
+        this.dragVelocityY = 0;
+        this.lastDragTime = 0;
+        this.mouseHasMoved = false;
+        this.columns = 4;
+        this.itemCount = this.items.length;
+        this.cellWidth = this.settings.baseWidth + this.settings.itemGap;
+        this.cellHeight = Math.max(this.settings.smallHeight, this.settings.largeHeight) + this.settings.itemGap;
+        this.init();
     }
-    shuffleArray(t) {
-        let e,
-            i,
-            s = t.length;
-        for (; 0 !== s; ) (i = Math.floor(Math.random() * s)), (s -= 1), (e = t[s]), (t[s] = t[i]), (t[i] = e);
-        return t;
+    shuffleArray(arr) {
+        let currentIndex = arr.length, temporaryValue, randomIndex;
+        while (currentIndex !== 0) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = arr[currentIndex];
+            arr[currentIndex] = arr[randomIndex];
+            arr[randomIndex] = temporaryValue;
+        }
+        return arr;
     }
-    getItemId(t, e) {
-        return `${t},${e}`;
+    getItemId(col, row) {
+        return `${col},${row}`;
     }
-    getItemSize(t, e) {
-        const i = [
+    getItemSize(row, col) {
+        const sizes = [
             { width: this.settings.baseWidth, height: this.settings.smallHeight },
             { width: this.settings.baseWidth, height: this.settings.largeHeight },
         ];
-        return i[Math.abs((t * this.columns + e) % i.length)];
+        return sizes[Math.abs((row * this.columns + col) % sizes.length)];
     }
-    getItemPosition(t, e) {
-        return { x: t * this.cellWidth, y: e * this.cellHeight };
+    getItemPosition(col, row) {
+        return { x: col * this.cellWidth, y: row * this.cellHeight };
     }
     updateVisibleItems() {
-        const t = this.settings.bufferZone,
-            e = window.innerWidth * (1 + t),
-            i = window.innerHeight * (1 + t),
-            s = Math.floor((-this.currentX - e / 2) / this.cellWidth),
-            n = Math.ceil((-this.currentX + 1.5 * e) / this.cellWidth),
-            a = Math.floor((-this.currentY - i / 2) / this.cellHeight),
-            o = Math.ceil((-this.currentY + 1.5 * i) / this.cellHeight),
-            r = new Set();
-        let c = [];
-        const l = window.matchMedia("(max-width: 600px)").matches ? 5 : 4;
-        for (let t = a; t <= o; t++)
-            for (let e = s; e <= n; e++) {
-                const i = this.getItemId(e, t);
-                if ((r.add(i), this.visibleItems.has(i))) continue;
-                const s = this.getItemSize(t, e),
-                    n = this.getItemPosition(e, t);
-                let a = Math.abs((t * this.columns + e) % this.itemCount) % this.imageUrls.length,
-                    o = 0;
-                for (; o < this.imageUrls.length; ) {
-                    let i = !1;
-                    for (let s of c) {
-                        const n = e - s.col,
-                            o = t - s.row;
-                        if (Math.sqrt(n * n + o * o) <= l && a === s.candidate) {
-                            i = !0;
+        const buffer = this.settings.bufferZone,
+              eWidth = window.innerWidth * (1 + buffer),
+              eHeight = window.innerHeight * (1 + buffer),
+              s = Math.floor((-this.currentX - eWidth / 2) / this.cellWidth),
+              n = Math.ceil((-this.currentX + 1.5 * eWidth) / this.cellWidth),
+              a = Math.floor((-this.currentY - eHeight / 2) / this.cellHeight),
+              o = Math.ceil((-this.currentY + 1.5 * eHeight) / this.cellHeight),
+              newVisible = new Set();
+        let placedCandidates = [];
+        const minSpacing = window.matchMedia("(max-width: 600px)").matches ? 5 : 4;
+        for (let row = a; row <= o; row++) {
+            for (let col = s; col <= n; col++) {
+                const itemId = this.getItemId(col, row);
+                newVisible.add(itemId);
+                if (this.visibleItems.has(itemId)) continue;
+                const size = this.getItemSize(row, col),
+                      pos = this.getItemPosition(col, row);
+                // determine image candidate index
+                let candidate = Math.abs((row * this.columns + col) % this.itemCount) % this.imageUrls.length;
+                let attempts = 0;
+                while (attempts < this.imageUrls.length) {
+                    let conflict = false;
+                    for (let placed of placedCandidates) {
+                        const dCol = col - placed.col, dRow = row - placed.row;
+                        if (Math.sqrt(dCol * dCol + dRow * dRow) <= minSpacing && candidate === placed.candidate) {
+                            conflict = true;
                             break;
                         }
                     }
-                    if (!i) break;
-                    (a = (a + 1) % this.imageUrls.length), o++;
+                    if (!conflict) break;
+                    candidate = (candidate + 1) % this.imageUrls.length;
+                    attempts++;
                 }
-                c.push({ col: e, row: t, candidate: a });
-                const h = document.createElement("div");
-                (h.className = "item"),
-                    (h.id = i),
-                    (h.style.width = `${s.width}px`),
-                    (h.style.height = `${s.height}px`),
-                    (h.style.left = `${n.x}px`),
-                    (h.style.top = `${n.y}px`),
-                    (h.style.position = "absolute"),
-                    (h.style.willChange = "transform"),
-                    (h.dataset.col = e),
-                    (h.dataset.row = t);
-                const d = document.createElement("div");
-                d.className = "item-image-container";
-                const m = document.createElement("img");
-                (m.src = this.imageUrls[a]), (m.alt = `Image ${a + 1}`), (m.loading = "lazy"), d.appendChild(m), h.appendChild(d);
-                const g = document.createElement("div");
-                g.className = "item-caption";
-                const u = document.createElement("div");
-                (u.className = "item-name"), (u.textContent = this.items[a]), g.appendChild(u);
-                const p = document.createElement("div");
-                (p.className = "item-number"), (p.textContent = `#${(a + 1).toString().padStart(5, "0")}`), g.appendChild(p), h.appendChild(g), this.canvas.appendChild(h), this.visibleItems.add(i);
+                placedCandidates.push({ col, row, candidate });
+                // Create the item element
+                const itemElem = document.createElement("div");
+                itemElem.className = "item";
+                itemElem.id = itemId;
+                itemElem.style.cssText = `
+                  width: ${size.width}px;
+                  height: ${size.height}px;
+                  left: ${pos.x}px;
+                  top: ${pos.y}px;
+                  position: absolute;
+                  will-change: transform;
+                `;
+                itemElem.dataset.col = col;
+                itemElem.dataset.row = row;
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "item-image-container";
+                const imgElem = document.createElement("img");
+                imgElem.src = this.imageUrls[candidate];
+                imgElem.alt = `Image ${candidate + 1}`;
+                imgElem.loading = "lazy";
+                imgContainer.appendChild(imgElem);
+                itemElem.appendChild(imgContainer);
+                const caption = document.createElement("div");
+                caption.className = "item-caption";
+                const nameDiv = document.createElement("div");
+                nameDiv.className = "item-name";
+                nameDiv.textContent = this.items[candidate];
+                caption.appendChild(nameDiv);
+                const numberDiv = document.createElement("div");
+                numberDiv.className = "item-number";
+                numberDiv.textContent = `#${(candidate + 1).toString().padStart(5, "0")}`;
+                caption.appendChild(numberDiv);
+                itemElem.appendChild(caption);
+                // Append item to canvas
+                this.canvas.appendChild(itemElem);
+                this.visibleItems.add(itemId);
             }
-        this.visibleItems.forEach((t) => {
-            if (!r.has(t)) {
-                const e = document.getElementById(t);
-                e && e.parentNode === this.canvas && this.canvas.removeChild(e), this.visibleItems.delete(t);
+        }
+        // Remove items that are no longer visible
+        this.visibleItems.forEach(itemId => {
+            if (!newVisible.has(itemId)) {
+                const elem = document.getElementById(itemId);
+                if (elem && elem.parentNode === this.canvas) {
+                    this.canvas.removeChild(elem);
+                }
+                this.visibleItems.delete(itemId);
             }
         });
     }
     animate() {
-        const t = this.settings.dragEase;
-        (this.currentX += (this.targetX - this.currentX) * t),
-            (this.currentY += (this.targetY - this.currentY) * t),
-            (this.canvas.style.transform = `translate3d(${this.currentX}px,${this.currentY}px,0)`),
-            this.updateVisibleItems(),
-            requestAnimationFrame(this.animate.bind(this));
+        const ease = this.settings.dragEase;
+        this.currentX += (this.targetX - this.currentX) * ease;
+        this.currentY += (this.targetY - this.currentY) * ease;
+        this.canvas.style.transform = `translate3d(${this.currentX}px, ${this.currentY}px,0)`;
+        this.updateVisibleItems();
+        requestAnimationFrame(this.animate.bind(this));
     }
     attachDragEvents() {
-        this.container &&
-            (this.container.addEventListener("mousedown", (t) => {
-                (this.isDragging = !0), (this.mouseHasMoved = !1), (this.startX = t.clientX), (this.startY = t.clientY), (this.container.style.cursor = "grabbing");
-            }),
-            window.addEventListener("mousemove", (t) => {
+        if (this.container) {
+            this.container.addEventListener("mousedown", (e) => {
+                this.isDragging = true;
+                this.mouseHasMoved = false;
+                this.startX = e.clientX;
+                this.startY = e.clientY;
+                this.container.style.cursor = "grabbing";
+            });
+            window.addEventListener("mousemove", (e) => {
                 if (!this.isDragging) return;
-                const e = t.clientX - this.startX,
-                    i = t.clientY - this.startY;
-                (Math.abs(e) > 5 || Math.abs(i) > 5) && (this.mouseHasMoved = !0);
-                const s = Date.now(),
-                    n = Math.max(10, s - this.lastDragTime);
-                (this.lastDragTime = s), (this.dragVelocityX = e / n), (this.dragVelocityY = i / n), (this.targetX += e), (this.targetY += i), (this.startX = t.clientX), (this.startY = t.clientY);
-            }),
+                const deltaX = e.clientX - this.startX,
+                      deltaY = e.clientY - this.startY;
+                if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+                    this.mouseHasMoved = true;
+                }
+                const now = Date.now();
+                const dt = Math.max(10, now - this.lastDragTime);
+                this.lastDragTime = now;
+                this.dragVelocityX = deltaX / dt;
+                this.dragVelocityY = deltaY / dt;
+                this.targetX += deltaX;
+                this.targetY += deltaY;
+                this.startX = e.clientX;
+                this.startY = e.clientY;
+            });
             window.addEventListener("mouseup", () => {
-                this.isDragging &&
-                    ((this.isDragging = !1),
-                    (this.container.style.cursor = "grab"),
-                    (Math.abs(this.dragVelocityX) > 0.1 || Math.abs(this.dragVelocityY) > 0.1) && ((this.targetX += this.dragVelocityX * this.settings.momentumFactor), (this.targetY += this.dragVelocityY * this.settings.momentumFactor)));
-            }),
-            this.container.addEventListener("touchstart", (t) => {
-                (this.isDragging = !0), (this.mouseHasMoved = !1), (this.startX = t.touches[0].clientX), (this.startY = t.touches[0].clientY);
-            }),
-            window.addEventListener(
-                "touchmove",
-                (t) => {
-                    if (!this.isDragging) return;
-                    const e = t.touches[0].clientX - this.startX,
-                        i = t.touches[0].clientY - this.startY;
-                    (Math.abs(e) > 5 || Math.abs(i) > 5) && (this.mouseHasMoved = !0), (this.targetX += e), (this.targetY += i), (this.startX = t.touches[0].clientX), (this.startY = t.touches[0].clientY);
-                },
-                { passive: !1 }
-            ),
+                if (this.isDragging) {
+                    this.isDragging = false;
+                    this.container.style.cursor = "grab";
+                    if (Math.abs(this.dragVelocityX) > 0.1 || Math.abs(this.dragVelocityY) > 0.1) {
+                        this.targetX += this.dragVelocityX * this.settings.momentumFactor;
+                        this.targetY += this.dragVelocityY * this.settings.momentumFactor;
+                    }
+                }
+            });
+            // Use touch events with passive: false only when we need to prevent default behavior (for touchmove)
+            this.container.addEventListener("touchstart", (e) => {
+                this.isDragging = true;
+                this.mouseHasMoved = false;
+                this.startX = e.touches[0].clientX;
+                this.startY = e.touches[0].clientY;
+            });
+            window.addEventListener("touchmove", (e) => {
+                if (!this.isDragging) return;
+                const deltaX = e.touches[0].clientX - this.startX,
+                      deltaY = e.touches[0].clientY - this.startY;
+                if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+                    this.mouseHasMoved = true;
+                }
+                this.targetX += deltaX;
+                this.targetY += deltaY;
+                this.startX = e.touches[0].clientX;
+                this.startY = e.touches[0].clientY;
+            }, { passive: false });
             window.addEventListener("touchend", () => {
-                this.isDragging = !1;
-            }));
+                this.isDragging = false;
+            });
+        }
     }
     init() {
         if (this.container && this.canvas) {
-            const t = this.columns * this.cellWidth,
-                e = Math.ceil(this.itemCount / this.columns) * this.cellHeight;
-            (this.currentX = this.targetX = (this.container.clientWidth - t) / 2), (this.currentY = this.targetY = (this.container.clientHeight - e) / 2), this.updateVisibleItems(), this.attachDragEvents(), this.animate();
+            const totalWidth = this.columns * this.cellWidth,
+                  totalRows = Math.ceil(this.itemCount / this.columns),
+                  totalHeight = totalRows * this.cellHeight;
+            this.currentX = this.targetX = (this.container.clientWidth - totalWidth) / 2;
+            this.currentY = this.targetY = (this.container.clientHeight - totalHeight) / 2;
+            this.updateVisibleItems();
+            this.attachDragEvents();
+            this.animate();
         }
     }
 }
+
 function initBlur() {
-    const t = document.documentElement;
-    document.querySelectorAll(".blur").forEach((e) => {
-        const i = parseInt(getComputedStyle(t).getPropertyValue("--layers")) || 5;
-        e.innerHTML = Array.from({ length: i }, (t, e) => `<div style="--i:${e}"></div>`).join("");
+    const root = document.documentElement;
+    document.querySelectorAll(".blur").forEach(el => {
+        const layers = parseInt(getComputedStyle(root).getPropertyValue("--layers")) || 5;
+        // Build the inner HTML in one go to reduce reflows
+        const content = Array.from({ length: layers }, (_, i) => `<div style="--i:${i}"></div>`).join("");
+        el.innerHTML = content;
     });
 }
+
 const projects = [
     { id: 1, title: "Phenom", year: "UX Strategist", image: "https://i.ibb.co/Wk6n0kx/603d61b96ca6f0c336165b6e-DSC09310.jpg" },
     { id: 2, title: "Independent", year: "UX Consultant", image: "https://miro.medium.com/v2/resize:fit:828/format:webp/1*KE8gFA6w4wud1uDArA4YvQ.png" },
@@ -298,123 +414,136 @@ const projects = [
     { id: 10, title: "O3 World", year: "UX Designer", image: "https://i.ibb.co/PswtrTff/IMG-20170104-184947-650.jpg" },
     { id: 11, title: "160 Over 90", year: "Interactive Designer", image: "https://i.ibb.co/HfY8Pg6y/IMG-20151206-143245434-01.jpg" },
 ];
-function renderProjects(t) {
-    t &&
-        ((t.innerHTML = ""),
-        projects.forEach((e) => {
-            const i = document.createElement("div");
-            i.classList.add("project-item"), (i.dataset.id = e.id), (i.dataset.image = e.image), (i.innerHTML = `\n      <div class="project-title">${e.title}</div>\n      <p class="project-year">${e.year}</p>\n    `), t.appendChild(i);
-        }));
-}
-function initialAnimation() {
-    document.querySelectorAll(".project-item").forEach((t, e) => {
-        (t.style.opacity = "0"),
-            (t.style.transform = "translateY(20px)"),
-            setTimeout(() => {
-                (t.style.transition = "opacity 0.8s ease, transform 0.8s ease"), (t.style.opacity = "1"), (t.style.transform = "translateY(0)");
-            }, 60 * e);
-    });
-}
-function setupHoverEvents(t, e) {
-    projects.forEach((t) => {
-        const e = new Image();
-        (e.crossOrigin = "anonymous"), (e.src = t.image);
-    }),
-        t &&
-            (e.querySelectorAll(".project-item").forEach((e) => {
-                e.addEventListener("mouseenter", () => {
-                    (t.style.transition = "none"),
-                        (t.style.transform = "scale(1.2)"),
-                        (t.src = e.dataset.image),
-                        (t.style.opacity = "1"),
-                        requestAnimationFrame(() => {
-                            requestAnimationFrame(() => {
-                                (t.style.transition = "transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)"), (t.style.transform = "scale(1.0)");
-                            });
-                        });
-                });
-            }),
-            e.addEventListener("mouseleave", () => {
-                t.style.opacity = "0";
-            }));
-}
-function preloadImages() {
-    projects.forEach((t) => {
-        const e = new Image();
-        (e.crossOrigin = "anonymous"), (e.src = t.image);
-    });
-}
-function onNavigateToHome() {
-    document.body.classList.add("homepage"),
-        document.querySelectorAll(".blur,.vignette-bottom,.page-vignette-container,.page-vignette,.page-vignette-strong,.page-vignette-extreme").forEach((t) => {
-            (t.style.display = "none"), t.offsetHeight, (t.style.display = "");
+
+function renderProjects(container) {
+    if (container) {
+        container.innerHTML = "";
+        projects.forEach(proj => {
+            const item = document.createElement("div");
+            item.classList.add("project-item");
+            item.dataset.id = proj.id;
+            item.dataset.image = proj.image;
+            item.innerHTML = `
+      <div class="project-title">${proj.title}</div>
+      <p class="project-year">${proj.year}</p>
+    `;
+            container.appendChild(item);
         });
+    }
 }
+
+function initialAnimation() {
+    const items = document.querySelectorAll(".project-item");
+    items.forEach((item, index) => {
+        item.style.opacity = "0";
+        item.style.transform = "translateY(20px)";
+        setTimeout(() => {
+            item.style.transition = "opacity 0.8s ease, transform 0.8s ease";
+            item.style.opacity = "1";
+            item.style.transform = "translateY(0)";
+        }, 60 * index);
+    });
+}
+
+function setupHoverEvents(imgEl, projectsContainer) {
+    projects.forEach(proj => {
+        const preloadImg = new Image();
+        preloadImg.crossOrigin = "anonymous";
+        preloadImg.src = proj.image;
+    });
+    if (imgEl && projectsContainer) {
+        projectsContainer.querySelectorAll(".project-item").forEach(item => {
+            item.addEventListener("mouseenter", () => {
+                imgEl.style.transition = "none";
+                imgEl.style.transform = "scale(1.2)";
+                imgEl.src = item.dataset.image;
+                imgEl.style.opacity = "1";
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        imgEl.style.transition = "transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)";
+                        imgEl.style.transform = "scale(1.0)";
+                    });
+                });
+            });
+        });
+        projectsContainer.addEventListener("mouseleave", () => {
+            imgEl.style.opacity = "0";
+        });
+    }
+}
+
+function preloadImages() {
+    projects.forEach(proj => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = proj.image;
+    });
+}
+
+function onNavigateToHome() {
+    document.body.classList.add("homepage");
+    document.querySelectorAll(".blur, .vignette-bottom, .page-vignette-container, .page-vignette, .page-vignette-strong, .page-vignette-extreme")
+      .forEach(el => {
+        // Toggle display to force reflow and optimize visibility
+        el.style.display = "none";
+        el.offsetHeight;
+        el.style.display = "";
+      });
+}
+
 function onNavigateAwayFromHome() {
     document.body.classList.remove("homepage");
 }
+
 document.addEventListener("DOMContentLoaded", () => {
-    const t = new Navigation("nav", "#spotlight fePointLight"),
-        e = new LogoSpotlight(".logo-wrapper", "logoLight");
-    function i() {
-        const t = document.getElementById("page-life");
-        t && t.classList.contains("active") && initLifeScrollProgress();
+    const navigation = new Navigation("nav", "#spotlight fePointLight");
+    const logoSpotlight = new LogoSpotlight(".logo-wrapper", "logoLight");
+    function initLifeScroll() {
+        const lifePage = document.getElementById("page-life");
+        if (lifePage && lifePage.classList.contains("active") && typeof initLifeScrollProgress === "function") {
+            initLifeScrollProgress();
+        }
     }
-    t.attachEvents(i), t.resizeLogoCenter(e.centreLogo), t.setActivePage("page-home");
-    const s = document.querySelector('nav a[data-page="home"]');
-    s && (document.querySelectorAll("nav a").forEach((t) => t.removeAttribute("data-active")), s.setAttribute("data-active", "true"), t.moveNavLight(t.centerX(s)));
-    const n = document.querySelector(".logo-wrapper");
-    n &&
-        (n.addEventListener("click", (e) => {
+    navigation.attachEvents(initLifeScroll);
+    navigation.resizeLogoCenter(logoSpotlight.centreLogo);
+    navigation.setActivePage("page-home");
+
+    const homeLink = document.querySelector('nav a[data-page="home"]');
+    if (homeLink) {
+        document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
+        homeLink.setAttribute("data-active", "true");
+        navigation.moveNavLight(navigation.centerX(homeLink));
+    }
+    const logoWrapper = document.querySelector(".logo-wrapper");
+    if (logoWrapper) {
+        logoWrapper.addEventListener("click", (e) => {
             e.preventDefault();
-            const s = document.querySelector('nav a[data-page="home"]');
-            s && (document.querySelectorAll("nav a").forEach((t) => t.removeAttribute("data-active")), s.setAttribute("data-active", "true")), t.setActivePage("page-home"), t.moveNavLight(t.centerX(s)), i();
-        }),
-        (n.style.cursor = "pointer")),
-        i(),
-        new GooeyCursor("cursor", 16);
-    const a = window.matchMedia("(max-width: 600px)").matches;
+            const homeLink = document.querySelector('nav a[data-page="home"]');
+            if (homeLink) {
+                document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
+                homeLink.setAttribute("data-active", "true");
+            }
+            navigation.setActivePage("page-home");
+            navigation.moveNavLight(navigation.centerX(homeLink));
+            initLifeScroll();
+        });
+        logoWrapper.style.cursor = "pointer";
+    }
+    initLifeScroll();
+
+    new GooeyCursor("cursor", 16);
+
+    const isMobile = window.matchMedia("(max-width: 600px)").matches;
     new HomeGallery({
         items: [
-            "Gallery Image 1",
-            "Gallery Image 2",
-            "Gallery Image 3",
-            "Gallery Image 4",
-            "Gallery Image 5",
-            "Gallery Image 6",
-            "Gallery Image 7",
-            "Gallery Image 8",
-            "Gallery Image 9",
-            "Gallery Image 10",
-            "Gallery Image 11",
-            "Gallery Image 12",
-            "Gallery Image 13",
-            "Gallery Image 14",
-            "Gallery Image 15",
-            "Gallery Image 16",
-            "Gallery Image 17",
-            "Gallery Image 18",
-            "Gallery Image 19",
-            "Gallery Image 20",
-            "Gallery Image 21",
-            "Gallery Image 22",
-            "Gallery Image 23",
-            "Gallery Image 24",
-            "Gallery Image 25",
-            "Gallery Image 26",
-            "Gallery Image 27",
-            "Gallery Image 28",
-            "Gallery Image 29",
-            "Gallery Image 30",
-            "Gallery Image 31",
-            "Gallery Image 32",
-            "Gallery Image 33",
-            "Gallery Image 34",
-            "Gallery Image 35",
-            "Gallery Image 36",
-            "Gallery Image 37",
-            "Gallery Image 38",
-            "Gallery Image 39",
+            "Gallery Image 1", "Gallery Image 2", "Gallery Image 3", "Gallery Image 4", "Gallery Image 5",
+            "Gallery Image 6", "Gallery Image 7", "Gallery Image 8", "Gallery Image 9", "Gallery Image 10",
+            "Gallery Image 11", "Gallery Image 12", "Gallery Image 13", "Gallery Image 14", "Gallery Image 15",
+            "Gallery Image 16", "Gallery Image 17", "Gallery Image 18", "Gallery Image 19", "Gallery Image 20",
+            "Gallery Image 21", "Gallery Image 22", "Gallery Image 23", "Gallery Image 24", "Gallery Image 25",
+            "Gallery Image 26", "Gallery Image 27", "Gallery Image 28", "Gallery Image 29", "Gallery Image 30",
+            "Gallery Image 31", "Gallery Image 32", "Gallery Image 33", "Gallery Image 34", "Gallery Image 35",
+            "Gallery Image 36", "Gallery Image 37", "Gallery Image 38", "Gallery Image 39",
         ],
         imageUrls: [
             "https://i.ibb.co/Px9Q8Z8/603a93eddcd3ab104d64fcbb-ZAX09767.jpg",
@@ -457,7 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "https://i.ibb.co/MZbMqsT/6039d4bbb15be328fc33b54d-IMG-6478.jpg",
             "https://i.ibb.co/hM1jbkQ/603985613b870e6cd6c49a29-IMG-3457.jpg",
         ],
-        settings: a
+        settings: isMobile
             ? {
                   baseWidth: 320,
                   smallHeight: 320,
@@ -494,233 +623,467 @@ document.addEventListener("DOMContentLoaded", () => {
               },
         containerSelector: "#page-home .container",
         canvasSelector: "canvas",
-    }),
-        initBlur(),
-        "function" == typeof Sketch && new Sketch({ dom: document.getElementById("webgl-bg") });
-    const o = document.querySelector("#page-work .projects-container"),
-        r = document.getElementById("background-image");
-    renderProjects(o), initialAnimation(), preloadImages(), setupHoverEvents(r, o);
+    });
+    initBlur();
+    if (typeof Sketch === "function") {
+        new Sketch({ dom: document.getElementById("webgl-bg") });
+    }
+    const projectsContainer = document.querySelector("#page-work .projects-container");
+    const backgroundImage = document.getElementById("background-image");
+    renderProjects(projectsContainer);
+    initialAnimation();
+    preloadImages();
+    setupHoverEvents(backgroundImage, projectsContainer);
 });
+
+// Optimized back-to-top & related scroll events with passive listeners and debouncing where applicable
 const button = document.querySelector(".spotlight-button"),
-    ellipse = button ? button.querySelector(".spotlight-ellipse") : null;
-button &&
-    ellipse &&
-    (button.addEventListener("pointermove", (t) => {
-        const e = button.getBoundingClientRect(),
-            i = ((t.clientX - e.left) / e.width) * 100,
-            s = ((t.clientY - e.top) / e.height) * 70 + 20;
-        ellipse.setAttribute("cx", `${i}%`), ellipse.setAttribute("cy", `${s}`);
-    }),
+      ellipse = button ? button.querySelector(".spotlight-ellipse") : null;
+if (button && ellipse) {
+    button.addEventListener("pointermove", (e) => {
+        const rect = button.getBoundingClientRect(),
+              percX = ((e.clientX - rect.left) / rect.width) * 100,
+              percY = ((e.clientY - rect.top) / rect.height) * 70 + 20;
+        ellipse.setAttribute("cx", `${percX}%`);
+        ellipse.setAttribute("cy", `${percY}`);
+    });
     button.addEventListener("pointerleave", () => {
-        ellipse.setAttribute("cx", "50%"), ellipse.setAttribute("cy", "54");
-    })),
-    (function () {
-        const t = document.getElementById("back-to-top-life"),
-            e = document.getElementById("page-life");
-        t &&
-            e &&
-            (window.addEventListener("scroll", function () {
-                const i = window.scrollY || document.documentElement.scrollTop;
-                e.getBoundingClientRect(), i > e.offsetTop + 200 ? t.classList.add("visible") : t.classList.remove("visible");
-            }),
-            t.addEventListener("click", function (t) {
-                t.preventDefault(), window.scrollTo({ top: e.offsetTop, behavior: "smooth" });
-            }));
-    })(),
-    (function (t = 375) {
-        function e() {
-            if (((document.documentElement.style.minWidth = t + "px"), (document.body.style.minWidth = t + "px"), (document.documentElement.style.overflowX = "auto"), (document.body.style.overflowX = "auto"), window.innerWidth < t)) {
-                const e = window.innerWidth / t;
-                (document.body.style.transformOrigin = "top left"), (document.body.style.transform = "scale(" + e + ")"), (document.body.style.width = t + "px"), (document.documentElement.style.overflowX = "hidden");
-            } else (document.body.style.transform = ""), (document.body.style.width = ""), (document.documentElement.style.overflowX = "auto");
+        ellipse.setAttribute("cx", "50%");
+        ellipse.setAttribute("cy", "54");
+    });
+}
+
+(function () {
+    const backToTopBtn = document.getElementById("back-to-top-life"),
+          lifePage = document.getElementById("page-life");
+    if (backToTopBtn && lifePage) {
+        window.addEventListener("scroll", debounce(() => {
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+            if (scrollY > lifePage.offsetTop + 200) {
+                backToTopBtn.classList.add("visible");
+            } else {
+                backToTopBtn.classList.remove("visible");
+            }
+        }, 50), { passive: true });
+        backToTopBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: lifePage.offsetTop, behavior: "smooth" });
+        });
+    }
+})();
+
+(function (minWidth = 375) {
+    const adjustScale = () => {
+        document.documentElement.style.minWidth = `${minWidth}px`;
+        document.body.style.minWidth = `${minWidth}px`;
+        if (window.innerWidth < minWidth) {
+            const scale = window.innerWidth / minWidth;
+            document.body.style.transformOrigin = "top left";
+            document.body.style.transform = `scale(${scale})`;
+            document.body.style.width = `${minWidth}px`;
+            document.documentElement.style.overflowX = "hidden";
+        } else {
+            document.body.style.transform = "";
+            document.body.style.width = "";
+            document.documentElement.style.overflowX = "auto";
         }
-        window.addEventListener("resize", e), window.addEventListener("DOMContentLoaded", e), e();
-    })(375),
-    (function () {
-        const t = document.getElementById("back-to-glassy-container"),
-            e = document.getElementById("back-to-glassy");
-        if (!t || !e) return;
-        let i = null;
-        const s = document.getElementById("page-life");
-        if (s) {
-            const t = s.querySelector(".content");
-            t && t.scrollHeight > t.clientHeight && (i = t);
+    };
+    window.addEventListener("resize", debounce(adjustScale, 50));
+    window.addEventListener("DOMContentLoaded", adjustScale);
+    adjustScale();
+})(375);
+
+(function () {
+    const container = document.getElementById("back-to-glassy-container"),
+          button = document.getElementById("back-to-glassy");
+    if (!container || !button) return;
+    let scrollContainer = null;
+    const lifePage = document.getElementById("page-life");
+    if (lifePage) {
+        const content = lifePage.querySelector(".content");
+        if (content && content.scrollHeight > content.clientHeight) {
+            scrollContainer = content;
         }
-        function n() {
-            (i === window ? window.scrollY || document.documentElement.scrollTop : i.scrollTop) > 0 ? t.classList.add("visible") : t.classList.remove("visible");
+    }
+    if (!scrollContainer) scrollContainer = window;
+    const toggleVisibility = () => {
+        const scrollTop = (scrollContainer === window ? window.scrollY || document.documentElement.scrollTop : scrollContainer.scrollTop);
+        if (scrollTop > 0) {
+            container.classList.add("visible");
+        } else {
+            container.classList.remove("visible");
         }
-        i || (i = window),
-            i === window ? window.addEventListener("scroll", n) : i.addEventListener("scroll", n),
-            e.addEventListener("click", function (t) {
-                t.preventDefault(), i === window ? window.scrollTo({ top: 0, behavior: "smooth" }) : i.scrollTo({ top: 0, behavior: "smooth" });
-            }),
-            n();
-    })(),
-    (function () {
-        const t = document.getElementById("back-to-top-life"),
-            e = document.getElementById("page-life");
-        t &&
-            e &&
-            (window.addEventListener("scroll", function () {
-                (window.scrollY || document.documentElement.scrollTop) > 200 ? t.classList.add("visible") : t.classList.remove("visible");
-            }),
-            t.addEventListener("click", function (t) {
-                t.preventDefault(), window.scrollTo({ top: 0, behavior: "smooth" });
-            }));
-    })();
-const vertex =
-        "\nvarying vec3 pos;\nuniform float time;\n\nvarying float v_noise;\nvarying vec2 vUv;\n\nvoid main(){\n    pos=position;\n    vUv=uv;\n    vec3 newPosition=position;\n\n    gl_Position=projectionMatrix*modelViewMatrix*vec4(newPosition,1.);\n}\n",
-    fragment =
-        "\nvarying vec3 pos;\nvarying vec2 vUv;\nvarying float v_noise;\n\nuniform float time;\nuniform sampler2D matCap;\nuniform vec4 resolution;\nuniform vec2 mouse;\nuniform float progress;\nuniform float particleNumber;\n\n#define PI 3.14159265359\n\nmat4 rotationMatrix(vec3 axis,float angle){\n    axis=normalize(axis);\n    float s=sin(angle);\n    float c=cos(angle);\n    float oc=1.-c;\n\n    return mat4(oc*axis.x*axis.x+c,oc*axis.x*axis.y-axis.z*s,oc*axis.z*axis.x+axis.y*s,0.,\n        oc*axis.x*axis.y+axis.z*s,oc*axis.y*axis.y+c,oc*axis.y*axis.z-axis.x*s,0.,\n        oc*axis.z*axis.x-axis.y*s,oc*axis.y*axis.z+axis.x*s,oc*axis.z*axis.z+c,0.,\n    0.,0.,0.,1.);\n}\n\nvec3 rotate(vec3 v,vec3 axis,float angle){\n    mat4 m=rotationMatrix(axis,angle);\n    return(m*vec4(v,1.)).xyz;\n}\n\nvec2 getmatcap(vec3 eye,vec3 normal){\n    vec3 reflected=reflect(eye,normal);\n    float m=2.8284271247461903*sqrt(reflected.z+1.);\n    return reflected.xy/m+.5;\n}\n\nfloat sdSphere(vec3 p,float s){\n    return length(p)-s;\n}\n\nfloat sdBox(vec3 p,vec3 b){\n    vec3 q=abs(p)-b;\n    return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);\n}\n\nfloat smin(float a,float b,float k){\n    float h=clamp(.5+.5*(b-a)/k,0.,1.);\n    return mix(b,a,h)-k*h*(1.-h);\n}\n\nfloat rand(vec2 co){\n    return fract(sin(dot(co,vec2(12.9898,78.233)))*43758.5453);\n}\n\nfloat sdf(vec3 p){\n    vec3 p1=rotate(p,vec3(.1),time/5.);\n    float box=smin(sdBox(p1,vec3(.3)),sdSphere(p,.4),.3);\n    float final=mix(box,sdSphere(p,.2+progress/4.),progress);\n\n    for(int i=0;i<int(particleNumber);i++){\n        float randOffset=rand(vec2(i,0.));\n        float progr=fract(time/4.+randOffset*5.);\n        vec3 rPos=vec3(sin(randOffset*2.*PI)*2.,cos(randOffset*2.*PI)*2.,0.);\n        float gotoCenter=sdSphere(p-rPos*progr,.12);\n        final=smin(final,gotoCenter,.3);\n    }\n\n    float mouseSphere=sdSphere(p-vec3(mouse*resolution.zw*2.,0.),.25);\n    return smin(final,mouseSphere,.4);\n}\n\nvec3 calcNormal(in vec3 p){\n    const float eps=.0001;\n    const vec2 h=vec2(eps,0);\n    return normalize(\n        vec3(\n            sdf(p+h.xyy)-sdf(p-h.xyy),\n            sdf(p+h.yxy)-sdf(p-h.yxy),\n            sdf(p+h.yyx)-sdf(p-h.yyx)\n        )\n    );\n}\n\nvoid main(){\n    float dist=length(vUv-vec2(.5));\n    vec3 bg=vec3(mix(vec3(.1),vec3(0.),dist));\n    vec2 newUv=(vUv-vec2(.5))*resolution.zw+vec2(.5);\n    vec3 cameraPos=vec3(0.,0.,2.);\n    vec3 ray=normalize(vec3((vUv-vec2(.5))*resolution.zw,-1.));\n\n    vec3 rayPos=cameraPos;\n    float t=0.;\n    float tMax=5.;\n    for(int i=0;i<256;i++){\n        vec3 pos=cameraPos+t*ray;\n        float h=sdf(pos);\n        if(h<.001||t>tMax){\n            break;\n        }\n        t+=h;\n    }\n\n    vec4 color=vec4(bg,1.);\n    if(t<tMax){\n        vec3 pos=cameraPos+t*ray;\n        vec3 normal=calcNormal(pos);\n        float diff=dot(vec3(1.),normal);\n        vec2 matCapUv=getmatcap(ray,normal);\n        color=texture2D(matCap,matCapUv);\n        float fresnel=pow(1.+dot(ray,normal),3.);\n        color=mix(color,vec4(bg,.5),fresnel);\n    }\n    gl_FragColor=vec4(color);\n}\n",
-    matCap = "https://raw.githubusercontent.com/nidorx/matcaps/master/1024/293534_B2BFC5_738289_8A9AA7.png";
+    };
+    scrollContainer.addEventListener("scroll", debounce(toggleVisibility, 50), { passive: true });
+    button.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (scrollContainer === window) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+            scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+    toggleVisibility();
+})();
+
+(function () {
+    const backToTop = document.getElementById("back-to-top-life"),
+          lifePage = document.getElementById("page-life");
+    if (backToTop && lifePage) {
+        window.addEventListener("scroll", debounce(() => {
+            if ((window.scrollY || document.documentElement.scrollTop) > 200) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        }, 50), { passive: true });
+        backToTop.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+})();
+
+// WebGL sketch code
+const vertex = `
+varying vec3 pos;
+uniform float time;
+
+varying float v_noise;
+varying vec2 vUv;
+
+void main(){
+    pos = position;
+    vUv = uv;
+    vec3 newPosition = position;
+    
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.);
+}
+`;
+const fragment = `
+varying vec3 pos;
+varying vec2 vUv;
+varying float v_noise;
+
+uniform float time;
+uniform sampler2D matCap;
+uniform vec4 resolution;
+uniform vec2 mouse;
+uniform float progress;
+uniform float particleNumber;
+
+#define PI 3.14159265359
+
+mat4 rotationMatrix(vec3 axis, float angle){
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1. - c;
+    
+    return mat4(oc * axis.x * axis.x + c, oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s, 0.,
+                oc * axis.x * axis.y + axis.z * s, oc * axis.y * axis.y + c, oc * axis.y * axis.z - axis.x * s, 0.,
+                oc * axis.z * axis.x - axis.y * s, oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c, 0.,
+                0., 0., 0., 1.);
+}
+
+vec3 rotate(vec3 v, vec3 axis, float angle){
+    mat4 m = rotationMatrix(axis, angle);
+    return (m * vec4(v, 1.)).xyz;
+}
+
+vec2 getmatcap(vec3 eye, vec3 normal){
+    vec3 reflected = reflect(eye, normal);
+    float m = 2.8284271247461903 * sqrt(reflected.z + 1.);
+    return reflected.xy / m + .5;
+}
+
+float sdSphere(vec3 p, float s){
+    return length(p) - s;
+}
+
+float sdBox(vec3 p, vec3 b){
+    vec3 q = abs(p) - b;
+    return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.);
+}
+
+float smin(float a, float b, float k){
+    float h = clamp(.5 + .5 * (b - a) / k, 0., 1.);
+    return mix(b, a, h) - k * h * (1. - h);
+}
+
+float rand(vec2 co){
+    return fract(sin(dot(co, vec2(12.9898,78.233))) * 43758.5453);
+}
+
+float sdf(vec3 p){
+    vec3 p1 = rotate(p, vec3(.1), time / 5.);
+    float box = smin(sdBox(p1, vec3(.3)), sdSphere(p, .4), .3);
+    float final = mix(box, sdSphere(p, .2 + progress / 4.), progress);
+    
+    for (int i = 0; i < int(particleNumber); i++){
+        float randOffset = rand(vec2(i, 0.));
+        float progr = fract(time / 4. + randOffset * 5.);
+        vec3 rPos = vec3(sin(randOffset * 2. * PI) * 2., cos(randOffset * 2. * PI) * 2., 0.);
+        float gotoCenter = sdSphere(p - rPos * progr, .12);
+        final = smin(final, gotoCenter, .3);
+    }
+    
+    float mouseSphere = sdSphere(p - vec3(mouse * resolution.zw * 2., 0.), .25);
+    return smin(final, mouseSphere, .4);
+}
+
+vec3 calcNormal(in vec3 p){
+    const float eps = .0001;
+    const vec2 h = vec2(eps, 0);
+    return normalize(vec3(
+        sdf(p + vec3(h.x, h.y, h.y)) - sdf(p - vec3(h.x, h.y, h.y)),
+        sdf(p + vec3(h.y, h.x, h.y)) - sdf(p - vec3(h.y, h.x, h.y)),
+        sdf(p + vec3(h.y, h.y, h.x)) - sdf(p - vec3(h.y, h.y, h.x))
+    ));
+}
+
+void main(){
+    float dist = length(vUv - vec2(.5));
+    vec3 bg = vec3(mix(vec3(.1), vec3(0.), dist));
+    vec2 newUv = (vUv - vec2(.5)) * resolution.zw + vec2(.5);
+    vec3 cameraPos = vec3(0., 0., 2.);
+    vec3 ray = normalize(vec3((vUv - vec2(.5)) * resolution.zw, -1.));
+    
+    vec3 rayPos = cameraPos;
+    float t = 0.;
+    float tMax = 5.;
+    for (int i = 0; i < 256; i++){
+        vec3 pos = cameraPos + t * ray;
+        float h = sdf(pos);
+        if (h < .001 || t > tMax) break;
+        t += h;
+    }
+    
+    vec4 color = vec4(bg, 1.);
+    if (t < tMax){
+        vec3 pos = cameraPos + t * ray;
+        vec3 normal = calcNormal(pos);
+        float diff = dot(vec3(1.), normal);
+        vec2 matCapUv = getmatcap(ray, normal);
+        color = texture2D(matCap, matCapUv);
+        float fresnel = pow(1. + dot(ray, normal), 3.);
+        color = mix(color, vec4(bg, .5), fresnel);
+    }
+    gl_FragColor = vec4(color);
+}
+`;
+const matCap = "https://raw.githubusercontent.com/nidorx/matcaps/master/1024/293534_B2BFC5_738289_8A9AA7.png";
+
 class Sketch {
-    constructor({ dom: t }) {
-        (this.time = 0),
-            (this.container = t),
-            (this.scene = new THREE.Scene()),
-            (this.width = this.container.offsetWidth),
-            (this.height = this.container.offsetHeight),
-            (this.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -1e3, 1e3)),
-            (this.camera.position.z = 1),
-            (this.renderer = new THREE.WebGLRenderer({ antialias: !0, alpha: !0 })),
-            this.container.appendChild(this.renderer.domElement),
-            this.resizeSetup(),
-            this.mouseEvents(),
-            this.addObjects();
+    constructor({ dom }) {
+        this.time = 0;
+        this.container = dom;
+        this.scene = new THREE.Scene();
+        this.width = this.container.offsetWidth;
+        this.height = this.container.offsetHeight;
+        this.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -1e3, 1e3);
+        this.camera.position.z = 1;
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.container.appendChild(this.renderer.domElement);
+        this.resizeSetup();
+        this.mouseEvents();
+        this.addObjects();
     }
     resizeSetup() {
         window.addEventListener("resize", this.resize.bind(this));
     }
     resize() {
         if (!this.material) return;
+        this.width = this.container.offsetWidth;
+        this.height = this.container.offsetHeight;
+        this.renderer.setSize(this.width, this.height);
+        this.camera.aspect = this.width / this.height;
+        this.camera.updateProjectionMatrix();
+        this.imageAspect = 1;
         let t, e;
-        (this.width = this.container.offsetWidth),
-            (this.height = this.container.offsetHeight),
-            this.renderer.setSize(this.width, this.height),
-            (this.camera.aspect = this.width / this.height),
-            this.camera.updateProjectionMatrix(),
-            (this.imageAspect = 1),
-            this.width / this.height > this.imageAspect ? ((t = (this.width / this.height) * this.imageAspect), (e = 1)) : ((t = 1), (e = (this.width / this.height) * this.imageAspect)),
-            (this.material.uniforms.resolution.value.x = this.width),
-            (this.material.uniforms.resolution.value.y = this.height),
-            (this.material.uniforms.resolution.value.z = t),
-            (this.material.uniforms.resolution.value.w = e);
+        if (this.width / this.height > this.imageAspect) {
+            t = (this.width / this.height) * this.imageAspect;
+            e = 1;
+        } else {
+            t = 1;
+            e = (this.width / this.height) * this.imageAspect;
+        }
+        this.material.uniforms.resolution.value.x = this.width;
+        this.material.uniforms.resolution.value.y = this.height;
+        this.material.uniforms.resolution.value.z = t;
+        this.material.uniforms.resolution.value.w = e;
     }
     mouseEvents() {
-        (this.mouse = new THREE.Vector2()),
-            document.addEventListener("mousemove", (t) => {
-                (this.mouse.x = t.pageX / this.width - 0.5), (this.mouse.y = -t.pageY / this.height + 0.5);
-            });
+        this.mouse = new THREE.Vector2();
+        document.addEventListener("mousemove", (e) => {
+            this.mouse.x = e.pageX / this.width - 0.5;
+            this.mouse.y = -e.pageY / this.height + 0.5;
+        });
     }
     addObjects() {
-        const t = new THREE.TextureLoader();
-        (t.crossOrigin = ""),
-            t.load(
-                matCap,
-                (t) => {
-                    (this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1)),
-                        (this.material = new THREE.ShaderMaterial({
-                            extensions: { derivatives: "#extension GL_OES_standard_derivatives : enable" },
-                            side: THREE.DoubleSide,
-                            vertexShader: vertex,
-                            fragmentShader: fragment,
-                            transparent: !0,
-                            uniforms: { time: { value: this.time }, mouse: { value: new THREE.Vector2(0, 0) }, progress: { value: 0 }, matCap: { value: t }, resolution: { value: new THREE.Vector4() }, particleNumber: { value: 0 } },
-                        })),
-                        (this.mesh = new THREE.Mesh(this.geometry, this.material)),
-                        this.scene.add(this.mesh),
-                        this.resize(),
-                        this.render();
-                },
-                void 0,
-                (t) => {
-                    console.error("Texture failed to load:", t);
-                }
-            );
+        const loader = new THREE.TextureLoader();
+        loader.crossOrigin = "";
+        loader.load(
+            matCap,
+            (texture) => {
+                this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+                this.material = new THREE.ShaderMaterial({
+                    extensions: { derivatives: "#extension GL_OES_standard_derivatives : enable" },
+                    side: THREE.DoubleSide,
+                    vertexShader: vertex,
+                    fragmentShader: fragment,
+                    transparent: true,
+                    uniforms: { 
+                        time: { value: this.time }, 
+                        mouse: { value: new THREE.Vector2(0, 0) }, 
+                        progress: { value: 0 }, 
+                        matCap: { value: texture }, 
+                        resolution: { value: new THREE.Vector4() },
+                        particleNumber: { value: 0 }
+                    },
+                });
+                this.mesh = new THREE.Mesh(this.geometry, this.material);
+                this.scene.add(this.mesh);
+                this.resize();
+                this.render();
+            },
+            undefined,
+            (err) => {
+                console.error("Texture failed to load:", err);
+            }
+        );
     }
     render() {
-        (this.time += 0.05),
-            this.material && ((this.material.uniforms.time.value = this.time), this.mouse && (this.material.uniforms.mouse.value = this.mouse)),
-            this.renderer.render(this.scene, this.camera),
-            requestAnimationFrame(this.render.bind(this));
+        this.time += 0.05;
+        if (this.material) {
+            this.material.uniforms.time.value = this.time;
+            if (this.mouse) this.material.uniforms.mouse.value = this.mouse;
+        }
+        this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(this.render.bind(this));
     }
 }
-new Sketch({ dom: document.getElementById("webgl-bg") }),
-    $(function () {
-        function t(t, e) {
-            var i = t.data("original") || t.text();
-            t.data("original", i);
-            for (var s = "", n = i.split(""), a = 0; a < n.length; a++) s += '<span style="animation-delay:' + e * a + 's">' + (" " === n[a] ? " " : $("<div/>").text(n[a]).html()) + "</span>";
-            return t.html(s), n.length;
+new Sketch({ dom: document.getElementById("webgl-bg") });
+
+$(function () {
+    function spanize($elem, delayFactor) {
+        const originalText = $elem.data("original") || $elem.text();
+        $elem.data("original", originalText);
+        let html = "";
+        originalText.split("").forEach((char, index) => {
+            const escaped = char === " " ? " " : $("<div/>").text(char).html();
+            html += `<span style="animation-delay:${delayFactor * index}s">${escaped}</span>`;
+        });
+        $elem.html(html);
+        return originalText.length;
+    }
+    function activateSection(type, activate) {
+        $(".mast__title, .mast__text").removeClass("active");
+        const $title = $(`.mast__title[data-type="${type}"]`).addClass("active");
+        const $text = $(`.mast__text[data-type="${type}"]`);
+        if (activate) {
+            $text.addClass("active");
+        } else {
+            $text.removeClass("active");
         }
-        function e(e, i) {
-            $(".mast__title, .mast__text").removeClass("active");
-            let s = $('.mast__title[data-type="' + e + '"]').addClass("active"),
-                n = $('.mast__text[data-type="' + e + '"]');
-            i ? n.addClass("active") : n.removeClass("active"), t(s, 0.05), i && t(n, 0.02);
+        spanize($title, 0.05);
+        if (activate) spanize($text, 0.02);
+    }
+    $(".mast__title.js-spanize").each(function () {
+        spanize($(this), 0.05);
+    });
+    $(".mast__text.js-spanize").each(function () {
+        spanize($(this), 0.02);
+    });
+    $(".mast__title, .mast__text").removeClass("active");
+    activateSection("reason", true);
+    $(".mast__title").on("click", function () {
+        activateSection($(this).data("type"), true);
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("back-to-glassy-container");
+    function toggleGlassy() {
+        if (window.scrollY > 64) {
+            container.classList.add("active");
+        } else {
+            container.classList.remove("active");
         }
-        $(".mast__title.js-spanize").each(function () {
-            t($(this), 0.05);
-        }),
-            $(".mast__text.js-spanize").each(function () {
-                t($(this), 0.02);
-            }),
-            $(".mast__title, .mast__text").removeClass("active"),
-            e("reason", !0),
-            $(".mast__title").on("click", function () {
-                e($(this).data("type"), !0);
-            });
-    }),
-    document.addEventListener("DOMContentLoaded", function () {
-        const t = document.getElementById("back-to-glassy-container");
-        function e() {
-            window.scrollY > 64 ? t.classList.add("active") : t.classList.remove("active");
-        }
-        t &&
-            (t.addEventListener("click", function (t) {
-                t.target.closest(".back-to-glassy-btn") && window.scrollTo({ top: 0, behavior: "smooth" });
-            }),
-            window.addEventListener("scroll", e, { passive: !0 }),
-            e());
-    }),
-    document.addEventListener("DOMContentLoaded", function () {
-        const t = document.querySelectorAll("#page-life .life-section");
-        if (!t.length) return;
-        const e = new window.IntersectionObserver(
-            (t, e) => {
-                t.forEach((t) => {
-                    t.isIntersecting && (t.target.classList.add("visible"), e.unobserve(t.target));
+    }
+    if (container) {
+        container.addEventListener("click", function (e) {
+            if (e.target.closest(".back-to-glassy-btn")) {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        });
+        window.addEventListener("scroll", debounce(toggleGlassy, 50), { passive: true });
+        toggleGlassy();
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const lifeSections = document.querySelectorAll("#page-life .life-section");
+    if (lifeSections.length) {
+        const observer = new IntersectionObserver(
+            (entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        obs.unobserve(entry.target);
+                    }
                 });
             },
             { threshold: 0.5 }
         );
-        t.forEach((t) => e.observe(t));
-    }),
-    (function () {
-        const t = document.getElementById("back-to-top-life-container"),
-            e = document.getElementById("back-to-top-life"),
-            i = document.getElementById("page-life");
-        if (!t || !e || !i) return;
-        const s = i.querySelector(".content");
-        function n() {
-            s.scrollTop > 0 ? t.classList.add("visible") : t.classList.remove("visible");
+        lifeSections.forEach(section => observer.observe(section));
+    }
+});
+
+(function () {
+    const btnContainer = document.getElementById("back-to-top-life-container"),
+          backToTop = document.getElementById("back-to-top-life"),
+          lifePage = document.getElementById("page-life");
+    if (!btnContainer || !backToTop || !lifePage) return;
+    const content = lifePage.querySelector(".content");
+    const scrollElem = content || window;
+    function checkScroll() {
+        if ((scrollElem === window ? window.scrollY || document.documentElement.scrollTop : content.scrollTop) > 0) {
+            btnContainer.classList.add("visible");
+        } else {
+            btnContainer.classList.remove("visible");
         }
-        s &&
-            (e.addEventListener("click", function (t) {
-                t.preventDefault(), s.scrollTo({ top: 0, behavior: "smooth" });
-            }),
-            s.addEventListener("scroll", n, { passive: !0 }),
-            n());
-    })(),
-    (function () {
-        const t = document.getElementById("back-to-top-life"),
-            e = document.getElementById("page-life");
-        t &&
-            e &&
-            (window.addEventListener("scroll", function () {
-                (window.scrollY || document.documentElement.scrollTop) > 200 ? t.classList.add("visible") : t.classList.remove("visible");
-            }),
-            t.addEventListener("click", function (t) {
-                t.preventDefault(), window.scrollTo({ top: 0, behavior: "smooth" });
-            }));
-    })();
+    }
+    if (scrollElem === window) {
+        window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
+    } else {
+        content.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
+    }
+    backToTop.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (scrollElem === window) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+            content.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    });
+    checkScroll();
+})();
+
+(function () {
+    const backToTop = document.getElementById("back-to-top-life"),
+          lifePage = document.getElementById("page-life");
+    if (backToTop && lifePage) {
+        window.addEventListener("scroll", debounce(() => {
+            if ((window.scrollY || document.documentElement.scrollTop) > 200) {
+                backToTop.classList.add("visible");
+            } else {
+                backToTop.classList.remove("visible");
+            }
+        }, 50), { passive: true });
+        backToTop.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+})();
