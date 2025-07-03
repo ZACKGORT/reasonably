@@ -36,7 +36,7 @@ class Navigation {
     document.body.classList.add(`${pageId.replace("page-", "")}-active`);
   }
 
-  attachEvents(onPageSwitch) {
+  attachEvents() {
     this.links.forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
@@ -44,7 +44,6 @@ class Navigation {
         link.setAttribute("data-active", "true");
         this.setActivePage(`page-${link.dataset.page}`);
         this.moveNavLight(this.centerX(link));
-        if (typeof onPageSwitch === "function") onPageSwitch();
       });
     });
 
@@ -59,7 +58,7 @@ class Navigation {
     this.nav.addEventListener("pointerleave", () => {
       this.nav.removeEventListener("pointermove", handleMove);
       this.moveNavLight(
-        this.centerX(this.nav.querySelector("[data-active='true']")),
+        this.centerX(this.nav.querySelector("[data-active='true']"))
       );
     });
   }
@@ -71,7 +70,7 @@ class Navigation {
       resizeTimer = setTimeout(() => {
         this.moveNavLight(
           this.centerX(this.nav.querySelector("[data-active='true']")),
-          true,
+          true
         );
         if (typeof centreLogoFn === "function") centreLogoFn();
       }, 50);
@@ -82,7 +81,7 @@ class Navigation {
     if (!this.nav) return;
     this.moveNavLight(
       this.centerX(this.nav.querySelector("[data-active='true']")),
-      true,
+      true
     );
   }
 }
@@ -120,8 +119,6 @@ class LogoSpotlight {
   }
 }
 
-
-
 // ======= GOOEY CURSOR =======
 class GooeyCursor {
   constructor(cursorSelector, tailLength = 16) {
@@ -155,7 +152,7 @@ class GooeyCursor {
         this.cx = e.clientX;
         this.cy = e.clientY;
       },
-      { passive: true },
+      { passive: true }
     );
 
     window.addEventListener(
@@ -165,7 +162,7 @@ class GooeyCursor {
         this.cx = t.clientX;
         this.cy = t.clientY;
       },
-      { passive: true },
+      { passive: true }
     );
 
     if (!this.gooLoopStarted) {
@@ -367,7 +364,7 @@ class HomeGallery {
         this.startX = e.touches[0].clientX;
         this.startY = e.touches[0].clientY;
       },
-      { passive: false },
+      { passive: false }
     );
     window.addEventListener("touchend", () => (this.isDragging = false));
   }
@@ -388,7 +385,7 @@ function initBlur() {
       parseInt(getComputedStyle(root).getPropertyValue("--layers")) || 5;
     blur.innerHTML = Array.from(
       { length: total },
-      (_, i) => `<div style="--i:${i}"></div>`,
+      (_, i) => `<div style="--i:${i}"></div>`
     ).join("");
   });
 }
@@ -536,15 +533,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const nav = new Navigation("nav", "#spotlight fePointLight");
   const logo = new LogoSpotlight(".logo-wrapper", "logoLight");
 
-  // When Life page is activated, initialize scroll progress logic
-  function handlePageSwitch() {
-    const lifePage = document.getElementById("page-life");
-    if (lifePage && lifePage.classList.contains("active")) {
-      initLifeScrollProgress();
-    }
-  }
+  // Removed scroll progress logic
 
-  nav.attachEvents(handlePageSwitch);
+  nav.attachEvents();
   nav.resizeLogoCenter(logo.centreLogo);
 
   // Set default page active (e.g., home) via JS
@@ -572,12 +563,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       nav.setActivePage("page-home");
       nav.moveNavLight(nav.centerX(homeLink));
-      handlePageSwitch();
     });
     logoWrap.style.cursor = "pointer";
   }
-
-  handlePageSwitch();
 
   // Gooey cursor
   new GooeyCursor("cursor", 16);
@@ -602,17 +590,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const mobileSettings = {
-    baseWidth: 320, // 400 * 0.7
-    smallHeight: 320, // 400 * 0.7
-    largeHeight: 320, // 400 * 0.7
-    itemGap: 5, // 15 * 0.7 (optional, but recommended to scale gap)
+    baseWidth: 320,
+    smallHeight: 320,
+    largeHeight: 320,
+    itemGap: 5,
     hoverScale: 1.05,
     expandedScale: 0.4,
     dragEase: 0.075,
-    momentumFactor: 140, // 200 * 0.7 (optional)
+    momentumFactor: 140,
     bufferZone: 1,
     borderRadius: 0,
-    vignetteSize: 140, // 200 * 0.7
+    vignetteSize: 140,
     vignetteStrength: 0.7,
     overlayOpacity: 0.9,
     overlayEaseDuration: 0.8,
@@ -668,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Work page projects
   const projectsContainer = document.querySelector(
-    "#page-work .projects-container",
+    "#page-work .projects-container"
   );
   const backgroundImage = document.getElementById("background-image");
   renderProjects(projectsContainer);
@@ -683,7 +671,7 @@ function onNavigateToHome() {
   // Optionally force redraw for overlays
   document
     .querySelectorAll(
-      ".blur,.vignette-bottom,.page-vignette-container,.page-vignette,.page-vignette-strong,.page-vignette-extreme",
+      ".blur,.vignette-bottom,.page-vignette-container,.page-vignette,.page-vignette-strong,.page-vignette-extreme"
     )
     .forEach((el) => {
       el.style.display = "none";
@@ -696,8 +684,6 @@ function onNavigateAwayFromHome() {
   document.body.classList.remove("homepage");
 }
 
-// Example: Call these functions on your router/page change event
-
 const button = document.querySelector(".spotlight-button");
 const ellipse = button?.querySelector(".spotlight-ellipse");
 
@@ -705,7 +691,6 @@ if (button && ellipse) {
   button.addEventListener("pointermove", (e) => {
     const rect = button.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
-    // Adjust y for a more "oval" effect if you want (between 40 and 70 is nice)
     const y = ((e.clientY - rect.top) / rect.height) * 70 + 20;
     ellipse.setAttribute("cx", `${x}%`);
     ellipse.setAttribute("cy", `${y}`);
@@ -717,12 +702,6 @@ if (button && ellipse) {
   });
 }
 
-
-
-
-
-
-
 // Show button after scrolling and smooth scroll to top
 (function() {
   const btn = document.getElementById('back-to-top-life');
@@ -730,10 +709,7 @@ if (button && ellipse) {
   if (!btn || !page) return;
 
   function toggleBtn() {
-    // Show button if user scrolled 200px or more down in #page-life
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const pageRect = page.getBoundingClientRect();
-    // You might want to adjust the threshold or container as needed
     if (scrollTop > (page.offsetTop + 200)) {
       btn.classList.add('visible');
     } else {
@@ -749,20 +725,12 @@ if (button && ellipse) {
   });
 })();
 
-
-
-
-
-
 (function ensureMinWidth(minWidth = 375) {
   function setMinWidth() {
-    // Set min-width on html and body
     document.documentElement.style.minWidth = minWidth + "px";
     document.body.style.minWidth = minWidth + "px";
-    // Prevent horizontal scrolling if possible
     document.documentElement.style.overflowX = "auto";
     document.body.style.overflowX = "auto";
-    // If the viewport is less than minWidth, add a scaling transform as fallback
     if (window.innerWidth < minWidth) {
       const scale = window.innerWidth / minWidth;
       document.body.style.transformOrigin = "top left";
@@ -780,36 +748,22 @@ if (button && ellipse) {
   setMinWidth();
 })();
 
-
-
-
-
-
-
-
-
-
 (function() {
-  // Elements
   const btnContainer = document.getElementById('back-to-glassy-container');
   const btn = document.getElementById('back-to-glassy');
   if (!btnContainer || !btn) return;
 
-  // Determine scroll container: prefer a scrollable .content inside #page-life, else fallback to window
   let scrollContainer = null;
   const pageLife = document.getElementById('page-life');
   if (pageLife) {
     const content = pageLife.querySelector('.content');
-    // If .content scrolls, use it; otherwise, use window
     if (content && (content.scrollHeight > content.clientHeight)) {
       scrollContainer = content;
     }
   }
   if (!scrollContainer) scrollContainer = window;
 
-  // Show/hide logic
   function toggleBtn() {
-    // If using a custom scroll container, use .scrollTop. Otherwise, window.scrollY
     const scrolled = scrollContainer === window
       ? (window.scrollY || document.documentElement.scrollTop)
       : scrollContainer.scrollTop;
@@ -820,14 +774,12 @@ if (button && ellipse) {
     }
   }
 
-  // Attach scroll event
   if (scrollContainer === window) {
     window.addEventListener('scroll', toggleBtn);
   } else {
     scrollContainer.addEventListener('scroll', toggleBtn);
   }
 
-  // Button click scrolls to top
   btn.addEventListener('click', function(e) {
     e.preventDefault();
     if (scrollContainer === window) {
@@ -837,16 +789,16 @@ if (button && ellipse) {
     }
   });
 
-  // Initial check
   toggleBtn();
-})();(function() {
+})();
+
+(function() {
   const btn = document.getElementById('back-to-top-life');
   const page = document.getElementById('page-life');
   if (!btn || !page) return;
 
   function toggleBtn() {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    // Show after 200px of scroll
     if (scrollTop > 200) {
       btn.classList.add('visible');
     } else {
@@ -862,10 +814,6 @@ if (button && ellipse) {
   });
 })();
 
-
-
-
-
 // =========== GLOBAL THREE.JS SHADER BACKGROUND =============
 // --- FULL SHADER CODE ---
 const vertex = `
@@ -876,11 +824,11 @@ varying float v_noise;
 varying vec2 vUv;
 
 void main(){
-    pos=position;
-    vUv=uv;
-    vec3 newPosition=position;
+    pos = position;
+    vUv = uv;
+    vec3 newPosition = position;
 
-    gl_Position=projectionMatrix*modelViewMatrix*vec4(newPosition,1.);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.);
 }
 `;
 const fragment = `
@@ -897,114 +845,108 @@ uniform float particleNumber;
 
 #define PI 3.14159265359
 
-mat4 rotationMatrix(vec3 axis,float angle){
-    axis=normalize(axis);
-    float s=sin(angle);
-    float c=cos(angle);
-    float oc=1.-c;
+mat4 rotationMatrix(vec3 axis, float angle){
+    axis = normalize(axis);
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1. - c;
 
-    return mat4(oc*axis.x*axis.x+c,oc*axis.x*axis.y-axis.z*s,oc*axis.z*axis.x+axis.y*s,0.,
-        oc*axis.x*axis.y+axis.z*s,oc*axis.y*axis.y+c,oc*axis.y*axis.z-axis.x*s,0.,
-        oc*axis.z*axis.x-axis.y*s,oc*axis.y*axis.z+axis.x*s,oc*axis.z*axis.z+c,0.,
-    0.,0.,0.,1.);
+    return mat4(oc*axis.x*axis.x+c, oc*axis.x*axis.y-axis.z*s, oc*axis.z*axis.x+axis.y*s, 0.,
+                oc*axis.x*axis.y+axis.z*s, oc*axis.y*axis.y+c, oc*axis.y*axis.z-axis.x*s, 0.,
+                oc*axis.z*axis.x-axis.y*s, oc*axis.y*axis.z+axis.x*s, oc*axis.z*axis.z+c, 0.,
+                0., 0., 0., 1.);
 }
 
-vec3 rotate(vec3 v,vec3 axis,float angle){
-    mat4 m=rotationMatrix(axis,angle);
-    return(m*vec4(v,1.)).xyz;
+vec3 rotate(vec3 v, vec3 axis, float angle){
+    mat4 m = rotationMatrix(axis, angle);
+    return (m * vec4(v, 1.)).xyz;
 }
 
-vec2 getmatcap(vec3 eye,vec3 normal){
-    vec3 reflected=reflect(eye,normal);
-    float m=2.8284271247461903*sqrt(reflected.z+1.);
-    return reflected.xy/m+.5;
+vec2 getmatcap(vec3 eye, vec3 normal){
+    vec3 reflected = reflect(eye, normal);
+    float m = 2.8284271247461903 * sqrt(reflected.z + 1.);
+    return reflected.xy/m + .5;
 }
 
-float sdSphere(vec3 p,float s)
-{
-    return length(p)-s;
+float sdSphere(vec3 p, float s) {
+    return length(p) - s;
 }
 
-float sdBox(vec3 p,vec3 b)
-{
-    vec3 q=abs(p)-b;
-    return length(max(q,0.))+min(max(q.x,max(q.y,q.z)),0.);
+float sdBox(vec3 p, vec3 b) {
+    vec3 q = abs(p) - b;
+    return length(max(q, 0.)) + min(max(q.x, max(q.y, q.z)), 0.);
 }
 
-float smin(float a,float b,float k){
-    float h=clamp(.5+.5*(b-a)/k,0.,1.);
-    return mix(b,a,h)-k*h*(1.-h);
+float smin(float a, float b, float k) {
+    float h = clamp(.5 + .5 * (b - a)/k, 0., 1.);
+    return mix(b, a, h) - k * h * (1. - h);
 }
 
 float rand(vec2 co){
-    return fract(sin(dot(co,vec2(12.9898,78.233)))*43758.5453);
+    return fract(sin(dot(co, vec2(12.9898,78.233)))*43758.5453);
 }
 
 float sdf(vec3 p){
-    vec3 p1=rotate(p,vec3(.1),time/5.);
-    float box=smin(sdBox(p1,vec3(.3)),sdSphere(p,.4),.3);
-    float final=mix(box,sdSphere(p,.2+progress/4.),progress);
+    vec3 p1 = rotate(p, vec3(.1), time/5.);
+    float box = smin(sdBox(p1, vec3(.3)), sdSphere(p, .4), .3);
+    float final = mix(box, sdSphere(p, .2+progress/4.), progress);
 
-    for(int i=0;i<int(particleNumber);i++){
-        float randOffset=rand(vec2(i,0.));
-        float progr=fract(time/4.+randOffset*5.);
-        vec3 rPos=vec3(sin(randOffset*2.*PI)*2.,cos(randOffset*2.*PI)*2.,0.);
-        float gotoCenter=sdSphere(p-rPos*progr,.12);
-        final=smin(final,gotoCenter,.3);
+    for(int i = 0; i < int(particleNumber); i++){
+        float randOffset = rand(vec2(i, 0.));
+        float progr = fract(time/4. + randOffset*5.);
+        vec3 rPos = vec3(sin(randOffset*2.*PI)*2., cos(randOffset*2.*PI)*2., 0.);
+        float gotoCenter = sdSphere(p - rPos * progr, .12);
+        final = smin(final, gotoCenter, .3);
     }
 
-    float mouseSphere=sdSphere(p-vec3(mouse*resolution.zw*2.,0.),.25);
-    return smin(final,mouseSphere,.4);
+    float mouseSphere = sdSphere(p - vec3(mouse * resolution.zw * 2., 0.), .25);
+    return smin(final, mouseSphere, .4);
 }
 
-vec3 calcNormal(in vec3 p)// for function sdf(p)
-{
-    const float eps=.0001;// or some other value
-    const vec2 h=vec2(eps,0);
-    return normalize
-    (
-        vec3(
-            sdf(p+h.xyy)-sdf(p-h.xyy),
-            sdf(p+h.yxy)-sdf(p-h.yxy),
-            sdf(p+h.yyx)-sdf(p-h.yyx)
-        )
-    );
+vec3 calcNormal(in vec3 p) {
+    const float eps = .0001;
+    const vec2 h = vec2(eps, 0);
+    return normalize(vec3(
+        sdf(p + h.xyy) - sdf(p - h.xyy),
+        sdf(p + h.yxy) - sdf(p - h.yxy),
+        sdf(p + h.yyx) - sdf(p - h.yyx)
+    ));
 }
 
 void main(){
-    float dist=length(vUv-vec2(.5));
-    vec3 bg=vec3(mix(vec3(.1),vec3(0.),dist));
-    vec2 newUv=(vUv-vec2(.5))*resolution.zw+vec2(.5);
-    vec3 cameraPos=vec3(0.,0.,2.);
-    vec3 ray=normalize(vec3((vUv-vec2(.5))*resolution.zw,-1.));
+    float dist = length(vUv - vec2(.5));
+    vec3 bg = vec3(mix(vec3(.1), vec3(0.), dist));
+    vec2 newUv = (vUv - vec2(.5)) * resolution.zw + vec2(.5);
+    vec3 cameraPos = vec3(0., 0., 2.);
+    vec3 ray = normalize(vec3((vUv - vec2(.5))*resolution.zw, -1.));
 
-    vec3 rayPos=cameraPos;
-    float t=0.;
-    float tMax=5.;
-    for(int i=0;i<256;i++){
-        vec3 pos=cameraPos+t*ray;
-        float h=sdf(pos);
+    vec3 rayPos = cameraPos;
+    float t = 0.;
+    float tMax = 5.;
+    for(int i = 0; i < 256; i++){
+        vec3 pos = cameraPos + t * ray;
+        float h = sdf(pos);
 
-        if(h<.001||t>tMax){
+        if(h < .001 || t > tMax){
             break;
         }
 
-        t+=h;
+        t += h;
     }
 
-    vec4 color=vec4(bg,1.);
-    if(t<tMax){
-        vec3 pos=cameraPos+t*ray;
-        vec3 normal=calcNormal(pos);
-        float diff=dot(vec3(1.),normal);
-        vec2 matCapUv=getmatcap(ray,normal);
-        color=texture2D(matCap,matCapUv);
+    vec4 color = vec4(bg, 1.);
+    if(t < tMax){
+        vec3 pos = cameraPos + t * ray;
+        vec3 normal = calcNormal(pos);
+        float diff = dot(vec3(1.), normal);
+        vec2 matCapUv = getmatcap(ray, normal);
+        color = texture2D(matCap, matCapUv);
 
-        float fresnel=pow(1.+dot(ray,normal),3.);
-        color=mix(color,vec4(bg,.5),fresnel);
+        float fresnel = pow(1. + dot(ray, normal), 3.);
+        color = mix(color, vec4(bg, .5), fresnel);
     }
 
-    gl_FragColor=vec4(color);
+    gl_FragColor = vec4(color);
 }
 `;
 const matCap =
@@ -1023,7 +965,7 @@ class Sketch {
       fumSize / 2,
       fumSize / -2,
       -1000,
-      1000,
+      1000
     );
     this.camera.position.z = 1;
     this.renderer = new THREE.WebGLRenderer({
@@ -1077,7 +1019,7 @@ class Sketch {
           1,
           1,
           resolution,
-          resolution,
+          resolution
         );
         this.material = new THREE.ShaderMaterial({
           extensions: {
@@ -1116,7 +1058,7 @@ class Sketch {
       undefined,
       (err) => {
         console.error("Texture failed to load:", err);
-      },
+      }
     );
   }
   render() {
@@ -1137,7 +1079,6 @@ new Sketch({
 
 // =========== CONNECT PAGE SPANIZE MAST LOGIC ===========
 $(function() {
-  // Helper: spanize text (returns character count)
   function spanize($el, delayStep) {
     var text = $el.data('original') || $el.text();
     $el.data('original', text);
@@ -1152,7 +1093,6 @@ $(function() {
     return chars.length;
   }
 
-  // Helper: show only the specified heading and (optionally) its paragraph
   function showPair(type, showPara) {
     $('.mast__title, .mast__text').removeClass('active');
     let $heading = $('.mast__title[data-type="' + type + '"]').addClass('active');
@@ -1162,22 +1102,17 @@ $(function() {
     if (showPara) spanize($text, 0.02);
   }
 
-  // Spanize on initial load (prevents unstyled flash)
   $('.mast__title.js-spanize').each(function() { spanize($(this), 0.05); });
   $('.mast__text.js-spanize').each(function() { spanize($(this), 0.02); });
   $('.mast__title, .mast__text').removeClass('active');
 
-  // On load: show first pair ("reason" with its paragraph)
   showPair('reason', true);
 
-  // Click handler for showing paragraph on demand
   $('.mast__title').on('click', function() {
     let type = $(this).data('type');
-    showPair(type, true); // show heading and its p
+    showPair(type, true);
   });
 });
-
-
 
 document.addEventListener('DOMContentLoaded', function () {
   const btnContainer = document.getElementById('back-to-glassy-container');
@@ -1201,10 +1136,6 @@ document.addEventListener('DOMContentLoaded', function () {
   toggleButton();
 });
 
-
-
-
-
 document.addEventListener("DOMContentLoaded", function() {
   const sections = document.querySelectorAll('#page-life .life-section');
   if (!sections.length) return;
@@ -1214,28 +1145,17 @@ document.addEventListener("DOMContentLoaded", function() {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
-          obs.unobserve(entry.target); // Remove observer after fade-in
+          obs.unobserve(entry.target);
         }
       });
     },
     {
-      threshold: 0.50 // Adjust as needed for earlier/later trigger
+      threshold: 0.50
     }
   );
 
   sections.forEach(section => observer.observe(section));
 });
-
-
-
-
-
-
-
-
-
-
-
 
 (function() {
   const btnContainer = document.getElementById('back-to-top-life-container');
@@ -1243,11 +1163,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const pageLife = document.getElementById('page-life');
   if (!btnContainer || !btn || !pageLife) return;
 
-  // Target the inner scrollable container
   const scrollContainer = pageLife.querySelector('.content');
   if (!scrollContainer) return;
 
-  // Show/hide button based on inner container scroll
   function toggleBtn() {
     if (scrollContainer.scrollTop > 0) {
       btnContainer.classList.add('visible');
@@ -1256,15 +1174,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Scroll to top of the inner container
   btn.addEventListener('click', function(e) {
     e.preventDefault();
     scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Listen to scroll events on the inner container
   scrollContainer.addEventListener('scroll', toggleBtn, { passive: true });
-
-  // Initial check
   toggleBtn();
 })();
