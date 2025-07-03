@@ -558,3 +558,18 @@ h2::before, label::before, .sr-only::before {content:"" !important;}
 body {
   background: #000 !important;
 }
+
+
+/* Prevent body scrolling */
+body {
+  overflow: hidden;
+}
+
+/* Allow inner scrolling within a container */
+.scrollable-inner {
+  overflow-y: auto;    /* Enable vertical scroll if content overflows */
+  height: 400px;       /* Set a fixed height (or use other means) */
+  /* Optionally, add additional styling */
+  padding: 16px;
+  border: 1px solid #ccc;
+}
