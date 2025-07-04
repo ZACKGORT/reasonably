@@ -1547,6 +1547,12 @@ h1, .mast__title, .mast__title.js-spanize {
 
 
 
+
+
+
+
+
+
 @media only screen and (max-width: 600px) {
   .project-title { font-size: 1em; letter-spacing: 0.01em; }
   .project-year {
