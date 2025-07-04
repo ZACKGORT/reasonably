@@ -68,11 +68,44 @@ p,
   height: calc(var(--trigger-offset) + env(safe-area-inset-bottom) + 20vh);
   flex-shrink: 0;
 }
-#page-life h1 {
-  font-size: 1.6em;
-  line-height: 1.2;
+/* --- UPDATED: Match work page headings --- */
+#page-life h1,
+#page-life h2,
+#page-life h3,
+#page-life h4,
+#page-life h5,
+#page-life h6 {
+  position: relative;
+  mix-blend-mode: exclusion;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   margin-bottom: 0.8em;
-  opacity: 0.85;
+  opacity: 0.92;
+  color: #fff !important;
+  line-height: 1.15;
+}
+@media (max-width: 768px) {
+  #page-life h1,
+  #page-life h2,
+  #page-life h3,
+  #page-life h4,
+  #page-life h5,
+  #page-life h6 {
+    font-size: 1.4rem;
+  }
+}
+@media (max-width: 600px) {
+  #page-life h1,
+  #page-life h2,
+  #page-life h3,
+  #page-life h4,
+  #page-life h5,
+  #page-life h6 {
+    font-size: 1em;
+    letter-spacing: 0.01em;
+  }
 }
 
 @media (max-width: 600px) {
@@ -213,7 +246,7 @@ p,
 }
 .logo-wrapper {
   display: flex;
-  margin: 0 0 0 2.5%;
+  margin: 0 0 0 3%;
   justify-content: center;
   align-items: center;
   pointer-events: auto;
@@ -256,7 +289,7 @@ nav {
   display: flex;
   align-items: center;
   width: fit-content;
-  margin: 0 0 0 2.8%;
+  margin: 0 0 0 2.5%;
   border-radius: 100px;
   background: hsla(0, 0%, 100%, 0.05);
   border: 0.5px solid rgba(255, 255, 255, 0.35);
@@ -989,7 +1022,7 @@ li:has(input:checked) > label {
 .cards > li > h2 {
   position: absolute;
   left: 50%;
-  top: 42%;
+  top: 36%;
   transform: translateX(-50%);
   width: var(--info-width);
   max-width: 90vw;
@@ -1003,10 +1036,10 @@ li:has(input:checked) > label {
 .cards > li > p {
   position: absolute;
   left: 50%;
-  top: 58%;
+  top: 44%;
   transform: translateX(-50%);
   width: var(--info-width);
-  max-width: 90vw;
+  max-width: 100vw;
   box-sizing: border-box;
   padding: 0 1rem;
   pointer-events: none;
@@ -1074,10 +1107,10 @@ li:has(input:checked) {
 /* --- CONNECT PAGE (CORRECTED) --- */
 .connect-container {
   margin: 3em auto 0 auto;
-  width: 1200px;
+  width: auto;
   max-width: 98vw;
   min-height: 200px;
-  padding-top: 8em;
+  padding-top: 4em;
   background: transparent;
   border-radius: 20px;
   box-shadow: none;
@@ -1135,7 +1168,7 @@ li:has(input:checked) {
   text-transform: uppercase;
   color: #fff;
   opacity: 0.96;
-  margin-bottom: 0.1em;
+  margin-bottom: 1.66em;
   background: transparent !important;
   cursor: pointer;
   text-align: left;
@@ -1192,7 +1225,7 @@ h2.active, h2:hover, h2:focus {
 .mast__text {
   font-size: 0.9em;
   font-weight: 200;
-  margin: 0 0 0.2em 0;
+  margin: 1.2em 0 0.2em 0;
   letter-spacing: 0.4em;
   line-height: 1.6;
   color: #eee;
