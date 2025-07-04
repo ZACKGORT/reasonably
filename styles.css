@@ -830,8 +830,8 @@ body.balance-lock-scroll {
   inset: 0;
   pointer-events: none !important;
   z-index: 100 !important;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.30) 2%, rgba(0, 0, 0, 0.12) 18%, rgba(0, 0, 0, 0) 30%),
-              linear-gradient(to bottom, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.12) 10%, rgba(0, 0, 0, 0) 25%),
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.30) 2%, rgba(0, 0, 0, 0.12) 18%, rgba(0, 0, 0, 0) 40%),
+              linear-gradient(to bottom, rgba(0, 0, 0, 0.30) 0%, rgba(0, 0, 0, 0.12) 18%, rgba(0, 0, 0, 0) 25%),
               radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 65%, rgba(0, 0, 0, 0.09) 83%, rgba(0, 0, 0, 0.17) 96%, rgba(0, 0, 0, 0.26) 100%);
 }
 #webgl-bg { z-index: 0; }
@@ -1304,26 +1304,18 @@ h1, .mast__title, .mast__title.js-spanize {
   .mast__text { font-size: 0.90em; letter-spacing: 0.2em; line-height: 1.7; margin-bottom: 0; }
   .mast { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; position: relative; }
   .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; pointer-events: none; }
-  .mast__header h2, .heading h2, h2 { width: 100%; text-align: center; display: flex; justify-content: center; align-items: center; }
+  .mast__header h2,{ width: 100%; text-align: left; display: flex; justify-content: left; align-items: left; }
 }
 
 @media (max-width: 400px) {
   .connect-container { padding: 12em; }
   .mast__texts { max-width: 100vw; }
-  .mast__title, .mast__title.js-spanize { font-size: 2.6em; letter-spacing: 0.09em; margin-bottom: 0.1em; }
+  .mast__title, .mast__title.js-spanize { font-size: 1.8em; letter-spacing: 0.09em; margin-bottom: 0.1em; }
   .mast__text { font-size: 0.88em; letter-spacing: 0.2em; line-height: 1.7; }
   .mast { display: flex; flex-direction: column; justify-content: left; align-items: left; width: 100%; position: relative; }
   .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: left; background-position: left; pointer-events: none; }
 }
 
-@media (max-width: 375px) {
-  html, body, #page-connect, .connect-container, .connect-content, .connect-mast-container, .mast {
-    min-width: 375px !important;
-    overflow-x: auto;
-  }
-  .mast { display: flex; flex-direction: column; justify-content: left; align-items: left; width: 100%; position: relative; }
-  .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; pointer-events: none; }
-}
 
 .zackgort-footer {
   position: fixed;
@@ -1594,7 +1586,7 @@ h1, .mast__title, .mast__title.js-spanize {
     nav {
       position: relative;
       display: flex;
-      align-items: center;
+      align-items: left;
       width: fit-content;
       margin: 0 0 0 auto;
       border-radius: 100px;
