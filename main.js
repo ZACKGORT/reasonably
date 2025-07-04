@@ -1117,23 +1117,161 @@ lockScreen();
 
 
 
+// ... (rest of your file above remains unchanged)
 
 document.addEventListener("DOMContentLoaded", function () {
-  // 1. Fade in glassy button after 3 seconds
-  const container = document.querySelector('.connect-container .glassy-button-container');
-  if (container) {
-    container.style.opacity = '0';
-    container.style.transition = 'opacity 0.8s ease';
-    setTimeout(function () {
-      container.style.opacity = '1';
-    }, 3000);
+  // MAST SEQUENTIAL ANIMATION FOR CONNECT PAGE
+
+  // Helper: animate an element by adding a class and waiting
+  function animateIn(elem, delay = 0, className = 'mast-fadein') {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        elem.classList.add(className);
+        resolve();
+      }, delay);
+    });
   }
 
-  // 2. Make glassy button open email client
-  const btn = document.querySelector('.connect-container .glassy-button');
-  if (btn) {
-    btn.addEventListener('click', function () {
+  // Helper: get all mast h1s and their associated p lines in desired order
+  // ORDER: &, Reason, Resolution
+  function getMastElements() {
+    const container = document.querySelector('.connect-container .mast__header');
+    if (!container) return null;
+
+    const h1s = [
+      container.querySelector('.mast__title[data-type="and"]'),
+      container.querySelector('.mast__title[data-type="reason"]'),
+      container.querySelector('.mast__title[data-type="resolution"]')
+    ];
+    const ps = [
+      container.querySelector('.mast__text[data-type="and"]'),
+      container.querySelector('.mast__text[data-type="reason"]'),
+      container.querySelector('.mast__text[data-type="resolution"]')
+    ];
+    return { h1s, ps };
+  }
+
+  // CSS: ensure all elements start hidden and fade in
+  const mastStyles = document.createElement('style');
+  mastStyles.textContent = `
+    .connect-container .mast__title, 
+    .connect-container .mast__text,
+    .connect-container .glassy-button-container {
+      opacity: 0;
+      transition: opacity 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .connect-container .mast__title.mast-fadein,
+    .connect-container .mast__text.mast-fadein,
+    .connect-container .glassy-button-container.mast-fadein {
+      opacity: 1;
+    }
+  `;
+  document.head.appendChild(mastStyles);
+
+  async function runMastSequence() {
+    // Hide glassy button instantly
+    const glassyButtonCont = document.querySelector('.connect-container .glassy-button-container');
+    if (glassyButtonCont) {
+      glassyButtonCont.style.opacity = '0';
+      glassyButtonCont.classList.remove('mast-fadein');
+    }
+
+    // Hide all mast h1s and ps instantly
+    const mast = getMastElements();
+    if (!mast) return;
+    mast.h1s.forEach(h1 => h1 && h1.classList.remove('mast-fadein'));
+    mast.ps.forEach(p => { if (p) p.classList.remove('mast-fadein'); });
+
+    // Animate h1s in sequence, 350ms apart
+    for (let i = 0; i < mast.h1s.length; i++) {
+      if (mast.h1s[i]) await animateIn(mast.h1s[i], i === 0 ? 0 : 350);
+    }
+
+    // Animate ps in sequence, 300ms apart
+    for (let i = 0; i < mast.ps.length; i++) {
+      if (mast.ps[i]) await animateIn(mast.ps[i], 300);
+    }
+
+    // After last p, animate glassy button (e.g. after 400ms)
+    if (glassyButtonCont) {
+      setTimeout(() => {
+        glassyButtonCont.classList.add('mast-fadein');
+      }, 400);
+    }
+  }
+
+  // Only run on CONNECT page
+  function onConnectPageActive() {
+    // Check if CONNECT page is active
+    const connectPage = document.getElementById('page-connect');
+    if (connectPage && connectPage.classList.contains('active')) {
+      runMastSequence();
+    }
+  }
+
+  // Run on load and on navigation to CONNECT page
+  onConnectPageActive();
+  // If using your Navigation class, hook into page changes as below:
+  // (Assuming Navigation.setActivePage or similar triggers a custom event, or you can poll for .active change.)
+  // Here, we poll for demonstration:
+  let lastWasConnect = false;
+  setInterval(() => {
+    const isConnect = document.getElementById('page-connect')?.classList.contains('active');
+    if (isConnect && !lastWasConnect) {
+      runMastSequence();
+    }
+    lastWasConnect = isConnect;
+  }, 500);
+
+  // Existing glassy button fade-in and mailto logic (no change needed)
+  const glassyBtn = document.querySelector('.connect-container .glassy-button');
+  if (glassyBtn) {
+    glassyBtn.addEventListener('click', function () {
       window.location.href = 'mailto:zack@reasonably.cc';
     });
   }
+});
+
+// Set "&" and its p as the default active mast section on CONNECT page (for jQuery spanize logic)
+$(function () {
+  function spanize($elem, delayFactor) {
+    const originalText = $elem.data("original") || $elem.text();
+    $elem.data("original", originalText);
+    let html = "";
+    originalText.split("").forEach((char, index) => {
+      const escaped = char === " " ? " " : $("<div/>").text(char).html();
+      html += `<span style="animation-delay:${delayFactor * index}s">${escaped}</span>`;
+    });
+    $elem.html(html);
+    return originalText.length;
+  }
+
+  function activateSection(type, activate) {
+    $(".mast__title, .mast__text").removeClass("active");
+    const $title = $(`.mast__title[data-type="${type}"]`).addClass("active");
+    const $text = $(`.mast__text[data-type="${type}"]`);
+    if (activate) {
+      $text.addClass("active");
+    } else {
+      $text.removeClass("active");
+    }
+    spanize($title, 0.05);
+    if (activate) spanize($text, 0.02);
+  }
+
+  $(".mast__title.js-spanize").each(function () {
+    spanize($(this), 0.05);
+  });
+
+  $(".mast__text.js-spanize").each(function () {
+    spanize($(this), 0.02);
+  });
+
+  // Default: "&" active instead of "Reason"
+  $(".mast__title, .mast__text").removeClass("active");
+  activateSection("and", true);
+
+  $(".mast__title").on("click", function () {
+    activateSection($(this).data("type"), true);
+  });
 });
