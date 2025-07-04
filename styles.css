@@ -313,8 +313,8 @@ p,
 }
 .logo-wrapper:hover .trademark-symbol,
 .logo-wrapper:focus .trademark-symbol {
-  animation: logo-glow-hover 2.2s ease-in-out infinite;
-  box-shadow: 0 0 18px 7px #fff, 0 0 32px 12px #6af4fb66;
+  animation: logo-glow-hover 4.2s ease-in-out infinite;
+  box-shadow: 0 0 18px 7px #fff, 0 0 12px 12px #6af4fb66;
 }
 
 
