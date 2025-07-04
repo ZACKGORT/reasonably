@@ -1290,40 +1290,63 @@ $(function () {
 
 
 // Map page ids to instruction text
+// Map page ids to instruction text
 const instructionTexts = {
   "page-home": "drag me",
   "page-work": "tap me",
   "page-life": "scroll me",
-  "page-balance": "tap me",
+  "page-balance": "roll me",
   "page-connect": "chat with me"
 };
 
-function updateInstructionText() {
-  // Find the currently active page
+let instructionTimeouts = {
+  fadeIn: null,
+  fadeOut: null
+};
+
+function showInstructionWithDelay() {
+  clearTimeout(instructionTimeouts.fadeIn);
+  clearTimeout(instructionTimeouts.fadeOut);
+
   const activePage = document.querySelector('.page.active');
   const instruction = document.getElementById('gallery-instruction');
   const instructionText = document.getElementById('instruction-text');
-  if (!instruction || !instructionText) return;
-
-  if (activePage && instructionTexts[activePage.id]) {
-    instruction.style.display = '';
-    instructionText.textContent = instructionTexts[activePage.id];
-  } else {
-    // Hide the instruction if not on a recognized page
-    instruction.style.display = 'none';
+  if (!instruction || !instructionText || !activePage || !instructionTexts[activePage.id]) {
+    if (instruction) instruction.style.opacity = 0;
+    return;
   }
+
+  instruction.style.display = '';
+  instruction.style.opacity = 0;
+  instructionText.textContent = instructionTexts[activePage.id];
+
+  // Fade in after 1.5s
+  instructionTimeouts.fadeIn = setTimeout(() => {
+    instruction.style.transition = 'opacity 0.65s';
+    instruction.style.opacity = 1;
+
+    // Fade out after 5s visible
+    instructionTimeouts.fadeOut = setTimeout(() => {
+      instruction.style.opacity = 0;
+    }, 5000);
+  }, 1500);
+}
+
+function hideInstructionImmediate() {
+  clearTimeout(instructionTimeouts.fadeIn);
+  clearTimeout(instructionTimeouts.fadeOut);
+  const instruction = document.getElementById('gallery-instruction');
+  if (instruction) instruction.style.opacity = 0;
 }
 
 // Initial call on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', updateInstructionText);
+document.addEventListener('DOMContentLoaded', showInstructionWithDelay);
 
 // Listen for changes in the .active page (using MutationObserver)
 const pageRoots = document.querySelectorAll('.page');
-const mo = new MutationObserver(updateInstructionText);
+const mo = new MutationObserver(showInstructionWithDelay);
 pageRoots.forEach(page => mo.observe(page, { attributes: true, attributeFilter: ['class'] }));
 
 // Optionally, listen for navigation events if you use history API or hashchange
-window.addEventListener('hashchange', updateInstructionText);
-window.addEventListener('popstate', updateInstructionText);
-
-
+window.addEventListener('hashchange', showInstructionWithDelay);
+window.addEventListener('popstate', showInstructionWithDelay);
