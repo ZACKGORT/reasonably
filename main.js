@@ -1117,29 +1117,23 @@ lockScreen();
 
 
 
+
 document.addEventListener("DOMContentLoaded", function () {
-  // Wait for all <p> in .connect-page-content to be loaded
-  const connectContent = document.querySelector('.connect-page-content');
-  const glassyPlaceholder = document.getElementById('glassy-button-placeholder');
-  if (connectContent && glassyPlaceholder) {
-    // Optionally, you could check if images are loaded, but for <p> this is enough
-    setTimeout(() => {
-      // Insert the glassy button markup
-      glassyPlaceholder.innerHTML = `
-        <div class="glassy-button-container">
-          <div class="glassy-button-wrap" data-loaded="false">
-            <button class="glassy-button">
-              <span>Connect</span>
-            </button>
-            <div class="glassy-button-shadow"></div>
-          </div>
-        </div>
-      `;
-      // Let CSS animate in the button
-      setTimeout(() => {
-        const wrap = glassyPlaceholder.querySelector(".glassy-button-wrap");
-        if (wrap) wrap.setAttribute("data-loaded", "true");
-      }, 50);
-    }, 100); // 100ms after p renders; adjust for effect
+  // 1. Fade in glassy button after 3 seconds
+  const container = document.querySelector('.connect-container .glassy-button-container');
+  if (container) {
+    container.style.opacity = '0';
+    container.style.transition = 'opacity 0.8s ease';
+    setTimeout(function () {
+      container.style.opacity = '1';
+    }, 3000);
+  }
+
+  // 2. Make glassy button open email client
+  const btn = document.querySelector('.connect-container .glassy-button');
+  if (btn) {
+    btn.addEventListener('click', function () {
+      window.location.href = 'mailto:zack@reasonably.cc';
+    });
   }
 });
