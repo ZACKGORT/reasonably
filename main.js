@@ -1296,7 +1296,7 @@ const instructionTexts = {
   "page-work": "tap me",
   "page-life": "scroll me",
   "page-balance": "roll me",
-  "page-connect": "chat with me"
+  "page-connect": "say hello!"
 };
 
 let instructionTimeouts = {
