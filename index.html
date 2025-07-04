@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="canonical" href="https://codepen.io/zackgort/pen/jEPXaRP">
-  <title>Example Page</title>
+<link rel="canonical" href="https://codepen.io/zackgort/pen/jEPXaRP">
+  
   <!-- Stylesheets -->
   <link rel="stylesheet" href="styles.css">
   <!-- External JS libraries -->
@@ -13,9 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.4.0/umd/split-type.min.js"></script>
-</head>
 
-    <body>
 <!-- SVG FILTERS (spotlight, ambience, gooey, etc.) -->
 <svg aria-hidden="true" class="sr-only">
     <!-- Nav spotlight -->
@@ -53,10 +45,6 @@
     </filter>
 </svg>
 
-
-
-
-
 <!-- Global WebGL Background (Three.js shader) -->
 <div id="webgl-bg"></div>
 
@@ -91,8 +79,6 @@
 
 <div class="noise-overlay"></div>
 
-
-
 <!-- HOME PAGE (gallery) -->
 <section id="page-home" class="page">
     <div class="header"></div>
@@ -107,8 +93,6 @@
 
 </section>
 
-
-
 <!-- WORK PAGE -->
 <section id="page-work" class="page">
     <div id="background-image-container">
@@ -121,8 +105,6 @@
     </div>
 
 </section>
-
-
 
 <!-- LIFE PAGE (Popover UI Demo, only this version present) -->
 <section id="page-life" class="page">
@@ -379,8 +361,6 @@
     </div>
 </section>
 
-
-
 <!-- BALANCE PAGE -->
 <section id="page-balance" class="page">
     <div class="balance-bg-cursor"></div>
@@ -551,8 +531,6 @@
     </div>
 </section>
 
-
-
 <!-- CONNECT PAGE -->
 <section id="page-connect" class="page">
     <div class="connect-container">
@@ -597,8 +575,6 @@
     </div>
 </section>
 
-
-
 <!-- GLOBAL OVERLAY -->
 <section id="global-overlay" class="page">
   <div class="connect-container">
@@ -633,16 +609,12 @@
   </div>
 </section>
 
-
-
-
 <!-- Vignette overlays (global, always rendered) -->
 <div class="page-vignette-container">
     <div class="page-vignette"></div>
     <div class="page-vignette-strong"></div>
     <div class="page-vignette-extreme"></div>
 </div>
-
 
 <!-- Vignette overlays (global, always rendered, fixed and high z-index) -->
 <div class="page-vignette-container">
@@ -653,7 +625,6 @@
 <!-- Global Blur overlay (always rendered) -->
 <div class="global-blur"></div>
 
-
     <!-- Add your audio element (ensure the sound file exists in your project) -->
     <audio id="click-sound" src="click-sound.mp3" preload="auto"></audio>
 
@@ -661,9 +632,7 @@
   <p class="zackgort-paragraph">Reason inspires. Resolution ships.</p>
 </footer>
 
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="main.js"></script>
-    </body></html>
 
 <!-- Main JS file (Remove this if using CodePen/JSFiddle JS panel) -->
