@@ -527,12 +527,14 @@ document.addEventListener("DOMContentLoaded", () => {
   navigation.resizeLogoCenter(logoSpotlight.centreLogo);
   navigation.setActivePage("page-home");
 
-  const homeLink = document.querySelector('nav a[data-page="home"]');
-  if (homeLink) {
-    document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
-    homeLink.setAttribute("data-active", "true");
-    navigation.moveNavLight(navigation.centerX(homeLink));
-  }
+// Remove all nav active states (so none are active on first load)
+const homeLink = document.querySelector('nav a[data-page="home"]');
+if (homeLink) {
+  document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
+  // Do NOT set any link as active here
+  // Optionally, you may want to hide or move the nav light offscreen if desired:
+  // navigation.moveNavLight(-1000); // Move the nav light far out of view if needed
+}
 
   const logoWrapper = document.querySelector(".logo-wrapper");
   if (logoWrapper) {
@@ -1283,3 +1285,45 @@ $(function () {
     activateSection($(this).data("type"), true);
   });
 });
+
+
+
+
+// Map page ids to instruction text
+const instructionTexts = {
+  "page-home": "drag me",
+  "page-work": "tap me",
+  "page-life": "scroll me",
+  "page-balance": "tap me",
+  "page-connect": "chat with me"
+};
+
+function updateInstructionText() {
+  // Find the currently active page
+  const activePage = document.querySelector('.page.active');
+  const instruction = document.getElementById('gallery-instruction');
+  const instructionText = document.getElementById('instruction-text');
+  if (!instruction || !instructionText) return;
+
+  if (activePage && instructionTexts[activePage.id]) {
+    instruction.style.display = '';
+    instructionText.textContent = instructionTexts[activePage.id];
+  } else {
+    // Hide the instruction if not on a recognized page
+    instruction.style.display = 'none';
+  }
+}
+
+// Initial call on DOMContentLoaded
+document.addEventListener('DOMContentLoaded', updateInstructionText);
+
+// Listen for changes in the .active page (using MutationObserver)
+const pageRoots = document.querySelectorAll('.page');
+const mo = new MutationObserver(updateInstructionText);
+pageRoots.forEach(page => mo.observe(page, { attributes: true, attributeFilter: ['class'] }));
+
+// Optionally, listen for navigation events if you use history API or hashchange
+window.addEventListener('hashchange', updateInstructionText);
+window.addEventListener('popstate', updateInstructionText);
+
+
