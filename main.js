@@ -1168,38 +1168,36 @@ document.addEventListener("DOMContentLoaded", function () {
   `;
   document.head.appendChild(mastStyles);
 
-  async function runMastSequence() {
-    // Hide glassy button instantly
-    const glassyButtonCont = document.querySelector('.connect-container .glassy-button-container');
-    if (glassyButtonCont) {
-      glassyButtonCont.style.opacity = '0';
-      glassyButtonCont.classList.remove('mast-fadein');
-    }
-
-    // Hide all mast h1s and ps instantly
-    const mast = getMastElements();
-    if (!mast) return;
-    mast.h1s.forEach(h1 => h1 && h1.classList.remove('mast-fadein'));
-    mast.ps.forEach(p => { if (p) p.classList.remove('mast-fadein'); });
-
-    // Animate h1s in sequence, 350ms apart
-    for (let i = 0; i < mast.h1s.length; i++) {
-      if (mast.h1s[i]) await animateIn(mast.h1s[i], i === 0 ? 0 : 350);
-    }
-
-    // Animate ps in sequence, 300ms apart
-    for (let i = 0; i < mast.ps.length; i++) {
-      if (mast.ps[i]) await animateIn(mast.ps[i], 300);
-    }
-
-    // After last p, animate glassy button (e.g. after 400ms)
-    if (glassyButtonCont) {
-      setTimeout(() => {
-        glassyButtonCont.classList.add('mast-fadein');
-      }, 400);
-    }
+async function runMastSequence() {
+  // Hide glassy button instantly via class, not inline style
+  const glassyButtonCont = document.querySelector('.connect-container .glassy-button-container');
+  if (glassyButtonCont) {
+    glassyButtonCont.classList.remove('mast-fadein');
   }
 
+  // Hide all mast h1s and ps instantly
+  const mast = getMastElements();
+  if (!mast) return;
+  mast.h1s.forEach(h1 => h1 && h1.classList.remove('mast-fadein'));
+  mast.ps.forEach(p => { if (p) p.classList.remove('mast-fadein'); });
+
+  // Animate h1s in sequence, 350ms apart
+  for (let i = 0; i < mast.h1s.length; i++) {
+    if (mast.h1s[i]) await animateIn(mast.h1s[i], i === 0 ? 0 : 350);
+  }
+
+  // Animate ps in sequence, 300ms apart
+  for (let i = 0; i < mast.ps.length; i++) {
+    if (mast.ps[i]) await animateIn(mast.ps[i], 300);
+  }
+
+  // After last p, animate glassy button (e.g. after 400ms)
+  if (glassyButtonCont) {
+    setTimeout(() => {
+      glassyButtonCont.classList.add('mast-fadein');
+    }, 400);
+  }
+}
   // Only run on CONNECT page
   function onConnectPageActive() {
     // Check if CONNECT page is active
