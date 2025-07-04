@@ -284,6 +284,41 @@ p,
   to { transform: rotate(360deg); }
 }
 
+
+@keyframes logo-glow {
+  0% {
+    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
+  }
+  60% {
+    box-shadow: 0 0 8px 4px #aaf7ff33, 0 0 16px 6px #6af4fb22;
+  }
+  100% {
+    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
+  }
+}
+@keyframes logo-glow-hover {
+  0% {
+    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
+  }
+  60% {
+    box-shadow: 0 0 10px 6px #aaf7ff33, 0 0 18px 8px #6af4fb22;
+  }
+  100% {
+    box-shadow: 0 0 0px 0px #fff, 0 0 8px 4px #6af4fb22;
+  }
+}
+.logo-wrapper .trademark-symbol {
+  animation: logo-glow 8s ease-in-out infinite;
+  transition: box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.logo-wrapper:hover .trademark-symbol,
+.logo-wrapper:focus .trademark-symbol {
+  animation: logo-glow-hover 2.2s ease-in-out infinite;
+  box-shadow: 0 0 18px 7px #fff, 0 0 32px 12px #6af4fb66;
+}
+
+
+
 nav {
   position: relative;
   display: flex;
@@ -1640,16 +1675,7 @@ body { overflow: hidden; }
   font-size: clamp(0.8rem, 1.8vw, 1.4rem);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s;
-  animation: instruction-fade-loop 12s cubic-bezier(0.4,0,0.2,1) 4.6s infinite;
-}
-
-@keyframes instruction-fade-loop {
-  0%   { opacity: 0; }
-  8%   { opacity: 1; }
-  42%  { opacity: 1; }
-  50%  { opacity: 0; }
-  100% { opacity: 0; }
+  transition: opacity 1.6s;
 }
 
 .instruction svg {
@@ -1665,7 +1691,6 @@ body { overflow: hidden; }
   font-size: clamp(0.8rem, 1.1vw, 1.1rem);
 }
 
-/* Slightly smaller on mobile */
 @media (max-width: 600px) {
   .instruction {
     font-size: clamp(0.7rem, 1.3vw, 1.1rem);
@@ -1680,37 +1705,6 @@ body { overflow: hidden; }
     font-size: clamp(0.7rem, 0.9vw, 0.95rem);
   }
 }
-
-
-@keyframes logo-glow {
-  0% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
-  }
-  60% {
-    box-shadow: 0 0 8px 4px #aaf7ff33, 0 0 16px 6px #6af4fb22;
-  }
-  100% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
-  }
-}
-@keyframes logo-glow-hover {
-  0%, 100% {
-    box-shadow: 0 0 12px 4px #fff, 0 0 18px 3px #6af4fb44;
-  }
-  50% {
-    box-shadow: 0 0 18px 7px #fff, 0 0 12px 8px #6af4fb66;
-  }
-}
-.logo-wrapper .trademark-symbol {
-  animation: logo-glow 8s ease-in-out infinite;
-  transition: box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.logo-wrapper:hover .trademark-symbol,
-.logo-wrapper:focus .trademark-symbol {
-  animation: logo-glow-hover 2.2s ease-in-out infinite;
-  box-shadow: 0 0 18px 7px #fff, 0 0 32px 12px #6af4fb66;
-}
-
 
 
 
