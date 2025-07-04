@@ -1368,7 +1368,7 @@ h1, .mast__title, .mast__title.js-spanize {
   /* font-family removed for Poppins canonical inheritance */
   text-transform: uppercase;
   font-size: 0.92em;
-  letter-spacing: 0.4em;
+  letter-spacing: 0.2em;
   overflow: hidden;
   white-space: normal;
   background: linear-gradient(90deg, #000, #fff, #000);
