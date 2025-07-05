@@ -117,6 +117,8 @@ p,
   }
 }
 
+
+
 #page-life .content > *:last-child {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -1045,6 +1047,7 @@ li:has(input:checked) > label {
   user-select: none;
   opacity: var(--title-opacity, 0);
   transition: var(--duration) ease-in-out var(--title-delay, 0ms);
+  
 }
 .cards > li > p {
   position: absolute;
@@ -1685,4 +1688,35 @@ body { overflow: hidden; }
 }
 
 
+
+#page-balance h2 {
+  font-size: 1.8em;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #fff;
+  font-family: 'Poppins', Helvetica, Arial, sans-serif;
+}
+
+#page-balance p {
+  margin-top: 1em;
+  font-size: 0.8em;
+  font-weight: 200;
+  line-height: 1.7em;  
+  letter-spacing: 0.2em;
+  text-align: left;
+  color: #eee;
+  font-family: 'Poppins', Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 600px) {
+  #page-balance h2 {
+    font-size: 1.0em;
+    letter-spacing: 0.09em;
+  }
+  #page-balance p {
+    font-size: 0.75em;
+    letter-spacing: 0.1em;
+  }
+}
 
