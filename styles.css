@@ -19,6 +19,7 @@ p,
   font-family: 'Poppins', Helvetica, Arial, sans-serif !important;
 }
 
+
 /* Remove legacy font-family from these elements (handled above) */
 .project-title,
 .project-year,
@@ -78,7 +79,7 @@ p,
   position: relative;
   mix-blend-mode: exclusion;
   font-size: 1.8rem;
-  font-weight: 600;
+  font-weight: 200;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.8em;
@@ -103,18 +104,17 @@ p,
   #page-life h4,
   #page-life h5,
   #page-life h6 {
-    font-size: 1em;
+    font-size: 1.4em;
     letter-spacing: 0.01em;
   }
 }
-
 @media (max-width: 600px) {
-  #page-life .content {
-    padding-left: 3rem;
-    padding-right: 3rem;
-    padding-top: calc(var(--header-h) + 0.02rem);
+  #page-life .content p {
+    font-size: 0.98em;    /* Or your desired size */
+    line-height: 1.5;     /* Or your desired spacing */
+    margin-bottom: 0.7em; /* Or your desired spacing */
+    padding: 0 0.15em;    /* Optional: horizontal padding */
   }
-  #page-life h1 { font-size: 1.25em; }
 }
 
 #page-life .content > *:last-child {
