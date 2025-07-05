@@ -250,6 +250,8 @@ p,
   justify-content: center;
   align-items: center;
   pointer-events: auto;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.3, 1);  
+  
 }
 .logo-wrapper:hover { filter: url("#logo-spotlight"); }
 .logo-wrapper a { text-decoration: none !important; outline: none !important; }
@@ -259,6 +261,15 @@ p,
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
 }
+
+
+/* Add this for the rotation effect */
+.logo-wrapper:hover,
+.logo-wrapper:focus-visible {
+  animation: spin360 0.9s cubic-bezier(0.6, 0.2, 0.3, 1);
+}
+
+
 .trademark-symbol {
   width: 24px;
   height: 24px;
@@ -282,39 +293,6 @@ p,
 
 @keyframes spin360 {
   to { transform: rotate(360deg); }
-}
-
-
-@keyframes logo-glow {
-  0% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
-  }
-  60% {
-    box-shadow: 0 0 8px 4px #aaf7ff33, 0 0 16px 6px #6af4fb22;
-  }
-  100% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
-  }
-}
-@keyframes logo-glow-hover {
-  0% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 6px 2px #6af4fb22;
-  }
-  60% {
-    box-shadow: 0 0 10px 6px #aaf7ff33, 0 0 18px 8px #6af4fb22;
-  }
-  100% {
-    box-shadow: 0 0 0px 0px #fff, 0 0 8px 4px #6af4fb22;
-  }
-}
-.logo-wrapper .trademark-symbol {
-  animation: logo-glow 8s ease-in-out infinite;
-  transition: box-shadow 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-}
-.logo-wrapper:hover .trademark-symbol,
-.logo-wrapper:focus .trademark-symbol {
-  animation: logo-glow-hover 4.2s ease-in-out infinite;
-  box-shadow: 0 0 18px 7px #fff, 0 0 12px 12px #6af4fb66;
 }
 
 
