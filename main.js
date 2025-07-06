@@ -772,6 +772,7 @@ if (button && ellipse) {
 
 
 
+
     // Vertex shader
     const vertex = `
       varying vec3 pos;
@@ -911,21 +912,21 @@ if (button && ellipse) {
         const canvas = this.renderer.domElement;
         canvas.style.width = width + "px";
         canvas.style.height = height + "px";
-        // Calculate camera bounds so the 1x1 plane is always a square
-        const aspect = width / height;
-        let left, right, top, bottom;
+        var aspect = width / height;
+        var zoomOutFactor = 1.15; // 15% zoomed out
+        var left, right, top, bottom;
         if (aspect >= 1) {
           // Landscape: fit height, expand width
-          left = -aspect / 2;
-          right = aspect / 2;
-          top = 0.5;
-          bottom = -0.5;
+          left = -aspect / 2 * zoomOutFactor;
+          right = aspect / 2 * zoomOutFactor;
+          top = 0.5 * zoomOutFactor;
+          bottom = -0.5 * zoomOutFactor;
         } else {
           // Portrait: fit width, expand height
-          left = -0.5;
-          right = 0.5;
-          top = 0.5 / aspect;
-          bottom = -0.5 / aspect;
+          left = -0.5 * zoomOutFactor;
+          right = 0.5 * zoomOutFactor;
+          top = 0.5 / aspect * zoomOutFactor;
+          bottom = -0.5 / aspect * zoomOutFactor;
         }
         // (Re-)create camera if needed
         if (!this.camera) {
@@ -938,7 +939,6 @@ if (button && ellipse) {
           this.camera.bottom = bottom;
           this.camera.updateProjectionMatrix();
         }
-        // Shader uniform: always pass 1,1 for .zw so the raymarch stays square
         if (this.material) {
           this.material.uniforms.resolution.value.x = width;
           this.material.uniforms.resolution.value.y = height;
@@ -949,14 +949,23 @@ if (button && ellipse) {
 
       mouseEvents() {
         document.addEventListener("mousemove", (e) => {
-          this.mouse.x = (e.pageX / this.width - 0.5) * 2;
-          this.mouse.y = (-e.pageY / this.height + 0.5) * 2;
+          // Convert mouse to world coordinates matching the plane and camera
+          const ndcX = (e.clientX / this.width) * 2 - 1;
+          const ndcY = -((e.clientY / this.height) * 2 - 1);
+          const xWorld = this.camera.left + (ndcX + 1) / 2 * (this.camera.right - this.camera.left);
+          const yWorld = this.camera.bottom + (ndcY + 1) / 2 * (this.camera.top - this.camera.bottom);
+          this.mouse.x = xWorld;
+          this.mouse.y = yWorld;
         });
         document.addEventListener("touchmove", (e) => {
           if (e.touches && e.touches.length > 0) {
             const touch = e.touches[0];
-            this.mouse.x = (touch.pageX / this.width - 0.5) * 2;
-            this.mouse.y = (-touch.pageY / this.height + 0.5) * 2;
+            const ndcX = (touch.clientX / this.width) * 2 - 1;
+            const ndcY = -((touch.clientY / this.height) * 2 - 1);
+            const xWorld = this.camera.left + (ndcX + 1) / 2 * (this.camera.right - this.camera.left);
+            const yWorld = this.camera.bottom + (ndcY + 1) / 2 * (this.camera.top - this.camera.bottom);
+            this.mouse.x = xWorld;
+            this.mouse.y = yWorld;
           }
         }, { passive: true });
       }
@@ -1004,9 +1013,6 @@ if (button && ellipse) {
     document.addEventListener("DOMContentLoaded", function () {
       new Sketch({ dom: document.getElementById("webgl-bg") });
     });
-
-
-
 
 
 
