@@ -769,211 +769,249 @@ if (button && ellipse) {
   }
 })();
 
-// WebGL sketch code
-const vertex = `
-  varying vec3 pos;
-  uniform float time;
-  varying float v_noise;
-  varying vec2 vUv;
-  void main() {
-    pos = position;
-    vUv = uv;
-    vec3 newPosition = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-  }
-`;
 
-const fragment = `
-  varying vec3 pos;
-  varying vec2 vUv;
-  varying float v_noise;
-  uniform float time;
-  uniform sampler2D matCap;
-  uniform vec4 resolution;
-  uniform vec2 mouse;
-  uniform float progress;
-  uniform float particleNumber;
-  #define PI 3.14159265359
-  mat4 rotationMatrix(vec3 axis, float angle) {
-    axis = normalize(axis);
-    float s = sin(angle);
-    float c = cos(angle);
-    float oc = 1.0 - c;
-    return mat4(
-      oc * axis.x * axis.x + c,         oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s, 0.0,
-      oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,        oc * axis.y * axis.z - axis.x * s, 0.0,
-      oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c,         0.0,
-      0.0,                              0.0,                              0.0,                              1.0
-    );
-  }
-  vec3 rotate(vec3 v, vec3 axis, float angle) {
-    mat4 m = rotationMatrix(axis, angle);
-    return (m * vec4(v, 1.0)).xyz;
-  }
-  vec2 getmatcap(vec3 eye, vec3 normal) {
-    vec3 reflected = reflect(eye, normal);
-    float m = 2.8284271247461903 * sqrt(reflected.z + 1.0);
-    return reflected.xy / m + 0.5;
-  }
-  float sdSphere(vec3 p, float s) {
-    return length(p) - s;
-  }
-  float sdBox(vec3 p, vec3 b) {
-    vec3 q = abs(p) - b;
-    return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
-  }
-  float smin(float a, float b, float k) {
-    float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
-    return mix(b, a, h) - k * h * (1.0 - h);
-  }
-  float rand(vec2 co) {
-    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
-  }
-  float sdf(vec3 p) {
-    vec3 p1 = rotate(p, vec3(0.1), time / 5.0);
-    float box = smin(sdBox(p1, vec3(0.3)), sdSphere(p, 0.4), 0.3);
-    float final = mix(box, sdSphere(p, 0.2 + progress / 4.0), progress);
-    for (int i = 0; i < int(particleNumber); i++) {
-      float randOffset = rand(vec2(i, 0.0));
-      float progr = fract(time / 4.0 + randOffset * 5.0);
-      vec3 rPos = vec3(sin(randOffset * 2.0 * PI) * 2.0, cos(randOffset * 2.0 * PI) * 2.0, 0.0);
-      float gotoCenter = sdSphere(p - rPos * progr, 0.12);
-      final = smin(final, gotoCenter, 0.3);
-    }
-    float mouseSphere = sdSphere(p - vec3(mouse * resolution.zw * 2.0, 0.0), 0.25);
-    return smin(final, mouseSphere, 0.4);
-  }
-  vec3 calcNormal(in vec3 p) {
-    const float eps = 0.0001;
-    const vec2 h = vec2(eps, 0.0);
-    return normalize(vec3(
-      sdf(p + vec3(h.x, h.y, h.y)) - sdf(p - vec3(h.x, h.y, h.y)),
-      sdf(p + vec3(h.y, h.x, h.y)) - sdf(p - vec3(h.y, h.x, h.y)),
-      sdf(p + vec3(h.y, h.y, h.x)) - sdf(p - vec3(h.y, h.y, h.x))
-    ));
-  }
-  void main() {
-    float dist = length(vUv - vec2(0.5));
-    vec3 bg = vec3(mix(vec3(0.1), vec3(0.0), dist));
-    vec2 newUv = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
-    vec3 cameraPos = vec3(0.0, 0.0, 2.0);
-    vec3 ray = normalize(vec3((vUv - vec2(0.5)) * resolution.zw, -1.0));
-    vec3 rayPos = cameraPos;
-    float t = 0.0;
-    float tMax = 5.0;
-    for (int i = 0; i < 256; i++) {
-      vec3 pos = cameraPos + t * ray;
-      float h = sdf(pos);
-      if (h < 0.001 || t > tMax) break;
-      t += h;
-    }
-    vec4 color = vec4(bg, 1.0);
-    if (t < tMax) {
-      vec3 pos = cameraPos + t * ray;
-      vec3 normal = calcNormal(pos);
-      float diff = dot(vec3(1.0), normal);
-      vec2 matCapUv = getmatcap(ray, normal);
-      color = texture2D(matCap, matCapUv);
-      float fresnel = pow(1.0 + dot(ray, normal), 3.0);
-      color = mix(color, vec4(bg, 0.5), fresnel);
-    }
-    gl_FragColor = vec4(color);
-  }
-`;
 
-const matCap = "https://raw.githubusercontent.com/nidorx/matcaps/master/1024/293534_B2BFC5_738289_8A9AA7.png";
 
-class Sketch {
-  constructor({ dom }) {
-    this.time = 0;
-    this.container = dom;
-    this.scene = new THREE.Scene();
-    this.width = this.container.offsetWidth;
-    this.height = this.container.offsetHeight;
-    this.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -1e3, 1e3);
-    this.camera.position.z = 1;
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    this.container.appendChild(this.renderer.domElement);
-    this.resizeSetup();
-    this.mouseEvents();
-    this.addObjects();
-  }
-
-  resizeSetup() {
-    window.addEventListener("resize", this.resize.bind(this));
-  }
-
-  resize() {
-    if (!this.material) return;
-    this.width = this.container.offsetWidth;
-    this.height = this.container.offsetHeight;
-    this.renderer.setSize(this.width, this.height);
-    this.camera.aspect = this.width / this.height;
-    this.camera.updateProjectionMatrix();
-    this.imageAspect = 1;
-    let t, e;
-    if (this.width / this.height > this.imageAspect) {
-      t = (this.width / this.height) * this.imageAspect;
-      e = 1;
-    } else {
-      t = 1;
-      e = (this.width / this.height) * this.imageAspect;
-    }
-    this.material.uniforms.resolution.value.x = this.width;
-    this.material.uniforms.resolution.value.y = this.height;
-    this.material.uniforms.resolution.value.z = t;
-    this.material.uniforms.resolution.value.w = e;
-  }
-
-  mouseEvents() {
-    this.mouse = new THREE.Vector2();
-    document.addEventListener("mousemove", (e) => {
-      this.mouse.x = e.pageX / this.width - 0.5;
-      this.mouse.y = -e.pageY / this.height + 0.5;
-    });
-  }
-
-  addObjects() {
-    const loader = new THREE.TextureLoader();
-    loader.crossOrigin = "";
-    loader.load(matCap, (texture) => {
-      this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
-      this.material = new THREE.ShaderMaterial({
-        extensions: { derivatives: "#extension GL_OES_standard_derivatives : enable" },
-        side: THREE.DoubleSide,
-        vertexShader: vertex,
-        fragmentShader: fragment,
-        transparent: true,
-        uniforms: {
-          time: { value: this.time },
-          mouse: { value: new THREE.Vector2(0, 0) },
-          progress: { value: 0 },
-          matCap: { value: texture },
-          resolution: { value: new THREE.Vector4() },
-          particleNumber: { value: 0 }
+    // Vertex shader
+    const vertex = `
+      varying vec3 pos;
+      varying vec2 vUv;
+      void main() {
+        pos = position;
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    // Fragment shader (unchanged)
+    const fragment = `
+      varying vec3 pos;
+      varying vec2 vUv;
+      uniform float time;
+      uniform sampler2D matCap;
+      uniform vec4 resolution;
+      uniform vec2 mouse;
+      uniform float progress;
+      uniform float particleNumber;
+      #define PI 3.14159265359
+      mat4 rotationMatrix(vec3 axis, float angle) {
+        axis = normalize(axis);
+        float s = sin(angle);
+        float c = cos(angle);
+        float oc = 1.0 - c;
+        return mat4(
+          oc * axis.x * axis.x + c,         oc * axis.x * axis.y - axis.z * s, oc * axis.z * axis.x + axis.y * s, 0.0,
+          oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,        oc * axis.y * axis.z - axis.x * s, 0.0,
+          oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s, oc * axis.z * axis.z + c,         0.0,
+          0.0,                              0.0,                              0.0,                              1.0
+        );
+      }
+      vec3 rotate(vec3 v, vec3 axis, float angle) {
+        mat4 m = rotationMatrix(axis, angle);
+        return (m * vec4(v, 1.0)).xyz;
+      }
+      vec2 getmatcap(vec3 eye, vec3 normal) {
+        vec3 reflected = reflect(eye, normal);
+        float m = 2.8284271247461903 * sqrt(reflected.z + 1.0);
+        return reflected.xy / m + 0.5;
+      }
+      float sdSphere(vec3 p, float s) {
+        return length(p) - s;
+      }
+      float sdBox(vec3 p, vec3 b) {
+        vec3 q = abs(p) - b;
+        return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
+      }
+      float smin(float a, float b, float k) {
+        float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+        return mix(b, a, h) - k * h * (1.0 - h);
+      }
+      float rand(vec2 co) {
+        return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+      }
+      float sdf(vec3 p) {
+        vec3 p1 = rotate(p, vec3(0.1), time / 5.0);
+        float box = smin(sdBox(p1, vec3(0.3)), sdSphere(p, 0.4), 0.3);
+        float final = mix(box, sdSphere(p, 0.2 + progress / 4.0), progress);
+        for (int i = 0; i < int(particleNumber); i++) {
+          float randOffset = rand(vec2(i, 0.0));
+          float progr = fract(time / 4.0 + randOffset * 5.0);
+          vec3 rPos = vec3(sin(randOffset * 2.0 * PI) * 2.0, cos(randOffset * 2.0 * PI) * 2.0, 0.0);
+          float gotoCenter = sdSphere(p - rPos * progr, 0.12);
+          final = smin(final, gotoCenter, 0.3);
         }
-      });
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-      this.scene.add(this.mesh);
-      this.resize();
-      this.render();
-    }, undefined, (err) => {
-      console.error("Texture failed to load:", err);
-    });
-  }
+        float mouseSphere = sdSphere(p - vec3(mouse * resolution.zw * 2.0, 0.0), 0.25);
+        return smin(final, mouseSphere, 0.4);
+      }
+      vec3 calcNormal(in vec3 p) {
+        const float eps = 0.0001;
+        const vec2 h = vec2(eps, 0.0);
+        return normalize(vec3(
+          sdf(p + vec3(h.x, h.y, h.y)) - sdf(p - vec3(h.x, h.y, h.y)),
+          sdf(p + vec3(h.y, h.x, h.y)) - sdf(p - vec3(h.y, h.x, h.y)),
+          sdf(p + vec3(h.y, h.y, h.x)) - sdf(p - vec3(h.y, h.y, h.x))
+        ));
+      }
+      void main() {
+        float dist = length(vUv - vec2(0.5));
+        vec3 bg = vec3(mix(vec3(0.1), vec3(0.0), dist));
+        vec2 newUv = (vUv - vec2(0.5)) * resolution.zw + vec2(0.5);
+        vec3 cameraPos = vec3(0.0, 0.0, 2.0);
+        vec3 ray = normalize(vec3((vUv - vec2(0.5)) * resolution.zw, -1.0));
+        vec3 rayPos = cameraPos;
+        float t = 0.0;
+        float tMax = 5.0;
+        for (int i = 0; i < 256; i++) {
+          vec3 pos = cameraPos + t * ray;
+          float h = sdf(pos);
+          if (h < 0.001 || t > tMax) break;
+          t += h;
+        }
+        vec4 color = vec4(bg, 1.0);
+        if (t < tMax) {
+          vec3 pos = cameraPos + t * ray;
+          vec3 normal = calcNormal(pos);
+          float diff = dot(vec3(1.0), normal);
+          vec2 matCapUv = getmatcap(ray, normal);
+          color = texture2D(matCap, matCapUv);
+          float fresnel = pow(1.0 + dot(ray, normal), 3.0);
+          color = mix(color, vec4(bg, 0.5), fresnel);
+        }
+        gl_FragColor = vec4(color);
+      }
+    `;
+    const matCap = "https://raw.githubusercontent.com/nidorx/matcaps/master/1024/293534_B2BFC5_738289_8A9AA7.png";
 
-  render() {
-    this.time += 0.05;
-    if (this.material) {
-      this.material.uniforms.time.value = this.time;
-      if (this.mouse) this.material.uniforms.mouse.value = this.mouse;
+    class Sketch {
+      constructor({ dom }) {
+        this.time = 0;
+        this.container = dom;
+        this.scene = new THREE.Scene();
+        // Camera will be set in resize()
+        this.camera = null;
+        this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.container.appendChild(this.renderer.domElement);
+        this.mouse = new THREE.Vector2(0, 0);
+        this.resizeSetup();
+        this.mouseEvents();
+        this.addObjects();
+      }
+
+      resizeSetup() {
+        window.addEventListener("resize", () => this.resize());
+        this.resize();
+      }
+
+      resize() {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        this.width = width;
+        this.height = height;
+        this.renderer.setSize(width, height, false);
+        const canvas = this.renderer.domElement;
+        canvas.style.width = width + "px";
+        canvas.style.height = height + "px";
+        // Calculate camera bounds so the 1x1 plane is always a square
+        const aspect = width / height;
+        let left, right, top, bottom;
+        if (aspect >= 1) {
+          // Landscape: fit height, expand width
+          left = -aspect / 2;
+          right = aspect / 2;
+          top = 0.5;
+          bottom = -0.5;
+        } else {
+          // Portrait: fit width, expand height
+          left = -0.5;
+          right = 0.5;
+          top = 0.5 / aspect;
+          bottom = -0.5 / aspect;
+        }
+        // (Re-)create camera if needed
+        if (!this.camera) {
+          this.camera = new THREE.OrthographicCamera(left, right, top, bottom, -1e3, 1e3);
+          this.camera.position.z = 1;
+        } else {
+          this.camera.left = left;
+          this.camera.right = right;
+          this.camera.top = top;
+          this.camera.bottom = bottom;
+          this.camera.updateProjectionMatrix();
+        }
+        // Shader uniform: always pass 1,1 for .zw so the raymarch stays square
+        if (this.material) {
+          this.material.uniforms.resolution.value.x = width;
+          this.material.uniforms.resolution.value.y = height;
+          this.material.uniforms.resolution.value.z = 1.0;
+          this.material.uniforms.resolution.value.w = 1.0;
+        }
+      }
+
+      mouseEvents() {
+        document.addEventListener("mousemove", (e) => {
+          this.mouse.x = (e.pageX / this.width - 0.5) * 2;
+          this.mouse.y = (-e.pageY / this.height + 0.5) * 2;
+        });
+        document.addEventListener("touchmove", (e) => {
+          if (e.touches && e.touches.length > 0) {
+            const touch = e.touches[0];
+            this.mouse.x = (touch.pageX / this.width - 0.5) * 2;
+            this.mouse.y = (-touch.pageY / this.height + 0.5) * 2;
+          }
+        }, { passive: true });
+      }
+
+      addObjects() {
+        const loader = new THREE.TextureLoader();
+        loader.crossOrigin = "";
+        loader.load(matCap, (texture) => {
+          this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+          this.material = new THREE.ShaderMaterial({
+            extensions: { derivatives: "#extension GL_OES_standard_derivatives : enable" },
+            side: THREE.DoubleSide,
+            vertexShader: vertex,
+            fragmentShader: fragment,
+            transparent: true,
+            uniforms: {
+              time: { value: this.time },
+              mouse: { value: new THREE.Vector2(0, 0) },
+              progress: { value: 0 },
+              matCap: { value: texture },
+              resolution: { value: new THREE.Vector4() },
+              particleNumber: { value: 0 }
+            }
+          });
+          this.mesh = new THREE.Mesh(this.geometry, this.material);
+          this.scene.add(this.mesh);
+          this.resize();
+          this.render();
+        }, undefined, (err) => {
+          console.error("Texture failed to load:", err);
+        });
+      }
+
+      render() {
+        this.time += 0.05;
+        if (this.material) {
+          this.material.uniforms.time.value = this.time;
+          if (this.mouse) this.material.uniforms.mouse.value = this.mouse;
+        }
+        this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(this.render.bind(this));
+      }
     }
-    this.renderer.render(this.scene, this.camera);
-    requestAnimationFrame(this.render.bind(this));
-  }
-}
 
-new Sketch({ dom: document.getElementById("webgl-bg") });
+    document.addEventListener("DOMContentLoaded", function () {
+      new Sketch({ dom: document.getElementById("webgl-bg") });
+    });
+
+
+
+
+
+
+
+
 
 $(function () {
   function spanize($elem, delayFactor) {
