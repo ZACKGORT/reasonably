@@ -289,7 +289,7 @@ p,
 .superscript-symbol {
   position: absolute;
   top: -7px;
-  right: -9px;
+  right: -11px;
   font-size: 0.75em;
   color: var(--warm-off-white) !important;
 }
