@@ -200,7 +200,8 @@ p,
     background: var(--warm-off-black);
     /* Canonical font-family already set above */
     text-transform: none;
-    letter-spacing: -0.03em;
+    letter-spacing: .05em;
+    line-height: 1.4em;
     color: var(--warm-off-white);
     position: relative;
     overflow: hidden;
