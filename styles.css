@@ -288,7 +288,7 @@ p,
 .trademark-symbol .letter { transform: scaleX(-1); }
 .superscript-symbol {
   position: absolute;
-  top: -1px;
+  top: -7px;
   right: -9px;
   font-size: 0.75em;
   color: var(--warm-off-white) !important;
