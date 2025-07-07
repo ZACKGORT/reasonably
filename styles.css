@@ -1,32 +1,5 @@
 @import url("https://unpkg.com/normalize.css") layer(normalize);
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
 @layer normalize, base, demo, scroll, popover;
-
-/* Canonical font-family: Poppins for all main text elements */
-body,
-h1, h2, h3, h4, h5, h6,
-p,
-.heading,
-.mast__title,
-.mast__title.js-spanize,
-.mast__text,
-.mast__texts,
-.life-paragraph,
-.balance-paragraph,
-.project-title,
-.project-year,
-.zackgort-paragraph {
-  font-family: 'Poppins', Helvetica, Arial, sans-serif !important;
-}
-
-
-/* Remove legacy font-family from these elements (handled above) */
-.project-title,
-.project-year,
-.zackgort-paragraph {
-  /* font-family intentionally omitted for canonical Poppins inheritance */
-}
-
 .page { display: none; }
 .page.active { display: block; }
 #page-life.active {
@@ -69,55 +42,21 @@ p,
   height: calc(var(--trigger-offset) + env(safe-area-inset-bottom) + 20vh);
   flex-shrink: 0;
 }
-/* --- UPDATED: Match work page headings --- */
-#page-life h1,
-#page-life h2,
-#page-life h3,
-#page-life h4,
-#page-life h5,
-#page-life h6 {
-  position: relative;
-  mix-blend-mode: exclusion;
-  font-size: 1.8rem;
-  font-weight: 200;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+#page-life h1 {
+  font-size: 1.6em;
+  line-height: 1.2;
   margin-bottom: 0.8em;
-  opacity: 0.92;
-  color: #fff !important;
-  line-height: 1.15;
-}
-@media (max-width: 768px) {
-  #page-life h1,
-  #page-life h2,
-  #page-life h3,
-  #page-life h4,
-  #page-life h5,
-  #page-life h6 {
-    font-size: 1.4rem;
-  }
-}
-@media (max-width: 600px) {
-  #page-life h1,
-  #page-life h2,
-  #page-life h3,
-  #page-life h4,
-  #page-life h5,
-  #page-life h6 {
-    font-size: 1.4em;
-    letter-spacing: 0.01em;
-  }
-}
-@media (max-width: 600px) {
-  #page-life .content p {
-    font-size: 0.98em;    /* Or your desired size */
-    line-height: 1.5;     /* Or your desired spacing */
-    margin-bottom: 0.7em; /* Or your desired spacing */
-    padding: 0 0.15em;    /* Optional: horizontal padding */
-  }
+  opacity: 0.85;
 }
 
-
+@media (max-width: 600px) {
+  #page-life .content {
+    padding-left: 3rem;
+    padding-right: 3rem;
+    padding-top: calc(var(--header-h) + 0.02rem);
+  }
+  #page-life h1 { font-size: 1.25em; }
+}
 
 #page-life .content > *:last-child {
   margin-bottom: 0;
@@ -198,7 +137,7 @@ p,
     display: grid;
     place-items: center;
     background: var(--warm-off-black);
-    /* Canonical font-family already set above */
+    font-family: "Poppins", Helvetica, Arial, sans-serif;
     text-transform: none;
     letter-spacing: -0.03em;
     color: var(--warm-off-white);
@@ -248,12 +187,10 @@ p,
 }
 .logo-wrapper {
   display: flex;
-  margin: 0 0 0 3%;
+  margin: 0 0 0 2.5%;
   justify-content: center;
   align-items: center;
   pointer-events: auto;
-  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.3, 1);  
-  
 }
 .logo-wrapper:hover { filter: url("#logo-spotlight"); }
 .logo-wrapper a { text-decoration: none !important; outline: none !important; }
@@ -263,15 +200,6 @@ p,
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 50%;
 }
-
-
-/* Add this for the rotation effect */
-.logo-wrapper:hover,
-.logo-wrapper:focus-visible {
-  animation: spin360 0.9s cubic-bezier(0.6, 0.2, 0.3, 1);
-}
-
-
 .trademark-symbol {
   width: 24px;
   height: 24px;
@@ -296,8 +224,6 @@ p,
 @keyframes spin360 {
   to { transform: rotate(360deg); }
 }
-
-
 
 nav {
   position: relative;
@@ -707,7 +633,7 @@ nav ul.content a:is(:hover, :focus-visible, [data-active="true"]) { opacity: 0.9
     display: grid;
     place-items: left;
     background: light-dark(white, black);
-    /* font-family intentionally omitted for canonical Poppins inheritance */
+    font-family: "SF Pro Text", "SF Pro Icons", "AOS Icons", "Helvetica Neue", Helvetica, Arial, sans-serif, system-ui;
   }
   body::before {
     --size: 45px;
@@ -1037,7 +963,7 @@ li:has(input:checked) > label {
 .cards > li > h2 {
   position: absolute;
   left: 50%;
-  top: 36%;
+  top: 42%;
   transform: translateX(-50%);
   width: var(--info-width);
   max-width: 90vw;
@@ -1047,15 +973,14 @@ li:has(input:checked) > label {
   user-select: none;
   opacity: var(--title-opacity, 0);
   transition: var(--duration) ease-in-out var(--title-delay, 0ms);
-  
 }
 .cards > li > p {
   position: absolute;
   left: 50%;
-  top: 44%;
+  top: 58%;
   transform: translateX(-50%);
   width: var(--info-width);
-  max-width: 100vw;
+  max-width: 90vw;
   box-sizing: border-box;
   padding: 0 1rem;
   pointer-events: none;
@@ -1123,10 +1048,10 @@ li:has(input:checked) {
 /* --- CONNECT PAGE (CORRECTED) --- */
 .connect-container {
   margin: 3em auto 0 auto;
-  width: auto;
+  width: 1200px;
   max-width: 98vw;
   min-height: 200px;
-  padding-top: 4em;
+  padding-top: 8em;
   background: transparent;
   border-radius: 20px;
   box-shadow: none;
@@ -1184,7 +1109,7 @@ li:has(input:checked) {
   text-transform: uppercase;
   color: #fff;
   opacity: 0.96;
-  margin-bottom: 1.66em;
+  margin-bottom: 0.1em;
   background: transparent !important;
   cursor: pointer;
   text-align: left;
@@ -1241,7 +1166,7 @@ h2.active, h2:hover, h2:focus {
 .mast__text {
   font-size: 0.9em;
   font-weight: 200;
-  margin: 1.2em 0 0.2em 0;
+  margin: 0 0 0.2em 0;
   letter-spacing: 0.4em;
   line-height: 1.6;
   color: #eee;
@@ -1320,71 +1245,46 @@ h1, .mast__title, .mast__title.js-spanize {
   .mast__text { font-size: 0.90em; letter-spacing: 0.2em; line-height: 1.7; margin-bottom: 0; }
   .mast { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; position: relative; }
   .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; pointer-events: none; }
-  .mast__header h2,{ width: 100%; text-align: left; display: flex; justify-content: left; align-items: left; }
+  .mast__header h2, .heading h2, h2 { width: 100%; text-align: center; display: flex; justify-content: center; align-items: center; }
 }
 
 @media (max-width: 400px) {
   .connect-container { padding: 12em; }
   .mast__texts { max-width: 100vw; }
-  .mast__title, .mast__title.js-spanize { font-size: 1.8em; letter-spacing: 0.09em; margin-bottom: 0.1em; }
+  .mast__title, .mast__title.js-spanize { font-size: 2.6em; letter-spacing: 0.09em; margin-bottom: 0.1em; }
   .mast__text { font-size: 0.88em; letter-spacing: 0.2em; line-height: 1.7; }
   .mast { display: flex; flex-direction: column; justify-content: left; align-items: left; width: 100%; position: relative; }
   .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: left; background-position: left; pointer-events: none; }
 }
 
-
-.zackgort-footer {
-  position: fixed;
-  bottom: 0;
-  padding-bottom: 2rem;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 9999;
-  background-color: transparent;
-  pointer-events: none;
-}
-.zackgort-paragraph {
-  position: relative;
-  /* font-family removed for Poppins canonical inheritance */
-  text-transform: uppercase;
-  font-size: 0.92em;
-  letter-spacing: 0.2em;
-  overflow: hidden;
-  white-space: normal;
-  background: linear-gradient(90deg, #000, #fff, #000);
-  background-repeat: no-repeat;
-  background-size: 80%;
-  animation: zackgort-animate 8s linear infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: rgba(255, 255, 255, 0);
-}
-
-@keyframes zackgort-animate {
-  0% { background-position: -500%; }
-  100% { background-position: 500%; }
-}
-
-.project-title {
-  position: relative;
-  /* font-family removed for Poppins canonical inheritance */
-  text-transform: uppercase;
-  font-size: 1.4em;
-  letter-spacing: 0.05em;
-  overflow: hidden;
-}
-.project-year {
-  position: relative;
-  /* font-family removed for Poppins canonical inheritance */
-  text-transform: camel-case;
-  font-size: 0.92em;
-  letter-spacing: 0.05em;
-  overflow: hidden;
-  white-space: normal;
+@media (max-width: 375px) {
+  html, body, #page-connect, .connect-container, .connect-content, .connect-mast-container, .mast {
+    min-width: 375px !important;
+    overflow-x: auto;
+  }
+  .mast { display: flex; flex-direction: column; justify-content: left; align-items: left; width: 100%; position: relative; }
+  .mast__bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; background-size: cover; background-position: center; pointer-events: none; }
 }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* --- REMAINDER OF FILE UNCHANGED --- */
 
 .glassy-button, .glassy-button * {
   -webkit-tap-highlight-color: transparent;
@@ -1590,9 +1490,56 @@ h1, .mast__title, .mast__title.js-spanize {
 
 
 
+.zackgort-footer {
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 2rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 9999;
+  background-color: transparent;
+  pointer-events: none;
+}
+.zackgort-paragraph {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 0.92em;
+  letter-spacing: 0.4em;
+  overflow: hidden;
+  white-space: normal;
+  background: linear-gradient(90deg, #000, #fff, #000);
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: zackgort-animate 8s linear infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: rgba(255, 255, 255, 0);
+}
+
+@keyframes zackgort-animate {
+  0% { background-position: -500%; }
+  100% { background-position: 500%; }
+}
 
 
-
+.project-title {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 1.4em;
+  letter-spacing: 0.05em;
+  overflow: hidden;
+}
+.project-year {
+  position: relative;
+  font-family: sans-serif;
+  text-transform: camel-case;
+  font-size: 0.92em;
+  letter-spacing: 0.05em;
+  overflow: hidden;
+  white-space: normal;
+}
 
 @media only screen and (max-width: 600px) {
   .project-title { font-size: 1em; letter-spacing: 0.01em; }
@@ -1602,7 +1549,7 @@ h1, .mast__title, .mast__title.js-spanize {
     nav {
       position: relative;
       display: flex;
-      align-items: left;
+      align-items: center;
       width: fit-content;
       margin: 0 0 0 auto;
       border-radius: 100px;
@@ -1640,231 +1587,3 @@ body { overflow: hidden; }
   padding: 16px;
   border: 1px solid #ccc;
 }
-
-
-.instruction {
-  position: fixed;
-  left: 1.5rem;
-  bottom: 1.5rem;
-  font-family: 'Gloria Hallelujah', cursive;
-  color: color-mix(in lch, canvas, canvasText 80%);
-  z-index: 9999999;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.5em;
-  font-size: clamp(0.8rem, 1.8vw, 1.4rem);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.6s;
-}
-
-.instruction svg {
-  margin-left: 40px;
-  width: 80px;
-  height: auto;
-  display: block;
-}
-
-.instruction span {
-  margin-top: 0.3em;
-  rotate: 8deg;
-  font-size: clamp(0.8rem, 1.1vw, 1.1rem);
-}
-
-@media (max-width: 600px) {
-  .instruction {
-    font-size: clamp(0.7rem, 1.3vw, 1.1rem);
-    left: 0.75rem;
-    bottom: 0.75rem;
-  }
-  .instruction svg {
-    width: 56px;
-    margin-left: 22px;
-  }
-  .instruction span {
-    font-size: clamp(0.7rem, 0.9vw, 1rem);
-  }
-}
-
-
-
-#page-balance h2 {
-  font-size: 1.8em;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #fff;
-  font-family: 'Poppins', Helvetica, Arial, sans-serif;
-}
-
-#page-balance p {
-  margin-top: 1em;
-  font-size: 0.8em;
-  font-weight: 200;
-  line-height: 1.7em;  
-  letter-spacing: 0.2em;
-  text-align: left;
-  color: #eee;
-  font-family: 'Poppins', Helvetica, Arial, sans-serif;
-}
-
-@media (max-width: 600px) {
-  #page-balance h2 {
-    font-size: 1.0em;
-    letter-spacing: 0.09em;
-  }
-  #page-balance p {
-    font-size: 0.75em;
-    letter-spacing: 0.1em;
-  }
-}
-
-
-
-/* --- iOS/iPhone/iPad-Specific Fixes --- */
-
-/* Target all iOS devices */
-@media screen and (max-width: 820px) and (pointer: coarse) and (hover: none) and (orientation: portrait) {
-  body, html {
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
-    height: 100dvh;
-    height: -webkit-fill-available;
-    width: 100vw;
-    overflow-x: hidden;
-    font-size: 16px;
-    /* iOS sometimes applies odd zoom or font scaling, this helps normalize */
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-    overscroll-behavior: contain;
-  }
-  .connect-container,
-  #page-life .content,
-  .mast,
-  .mast__texts {
-    padding-left: 1.5em !important;
-    padding-right: 1.5em !important;
-    box-sizing: border-box;
-  }
-  .mast__title, .mast__title.js-spanize {
-    font-size: 2em !important;
-    word-break: break-word;
-    white-space: normal;
-    line-height: 1.1;
-  }
-  .mast__text {
-    font-size: 1em !important;
-    letter-spacing: 0.15em !important;
-    line-height: 1.6;
-    max-width: 100vw;
-    white-space: normal;
-    overflow-wrap: break-word;
-  }
-  .section-image {
-    max-width: 90vw !important;
-    width: 100vw !important;
-    margin: 0 auto 1em auto;
-  }
-  /* Fix for footer on iOS Safari */
-  .zackgort-footer {
-    padding-bottom: calc(env(safe-area-inset-bottom, 20px) + 1.5rem);
-  }
-  /* Prevent double scroll on iOS */
-  #page-life.active,
-  #page-life.active .page-inner,
-  #page-balance.active .page-inner {
-    position: fixed;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    width: 100vw;
-    max-width: 100vw;
-    height: 100dvh;
-    min-height: 100dvh;
-  }
-}
-
-/* Narrower iPhones: SE, Mini, iPhone 11/12/13/14, etc. */
-@media only screen and (max-device-width: 430px) and (pointer: coarse) and (hover: none) {
-  .connect-container {
-    padding-left: 0.25em !important;
-    padding-right: 0.25em !important;
-    min-width: unset !important;
-    max-width: 100vw !important;
-  }
-  .mast__texts {
-    min-width: unset !important;
-    max-width: 100vw !important;
-    padding: 0 !important;
-  }
-  .mast__title, .mast__title.js-spanize {
-    font-size: 1.4em !important;
-    letter-spacing: 0.05em !important;
-    margin-bottom: 0.2em !important;
-    word-break: break-word;
-    white-space: normal;
-  }
-  .mast__text {
-    font-size: 0.93em !important;
-    letter-spacing: 0.09em !important;
-    padding: 0 0.1em !important;
-    line-height: 1.5 !important;
-    margin-bottom: 0.6em !important;
-    white-space: normal;
-  }
-  .section-image {
-    max-width: 98vw !important;
-    width: 100vw !important;
-  }
-}
-
-/* iOS Safe Area for Notch (iPhone X, 11, 12, 13, 14, 15...) */
-@media (max-width: 820px) and (pointer: coarse) and (hover: none) {
-  body, html {
-    padding-bottom: env(safe-area-inset-bottom, 20px);
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-  .connect-container {
-    margin-bottom: env(safe-area-inset-bottom, 20px);
-  }
-  .site-header {
-    margin-top: env(safe-area-inset-top, 0px);
-    top: calc(1.85rem + env(safe-area-inset-top, 0px));
-  }
-}
-
-/* Fix for orientation change (sometimes iOS loses 100vh in landscape) */
-@media screen and (orientation: landscape) and (max-width: 1024px) {
-  body, html, #page-life.active, #page-life.active .page-inner {
-    min-height: 100vh !important;
-    min-height: -webkit-fill-available !important;
-    height: 100vh !important;
-    height: -webkit-fill-available !important;
-    overflow-y: auto !important;
-  }
-  .connect-container, .mast__texts {
-    max-width: 99vw !important;
-    padding-left: 1em !important;
-    padding-right: 1em !important;
-  }
-}
-
-
-    @media (max-width: 699px) {
-      #webgl-bg canvas {
-        width: 200vmin;
-        height: 200vmin;
-        min-width: 200vw;
-        min-height: 200vh;
-        max-width: none;
-        max-height: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        aspect-ratio: 1 / 1;
-      }
-    }
-
-
-
