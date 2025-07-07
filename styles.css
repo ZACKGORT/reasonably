@@ -496,13 +496,13 @@ nav ul.content a:is(:hover, :focus-visible, [data-active="true"]) { opacity: 0.9
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
-.item:hover .item-caption,
+/*.item:hover .item-caption,
 .item:focus-within .item-caption {
   opacity: 1;
   visibility: visible;
   transition: opacity 0.3s ease;
   pointer-events: auto;
-}
+}*/
 #background-image-container {
   position: fixed;
   top: 0;
