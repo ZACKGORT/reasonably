@@ -1683,7 +1683,7 @@ body { overflow: hidden; }
     margin-left: 22px;
   }
   .instruction span {
-    font-size: clamp(0.7rem, 0.9vw, 1rem);
+    font-size: clamp(0.7rem, 0.9vw, 0.95rem);
   }
 }
 
