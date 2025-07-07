@@ -1350,6 +1350,3 @@ pageRoots.forEach(page => mo.observe(page, { attributes: true, attributeFilter: 
 // Optionally, listen for navigation events if you use history API or hashchange
 window.addEventListener('hashchange', showInstructionWithDelay);
 window.addEventListener('popstate', showInstructionWithDelay);
-
-
-
