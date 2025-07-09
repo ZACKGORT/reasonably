@@ -63,7 +63,7 @@ body {
 
 /* Scroll Spacer at Bottom of Content */
 .scroll-spacer {
-  height: 300px;
+  height: 200px;
   width: 100%;
   display: block;
 }
@@ -223,9 +223,8 @@ html {
 /* Adjust layout for smaller screens */
 @media (max-width: 960px) {
   .nav-links {
-    /* Use sticky to maintain position relative to scroll */
-    position: sticky;
-    top: 0;
+    /* On mobile, let the navigation scroll with content */
+    position: static;
   }
   .layout-services {
     grid-template-columns: 1fr;
@@ -666,6 +665,7 @@ html {
       <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 2: Publicis Sapient -->
@@ -709,6 +709,7 @@ html {
       <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 3: Code &amp; Theory -->
@@ -752,6 +753,7 @@ html {
       <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 4: Elva Design Group -->
@@ -789,6 +791,7 @@ html {
       <p>They consistently refine their methods and embrace new trends, ensuring designs remain fresh and ahead of the curve.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 5: Huge -->
@@ -832,6 +835,7 @@ html {
       <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 6: LiveArea -->
@@ -869,6 +873,7 @@ html {
       <p>Focused on user-centric design, LiveArea transforms digital interfaces into interactive works of art that captivate audiences.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 7: Workarea -->
@@ -906,6 +911,7 @@ html {
       <p>They consistently explore new technologies and design trends to create workspaces that are both modern and adaptable.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 8: O3 World -->
@@ -943,6 +949,7 @@ html {
       <p>Their innovative designs not only attract attention but also build lasting brand recognition and loyalty.</p>
     </div>
   </div>
+  <div class="tweakpane-container" id="tweakpane-container"></div>
 </div>
 
 <!-- Section 9: One Sixty Over Ninety -->
@@ -1014,31 +1021,13 @@ html {
   const backToTop = document.getElementById("back-to-top-life");
   if (!btnContainer || !backToTop) return;
 
-  function updateNavActive() {
-    // Use getBoundingClientRect to determine which section is closest to the top
-    const sections = Array.from(document.querySelectorAll('.introduction, .layout-container'));
-    let closestSection = sections[0];
-    let minDistance = Infinity;
-    sections.forEach(section => {
-      const distance = Math.abs(section.getBoundingClientRect().top);
-      if(distance < minDistance) {
-        minDistance = distance;
-        closestSection = section;
-      }
-    });
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-      if(link.getAttribute('href') === '#' + closestSection.id) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
-    });
+  function getScrollThreshold() {
+    const introduction = document.querySelector(".introduction");
+    return introduction ? introduction.offsetHeight + 200 : 200;
   }
 
   function checkScroll() {
-    updateNavActive();
-    const threshold = (document.querySelector(".introduction")?.offsetHeight || 200) + 200;
+    const threshold = getScrollThreshold();
     if (window.scrollY > threshold) {
       btnContainer.classList.add("visible");
       backToTop.classList.add("visible");
@@ -1046,13 +1035,45 @@ html {
       btnContainer.classList.remove("visible");
       backToTop.classList.remove("visible");
     }
+    updateNavActive();
+  }
+
+  function updateNavActive() {
+    const intro = document.querySelector(".introduction");
+    const layoutContainers = document.querySelectorAll(".layout-container");
+    const sections = [];
+    if (intro) {
+      sections.push(intro);
+    }
+    sections.push(...Array.from(layoutContainers));
+
+    const navLinks = document.querySelectorAll(".nav-links a");
+    let currentActiveIndex = -1;
+    // Force the first nav link active if at the top of the page
+    if (window.scrollY === 0) {
+      currentActiveIndex = 0;
+    } else {
+      sections.forEach((section, index) => {
+        const sectionTop = section.offsetTop;
+        if (window.scrollY + window.innerHeight / 2 >= sectionTop) {
+          currentActiveIndex = index;
+        }
+      });
+    }
+    navLinks.forEach(link => link.classList.remove("active"));
+    if (currentActiveIndex !== -1 && navLinks[currentActiveIndex]) {
+      navLinks[currentActiveIndex].classList.add("active");
+    }
   }
 
   window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
+
   backToTop.addEventListener("click", function (e) {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
+
+  // Run checkScroll once the DOM content has loaded.
   window.addEventListener("DOMContentLoaded", checkScroll);
   checkScroll();
 })();
