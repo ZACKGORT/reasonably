@@ -1,1132 +1,1250 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>A Reasonable Resume</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
-
-:root {
-  --spacing-base: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --color-text: #ffffff;
-  --color-text-dim: 0.6;
-  --transition-medium: 0.3s ease;
-  --font-size-base: 12px;
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: rgba(0, 0, 0, 0.1);
-  --blur-amount: 4px;
-}
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Global body styling */
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #ffffff;
-  color: #000000;
-  margin: 0;
-  padding: 10px;
-  position: relative;
-}
-
-/* Updated Introduction Section */
-.introduction {
-  max-width: 900px;
-  width: 100%;
-  margin: 100px auto 0;
-  padding: 20px;
-  text-align: left;
-  background-color: transparent;
-}
-
-.introduction h1 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.introduction p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* Scroll Spacer at Bottom of Content */
-.scroll-spacer {
-  height: 200px;
-  width: 100%;
-  display: block;
-}
-
-/* Navigation Links Styling (Frosted Glass Background) */
-.nav-links {
-  padding: var(--spacing-base);
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(10px);
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10001;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.nav-links a {
-  position: relative;
-  cursor: pointer;
-  color: #000000;
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  opacity: 1;
-  transition: color var(--transition-medium);
-  flex: 0 0 auto;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background-color: #000000;
-  z-index: -1;
-  transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.nav-links a:hover {
-  color: #ffffff;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-  background-color: #000000;
-}
-
-.nav-links a:active,
-.nav-links a.active {
-  color: #ffffff;
-}
-
-.nav-links a:active::after,
-.nav-links a.active::after {
-  width: 100%;
-  background-color: #000000;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Layout Containers (Glassmorphism) */
-.layout-container {
-  scroll-margin-top: 80px;
-  width: 80%;
-  max-width: 900px;
-  margin: 4em auto 0;
-  padding: 20px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  box-shadow: 0 4px 30px var(--glass-shadow);
-  position: relative;
-  z-index: 2;
-}
-
-.layout-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 10px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.layout-header h1 {
-  font-size: 2.2em;
-  font-weight: bold;
-  margin: 0;
-}
-
-.layout-progress {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid var(--glass-border);
-  font-size: 0.9em;
-}
-
-.shortcut-info {
-  font-size: 1em;
-  opacity: 0.7;
-}
-
-.layout-services {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 10px 0;
-}
-
-.service-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  box-shadow: inset 0 0 5px var(--glass-shadow);
-}
-
-.service-item h3 {
-  margin: 0 0 10px;
-  font-size: 1em;
-}
-
-.service-item p {
-  font-size: 0.75em;
-  line-height: 1.4;
-  margin: 0;
-}
-
-.service-item code {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-.tweakpane-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  transition: opacity 0.3s ease;
-  z-index: 3;
-}
-
-/* Adjust layout for smaller screens */
-@media (max-width: 960px) {
-  .nav-links {
-    /* On mobile, let the navigation scroll with content */
-    position: static;
-  }
-  .layout-services {
-    grid-template-columns: 1fr;
-  }
-  .layout-container {
-    width: 100%;
-    padding: 20px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 2rem;
-  }
-  table th,
-  table td {
-    padding: 12px;
-  }
-}
-
-/* Background SVG */
-.background-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-}
-
-/* Updated Glassy Button Container */
-.glassy-button-container {
-  position: fixed;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1200;
-}
-
-/* Glassy Button Styles */
-.glassy-button,
-.glassy-button * {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
-  touch-action: manipulation;
-  font-family: "Inter", sans-serif;
-}
-
-.glassy-button-wrap {
-  position: relative;
-  z-index: 2;
-  border-radius: 999vw;
-  background: transparent;
-  pointer-events: none;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-}
-
-.glassy-button-shadow {
-  --shadow-cuttoff-fix: 2em;
-  position: absolute;
-  width: calc(100% + var(--shadow-cuttoff-fix));
-  height: calc(100% + var(--shadow-cuttoff-fix));
-  top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  filter: blur(clamp(4px, 0.25em, 16px));
-  -webkit-filter: blur(clamp(4px, 0.25em, 16px));
-  -moz-filter: blur(clamp(4px, 0.25em, 16px));
-  -ms-filter: blur(clamp(4px, 0.25em, 16px));
-  overflow: visible;
-  pointer-events: none;
-}
-
-.glassy-button-shadow::after {
-  content: "";
-  position: relative;
-  z-index: 0;
-  inset: 0;
-  border-radius: 999vw;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-  padding: 0.125em;
-  box-sizing: border-box;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  overflow: visible;
-  opacity: 1;
-}
-
-.glassy-button {
-  --border-width: clamp(1px, 0.0625em, 4px);
-  all: unset;
-  cursor: pointer;
-  position: relative;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  pointer-events: auto;
-  z-index: 3;
-  background: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.05),
-    rgba(255, 255, 255, 0.2),
-    rgba(255, 255, 255, 0.05)
-  );
-  border-radius: 999vw;
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-    0 0 0 0 rgba(255, 255, 255, 1);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  -moz-backdrop-filter: blur(4px);
-  -ms-backdrop-filter: blur(4px);
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-}
-
-.glassy-button:hover,
-.glassy-button:active {
-  transform: scale(0.975);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  -moz-backdrop-filter: blur(10px);
-  -ms-backdrop-filter: blur(10px);
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
-    0 0 0 0 rgba(255, 255, 255, 1);
-}
-
-.glassy-button span {
-  position: relative;
-  display: block;
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  font-family: "Inter", sans-serif;
-  letter-spacing: -0.05em;
-  font-weight: 500;
-  font-size: 1em;
-  color: rgba(50, 50, 50, 1);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-shadow: 0 0.25em 0.05em rgba(0, 0, 0, 0.1);
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  padding-inline: 1.5em;
-  padding-block: 0.875em;
-}
-
-.glassy-button:hover span {
-  text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12);
-}
-
-.glassy-button span::after {
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: 1;
-  width: calc(100% - var(--border-width));
-  height: calc(100% - var(--border-width));
-  top: calc(0% + var(--border-width) / 2);
-  left: calc(0% + var(--border-width) / 2);
-  box-sizing: border-box;
-  border-radius: 999vw;
-  overflow: clip;
-  background: linear-gradient(
-    var(--angle-2),
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.5) 40% 50%,
-    rgba(255, 255, 255, 0) 55%
-  );
-  z-index: 3;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  background-size: 200% 200%;
-  background-position: 0% 50%;
-  background-repeat: no-repeat;
-  transition: background-position calc(var(--anim--hover-time) * 1.25)
-      var(--anim--hover-ease),
-    --angle-2 calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease);
-}
-
-.glassy-button:hover span::after {
-  background-position: 25% 50%;
-}
-
-.glassy-button:active span::after {
-  background-position: 50% 15%;
-  --angle-2: -15deg;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .glassy-button span::after,
-  .glassy-button:active span::after {
-    --angle-2: -45deg;
-  }
-}
-
-.glassy-button::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  border-radius: 999vw;
-  width: calc(100% + var(--border-width));
-  height: calc(100% + var(--border-width));
-  top: calc(0% - var(--border-width) / 2);
-  left: calc(0% - var(--border-width) / 2);
-  padding: var(--border-width);
-  box-sizing: border-box;
-  background: conic-gradient(
-      from var(--angle-1) at 50% 50%,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0) 5% 40%,
-      rgba(0, 0, 0, 0.5) 50%,
-      rgba(0, 0, 0, 0) 60% 95%,
-      rgba(0, 0, 0, 0.5)
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease),
-    --angle-1 500ms ease;
-  box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
-}
-
-.glassy-button:hover::after {
-  --angle-1: -125deg;
-}
-
-.glassy-button:active::after {
-  --angle-1: -75deg;
-}
-
-@media (hover: none) and (pointer: coarse) {
-  .glassy-button::after,
-  .glassy-button:hover::after,
-  .glassy-button:active::after {
-    --angle-1: -75deg;
-  }
-}
-
-/* Desktop positioning (screens wider than 960px) */
-@media (min-width: 961px) {
-  .glassy-button-container {
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 1200 !important;
-  }
-}
-
-/* Mobile positioning (screens 960px and smaller) */
-@media (max-width: 960px) {
-  .glassy-button-container {
-    position: fixed !important;
-    bottom: 50px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    z-index: 1200 !important;
-  }
-}
-
-/* UPDATED BLUR LAYER */
-@layer blurring {
-  :root {
-    --layers: 5;
-    --blur-max: 40;
-    --mask-stop: 15;
-  }
-  .blur {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 10;
-    pointer-events: none;
-  }
-  .blur div {
-    --blur: calc(
-      sin(((var(--layers) - var(--i)) / var(--layers)) * 90deg) *
-        var(--blur-max)
-    );
-    --stop: calc(sin(((var(--i)) / var(--layers)) * 90deg) * var(--mask-stop));
-    position: absolute;
-    inset: 0;
-  }
-  .blur div::after {
-    content: "";
-    position: absolute;
-    inset: 0 -250%;
-    backdrop-filter: blur(calc(var(--blur) * 1px));
-    mask: linear-gradient(
-      180deg,
-      transparent 0 calc((100 - var(--stop)) * 1%),
-      #000 100%
-    );
-  }
-}
-
-/* Glass Buttons styling within the introduction */
-.introduction {
-  position: relative;
-}
-
-/* Container for the two buttons, aligned to the right */
-.glass-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-/* Glass button common style */
-.glass-button {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  color: #000;
-  font-size: var(--font-size-base);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  transition: background var(--transition-medium);
-}
-
-.glass-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Ensure the email button looks like a button */
-.glass-buttons a.glass-button {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-  </style>
-</head>
-<body>
-<!-- Mobile debugging meta tag -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-
-<!-- Navigation Links -->
-<nav class="nav-links">
-  <a href="#section-1">Introduction</a>
-  <a href="#section-2">Phenom</a>
-  <a href="#section-3">Publicis Sapient</a>
-  <a href="#section-4">Code &amp; Theory</a>
-  <a href="#section-5">Elva Design Group</a>
-  <a href="#section-6">Huge</a>
-  <a href="#section-7">LiveArea</a>
-  <a href="#section-8">Workarea</a>
-  <a href="#section-9">O3 World</a>
-  <a href="#section-10">One Sixty Over Ninety</a>
-</nav>
-
-<!-- Background SVG -->
-<svg class="background-svg" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <pattern id="dottedGrid" width="30" height="30" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="1" fill="rgba(0,0,0,0.15)" />
-    </pattern>
-  </defs>
-  <rect width="100%" height="100%" fill="url(#dottedGrid)" />
-</svg>
-</div>
-
-<div class="blur"></div>
-
-<!-- Content Sections -->
-<!-- Introduction Section -->
-<div class="introduction" id="section-1">
-  <h1>A Reasonable Resume</h1>
-  <p>
-    Zachary Gort<br>
-    "Web Designer"<br>
-    <a href="https://reasonably.cc" target="_blank" rel="noopener">https://reasonably.cc</a><br>
-    <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br>
-    <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">LinkedIn/in/zackgort</a><br>
-  </p>
-  <!-- Glass Button Container -->
-  <div class="glass-buttons">
-    <a class="glass-button" href="javascript:savePageAsPDF()">Save as PDF</a>
-  </div>
-</div>
-
-<!-- Section 1: Phenom -->
-<div class="layout-container" id="section-2">
-  <div class="layout-header">
-    <h1 class="layout-title">Phenom</h1>
-  </div>
-  <div class="layout-progress">
-    <div>User Experience Strategist</div>
-    <div class="shortcut-info">2025</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Official duties</h3>
-      <p>Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the same area as the last.</p>
-    </div>
-    <div class="service-item">
-      <h3>Unofficial duties</h3>
-      <p>For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br>
-        <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Above &amp; beyond action</h3>
-      <p>To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br>
-        <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Core Skills</h3>
-      <p>√(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code> to avoid polar clustering.</p>
-    </div>
-    <div class="service-item">
-      <h3>Soft Skills</h3>
-      <p>I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and opacity—offset by each point’s fractional position to create a wave effect.</p>
-    </div>
-    <div class="service-item">
-      <h3>Learned Skills</h3>
-      <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 2: Publicis Sapient -->
-<div class="layout-container" id="section-3">
-  <div class="layout-header">
-    <h1 class="layout-title">Publicis Sapient</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Senior User Experience Designer</div>
-    <div class="shortcut-info">2022-2023</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Official duties</h3>
-      <p>Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the same area as the last.</p>
-    </div>
-    <div class="service-item">
-      <h3>Unofficial duties</h3>
-      <p>For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br>
-        <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Above &amp; beyond action</h3>
-      <p>To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br>
-        <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Core Skills</h3>
-      <p>√(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code> to avoid polar clustering.</p>
-    </div>
-    <div class="service-item">
-      <h3>Soft Skills</h3>
-      <p>I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and opacity—offset by each point’s fractional position to create a wave effect.</p>
-    </div>
-    <div class="service-item">
-      <h3>Learned Skills</h3>
-      <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 3: Code &amp; Theory -->
-<div class="layout-container" id="section-4">
-  <div class="layout-header">
-    <h1 class="layout-title">Code &amp; Theory</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Senior User Experience Designer</div>
-    <div class="shortcut-info">2021-2022</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Official duties</h3>
-      <p>Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the same area as the last.</p>
-    </div>
-    <div class="service-item">
-      <h3>Unofficial duties</h3>
-      <p>For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br>
-        <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Above &amp; beyond action</h3>
-      <p>To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br>
-        <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Core Skills</h3>
-      <p>√(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code> to avoid polar clustering.</p>
-    </div>
-    <div class="service-item">
-      <h3>Soft Skills</h3>
-      <p>I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and opacity—offset by each point’s fractional position to create a wave effect.</p>
-    </div>
-    <div class="service-item">
-      <h3>Learned Skills</h3>
-      <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 4: Elva Design Group -->
-<div class="layout-container" id="section-5">
-  <div class="layout-header">
-    <h1 class="layout-title">Elva Design Group</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Creative Director</div>
-    <div class="shortcut-info">2021</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Design Leadership</h3>
-      <p>Elva Design Group specializes in high-end design innovations with a focus on bespoke visual identities and creative collaborations.</p>
-    </div>
-    <div class="service-item">
-      <h3>Creative Strategy</h3>
-      <p>They lead with a visionary approach to digital craftsmanship, ensuring that each project reflects both art and functionality.</p>
-    </div>
-    <div class="service-item">
-      <h3>Innovative Practices</h3>
-      <p>Utilizing cutting-edge design techniques, they transform traditional aesthetics into modern user experiences that impress and inspire.</p>
-    </div>
-    <div class="service-item">
-      <h3>Collaborative Solutions</h3>
-      <p>Their process emphasizes close client collaboration, translating brand ethos into compelling designs and cohesive visual narratives.</p>
-    </div>
-    <div class="service-item">
-      <h3>Core Competencies</h3>
-      <p>Expertise in typography, color theory, and layout enable them to produce designs that balance beauty with usability.</p>
-    </div>
-    <div class="service-item">
-      <h3>Continuous Growth</h3>
-      <p>They consistently refine their methods and embrace new trends, ensuring designs remain fresh and ahead of the curve.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 5: Huge -->
-<div class="layout-container" id="section-6">
-  <div class="layout-header">
-    <h1 class="layout-title">Huge</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Senior User Experience Designer</div>
-    <div class="shortcut-info">2021</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Official duties</h3>
-      <p>Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the same area as the last.</p>
-    </div>
-    <div class="service-item">
-      <h3>Unofficial duties</h3>
-      <p>For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br>
-        <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Above &amp; beyond action</h3>
-      <p>To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br>
-        <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br>
-        <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
-      </p>
-    </div>
-    <div class="service-item">
-      <h3>Core Skills</h3>
-      <p>√(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code> to avoid polar clustering.</p>
-    </div>
-    <div class="service-item">
-      <h3>Soft Skills</h3>
-      <p>I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and opacity—offset by each point’s fractional position to create a wave effect.</p>
-    </div>
-    <div class="service-item">
-      <h3>Learned Skills</h3>
-      <p>Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on circles or spheres.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 6: LiveArea -->
-<div class="layout-container" id="section-7">
-  <div class="layout-header">
-    <h1 class="layout-title">LiveArea</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Digital Experience Designer</div>
-    <div class="shortcut-info">2020-2021</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Interactive Design</h3>
-      <p>LiveArea focuses on real-time digital experiences, crafting interactive user interfaces with dynamic motion and responsive elements.</p>
-    </div>
-    <div class="service-item">
-      <h3>User Engagement</h3>
-      <p>They emphasize creating immersive environments that engage users through innovative digital storytelling and intuitive navigation.</p>
-    </div>
-    <div class="service-item">
-      <h3>Technical Integration</h3>
-      <p>By seamlessly integrating modern web technologies, they ensure that interactive designs are both visually impressive and highly functional.</p>
-    </div>
-    <div class="service-item">
-      <h3>Core Competencies</h3>
-      <p>Expertise in animation, interactivity, and responsive design allows them to push the boundaries of digital user experiences.</p>
-    </div>
-    <div class="service-item">
-      <h3>Continuous Innovation</h3>
-      <p>They consistently adopt and adapt to emerging trends, ensuring that each project sets new standards in digital engagement.</p>
-    </div>
-    <div class="service-item">
-      <h3>Value Proposition</h3>
-      <p>Focused on user-centric design, LiveArea transforms digital interfaces into interactive works of art that captivate audiences.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 7: Workarea -->
-<div class="layout-container" id="section-8">
-  <div class="layout-header">
-    <h1 class="layout-title">Workarea</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Experience Director</div>
-    <div class="shortcut-info">2018-2019</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Experience Optimization</h3>
-      <p>Workarea redefines workspace aesthetics by merging functionality with creative design, ensuring productive yet inspiring environments.</p>
-    </div>
-    <div class="service-item">
-      <h3>Innovative Solutions</h3>
-      <p>They implement forward-thinking strategies that streamline operations while enhancing the overall aesthetic and user experience.</p>
-    </div>
-    <div class="service-item">
-      <h3>Operational Excellence</h3>
-      <p>Combining robust design principles with practical functionality, Workarea elevates day-to-day workplace interactions.</p>
-    </div>
-    <div class="service-item">
-      <h3>Core Strengths</h3>
-      <p>With a focus on ergonomics, efficiency, and design innovation, their projects deliver both style and substance.</p>
-    </div>
-    <div class="service-item">
-      <h3>Collaborative Spirit</h3>
-      <p>Working closely with clients, Workarea tailors solutions that dynamically respond to evolving business needs and cultural shifts.</p>
-    </div>
-    <div class="service-item">
-      <h3>Future-Ready Design</h3>
-      <p>They consistently explore new technologies and design trends to create workspaces that are both modern and adaptable.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 8: O3 World -->
-<div class="layout-container" id="section-9">
-  <div class="layout-header">
-    <h1 class="layout-title">O3 World</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Visual Storyteller</div>
-    <div class="shortcut-info">2016-2017</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Visual Branding</h3>
-      <p>O3 World specializes in creating immersive visual narratives that transform brands through powerful imagery and design.</p>
-    </div>
-    <div class="service-item">
-      <h3>Concept Realization</h3>
-      <p>They turn abstract ideas into compelling visuals, ensuring that each project tells a unique story.</p>
-    </div>
-    <div class="service-item">
-      <h3>Innovative Techniques</h3>
-      <p>Using a blend of traditional artistry and modern digital tools, they establish a signature style that resonates across media.</p>
-    </div>
-    <div class="service-item">
-      <h3>Core Methods</h3>
-      <p>Expertise in color theory, typography, and composition drives the striking and memorable experiences they deliver.</p>
-    </div>
-    <div class="service-item">
-      <h3>Engagement Strategies</h3>
-      <p>O3 World’s approach keeps audiences captivated, transforming visual content into an unforgettable narrative journey.</p>
-    </div>
-    <div class="service-item">
-      <h3>Market Impact</h3>
-      <p>Their innovative designs not only attract attention but also build lasting brand recognition and loyalty.</p>
-    </div>
-  </div>
-  <div class="tweakpane-container" id="tweakpane-container"></div>
-</div>
-
-<!-- Section 9: One Sixty Over Ninety -->
-<div class="layout-container" id="section-10">
-  <div class="layout-header">
-    <h1 class="layout-title">One Sixty Over Ninety</h1>
-  </div>
-  <div class="layout-progress">
-    <div>Innovative Designer</div>
-    <div class="shortcut-info">2014-2016</div>
-  </div>
-  <div class="layout-services">
-    <div class="service-item">
-      <h3>Design Evolution</h3>
-      <p>One Sixty Over Ninety pushes the boundaries of conventional design, integrating avant-garde techniques with practical application.</p>
-    </div>
-    <div class="service-item">
-      <h3>Concept Realization</h3>
-      <p>Their approach takes abstract ideas and transforms them into concrete, visually striking realities that resonate with modern audiences.</p>
-    </div>
-    <div class="service-item">
-      <h3>Innovative Practices</h3>
-      <p>Embracing both tradition and technology, they develop unique solutions that stand out in a crowded digital landscape.</p>
-    </div>
-    <div class="service-item">
-      <h3>Core Solutions</h3>
-      <p>Expert use of cutting-edge software and design methodologies ensures that every project is both innovative and effective.</p>
-    </div>
-    <div class="service-item">
-      <h3>Collaborative Vision</h3>
-      <p>Working closely with clients, they fuse creative insight with strategic execution to deliver projects that exceed expectations.</p>
-    </div>
-    <div class="service-item">
-      <h3>Future-Forward Approach</h3>
-      <p>Constantly exploring emerging trends, One Sixty Over Ninety aims to set new standards in design excellence and innovation.</p>
-    </div>
-  </div>
-</div>
-
-<!-- Lazy-load tables if present -->
-<div class="scroll-spacer"></div>
-
-<!-- Glassy Back to Top Button (SVG with Text, matches styling) -->
-<div class="glassy-button-container" id="back-to-top-life-container" style="position:fixed; left:50%; bottom:8rem; transform:translateX(-50%); z-index:1200;">
-  <div class="glassy-button-wrap">
-    <div class="glassy-button-shadow"></div>
-    <button id="back-to-top-life" class="glassy-button back-to-top-btn" type="button" aria-label="Back to top">
-      <span>
-        <svg width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:0.5em;">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
-        Back to Top
-      </span>
-    </button>
-  </div>
-</div>
-
-<script>
-(function () {
-  function debounce(func, wait) {
-    let timeout;
-    return function (...args) {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
-  }
-
-  const btnContainer = document.getElementById("back-to-top-life-container");
-  const backToTop = document.getElementById("back-to-top-life");
-  if (!btnContainer || !backToTop) return;
-
-  function getScrollThreshold() {
-    const introduction = document.querySelector(".introduction");
-    return introduction ? introduction.offsetHeight + 200 : 200;
-  }
-
-  function checkScroll() {
-    const threshold = getScrollThreshold();
-    if (window.scrollY > threshold) {
-      btnContainer.classList.add("visible");
-      backToTop.classList.add("visible");
-    } else {
-      btnContainer.classList.remove("visible");
-      backToTop.classList.remove("visible");
-    }
-    updateNavActive();
-  }
-
-  function updateNavActive() {
-    const intro = document.querySelector(".introduction");
-    const layoutContainers = document.querySelectorAll(".layout-container");
-    const sections = [];
-    if (intro) {
-      sections.push(intro);
-    }
-    sections.push(...Array.from(layoutContainers));
-
-    const navLinks = document.querySelectorAll(".nav-links a");
-    let currentActiveIndex = -1;
-    // Force the first nav link active if at the top of the page
-    if (window.scrollY === 0) {
-      currentActiveIndex = 0;
-    } else {
-      sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY + window.innerHeight / 2 >= sectionTop) {
-          currentActiveIndex = index;
+  <head>
+    <meta charset="UTF-8" />
+    <title>A Reasonable Resume</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+      :root {
+        --spacing-base: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --color-text: #ffffff;
+        --color-text-dim: 0.6;
+        --transition-medium: 0.3s ease;
+        --font-size-base: 12px;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --glass-shadow: rgba(0, 0, 0, 0.1);
+        --blur-amount: 4px;
+      }
+
+      /* Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+      }
+
+      /* Global body styling */
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #ffffff;
+        color: #000000;
+        margin: 0;
+        padding: 10px;
+        position: relative;
+      }
+
+      /* Updated Introduction Section */
+      .introduction {
+        max-width: 900px;
+        width: 100%;
+        margin: 100px auto 0;
+        padding: 20px;
+        text-align: left;
+        background-color: transparent;
+      }
+
+      .introduction h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .introduction p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin: 0;
+      }
+
+      /* Scroll Spacer at Bottom of Content */
+      .scroll-spacer {
+        height: 300px;
+        width: 100%;
+        display: block;
+      }
+
+      /* Navigation Links Styling (Frosted Glass Background) */
+      .nav-links {
+        padding: var(--spacing-base);
+        display: flex;
+        justify-content: center;
+        gap: var(--spacing-md);
+        background-color: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(10px);
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 10001;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .nav-links a {
+        position: relative;
+        cursor: pointer;
+        color: #000000;
+        text-decoration: none;
+        font-size: var(--font-size-base);
+        font-weight: 700;
+        opacity: 1;
+        transition: color var(--transition-medium);
+        flex: 0 0 auto;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 100%;
+        background-color: #000000;
+        z-index: -1;
+        transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .nav-links a:hover {
+        color: #ffffff;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+        background-color: #000000;
+      }
+
+      .nav-links a:active,
+      .nav-links a.active {
+        color: #ffffff;
+      }
+
+      .nav-links a:active::after,
+      .nav-links a.active::after {
+        width: 100%;
+        background-color: #000000;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Layout Containers (Glassmorphism) */
+      .layout-container {
+        scroll-margin-top: 80px;
+        width: 80%;
+        max-width: 900px;
+        margin: 4em auto 0;
+        padding: 20px;
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 10px;
+        backdrop-filter: blur(var(--blur-amount));
+        -webkit-backdrop-filter: blur(var(--blur-amount));
+        box-shadow: 0 4px 30px var(--glass-shadow);
+        position: relative;
+        z-index: 2;
+      }
+
+      .layout-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 10px;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .layout-header h1 {
+        font-size: 2.2em;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .layout-progress {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid var(--glass-border);
+        font-size: 0.9em;
+      }
+
+      .shortcut-info {
+        font-size: 1em;
+        opacity: 0.7;
+      }
+
+      .layout-services {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 10px 0;
+      }
+
+      .service-item {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        box-shadow: inset 0 0 5px var(--glass-shadow);
+      }
+
+      .service-item h3 {
+        margin: 0 0 10px;
+        font-size: 1em;
+      }
+
+      .service-item p {
+        font-size: 0.75em;
+        line-height: 1.4;
+        margin: 0;
+      }
+
+      .service-item code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+
+      .tweakpane-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        transition: opacity 0.3s ease;
+        z-index: 3;
+      }
+
+      /* Adjust layout for smaller screens */
+      @media (max-width: 960px) {
+        .nav-links {
+          /* Use sticky to maintain position relative to scroll, and align items to start */
+          position: sticky;
+          top: 0;
+          justify-content: flex-start;
         }
-      });
-    }
-    navLinks.forEach(link => link.classList.remove("active"));
-    if (currentActiveIndex !== -1 && navLinks[currentActiveIndex]) {
-      navLinks[currentActiveIndex].classList.add("active");
-    }
-  }
-
-  window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
-
-  backToTop.addEventListener("click", function (e) {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  // Run checkScroll once the DOM content has loaded.
-  window.addEventListener("DOMContentLoaded", checkScroll);
-  checkScroll();
-})();
-
-const config = { layers: 5 };
-const blur = document.querySelector(".blur");
-function updateBlur() {
-  if (!blur) return;
-  blur.innerHTML = "";
-  for (let i = 1; i <= config.layers; i++) {
-    const layer = document.createElement("div");
-    layer.style.setProperty("--i", i);
-    blur.appendChild(layer);
-  }
-}
-updateBlur();
-
-function savePageAsPDF() {
-  const printWindow = window.open("", "PrintWindow", "width=800,height=600");
-  if (!printWindow) return;
-  printWindow.document.write(`
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>Print Page as PDF</title>
-      </head>
-      <body>
-        ${document.body.innerHTML}
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.focus();
-  setTimeout(() => {
-    printWindow.print();
-    printWindow.close();
-  }, 500);
-}
-
-    // Intercept nav link clicks and scroll smoothly without updating the URL hash
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', function(event) {
-        event.preventDefault();
-        const targetId = this.getAttribute('href').substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          // Scroll to the target element smoothly
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-          // Remove the hash from the URL without reloading the page
-          history.replaceState(null, null, ' ');
+        .layout-services {
+          grid-template-columns: 1fr;
         }
-      });
-    });
-</script>
-</body>
+        .layout-container {
+          width: 100%;
+          padding: 20px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 0 2rem;
+        }
+        table th,
+        table td {
+          padding: 12px;
+        }
+      }
+
+      /* Background SVG */
+      .background-svg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+
+      /* Updated Glassy Button Container */
+      .glassy-button-container {
+        position: fixed;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 1200;
+      }
+
+      /* Glassy Button Styles */
+      .glassy-button,
+      .glassy-button * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        user-select: none;
+        touch-action: manipulation;
+        font-family: "Inter", sans-serif;
+      }
+
+      .glassy-button-wrap {
+        position: relative;
+        z-index: 2;
+        border-radius: 999vw;
+        background: transparent;
+        pointer-events: none;
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+      }
+
+      .glassy-button-shadow {
+        --shadow-cuttoff-fix: 2em;
+        position: absolute;
+        width: calc(100% + var(--shadow-cuttoff-fix));
+        height: calc(100% + var(--shadow-cuttoff-fix));
+        top: calc(0% - var(--shadow-cuttoff-fix) / 2);
+        left: calc(0% - var(--shadow-cuttoff-fix) / 2);
+        filter: blur(clamp(4px, 0.25em, 16px));
+        -webkit-filter: blur(clamp(4px, 0.25em, 16px));
+        -moz-filter: blur(clamp(4px, 0.25em, 16px));
+        -ms-filter: blur(clamp(4px, 0.25em, 16px));
+        overflow: visible;
+        pointer-events: none;
+      }
+
+      .glassy-button-shadow::after {
+        content: "";
+        position: relative;
+        z-index: 0;
+        inset: 0;
+        border-radius: 999vw;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+        width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+        height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+        top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+        left: calc(var(--shadow-cuttoff-fix) - 0.875em);
+        padding: 0.125em;
+        box-sizing: border-box;
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+        overflow: visible;
+        opacity: 1;
+      }
+
+      .glassy-button {
+        --border-width: clamp(1px, 0.0625em, 4px);
+        all: unset;
+        cursor: pointer;
+        position: relative;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        pointer-events: auto;
+        z-index: 3;
+        background: linear-gradient(
+          -75deg,
+          rgba(255, 255, 255, 0.05),
+          rgba(255, 255, 255, 0.2),
+          rgba(255, 255, 255, 0.05)
+        );
+        border-radius: 999vw;
+        box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+          inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+          0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+          0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
+          0 0 0 0 rgba(255, 255, 255, 1);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        -moz-backdrop-filter: blur(4px);
+        -ms-backdrop-filter: blur(4px);
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+      }
+
+      .glassy-button:hover,
+      .glassy-button:active {
+        transform: scale(0.975);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        -moz-backdrop-filter: blur(10px);
+        -ms-backdrop-filter: blur(10px);
+        box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+          inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+          0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
+          0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
+          0 0 0 0 rgba(255, 255, 255, 1);
+      }
+
+      .glassy-button span {
+        position: relative;
+        display: block;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        font-family: "Inter", sans-serif;
+        letter-spacing: -0.05em;
+        font-weight: 500;
+        font-size: 1em;
+        color: rgba(50, 50, 50, 1);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-shadow: 0 0.25em 0.05em rgba(0, 0, 0, 0.1);
+        transition: all var(--anim--hover-time) var(--anim--hover-ease);
+        padding-inline: 1.5em;
+        padding-block: 0.875em;
+      }
+
+      .glassy-button:hover span {
+        text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12);
+      }
+
+      .glassy-button span::after {
+        content: "";
+        display: block;
+        position: absolute;
+        z-index: 1;
+        width: calc(100% - var(--border-width));
+        height: calc(100% - var(--border-width));
+        top: calc(0% + var(--border-width) / 2);
+        left: calc(0% + var(--border-width) / 2);
+        box-sizing: border-box;
+        border-radius: 999vw;
+        overflow: clip;
+        background: linear-gradient(
+          var(--angle-2),
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.5) 40% 50%,
+          rgba(255, 255, 255, 0) 55%
+        );
+        z-index: 3;
+        mix-blend-mode: screen;
+        pointer-events: none;
+        background-size: 200% 200%;
+        background-position: 0% 50%;
+        background-repeat: no-repeat;
+        transition: background-position calc(var(--anim--hover-time) * 1.25)
+          var(--anim--hover-ease),
+          --angle-2 calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease);
+      }
+
+      .glassy-button:hover span::after {
+        background-position: 25% 50%;
+      }
+
+      .glassy-button:active span::after {
+        background-position: 50% 15%;
+        --angle-2: -15deg;
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .glassy-button span::after,
+        .glassy-button:active span::after {
+          --angle-2: -45deg;
+        }
+      }
+
+      .glassy-button::after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        border-radius: 999vw;
+        width: calc(100% + var(--border-width));
+        height: calc(100% + var(--border-width));
+        top: calc(0% - var(--border-width) / 2);
+        left: calc(0% - var(--border-width) / 2);
+        padding: var(--border-width);
+        box-sizing: border-box;
+        background: conic-gradient(
+            from var(--angle-1) at 50% 50%,
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0) 5% 40%,
+            rgba(0, 0, 0, 0.5) 50%,
+            rgba(0, 0, 0, 0) 60% 95%,
+            rgba(0, 0, 0, 0.5)
+          ),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        transition: all var(--anim--hover-time) var(--anim--hover-ease),
+          --angle-1 500ms ease;
+        box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
+      }
+
+      .glassy-button:hover::after {
+        --angle-1: -125deg;
+      }
+
+      .glassy-button:active::after {
+        --angle-1: -75deg;
+      }
+
+      @media (hover: none) and (pointer: coarse) {
+        .glassy-button::after,
+        .glassy-button:hover::after,
+        .glassy-button:active::after {
+          --angle-1: -75deg;
+        }
+      }
+
+      /* Desktop positioning (screens wider than 960px) */
+      @media (min-width: 961px) {
+        .glassy-button-container {
+          position: fixed !important;
+          bottom: 20px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          z-index: 1200 !important;
+        }
+      }
+
+      /* Mobile positioning (screens 960px and smaller) */
+      @media (max-width: 960px) {
+        .glassy-button-container {
+          position: fixed !important;
+          bottom: 50px !important;
+          left: 50% !important;
+          transform: translateX(-50%) !important;
+          z-index: 1200 !important;
+        }
+      }
+
+      /* UPDATED BLUR LAYER */
+      @layer blurring {
+        :root {
+          --layers: 5;
+          --blur-max: 40;
+          --mask-stop: 15;
+        }
+        .blur {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100vh;
+          z-index: 10;
+          pointer-events: none;
+        }
+        .blur div {
+          --blur: calc(
+            sin(((var(--layers) - var(--i)) / var(--layers)) * 90deg) *
+              var(--blur-max)
+          );
+          --stop: calc(sin(((var(--i)) / var(--layers)) * 90deg) * var(--mask-stop));
+          position: absolute;
+          inset: 0;
+        }
+        .blur div::after {
+          content: "";
+          position: absolute;
+          inset: 0 -250%;
+          backdrop-filter: blur(calc(var(--blur) * 1px));
+          mask: linear-gradient(
+            180deg,
+            transparent 0 calc((100 - var(--stop)) * 1%),
+            #000 100%
+          );
+        }
+      }
+
+      /* Glass Buttons styling within the introduction */
+      .introduction {
+        position: relative;
+      }
+
+      /* Container for the two buttons, aligned to the right */
+      .glass-buttons {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: var(--spacing-md);
+      }
+
+      /* Glass button common style */
+      .glass-button {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        color: #000;
+        font-size: var(--font-size-base);
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        backdrop-filter: blur(var(--blur-amount));
+        -webkit-backdrop-filter: blur(var(--blur-amount));
+        transition: background var(--transition-medium);
+      }
+
+      .glass-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Ensure the email button looks like a button */
+      .glass-buttons a.glass-button {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Mobile debugging meta tag -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <!-- Navigation Links -->
+    <nav class="nav-links">
+      <a href="#section-1">Introduction</a>
+      <a href="#section-2">Phenom</a>
+      <a href="#section-3">Publicis Sapient</a>
+      <a href="#section-4">Code &amp; Theory</a>
+      <a href="#section-5">Elva Design Group</a>
+      <a href="#section-6">Huge</a>
+      <a href="#section-7">LiveArea</a>
+      <a href="#section-8">Workarea</a>
+      <a href="#section-9">O3 World</a>
+      <a href="#section-10">One Sixty Over Ninety</a>
+    </nav>
+
+    <!-- Background SVG -->
+    <svg class="background-svg" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="dottedGrid" width="30" height="30" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="rgba(0,0,0,0.15)" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#dottedGrid)" />
+    </svg>
+    </div>
+
+    <div class="blur"></div>
+
+    <!-- Content Sections -->
+    <!-- Introduction Section -->
+    <div class="introduction" id="section-1">
+      <h1>A Reasonable Resume</h1>
+      <p>
+        Zachary Gort<br />
+        "Web Designer"<br />
+        <a href="https://reasonably.cc" target="_blank" rel="noopener">https://reasonably.cc</a
+        ><br />
+        <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
+        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener"
+          >LinkedIn/in/zackgort</a
+        ><br />
+      </p>
+      <!-- Glass Button Container -->
+      <div class="glass-buttons">
+        <a class="glass-button" href="javascript:savePageAsPDF()">Save as PDF</a>
+      </div>
+    </div>
+
+    <!-- Section 1: Phenom -->
+    <div class="layout-container" id="section-2">
+      <div class="layout-header">
+        <h1 class="layout-title">Phenom</h1>
+      </div>
+      <div class="layout-progress">
+        <div>User Experience Strategist</div>
+        <div class="shortcut-info">2025</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Official duties</h3>
+          <p>
+            Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the
+            <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the
+            same area as the last.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Unofficial duties</h3>
+          <p>
+            For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br />
+            <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Above &amp; beyond action</h3>
+          <p>
+            To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br />
+            <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Skills</h3>
+          <p>
+            √(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code>
+            to avoid polar clustering.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Soft Skills</h3>
+          <p>
+            I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and
+            opacity—offset by each point’s fractional position to create a wave effect.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Learned Skills</h3>
+          <p>
+            Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on
+            circles or spheres.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 2: Publicis Sapient -->
+    <div class="layout-container" id="section-3">
+      <div class="layout-header">
+        <h1 class="layout-title">Publicis Sapient</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">2022-2023</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Official duties</h3>
+          <p>
+            Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the
+            <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the
+            same area as the last.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Unofficial duties</h3>
+          <p>
+            For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br />
+            <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Above &amp; beyond action</h3>
+          <p>
+            To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br />
+            <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Skills</h3>
+          <p>
+            √(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code>
+            to avoid polar clustering.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Soft Skills</h3>
+          <p>
+            I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and
+            opacity—offset by each point’s fractional position to create a wave effect.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Learned Skills</h3>
+          <p>
+            Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on
+            circles or spheres.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 3: Code &amp; Theory -->
+    <div class="layout-container" id="section-4">
+      <div class="layout-header">
+        <h1 class="layout-title">Code &amp; Theory</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">2021-2022</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Official duties</h3>
+          <p>
+            Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the
+            <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the
+            same area as the last.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Unofficial duties</h3>
+          <p>
+            For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br />
+            <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Above &amp; beyond action</h3>
+          <p>
+            To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br />
+            <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Skills</h3>
+          <p>
+            √(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code>
+            to avoid polar clustering.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Soft Skills</h3>
+          <p>
+            I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and
+            opacity—offset by each point’s fractional position to create a wave effect.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Learned Skills</h3>
+          <p>
+            Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on
+            circles or spheres.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 4: Elva Design Group -->
+    <div class="layout-container" id="section-5">
+      <div class="layout-header">
+        <h1 class="layout-title">Elva Design Group</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Creative Director</div>
+        <div class="shortcut-info">2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Design Leadership</h3>
+          <p>
+            Elva Design Group specializes in high-end design innovations with a focus on bespoke visual identities and creative
+            collaborations.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Creative Strategy</h3>
+          <p>
+            They lead with a visionary approach to digital craftsmanship, ensuring that each project reflects both art and
+            functionality.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Practices</h3>
+          <p>
+            Utilizing cutting-edge design techniques, they transform traditional aesthetics into modern user experiences that
+            impress and inspire.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Solutions</h3>
+          <p>
+            Their process emphasizes close client collaboration, translating brand ethos into compelling designs and cohesive
+            visual narratives.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Competencies</h3>
+          <p>
+            Expertise in typography, color theory, and layout enable them to produce designs that balance beauty with usability.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Continuous Growth</h3>
+          <p>
+            They consistently refine their methods and embrace new trends, ensuring designs remain fresh and ahead of the curve.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 5: Huge -->
+    <div class="layout-container" id="section-6">
+      <div class="layout-header">
+        <h1 class="layout-title">Huge</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Official duties</h3>
+          <p>
+            Inspired by phyllotaxis in plants, the golden spiral method (Vogel’s model) places points at an angle equal to the
+            <strong>golden angle</strong>—2π·(1–1/φ) ≈ 137.5°—and adjusts radius by √(i/N) to ensure each new point occupies the
+            same area as the last.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Unofficial duties</h3>
+          <p>
+            For a flat disk, assign each point an index <code>i + 0.5</code> (to center at mid‐cell) and compute:<br />
+            <code>r = MAX_RADIUS · √((i + 0.5) / N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Above &amp; beyond action</h3>
+          <p>
+            To distribute on a sphere’s surface, sample the polar angle via the inverse CDF of sin φ:<br />
+            <code>φ = acos(1 – 2·(i + 0.5)/N)</code><br />
+            <code>θ = (i + 0.5) · GOLDEN_ANGLE</code>
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Skills</h3>
+          <p>
+            √(i/N) equalizes the differential ring areas (2πr dr), and the inverse‐CDF sampling for φ uses <code>sin φ dφ</code>
+            to avoid polar clustering.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Soft Skills</h3>
+          <p>
+            I build an SVG of <code>&lt;circle&gt;</code> elements, apply <code>&lt;animate&gt;</code> tags for pulsing radius and
+            opacity—offset by each point’s fractional position to create a wave effect.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Learned Skills</h3>
+          <p>
+            Ideal for generative art, data visualizations, computational geometry, or any scenario needing uniform sampling on
+            circles or spheres.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 6: LiveArea -->
+    <div class="layout-container" id="section-7">
+      <div class="layout-header">
+        <h1 class="layout-title">LiveArea</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Digital Experience Designer</div>
+        <div class="shortcut-info">2020-2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Interactive Design</h3>
+          <p>
+            LiveArea focuses on real-time digital experiences, crafting interactive user interfaces with dynamic motion
+            and responsive elements.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>User Engagement</h3>
+          <p>
+            They emphasize creating immersive environments that engage users through innovative digital storytelling and
+            intuitive navigation.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Technical Integration</h3>
+          <p>
+            By seamlessly integrating modern web technologies, they ensure that interactive designs are both visually
+            impressive and highly functional.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Competencies</h3>
+          <p>
+            Expertise in animation, interactivity, and responsive design allows them to push the boundaries of digital user
+            experiences.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Continuous Innovation</h3>
+          <p>
+            They consistently adopt and adapt to emerging trends, ensuring that each project sets new standards in digital
+            engagement.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Value Proposition</h3>
+          <p>
+            Focused on user-centric design, LiveArea transforms digital interfaces into interactive works of art that captivate
+            audiences.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 7: Workarea -->
+    <div class="layout-container" id="section-8">
+      <div class="layout-header">
+        <h1 class="layout-title">Workarea</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Experience Director</div>
+        <div class="shortcut-info">2018-2019</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Workarea redefines workspace aesthetics by merging functionality with creative design, ensuring productive yet
+            inspiring environments.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            They implement forward-thinking strategies that streamline operations while enhancing the overall aesthetic and
+            user experience.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Combining robust design principles with practical functionality, Workarea elevates day-to-day workplace interactions.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            With a focus on ergonomics, efficiency, and design innovation, their projects deliver both style and substance.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Working closely with clients, Workarea tailors solutions that dynamically respond to evolving business needs and
+            cultural shifts.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Future-Ready Design</h3>
+          <p>
+            They consistently explore new technologies and design trends to create workspaces that are both modern and adaptable.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 8: O3 World -->
+    <div class="layout-container" id="section-9">
+      <div class="layout-header">
+        <h1 class="layout-title">O3 World</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Visual Storyteller</div>
+        <div class="shortcut-info">2016-2017</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Visual Branding</h3>
+          <p>
+            O3 World specializes in creating immersive visual narratives that transform brands through powerful imagery and design.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Concept Realization</h3>
+          <p>
+            They turn abstract ideas into compelling visuals, ensuring that each project tells a unique story.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Techniques</h3>
+          <p>
+            Using a blend of traditional artistry and modern digital tools, they establish a signature style that resonates across
+            media.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Methods</h3>
+          <p>
+            Expertise in color theory, typography, and composition drives the striking and memorable experiences they deliver.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Engagement Strategies</h3>
+          <p>
+            O3 World’s approach keeps audiences captivated, transforming visual content into an unforgettable narrative journey.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Market Impact</h3>
+          <p>
+            Their innovative designs not only attract attention but also build lasting brand recognition and loyalty.
+          </p>
+        </div>
+      </div>
+      <div class="tweakpane-container" id="tweakpane-container"></div>
+    </div>
+
+    <!-- Section 9: One Sixty Over Ninety -->
+    <div class="layout-container" id="section-10">
+      <div class="layout-header">
+        <h1 class="layout-title">One Sixty Over Ninety</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Innovative Designer</div>
+        <div class="shortcut-info">2014-2016</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Design Evolution</h3>
+          <p>
+            One Sixty Over Ninety pushes the boundaries of conventional design, integrating avant-garde techniques with practical
+            application.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Concept Realization</h3>
+          <p>
+            Their approach takes abstract ideas and transforms them into concrete, visually striking realities that resonate with modern
+            audiences.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Practices</h3>
+          <p>
+            Embracing both tradition and technology, they develop unique solutions that stand out in a crowded digital landscape.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Solutions</h3>
+          <p>
+            Expert use of cutting-edge software and design methodologies ensures that every project is both innovative and effective.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Vision</h3>
+          <p>
+            Working closely with clients, they fuse creative insight with strategic execution to deliver projects that exceed expectations.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Future-Forward Approach</h3>
+          <p>
+            Constantly exploring emerging trends, One Sixty Over Ninety aims to set new standards in design excellence and innovation.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lazy-load tables if present -->
+    <div class="scroll-spacer"></div>
+
+    <!-- Glassy Back to Top Button (SVG with Text, matches styling) -->
+    <div class="glassy-button-container" id="back-to-top-life-container" style="position:fixed; left:50%; bottom:8rem; transform:translateX(-50%); z-index:1200;">
+      <div class="glassy-button-wrap">
+        <div class="glassy-button-shadow"></div>
+        <button id="back-to-top-life" class="glassy-button back-to-top-btn" type="button" aria-label="Back to top">
+          <span>
+            <svg width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle; margin-right:0.5em;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+            Back to Top
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        function debounce(func, wait) {
+          let timeout;
+          return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+          };
+        }
+
+        const btnContainer = document.getElementById("back-to-top-life-container");
+        const backToTop = document.getElementById("back-to-top-life");
+        if (!btnContainer || !backToTop) return;
+
+        function updateNavActive() {
+          // Use getBoundingClientRect to determine which section is closest to the top
+          const sections = Array.from(
+            document.querySelectorAll('.introduction, .layout-container')
+          );
+          let closestSection = sections[0];
+          let minDistance = Infinity;
+          sections.forEach((section) => {
+            const rect = section.getBoundingClientRect();
+            const distance = Math.abs(rect.top);
+            if (distance < minDistance) {
+              minDistance = distance;
+              closestSection = section;
+            }
+          });
+          const navLinks = document.querySelectorAll('.nav-links a');
+          navLinks.forEach((link) => {
+            if (link.getAttribute('href') === '#' + closestSection.id) {
+              link.classList.add('active');
+            } else {
+              link.classList.remove('active');
+            }
+          });
+        }
+
+        function checkScroll() {
+          updateNavActive();
+          const threshold = (document.querySelector(".introduction")?.offsetHeight || 200) + 200;
+          if (window.scrollY > threshold) {
+            btnContainer.classList.add("visible");
+            backToTop.classList.add("visible");
+          } else {
+            btnContainer.classList.remove("visible");
+            backToTop.classList.remove("visible");
+          }
+        }
+
+        window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
+        backToTop.addEventListener("click", function (e) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+        window.addEventListener("DOMContentLoaded", checkScroll);
+        checkScroll();
+      })();
+
+      const config = { layers: 5 };
+      const blur = document.querySelector(".blur");
+      function updateBlur() {
+        if (!blur) return;
+        blur.innerHTML = "";
+        for (let i = 1; i <= config.layers; i++) {
+          const layer = document.createElement("div");
+          layer.style.setProperty("--i", i);
+          blur.appendChild(layer);
+        }
+      }
+      updateBlur();
+
+      function savePageAsPDF() {
+        const printWindow = window.open("", "PrintWindow", "width=800,height=600");
+        if (!printWindow) return;
+        printWindow.document.write(`
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Print Page as PDF</title>
+            </head>
+            <body>
+              ${document.body.innerHTML}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.focus();
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+      }
+    </script>
+  </body>
 </html>
