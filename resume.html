@@ -66,7 +66,7 @@
 
       /* Scroll Spacer at Bottom of Content */
       .scroll-spacer {
-        height: 300px;
+        height: 200px;
         width: 100%;
         display: block;
       }
@@ -1152,6 +1152,21 @@
     </div>
 
     <script>
+      // Intercept navigation link clicks to scroll and remove hash from the URL
+      document.querySelectorAll('.nav-links a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          var targetId = this.getAttribute('href').substring(1);
+          var targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+            // Remove the hash from the URL without reloading the page
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+        });
+      });
+
+      // Existing scroll and blur logic...
       (function () {
         function debounce(func, wait) {
           let timeout;
@@ -1166,7 +1181,6 @@
         if (!btnContainer || !backToTop) return;
 
         function updateNavActive() {
-          // Use getBoundingClientRect to determine which section is closest to the top
           const sections = Array.from(
             document.querySelectorAll('.introduction, .layout-container')
           );
