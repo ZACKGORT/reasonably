@@ -223,7 +223,9 @@ html {
 /* Adjust layout for smaller screens */
 @media (max-width: 960px) {
   .nav-links {
-    justify-content: flex-start;
+    /* Use sticky to maintain position relative to scroll */
+    position: sticky;
+    top: 0;
   }
   .layout-services {
     grid-template-columns: 1fr;
@@ -1020,13 +1022,31 @@ html {
   const backToTop = document.getElementById("back-to-top-life");
   if (!btnContainer || !backToTop) return;
 
-  function getScrollThreshold() {
-    const introduction = document.querySelector(".introduction");
-    return introduction ? introduction.offsetHeight + 200 : 200;
+  function updateNavActive() {
+    // Use getBoundingClientRect to determine which section is closest to the top
+    const sections = Array.from(document.querySelectorAll('.introduction, .layout-container'));
+    let closestSection = sections[0];
+    let minDistance = Infinity;
+    sections.forEach(section => {
+      const distance = Math.abs(section.getBoundingClientRect().top);
+      if(distance < minDistance) {
+        minDistance = distance;
+        closestSection = section;
+      }
+    });
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+      if(link.getAttribute('href') === '#' + closestSection.id) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
   }
 
   function checkScroll() {
-    const threshold = getScrollThreshold();
+    updateNavActive();
+    const threshold = (document.querySelector(".introduction")?.offsetHeight || 200) + 200;
     if (window.scrollY > threshold) {
       btnContainer.classList.add("visible");
       backToTop.classList.add("visible");
@@ -1034,45 +1054,13 @@ html {
       btnContainer.classList.remove("visible");
       backToTop.classList.remove("visible");
     }
-    updateNavActive();
-  }
-
-  function updateNavActive() {
-    const intro = document.querySelector(".introduction");
-    const layoutContainers = document.querySelectorAll(".layout-container");
-    const sections = [];
-    if (intro) {
-      sections.push(intro);
-    }
-    sections.push(...Array.from(layoutContainers));
-
-    const navLinks = document.querySelectorAll(".nav-links a");
-    let currentActiveIndex = -1;
-    // Force the first nav link active if at the top of the page
-    if (window.scrollY === 0) {
-      currentActiveIndex = 0;
-    } else {
-      sections.forEach((section, index) => {
-        const sectionTop = section.offsetTop;
-        if (window.scrollY + window.innerHeight / 2 >= sectionTop) {
-          currentActiveIndex = index;
-        }
-      });
-    }
-    navLinks.forEach(link => link.classList.remove("active"));
-    if (currentActiveIndex !== -1 && navLinks[currentActiveIndex]) {
-      navLinks[currentActiveIndex].classList.add("active");
-    }
   }
 
   window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
-
   backToTop.addEventListener("click", function (e) {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
-
-  // Run checkScroll once the DOM content has loaded.
   window.addEventListener("DOMContentLoaded", checkScroll);
   checkScroll();
 })();
