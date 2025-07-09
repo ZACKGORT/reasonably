@@ -136,7 +136,7 @@ html {
 
 /* Layout Containers (Glassmorphism) */
 .layout-container {
-  scroll-margin-top: 80px; /* Adjust based on your header height */
+  scroll-margin-top: 80px;
   width: 80%;
   max-width: 900px;
   margin: 4em auto 0;
@@ -504,16 +504,15 @@ html {
     --mask-stop: 15;
   }
   .blur {
-    position: fixed; /* fixed position to overlay content */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: 10; /* a z-index above layout containers */
+    z-index: 10;
     pointer-events: none;
   }
   .blur div {
-    /* Calculate blur strength and mask stop for each layer */
     --blur: calc(
       sin(((var(--layers) - var(--i)) / var(--layers)) * 90deg) *
         var(--blur-max)
@@ -534,10 +533,6 @@ html {
     );
   }
 }
-
-
-
-/* ... existing styles ... */
 
 /* Glass Buttons styling within the introduction */
 .introduction {
@@ -586,16 +581,16 @@ html {
 
 <!-- Navigation Links -->
 <nav class="nav-links">
-  <a href="#section-0">Introduction</a>
-  <a href="#section-1">Phenom</a>
-  <a href="#section-2">Publicis Sapient</a>
-  <a href="#section-3">Code &amp; Theory</a>
-  <a href="#section-4">Elva Design Group</a>
-  <a href="#section-5">Huge</a>
-  <a href="#section-6">LiveArea</a>
-  <a href="#section-7">Workarea</a>
-  <a href="#section-8">O3 World</a>
-  <a href="#section-9">One Sixty Over Ninety</a>
+  <a href="#section-1">Introduction</a>
+  <a href="#section-2">Phenom</a>
+  <a href="#section-3">Publicis Sapient</a>
+  <a href="#section-4">Code &amp; Theory</a>
+  <a href="#section-5">Elva Design Group</a>
+  <a href="#section-6">Huge</a>
+  <a href="#section-7">LiveArea</a>
+  <a href="#section-8">Workarea</a>
+  <a href="#section-9">O3 World</a>
+  <a href="#section-10">One Sixty Over Ninety</a>
 </nav>
 
 <!-- Background SVG -->
@@ -612,7 +607,8 @@ html {
 <div class="blur"></div>
 
 <!-- Content Sections -->
-<div class="introduction" id="section-0">
+<!-- Introduction Section -->
+<div class="introduction" id="section-1">
   <h1>A Reasonable Resume</h1>
   <p>
     Zachary Gort<br>
@@ -627,10 +623,8 @@ html {
   </div>
 </div>
 
-<!-- Content Sections -->
-
 <!-- Section 1: Phenom -->
-<div class="layout-container" id="section-1">
+<div class="layout-container" id="section-2">
   <div class="layout-header">
     <h1 class="layout-title">Phenom</h1>
   </div>
@@ -674,7 +668,7 @@ html {
 </div>
 
 <!-- Section 2: Publicis Sapient -->
-<div class="layout-container" id="section-2">
+<div class="layout-container" id="section-3">
   <div class="layout-header">
     <h1 class="layout-title">Publicis Sapient</h1>
   </div>
@@ -718,7 +712,7 @@ html {
 </div>
 
 <!-- Section 3: Code &amp; Theory -->
-<div class="layout-container" id="section-3">
+<div class="layout-container" id="section-4">
   <div class="layout-header">
     <h1 class="layout-title">Code &amp; Theory</h1>
   </div>
@@ -762,7 +756,7 @@ html {
 </div>
 
 <!-- Section 4: Elva Design Group -->
-<div class="layout-container" id="section-4">
+<div class="layout-container" id="section-5">
   <div class="layout-header">
     <h1 class="layout-title">Elva Design Group</h1>
   </div>
@@ -800,7 +794,7 @@ html {
 </div>
 
 <!-- Section 5: Huge -->
-<div class="layout-container" id="section-5">
+<div class="layout-container" id="section-6">
   <div class="layout-header">
     <h1 class="layout-title">Huge</h1>
   </div>
@@ -844,7 +838,7 @@ html {
 </div>
 
 <!-- Section 6: LiveArea -->
-<div class="layout-container" id="section-6">
+<div class="layout-container" id="section-7">
   <div class="layout-header">
     <h1 class="layout-title">LiveArea</h1>
   </div>
@@ -882,7 +876,7 @@ html {
 </div>
 
 <!-- Section 7: Workarea -->
-<div class="layout-container" id="section-7">
+<div class="layout-container" id="section-8">
   <div class="layout-header">
     <h1 class="layout-title">Workarea</h1>
   </div>
@@ -920,7 +914,7 @@ html {
 </div>
 
 <!-- Section 8: O3 World -->
-<div class="layout-container" id="section-8">
+<div class="layout-container" id="section-9">
   <div class="layout-header">
     <h1 class="layout-title">O3 World</h1>
   </div>
@@ -958,7 +952,7 @@ html {
 </div>
 
 <!-- Section 9: One Sixty Over Ninety -->
-<div class="layout-container" id="section-9">
+<div class="layout-container" id="section-10">
   <div class="layout-header">
     <h1 class="layout-title">One Sixty Over Ninety</h1>
   </div>
@@ -993,8 +987,10 @@ html {
     </div>
   </div>
 </div>
+
 <!-- Lazy-load tables if present -->
 <div class="scroll-spacer"></div>
+
 <!-- Glassy Back to Top Button (SVG with Text, matches styling) -->
 <div class="glassy-button-container" id="back-to-top-life-container" style="position:fixed; left:50%; bottom:8rem; transform:translateX(-50%); z-index:1200;">
   <div class="glassy-button-wrap">
@@ -1009,9 +1005,9 @@ html {
     </button>
   </div>
 </div>
-  <script>
+
+<script>
 (function () {
-  // Debounce function to limit the frequency of the scroll handler execution
   function debounce(func, wait) {
     let timeout;
     return function (...args) {
@@ -1024,14 +1020,11 @@ html {
   const backToTop = document.getElementById("back-to-top-life");
   if (!btnContainer || !backToTop) return;
 
-  // Adjust threshold to account for the introduction section, if present
   function getScrollThreshold() {
     const introduction = document.querySelector(".introduction");
-    // Use a base threshold of 200, or add the introduction height if it exists.
     return introduction ? introduction.offsetHeight + 200 : 200;
   }
 
-  // Function to check scroll position and toggle visibility of the glassy button
   function checkScroll() {
     const threshold = getScrollThreshold();
     if (window.scrollY > threshold) {
@@ -1044,49 +1037,48 @@ html {
     updateNavActive();
   }
 
-  // Function to update navigation links based on scroll progress
   function updateNavActive() {
-    const sections = document.querySelectorAll(".layout-container");
+    const intro = document.querySelector(".introduction");
+    const layoutContainers = document.querySelectorAll(".layout-container");
+    const sections = [];
+    if (intro) {
+      sections.push(intro);
+    }
+    sections.push(...Array.from(layoutContainers));
+
     const navLinks = document.querySelectorAll(".nav-links a");
     let currentActiveIndex = -1;
-    // Determine which section is currently in view by checking each section's top offset
-    sections.forEach((section, index) => {
-      const sectionTop = section.offsetTop;
-      // Use vertical midpoint of the viewport as the criteria for current section
-      if (window.scrollY + window.innerHeight / 2 >= sectionTop) {
-        currentActiveIndex = index;
-      }
-    });
-    // Remove the "active" class from all links, then apply it to the current active nav link.
-    navLinks.forEach((link) => link.classList.remove("active"));
+    // Force the first nav link active if at the top of the page
+    if (window.scrollY === 0) {
+      currentActiveIndex = 0;
+    } else {
+      sections.forEach((section, index) => {
+        const sectionTop = section.offsetTop;
+        if (window.scrollY + window.innerHeight / 2 >= sectionTop) {
+          currentActiveIndex = index;
+        }
+      });
+    }
+    navLinks.forEach(link => link.classList.remove("active"));
     if (currentActiveIndex !== -1 && navLinks[currentActiveIndex]) {
       navLinks[currentActiveIndex].classList.add("active");
     }
   }
 
-  // Listen to the scroll event using debounce for performance
-  window.addEventListener("scroll", debounce(checkScroll, 50), {
-    passive: true
-  });
+  window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
 
-  // Attach click event to smoothly scroll back to the top,
-  // accounting for a potential scroll spacer at the bottom.
   backToTop.addEventListener("click", function (e) {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  // Run initial check on page load
+  // Run checkScroll once the DOM content has loaded.
+  window.addEventListener("DOMContentLoaded", checkScroll);
   checkScroll();
 })();
 
-// Minimal script to populate the .blur container with div layers
-const config = {
-  layers: 5
-};
-
+const config = { layers: 5 };
 const blur = document.querySelector(".blur");
-
 function updateBlur() {
   if (!blur) return;
   blur.innerHTML = "";
@@ -1096,19 +1088,11 @@ function updateBlur() {
     blur.appendChild(layer);
   }
 }
-
 updateBlur();
 
-
-
 function savePageAsPDF() {
-  // Open a new window for printing
   const printWindow = window.open("", "PrintWindow", "width=800,height=600");
   if (!printWindow) return;
-
-  // Retrieve the current document's content without any styling
-  // Here we use the document.body.innerHTML for simplicity.
-  // Alternatively, you can dynamically remove <link> and <style> tags if needed.
   printWindow.document.write(`
     <html>
       <head>
@@ -1122,13 +1106,11 @@ function savePageAsPDF() {
   `);
   printWindow.document.close();
   printWindow.focus();
-
-  // Delay printing slightly to ensure content is loaded
   setTimeout(() => {
     printWindow.print();
     printWindow.close();
   }, 500);
 }
-  </script>
+</script>
 </body>
 </html>
