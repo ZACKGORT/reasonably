@@ -41,6 +41,13 @@
         margin: 0;
         padding: 10px;
         position: relative;
+        /* Allow vertical panning only */
+        touch-action: pan-y;
+      }
+
+      /* Prevent dragging of images */
+      img {
+        -webkit-user-drag: none;
       }
 
       /* Updated Introduction Section */
@@ -66,7 +73,7 @@
 
       /* Scroll Spacer at Bottom of Content */
       .scroll-spacer {
-        height: 340px;
+        height: 300px;
         width: 100%;
         display: block;
       }
@@ -81,6 +88,7 @@
         backdrop-filter: blur(5px);
         -webkit-backdrop-filter: blur(10px);
         width: 100%;
+        /* Force navigation to be fixed at the top */
         position: fixed;
         top: 0;
         left: 0;
@@ -116,27 +124,27 @@
       .nav-links a:hover {
         color: #ffffff;
       }
-
+      
       .nav-links a:hover::after {
         width: 100%;
         background-color: #000000;
       }
-
+      
       .nav-links a:active,
       .nav-links a.active {
         color: #ffffff;
       }
-
+      
       .nav-links a:active::after,
       .nav-links a.active::after {
         width: 100%;
         background-color: #000000;
       }
-
+      
       html {
         scroll-behavior: smooth;
       }
-
+      
       /* Layout Containers (Glassmorphism) */
       .layout-container {
         scroll-margin-top: 80px;
@@ -153,7 +161,7 @@
         position: relative;
         z-index: 2;
       }
-
+      
       .layout-header {
         display: flex;
         align-items: center;
@@ -161,13 +169,13 @@
         padding: 10px;
         border-bottom: 1px solid var(--glass-border);
       }
-
+      
       .layout-header h1 {
         font-size: 2.2em;
         font-weight: bold;
         margin: 0;
       }
-
+      
       .layout-progress {
         display: flex;
         justify-content: space-between;
@@ -176,19 +184,19 @@
         border-bottom: 1px solid var(--glass-border);
         font-size: 0.9em;
       }
-
+      
       .shortcut-info {
         font-size: 1em;
         opacity: 0.7;
       }
-
+      
       .layout-services {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         padding: 10px 0;
       }
-
+      
       .service-item {
         background: rgba(255, 255, 255, 0.05);
         padding: 15px;
@@ -196,25 +204,25 @@
         border-radius: 8px;
         box-shadow: inset 0 0 5px var(--glass-shadow);
       }
-
+      
       .service-item h3 {
         margin: 0 0 10px;
         font-size: 1em;
       }
-
+      
       .service-item p {
         font-size: 0.75em;
         line-height: 1.4;
         margin: 0;
       }
-
+      
       .service-item code {
         background: rgba(255, 255, 255, 0.1);
         padding: 2px 4px;
         border-radius: 3px;
         font-size: 12px;
       }
-
+      
       .tweakpane-container {
         position: fixed;
         top: 20px;
@@ -222,12 +230,12 @@
         transition: opacity 0.3s ease;
         z-index: 3;
       }
-
+      
       /* Adjust layout for smaller screens */
       @media (max-width: 960px) {
         .nav-links {
-          /* Use sticky to maintain position relative to scroll, and align items to start */
-          position: sticky;
+          /* Use fixed positioning instead of sticky to avoid drift on touch scroll */
+          position: fixed;
           top: 0;
           justify-content: flex-start;
         }
@@ -248,7 +256,7 @@
           padding: 12px;
         }
       }
-
+      
       /* Background SVG */
       .background-svg {
         position: absolute;
@@ -256,7 +264,7 @@
         height: 100%;
         z-index: 0;
       }
-
+      
       /* Updated Glassy Button Container */
       .glassy-button-container {
         position: fixed;
@@ -271,7 +279,7 @@
         justify-content: center;
         z-index: 1200;
       }
-
+      
       /* Glassy Button Styles */
       .glassy-button,
       .glassy-button * {
@@ -281,7 +289,7 @@
         touch-action: manipulation;
         font-family: "Inter", sans-serif;
       }
-
+      
       .glassy-button-wrap {
         position: relative;
         z-index: 2;
@@ -290,7 +298,7 @@
         pointer-events: none;
         transition: all var(--anim--hover-time) var(--anim--hover-ease);
       }
-
+      
       .glassy-button-shadow {
         --shadow-cuttoff-fix: 2em;
         position: absolute;
@@ -305,7 +313,7 @@
         overflow: visible;
         pointer-events: none;
       }
-
+      
       .glassy-button-shadow::after {
         content: "";
         position: relative;
@@ -325,7 +333,7 @@
         overflow: visible;
         opacity: 1;
       }
-
+      
       .glassy-button {
         --border-width: clamp(1px, 0.0625em, 4px);
         all: unset;
@@ -352,7 +360,7 @@
         -ms-backdrop-filter: blur(4px);
         transition: all var(--anim--hover-time) var(--anim--hover-ease);
       }
-
+      
       .glassy-button:hover,
       .glassy-button:active {
         transform: scale(0.975);
@@ -366,7 +374,7 @@
           0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
           0 0 0 0 rgba(255, 255, 255, 1);
       }
-
+      
       .glassy-button span {
         position: relative;
         display: block;
@@ -386,11 +394,11 @@
         padding-inline: 1.5em;
         padding-block: 0.875em;
       }
-
+      
       .glassy-button:hover span {
         text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12);
       }
-
+      
       .glassy-button span::after {
         content: "";
         display: block;
@@ -419,23 +427,23 @@
           var(--anim--hover-ease),
           --angle-2 calc(var(--anim--hover-time) * 1.25) var(--anim--hover-ease);
       }
-
+      
       .glassy-button:hover span::after {
         background-position: 25% 50%;
       }
-
+      
       .glassy-button:active span::after {
         background-position: 50% 15%;
         --angle-2: -15deg;
       }
-
+      
       @media (hover: none) and (pointer: coarse) {
         .glassy-button span::after,
         .glassy-button:active span::after {
           --angle-2: -45deg;
         }
       }
-
+      
       .glassy-button::after {
         content: "";
         position: absolute;
@@ -463,15 +471,15 @@
           --angle-1 500ms ease;
         box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255, 255, 255, 0.5);
       }
-
+      
       .glassy-button:hover::after {
         --angle-1: -125deg;
       }
-
+      
       .glassy-button:active::after {
         --angle-1: -75deg;
       }
-
+      
       @media (hover: none) and (pointer: coarse) {
         .glassy-button::after,
         .glassy-button:hover::after,
@@ -479,7 +487,7 @@
           --angle-1: -75deg;
         }
       }
-
+      
       /* Desktop positioning (screens wider than 960px) */
       @media (min-width: 961px) {
         .glassy-button-container {
@@ -490,7 +498,7 @@
           z-index: 1200 !important;
         }
       }
-
+      
       /* Mobile positioning (screens 960px and smaller) */
       @media (max-width: 960px) {
         .glassy-button-container {
@@ -501,7 +509,7 @@
           z-index: 1200 !important;
         }
       }
-
+      
       /* UPDATED BLUR LAYER */
       @layer blurring {
         :root {
@@ -517,6 +525,9 @@
           height: 100vh;
           z-index: 10;
           pointer-events: none;
+          /* Force GPU acceleration to avoid jank */
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
         .blur div {
           --blur: calc(
@@ -539,13 +550,13 @@
           );
         }
       }
-
+      
       /* Glass Buttons styling within the introduction */
       .introduction {
         position: relative;
       }
-
-      /* Container for the two buttons, aligned to the right */
+      
+      /* Container for the buttons, aligned to the right */
       .glass-buttons {
         position: absolute;
         top: 20px;
@@ -553,7 +564,7 @@
         display: flex;
         gap: var(--spacing-md);
       }
-
+      
       /* Glass button common style */
       .glass-button {
         background: var(--glass-bg);
@@ -567,11 +578,11 @@
         -webkit-backdrop-filter: blur(var(--blur-amount));
         transition: background var(--transition-medium);
       }
-
+      
       .glass-button:hover {
         background: rgba(255, 255, 255, 0.2);
       }
-
+      
       /* Ensure the email button looks like a button */
       .glass-buttons a.glass-button {
         text-decoration: none;
@@ -1165,8 +1176,7 @@
           }
         });
       });
-
-      // Existing scroll and blur logic...
+      
       (function () {
         function debounce(func, wait) {
           let timeout;
@@ -1175,15 +1185,13 @@
             timeout = setTimeout(() => func.apply(this, args), wait);
           };
         }
-
+      
         const btnContainer = document.getElementById("back-to-top-life-container");
         const backToTop = document.getElementById("back-to-top-life");
         if (!btnContainer || !backToTop) return;
-
+      
         function updateNavActive() {
-          const sections = Array.from(
-            document.querySelectorAll('.introduction, .layout-container')
-          );
+          const sections = Array.from(document.querySelectorAll('.introduction, .layout-container'));
           let closestSection = sections[0];
           let minDistance = Infinity;
           sections.forEach((section) => {
@@ -1203,7 +1211,7 @@
             }
           });
         }
-
+      
         function checkScroll() {
           updateNavActive();
           const threshold = (document.querySelector(".introduction")?.offsetHeight || 200) + 200;
@@ -1215,7 +1223,7 @@
             backToTop.classList.remove("visible");
           }
         }
-
+      
         window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
         backToTop.addEventListener("click", function (e) {
           e.preventDefault();
@@ -1224,7 +1232,7 @@
         window.addEventListener("DOMContentLoaded", checkScroll);
         checkScroll();
       })();
-
+      
       const config = { layers: 5 };
       const blur = document.querySelector(".blur");
       function updateBlur() {
@@ -1237,7 +1245,7 @@
         }
       }
       updateBlur();
-
+      
       function savePageAsPDF() {
         const printWindow = window.open("", "PrintWindow", "width=800,height=600");
         if (!printWindow) return;
