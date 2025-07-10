@@ -1377,8 +1377,7 @@
         const touch = event.touches[0];
         mouseX = touch.clientX;
         mouseY = touch.clientY;
-        // Prevent scrolling while dragging the cursor
-        event.preventDefault();
+        // Notice: We removed event.preventDefault() here so scrolling is not blocked.
       }
 
       function initCursor() {
@@ -1411,8 +1410,8 @@
       // Desktop mouse movement
       document.addEventListener('mousemove', onMouseMove, false);
       // Mobile touch events
-      document.addEventListener('touchstart', onTouch, { passive: false });
-      document.addEventListener('touchmove', onTouch, { passive: false });
+      document.addEventListener('touchstart', onTouch, { passive: true });
+      document.addEventListener('touchmove', onTouch, { passive: true });
 
       initCursor();
       updateCursor();
