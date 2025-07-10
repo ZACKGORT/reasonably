@@ -633,13 +633,22 @@
       .control {
         position: fixed;
         bottom: 2.8em;
-        left: 50%;
+        left: 55%;
         transform: translateX(-50%);
         z-index: 1200;
         backdrop-filter: blur(10px);
       }
 
 
+
+    /* fade-in effect */
+    .control {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .control.visible {
+      opacity: 1;
+    }
 
 
       /* Dark-mode overrides for the frosted nav & link states */
@@ -1368,6 +1377,22 @@ window.addEventListener("resize", updateBlurLayers);
   });
 
 
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1) Default the nav to "Introduction"
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(a => a.classList.remove('active'));
+      const introLink = document.querySelector('.nav-links a[href="#section-1"]');
+      if (introLink) introLink.classList.add('active');
+
+      // 2) Collapse the control (only "Back to Top" visible)…
+      const controlEl = document.querySelector('.control');
+      controlEl.classList.add('collapsed');
+
+      // 3) …then fade it in after 3 seconds
+      setTimeout(() => {
+        controlEl.classList.add('visible');
+      }, 1000);
+    });
     </script>
   </body>
 </html>
