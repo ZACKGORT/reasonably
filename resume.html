@@ -680,7 +680,7 @@
         color: #ffffff;
       }
 
-      
+
 /* Container for layered blur effect */
 .blur {
   position: fixed;
@@ -759,22 +759,27 @@
 
 
 
-    <!-- Content Sections -->
-    <!-- Introduction Section -->
     <div class="introduction" id="section-1">
       <h1>A Reasonable Resume</h1>
       <p>
         <b>Zachary Gort</b><br />
         "Web Designer"<br />
-        <a href="https://reasonably.cc" target="_blank" rel="noopener">https://reasonably.cc</a><br />
+        <a href="https://reasonably.cc" target="_blank" rel="noopener">
+          https://reasonably.cc
+        </a><br />
         <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
-        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">LinkedIn/in/zackgort</a>
+        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">
+          LinkedIn/in/zackgort
+        </a>
       </p>
-      <!-- Glass Button Container -->
+      <!-- Glass Button Container: use <button> instead of href="javascript:" -->
       <div class="glass-buttons">
-        <a class="glass-button" href="javascript:savePageAsPDF()">Save as PDF</a>
+        <button id="print-btn" class="glass-button" type="button">
+          Save as PDF
+        </button>
       </div>
     </div>
+
 
     <!-- Section 1: Phenom -->
     <div class="layout-container" id="section-2">
@@ -1398,6 +1403,10 @@ window.addEventListener("resize", updateBlurLayers);
         controlEl.classList.add('visible');
       }, 1000);
     });
+
+
+
+    
     </script>
   </body>
 </html>
