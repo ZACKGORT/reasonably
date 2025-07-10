@@ -1376,23 +1376,28 @@ window.addEventListener("resize", updateBlurLayers);
     window.addEventListener('resize', updateActiveLink);
   });
 
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1) Make sure only "Back to Top" is selected on load
+    const backRadio = document.getElementById('free');
+    const lightRadio = document.getElementById('solo');
+    const darkRadio  = document.getElementById('team');
+    backRadio.checked = true;
+    lightRadio.checked = false;
+    darkRadio.checked  = false;
 
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1) Default the nav to "Introduction"
-      const navLinks = document.querySelectorAll('.nav-links a');
-      navLinks.forEach(a => a.classList.remove('active'));
-      const introLink = document.querySelector('.nav-links a[href="#section-1"]');
-      if (introLink) introLink.classList.add('active');
+    // 2) Collapse the premium (light/dark) toggles
+    const controlEl = document.querySelector('.control');
+    controlEl.classList.add('collapsed');
 
-      // 2) Collapse the control (only "Back to Top" visible)…
-      const controlEl = document.querySelector('.control');
-      controlEl.classList.add('collapsed');
+    // 3) After 3 seconds, fade the control back in
+    setTimeout(() => {
+      controlEl.classList.add('visible');
+    }, 1000);
+  });
 
-      // 3) …then fade it in after 3 seconds
-      setTimeout(() => {
-        controlEl.classList.add('visible');
-      }, 1000);
-    });
+
+
+  
     </script>
   </body>
 </html>
