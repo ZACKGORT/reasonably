@@ -719,6 +719,7 @@
         top: calc(var(--cursor-size) * -0.5);
         left: calc(var(--cursor-size) * -0.5);
         pointer-events: none;
+        touch-action: none;
         mix-blend-mode: difference;
         filter: url(#goo);
         z-index: 20000;
@@ -1365,9 +1366,19 @@
       let cursorCircles;
       let cursorHistory = Array(TAIL_LENGTH).fill({x: 0, y: 0});
 
+      // Update position for mouse movement (desktop)
       function onMouseMove(event) {
         mouseX = event.clientX;
         mouseY = event.clientY;
+      }
+
+      // Update position for touch events (mobile)
+      function onTouch(event) {
+        const touch = event.touches[0];
+        mouseX = touch.clientX;
+        mouseY = touch.clientY;
+        // Prevent scrolling while dragging the cursor
+        event.preventDefault();
       }
 
       function initCursor() {
@@ -1394,10 +1405,15 @@
           current.y += yDiff * 0.35;
           cursorCircles[i].style.transform = `translate(${current.x}px, ${current.y}px) scale(${i/TAIL_LENGTH})`;  
         }
-        requestAnimationFrame(updateCursor)
+        requestAnimationFrame(updateCursor);
       }
 
+      // Desktop mouse movement
       document.addEventListener('mousemove', onMouseMove, false);
+      // Mobile touch events
+      document.addEventListener('touchstart', onTouch, { passive: false });
+      document.addEventListener('touchmove', onTouch, { passive: false });
+
       initCursor();
       updateCursor();
     </script>
