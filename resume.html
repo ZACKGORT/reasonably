@@ -632,14 +632,14 @@
       }
 
       /* Override multi-functional control positioning and add blur */
-      .control {
-        position: fixed;
-        bottom: 2.8em;
-        left: 55%;
-        transform: translateX(-50%);
-        z-index: 1200;
-        backdrop-filter: blur(10px);
-      }
+.control {
+  position: fixed;
+  bottom: calc(2.4em + env(safe-area-inset-bottom)); /* 20px is an example spacing value */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  backdrop-filter: blur(10px);
+}
 
       /* fade-in effect */
       .control {
