@@ -632,14 +632,14 @@
       }
 
       /* Override multi-functional control positioning and add blur */
-.control {
-  position: fixed;
-  bottom: calc(2.4em + env(safe-area-inset-bottom)); /* 20px is an example spacing value */
-  left: 55%;
-  transform: translateX(-50%);
-  z-index: 1200;
-  backdrop-filter: blur(10px);
-}
+      .control {
+        position: fixed;
+        bottom: calc(2.4em + env(safe-area-inset-bottom)); /* accounts for mobile safe area */
+        left: 55%;
+        transform: translateX(-50%);
+        z-index: 1200;
+        backdrop-filter: blur(10px);
+      }
 
       /* fade-in effect */
       .control {
@@ -1263,6 +1263,29 @@
     <div id="cursor"></div>
 
     <script>
+      // Print raw HTML without any CSS/styles using the innerHTML of body
+      const printBtn = document.getElementById('print-btn');
+      printBtn?.addEventListener('click', () => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) return;
+        // Grab only the body's markup (without the <head> and styles)
+        const rawBody = document.body.innerHTML;
+        printWindow.document.write(`<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Print View</title>
+</head>
+<body>
+  ${rawBody}
+</body>
+</html>`);
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      });
+
       // Back-to-top functionality
       const backLabel = document.getElementById('back-to-top');
       const backRadio = document.getElementById('free');
@@ -1377,7 +1400,7 @@
         const touch = event.touches[0];
         mouseX = touch.clientX;
         mouseY = touch.clientY;
-        // Notice: We removed event.preventDefault() here so scrolling is not blocked.
+        // No preventDefault so scrolling remains enabled.
       }
 
       function initCursor() {
