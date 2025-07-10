@@ -659,6 +659,58 @@
       [data-theme="dark"] .nav-links a.active::after {
         background-color: #ffffff;
       }
+
+
+
+      /* Add this to your <style> block in reasonable-resume.html */
+
+/* Container for layered blur effect */
+.blur {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;              /* sit behind your main content */
+  pointer-events: none;     /* clicks pass through */
+  overflow: hidden;
+}
+
+/* Each child div becomes one blur layer */
+.blur > div {
+  /* how far each layer is offset */
+  --y-offset: calc(var(--i) * 15px);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateY(var(--y-offset));
+  /* amount of blur grows with layer index */
+  filter: blur(calc(var(--i) * var(--blur-amount)));
+  /* fade out the farther layers */
+  opacity: calc(1 - (var(--i) - 1) * 0.15);
+  /* show underlying page background */
+  background: inherit;
+}
+
+
+/* 1) Hide scroll bars globally */
+  /* Chrome, Safari, Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  /* Firefox */
+  html {
+    scrollbar-width: none;
+    -ms-overflow-style: none;  /* IE and Edge */
+  }
+
+  /* 2) Make all links white in dark mode */
+  [data-theme="dark"] a {
+    color: #ffffff !important;
+  }
+
+
+  
     </style>
   </head>
   <body>
@@ -679,7 +731,9 @@
       <a href="#section-10">One Sixty Over Ninety</a>
     </nav>
 
+    <div class="blur"></div>
     <!-- Background SVG -->
+    
     <svg class="background-svg" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="dottedGrid" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -689,7 +743,7 @@
       <rect width="100%" height="100%" fill="url(#dottedGrid)" />
     </svg>
 
-    <div class="blur"></div>
+
 
     <!-- Content Sections -->
     <!-- Introduction Section -->
@@ -1253,6 +1307,67 @@
           applyTheme('light');
         }
       });
+
+
+// Add this at the bottom of your <script> block in reasonable-resume.html
+
+// 1) Configure how many blur layers you want
+const configBlur = { layers: 5 };
+
+// 2) Grab the container
+const blurContainer = document.querySelector(".blur");
+
+// 3) Build the layers
+function updateBlurLayers() {
+  if (!blurContainer) return;
+  // clear any existing layers
+  blurContainer.innerHTML = "";
+  // create 'layers' number of <div> children
+  for (let i = 1; i <= configBlur.layers; i++) {
+    const layer = document.createElement("div");
+    // expose the index to CSS
+    layer.style.setProperty("--i", i);
+    blurContainer.appendChild(layer);
+  }
+}
+
+// 4) Initialize on load
+window.addEventListener("DOMContentLoaded", updateBlurLayers);
+// (optional) if you want to re-build on resize:
+window.addEventListener("resize", updateBlurLayers);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = [
+      document.querySelector('.introduction'),
+      ...document.querySelectorAll('.layout-container')
+    ].filter(Boolean);
+
+    function updateActiveLink() {
+      const midpoint = window.scrollY + window.innerHeight / 2;
+      // find the last section whose top is <= midpoint
+      let currentSection = sections[0];
+      for (const sec of sections) {
+        if (sec.offsetTop <= midpoint) {
+          currentSection = sec;
+        } else {
+          break;
+        }
+      }
+      // highlight its nav link
+      navLinks.forEach(a => a.classList.remove('active'));
+      const active = document.querySelector(`.nav-links a[href="#${currentSection.id}"]`);
+      if (active) active.classList.add('active');
+    }
+
+    // initialize on load
+    updateActiveLink();
+    // update on scroll and resize
+    window.addEventListener('scroll', updateActiveLink);
+    window.addEventListener('resize', updateActiveLink);
+  });
+
+
     </script>
   </body>
 </html>
