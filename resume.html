@@ -1263,13 +1263,21 @@
     <div id="cursor"></div>
 
     <script>
-      // Print raw HTML without any CSS/styles using the innerHTML of body
+      // Print raw HTML without any CSS/styles using the innerHTML of body.
+      // It removes any table elements and the control button before printing.
       const printBtn = document.getElementById('print-btn');
       printBtn?.addEventListener('click', () => {
         const printWindow = window.open('', '_blank');
         if (!printWindow) return;
-        // Grab only the body's markup (without the <head> and styles)
-        const rawBody = document.body.innerHTML;
+        // Clone the body to avoid modifying the live DOM
+        const clone = document.body.cloneNode(true);
+        // Remove table elements from the clone (if any)
+        const tables = clone.querySelectorAll('table');
+        tables.forEach(table => table.remove());
+        // Also remove the control button container
+        const controlContainer = clone.querySelector('.control');
+        if (controlContainer) controlContainer.remove();
+        const rawBody = clone.innerHTML;
         printWindow.document.write(`<!DOCTYPE html>
 <html>
 <head>
