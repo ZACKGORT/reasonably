@@ -26,7 +26,8 @@
       }
 
       /* Prevent horizontal shifting by hiding any horizontal overflow */
-      html, body {
+      html,
+      body {
         overflow-x: hidden;
       }
 
@@ -46,7 +47,6 @@
         margin: 0;
         padding: 10px;
         position: relative;
-        /* Allow vertical panning only */
         touch-action: pan-y;
       }
 
@@ -63,7 +63,7 @@
         padding: 20px;
         text-align: left;
         background-color: transparent;
-        position: relative; /* allow z-index adjustment */
+        position: relative;
         z-index: 5;
       }
 
@@ -101,9 +101,7 @@
         z-index: 10001;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        /* Optimize fixed position via GPU acceleration */
         will-change: transform;
-        /* Remove unwanted transforms */
         transform: translateX(0);
       }
 
@@ -134,27 +132,27 @@
       .nav-links a:hover {
         color: #ffffff;
       }
-      
+
       .nav-links a:hover::after {
         width: 100%;
         background-color: #000000;
       }
-      
+
       .nav-links a:active,
       .nav-links a.active {
         color: #ffffff;
       }
-      
+
       .nav-links a:active::after,
       .nav-links a.active::after {
         width: 100%;
         background-color: #000000;
       }
-      
+
       html {
         scroll-behavior: smooth;
       }
-      
+
       /* Layout Containers (Glassmorphism) */
       .layout-container {
         scroll-margin-top: 80px;
@@ -171,7 +169,7 @@
         position: relative;
         z-index: 5;
       }
-      
+
       .layout-header {
         display: flex;
         align-items: center;
@@ -179,13 +177,13 @@
         padding: 10px;
         border-bottom: 1px solid var(--glass-border);
       }
-      
+
       .layout-header h1 {
         font-size: 2.2em;
         font-weight: bold;
         margin: 0;
       }
-      
+
       .layout-progress {
         display: flex;
         justify-content: space-between;
@@ -194,19 +192,19 @@
         border-bottom: 1px solid var(--glass-border);
         font-size: 0.9em;
       }
-      
+
       .shortcut-info {
         font-size: 1em;
         opacity: 0.7;
       }
-      
+
       .layout-services {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 10px;
         padding: 10px 0;
       }
-      
+
       .service-item {
         background: rgba(255, 255, 255, 0.05);
         padding: 15px;
@@ -214,25 +212,25 @@
         border-radius: 8px;
         box-shadow: inset 0 0 5px var(--glass-shadow);
       }
-      
+
       .service-item h3 {
         margin: 0 0 10px;
         font-size: 1em;
       }
-      
+
       .service-item p {
         font-size: 0.75em;
         line-height: 1.4;
         margin: 0;
       }
-      
+
       .service-item code {
         background: rgba(255, 255, 255, 0.1);
         padding: 2px 4px;
         border-radius: 3px;
         font-size: 12px;
       }
-      
+
       .tweakpane-container {
         position: fixed;
         top: 20px;
@@ -240,7 +238,7 @@
         transition: opacity 0.3s ease;
         z-index: 100;
       }
-      
+
       /* Adjust layout for smaller screens */
       @media (max-width: 960px) {
         .nav-links {
@@ -265,7 +263,7 @@
           padding: 12px;
         }
       }
-      
+
       /* Background SVG */
       .background-svg {
         position: absolute;
@@ -273,270 +271,7 @@
         height: 100%;
         z-index: -2;
       }
-      
-      /* Updated Glassy Button Container */
-      .glassy-button-container {
-        position: fixed;
-        bottom: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 10001;
-      }
-      
-      /* Glassy Button Styles */
-      .glassy-button,
-      .glassy-button * {
-        -webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
-        user-select: none;
-        touch-action: manipulation;
-        font-family: "Inter", sans-serif;
-      }
-      
-      .glassy-button-wrap {
-        position: relative;
-        z-index: 2;
-        border-radius: 999vw;
-        background: transparent;
-        pointer-events: none;
-        transition: all 0.3s ease;
-      }
-      
-      .glassy-button-shadow {
-        --shadow-cuttoff-fix: 2em;
-        position: absolute;
-        width: calc(100% + var(--shadow-cuttoff-fix));
-        height: calc(100% + var(--shadow-cuttoff-fix));
-        top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-        left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-        filter: blur(clamp(4px, 0.25em, 16px));
-        -webkit-filter: blur(clamp(4px, 0.25em, 16px));
-        overflow: visible;
-        pointer-events: none;
-      }
-      
-      .glassy-button-shadow::after {
-        content: "";
-        position: relative;
-        z-index: 0;
-        inset: 0;
-        border-radius: 999vw;
-        background: linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.1));
-        width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-        height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-        top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-        left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-        padding: 0.125em;
-        box-sizing: border-box;
-        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        mask-composite: exclude;
-        transition: all 0.3s ease;
-        overflow: visible;
-        opacity: 1;
-      }
-      
-      .glassy-button {
-        --border-width: clamp(1px, 0.0625em, 4px);
-        all: unset;
-        cursor: pointer;
-        position: relative;
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-        pointer-events: auto;
-        z-index: 3;
-        background: linear-gradient(-75deg, rgba(255,255,255,0.05), rgba(255,255,255,0.2), rgba(255,255,255,0.05));
-        border-radius: 999vw;
-        box-shadow: inset 0 0.125em 0.125em rgba(0,0,0,0.05),
-                    inset 0 -0.125em 0.125em rgba(255,255,255,0.5),
-                    0 0.25em 0.125em -0.125em rgba(0,0,0,0.2),
-                    0 0 0.1em 0.25em inset rgba(255,255,255,0.2);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
-        transition: all 0.3s ease;
-      }
-      
-      .glassy-button:hover,
-      .glassy-button:active {
-        transform: scale(0.975);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        box-shadow: inset 0 0.125em 0.125em rgba(0,0,0,0.05),
-                    inset 0 -0.125em 0.125em rgba(255,255,255,0.5),
-                    0 0.15em 0.05em -0.1em rgba(0,0,0,0.25),
-                    0 0 0.05em 0.1em inset rgba(255,255,255,0.5);
-      }
-      
-      .glassy-button span {
-        position: relative;
-        display: block;
-        user-select: none;
-        -webkit-user-select: none;
-        font-family: "Inter", sans-serif;
-        letter-spacing: -0.05em;
-        font-weight: 500;
-        font-size: 1em;
-        color: rgba(50,50,50,1);
-        -webkit-font-smoothing: antialiased;
-        text-shadow: 0 0.25em 0.05em rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        padding-inline: 1.5em;
-        padding-block: 0.875em;
-      }
-      
-      .glassy-button:hover span {
-        text-shadow: 0.025em 0.025em 0.025em rgba(0,0,0,0.12);
-      }
-      
-      .glassy-button span::after {
-        content: "";
-        display: block;
-        position: absolute;
-        z-index: 1;
-        width: calc(100% - var(--border-width));
-        height: calc(100% - var(--border-width));
-        top: calc(0% + var(--border-width) / 2);
-        left: calc(0% + var(--border-width) / 2);
-        box-sizing: border-box;
-        border-radius: 999vw;
-        overflow: clip;
-        background: linear-gradient(
-          var(--angle-2),
-          rgba(255,255,255,0) 0%,
-          rgba(255,255,255,0.5) 40% 50%,
-          rgba(255,255,255,0) 55%
-        );
-        z-index: 3;
-        mix-blend-mode: screen;
-        pointer-events: none;
-        background-size: 200% 200%;
-        background-position: 0% 50%;
-        background-repeat: no-repeat;
-        transition: background-position calc(0.3s * 1.25) ease, --angle-2 calc(0.3s * 1.25) ease;
-      }
-      
-      .glassy-button:hover span::after {
-        background-position: 25% 50%;
-      }
-      
-      .glassy-button:active span::after {
-        background-position: 50% 15%;
-        --angle-2: -15deg;
-      }
-      
-      @media (hover: none) and (pointer: coarse) {
-        .glassy-button span::after,
-        .glassy-button:active span::after {
-          --angle-2: -45deg;
-        }
-      }
-      
-      .glassy-button::after {
-        content: "";
-        position: absolute;
-        z-index: 1;
-        inset: 0;
-        border-radius: 999vw;
-        width: calc(100% + var(--border-width));
-        height: calc(100% + var(--border-width));
-        top: calc(0% - var(--border-width) / 2);
-        left: calc(0% - var(--border-width) / 2);
-        padding: var(--border-width);
-        box-sizing: border-box;
-        background: conic-gradient(
-            from var(--angle-1) at 50% 50%,
-            rgba(0,0,0,0.5),
-            rgba(0,0,0,0) 5% 40%,
-            rgba(0,0,0,0.5) 50%,
-            rgba(0,0,0,0) 60% 95%,
-            rgba(0,0,0,0.5)
-          ),
-          linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.5));
-        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-        mask-composite: exclude;
-        transition: all 0.3s ease, --angle-1 500ms ease;
-        box-shadow: inset 0 0 0 calc(var(--border-width) / 2) rgba(255,255,255,0.5);
-      }
-      
-      .glassy-button:hover::after {
-        --angle-1: -125deg;
-      }
-      
-      .glassy-button:active::after {
-        --angle-1: -75deg;
-      }
-      
-      @media (hover: none) and (pointer: coarse) {
-        .glassy-button::after,
-        .glassy-button:hover::after,
-        .glassy-button:active::after {
-          --angle-1: -75deg;
-        }
-      }
-      
-      /* Desktop positioning (screens wider than 960px) */
-      @media (min-width: 961px) {
-        .glassy-button-container {
-          position: fixed !important;
-          bottom: 20px !important;
-          left: 50% !important;
-          transform: translateX(-50%) !important;
-          z-index: 1200 !important;
-        }
-      }
-      
-      /* Mobile positioning (screens 960px and smaller) */
-      @media (max-width: 960px) {
-        .glassy-button-container {
-          position: fixed !important;
-          bottom: 50px !important;
-          left: 50% !important;
-          transform: translateX(-50%) !important;
-          z-index: 1200 !important;
-        }
-      }
-      
-      /* UPDATED BLUR LAYER */
-      @layer blurring {
-        :root {
-          --layers: 5;
-          --blur-max: 40;
-          --mask-stop: 15;
-        }
-        .blur {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100vh;
-          /* Lowered z-index to keep blur behind content */
-          z-index: -1;
-          pointer-events: none;
-          /* Force GPU acceleration to avoid jank */
-          transform: translateZ(0);
-          backface-visibility: hidden;
-        }
-        .blur div {
-          --blur: calc(
-            sin(((var(--layers) - var(--i)) / var(--layers)) * 90deg) * var(--blur-max)
-          );
-          --stop: calc(sin(((var(--i)) / var(--layers)) * 90deg) * var(--mask-stop));
-          position: absolute;
-          inset: 0;
-        }
-        .blur div::after {
-          content: "";
-          position: absolute;
-          inset: 0 -250%;
-          backdrop-filter: blur(calc(var(--blur) * 1px));
-          mask: linear-gradient(180deg, transparent 0 calc((100 - var(--stop)) * 1%), #000 100%);
-        }
-      }
-      
+
       /* Glass Buttons styling within the introduction */
       .glass-buttons {
         position: absolute;
@@ -545,8 +280,7 @@
         display: flex;
         gap: var(--spacing-md);
       }
-      
-      /* Glass button common style */
+
       .glass-button {
         background: var(--glass-bg);
         border: 1px solid var(--glass-border);
@@ -559,16 +293,371 @@
         -webkit-backdrop-filter: blur(var(--blur-amount));
         transition: background var(--transition-medium);
       }
-      
+
       .glass-button:hover {
         background: rgba(255, 255, 255, 0.2);
       }
-      
+
       .glass-buttons a.glass-button {
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+      }
+
+      /* Remove old back-to-top button */
+      .glassy-button-container {
+        display: none;
+      }
+
+      /* New Multi-functional Control Styles */
+      @import url('https://unpkg.com/normalize.css') layer(normalize);
+      @layer normalize, base, demo, flip, debug;
+
+      @layer debug {
+        [data-debug='true'] input.sr-only {
+          position: absolute;
+          width: 20px;
+          height: 20px;
+          padding: 0;
+          margin: unset;
+          overflow: visible;
+          clip: unset;
+          white-space: nowrap;
+          border-width: unset;
+          accent-color: red;
+          outline: none;
+          cursor: pointer;
+          animation: reveal calc(var(--duration) * 1s) ease-out;
+        }
+
+        @keyframes reveal {
+          0% {
+            opacity: 0;
+          }
+        }
+
+        [data-debug='true'] .control__track > input {
+          left: 25%;
+          bottom: 200%;
+          translate: -50% 0;
+        }
+        [data-debug='true'] .premium > input:nth-of-type(1) {
+          left: 25%;
+          bottom: calc(200% + 2px);
+          translate: -50% 0;
+        }
+        [data-debug='true'] .premium > input:nth-of-type(2) {
+          left: 75%;
+          bottom: calc(200% + 2px);
+          translate: -50% 0;
+        }
+      }
+
+      @layer flip {
+        :root {
+          --shadow-color: 0deg 0% 63%;
+          --primary: light-dark(hsl(0 0% 10%), #fff);
+          --secondary: canvas;
+          --inactive: light-dark(hsl(0 0% 60%), hsl(0 0% 50%));
+          --duration: 0.22;
+          --drop-off: 0.4;
+          --ease: ease-out;
+          --ease: linear(
+            0 0%, 0.2342 12.49%, 0.4374 24.99%,
+            0.6093 37.49%, 0.6835 43.74%,
+            0.7499 49.99%, 0.8086 56.25%,
+            0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,
+            0.9648 81.25%, 0.9844 87.5%,
+            0.9961 93.75%, 1 100%
+          );
+          --border: light-dark(hsl(0 0% 80%), hsl(0 0% 60%));
+          @media (prefers-color-scheme: dark) {
+            --shadow-color: 0deg 0% 0%;
+          }
+        }
+        [data-theme='dark'] {
+          --shadow-color: 0deg 0% 0%;
+        }
+        [data-theme='light'] {
+          --shadow-color: 0deg 0% 63%;
+        }
+        .premium:has(:checked)::before {
+          translate: -50% -250%;
+          scale: 0.85;
+        }
+        .premium:has(:checked) label span {
+          scale: 1;
+        }
+        .premium:has(:checked) .indicator {
+          background: var(--secondary);
+          clip-path: inset(0 0 0 0 round 100px);
+        }
+        .premium:has(:checked) label {
+          color: var(--inactive);
+          opacity: 0.75;
+        }
+        .premium:has(:nth-of-type(1):checked) label:nth-of-type(1),
+        .premium:has(:nth-of-type(2):checked) label:nth-of-type(2) {
+          color: var(--primary);
+          opacity: 1;
+        }
+        .premium:has(:nth-of-type(1):checked) .indicator {
+          translate: -100% 0;
+        }
+        .premium:has(:nth-of-type(2):checked) .indicator {
+          translate: 0 0;
+        }
+
+        .control label {
+          transition-property: color, opacity;
+          transition-duration: calc(var(--duration) * 1s);
+          transition-timing-function: var(--ease);
+        }
+
+        .control__track:not(:has(> :checked)) > label {
+          color: var(--primary);
+          opacity: var(--drop-off);
+        }
+        .control__track:not(:has(> :checked)) > .indicator {
+          translate: 100% 0;
+        }
+        .indicator {
+          transition: translate calc(var(--duration) * 1s) var(--ease);
+        }
+        .premium .indicator {
+          transition-property: translate, clip-path, background;
+          transition-duration: calc(var(--duration) * 1s);
+          transition-timing-function: var(--ease);
+          clip-path: inset(
+            73cqh calc(50% + 1px) calc(27cqh - 2px) calc(50% - 3px) round 100px
+          );
+        }
+        .premium::before {
+          transition-property: scale, translate;
+          transition-duration: calc(var(--duration) * 1s);
+          transition-timing-function: var(--ease);
+        }
+        .control__track:has(> :checked) .premium .indicator {
+          background: var(--inactive);
+        }
+        .control__track:has(> :checked) .premium label {
+          color: var(--inactive);
+        }
+      }
+
+      @layer demo {
+        .indicator {
+          position: absolute;
+          width: 50%;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          background: var(--primary);
+          border-radius: 100px;
+        }
+
+        .premium .indicator {
+          background: var(--primary);
+          left: 50%;
+          top: 0;
+          translate: -50% 0;
+        }
+
+        .control {
+          scale: 1.2;
+          letter-spacing: 0.5px;
+          position: relative;
+          width: 260px;
+          height: 38px;
+          aspect-ratio: 300 / 38;
+          background: var(--secondary);
+          border-radius: 100px;
+          border: 1px solid var(--border);
+          padding: 2px;
+          box-shadow: -0.1px 1px 1px hsl(var(--shadow-color) / 0.22),
+            -0.2px 3.2px 3.1px -0.4px hsl(var(--shadow-color) / 0.26),
+            -0.3px 5.7px 5.5px -0.8px hsl(var(--shadow-color) / 0.24),
+            -0.5px 9.3px 8.9px -1.2px hsl(var(--shadow-color) / 0.22),
+            -0.8px 14.8px 14.2px -1.6px hsl(var(--shadow-color) / 0.19),
+            -1.3px 23.1px 22.2px -2px hsl(var(--shadow-color) / 0.17),
+            -2px 35px 33.7px -2.4px hsl(var(--shadow-color) / 0.14),
+            -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
+            -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
+            -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
+
+          .control__track {
+            display: grid;
+            place-items: center;
+            grid-template-columns: repeat(4, 1fr);
+            width: 100%;
+            height: 100%;
+            position: relative;
+          }
+
+          .premium::before {
+            content: 'Preference';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            translate: -50% -80%;
+            color: var(--primary);
+            font-size: 0.75rem;
+            z-index: 2;
+          }
+
+          label {
+            display: inline-block;
+            height: 100%;
+            width: 100%;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--primary);
+            z-index: 2;
+          }
+
+          .control__track > label {
+            color: var(--secondary);
+          }
+
+          .premium {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            position: relative;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid transparent;
+            container-type: size;
+          }
+
+          .premium,
+          .control__track > label:nth-of-type(1) {
+            grid-column: span 2;
+          }
+
+          label span {
+            display: grid;
+            place-items: center;
+            height: 100%;
+            width: 100%;
+            transition: scale calc(var(--duration) * 1s) var(--ease);
+          }
+
+          .premium label:nth-of-type(1) span {
+            scale: 0.75;
+            transform-origin: 150% 150%;
+            border-radius: 100px;
+          }
+          .premium label:nth-of-type(2) span {
+            scale: 0.75;
+            transform-origin: -65% 150%;
+            border-radius: 100px;
+          }
+        }
+      }
+
+      @layer base {
+        :root {
+          --font-size-min: 16;
+          --font-size-max: 20;
+          --font-ratio-min: 1.2;
+          --font-ratio-max: 1.33;
+          --font-width-min: 375;
+          --font-width-max: 1500;
+        }
+
+        html {
+          color-scheme: light dark;
+        }
+
+        [data-theme='light'] {
+          color-scheme: light only;
+        }
+
+        [data-theme='dark'] {
+          color-scheme: dark only;
+        }
+
+        :where(.fluid) {
+          --fluid-min: calc(
+            var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+          );
+          --fluid-max: calc(
+            var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+          );
+          --fluid-preferred: calc(
+            (var(--fluid-max) - var(--fluid-min)) /
+              (var(--font-width-max) - var(--font-width-min))
+          );
+          --fluid-type: clamp(
+            (var(--fluid-min) / 16) * 1rem,
+            ((var(--fluid-min) / 16) * 1rem) -
+              (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+              (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+            (var(--fluid-max) / 16) * 1rem
+          );
+          font-size: var(--fluid-type);
+        }
+
+        *,
+        *:after,
+        *:before {
+          box-sizing: border-box;
+        }
+
+        body {
+          display: grid;
+          place-items: center;
+          min-height: 100vh;
+          font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+            Helvetica, Arial, sans-serif, system-ui;
+        }
+
+        /* Utilities */
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border-width: 0;
+        }
+      }
+
+      /* Override multi-functional control positioning and add blur */
+      .control {
+        position: fixed;
+        bottom: 2.8em;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1200;
+        backdrop-filter: blur(10px);
+      }
+
+
+
+
+      /* Dark-mode overrides for the frosted nav & link states */
+      [data-theme="dark"] .nav-links {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+      [data-theme="dark"] .nav-links a {
+        color: #ffffff;
+      }
+      [data-theme="dark"] .nav-links a:hover,
+      [data-theme="dark"] .nav-links a:active,
+      [data-theme="dark"] .nav-links a.active {
+        color: #000000;
+      }
+      [data-theme="dark"] .nav-links a:hover::after,
+      [data-theme="dark"] .nav-links a:active::after,
+      [data-theme="dark"] .nav-links a.active::after {
+        background-color: #ffffff;
       }
     </style>
   </head>
@@ -611,7 +700,7 @@
         "Web Designer"<br />
         <a href="https://reasonably.cc" target="_blank" rel="noopener">https://reasonably.cc</a><br />
         <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
-        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">LinkedIn/in/zackgort</a><br />
+        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">LinkedIn/in/zackgort</a>
       </p>
       <!-- Glass Button Container -->
       <div class="glass-buttons">
@@ -1092,128 +1181,78 @@
       </div>
     </div>
 
-    <!-- Lazy-load tables if present -->
+    <!-- Scroll Spacer -->
     <div class="scroll-spacer"></div>
 
-    <!-- Glassy Back to Top Button -->
-    <div class="glassy-button-container" id="back-to-top-life-container" style="position: fixed; left: 50%; bottom: 8rem; transform: translateX(-50%); z-index: 1200;">
-      <div class="glassy-button-wrap">
-        <div class="glassy-button-shadow"></div>
-        <button id="back-to-top-life" class="glassy-button back-to-top-btn" type="button" aria-label="Back to top">
-          <span>
-            <svg width="24" height="24" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 0.5em;">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7" />
-            </svg>
-            Back to Top
-          </span>
-        </button>
+    <div class="control">
+      <div class="control__track">
+        <div class="indicator"></div>
+
+        <!-- Back to Top -->
+        <label for="free" id="back-to-top">Back to Top</label>
+        <input class="sr-only" type="radio" name="tier" id="free" checked />
+
+        <!-- Light / Dark toggles -->
+        <div class="premium">
+          <div class="indicator"></div>
+          <label for="solo"><span>Light</span><span class="sr-only">Light/Dark</span></label>
+          <input class="sr-only" type="radio" name="tier" id="solo" />
+
+          <label for="team"><span>Dark</span><span class="sr-only">Light/Dark</span></label>
+          <input class="sr-only" type="radio" name="tier" id="team" />
+        </div>
       </div>
     </div>
 
+
     <script>
-      // Intercept navigation link clicks to scroll and remove hash from the URL
-      document.querySelectorAll('.nav-links a').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          var targetId = this.getAttribute('href').substring(1);
-          var targetEl = document.getElementById(targetId);
-          if (targetEl) {
-            targetEl.scrollIntoView({ behavior: 'smooth' });
-            history.replaceState(null, '', window.location.pathname + window.location.search);
-          }
-        });
+// ==== script.js ====
+      // 1) Back to Top
+      const backLabel = document.getElementById('back-to-top');
+      const backRadio = document.getElementById('free');
+      function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      backRadio.addEventListener('change', () => {
+        if (backRadio.checked) scrollToTop();
       });
-      
-      (function () {
-        function debounce(func, wait) {
-          let timeout;
-          return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => func.apply(this, args), wait);
-          };
-        }
-      
-        const btnContainer = document.getElementById("back-to-top-life-container");
-        const backToTop = document.getElementById("back-to-top-life");
-        if (!btnContainer || !backToTop) return;
-      
-        function updateNavActive() {
-          const sections = Array.from(document.querySelectorAll('.introduction, .layout-container'));
-          let closestSection = sections[0];
-          let minDistance = Infinity;
-          sections.forEach((section) => {
-            const rect = section.getBoundingClientRect();
-            const distance = Math.abs(rect.top);
-            if (distance < minDistance) {
-              minDistance = distance;
-              closestSection = section;
-            }
-          });
-          const navLinks = document.querySelectorAll('.nav-links a');
-          navLinks.forEach((link) => {
-            if (link.getAttribute('href') === '#' + closestSection.id) {
-              link.classList.add('active');
-            } else {
-              link.classList.remove('active');
-            }
-          });
-        }
-      
-        function checkScroll() {
-          updateNavActive();
-          const threshold = (document.querySelector(".introduction")?.offsetHeight || 200) + 200;
-          if (window.scrollY > threshold) {
-            btnContainer.classList.add("visible");
-            backToTop.classList.add("visible");
-          } else {
-            btnContainer.classList.remove("visible");
-            backToTop.classList.remove("visible");
-          }
-        }
-      
-        window.addEventListener("scroll", debounce(checkScroll, 50), { passive: true });
-        backToTop.addEventListener("click", function (e) {
-          e.preventDefault();
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-        window.addEventListener("DOMContentLoaded", checkScroll);
-        checkScroll();
-      })();
-      
-      const config = { layers: 5 };
-      const blur = document.querySelector(".blur");
-      function updateBlur() {
-        if (!blur) return;
-        blur.innerHTML = "";
-        for (let i = 1; i <= config.layers; i++) {
-          const layer = document.createElement("div");
-          layer.style.setProperty("--i", i);
-          blur.appendChild(layer);
+      backLabel.addEventListener('click', (e) => {
+        e.preventDefault();
+        backRadio.checked = true;
+        scrollToTop();
+      });
+
+      // 2) Theme Toggle
+      const lightRadio = document.getElementById('solo');
+      const darkRadio  = document.getElementById('team');
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'dark') {
+          document.body.style.backgroundColor = '#000000';
+          document.body.style.color = '#ffffff';
+        } else {
+          document.body.style.backgroundColor = '#ffffff';
+          document.body.style.color = '#000000';
         }
       }
-      updateBlur();
-      
-      function savePageAsPDF() {
-        const printWindow = window.open("", "PrintWindow", "width=800,height=600");
-        if (!printWindow) return;
-        printWindow.document.write(`
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <title>Print Page as PDF</title>
-            </head>
-            <body>
-              ${document.body.innerHTML}
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.focus();
-        setTimeout(() => {
-          printWindow.print();
-          printWindow.close();
-        }, 500);
-      }
+      lightRadio.addEventListener('change', () => {
+        if (lightRadio.checked) applyTheme('light');
+      });
+      darkRadio.addEventListener('change', () => {
+        if (darkRadio.checked) applyTheme('dark');
+      });
+
+      // 3) Initialize on load
+      window.addEventListener('DOMContentLoaded', () => {
+        const existing = document.documentElement.dataset.theme;
+        if (existing === 'dark') {
+          darkRadio.checked = true;
+          applyTheme('dark');
+        } else {
+          lightRadio.checked = true;
+          applyTheme('light');
+        }
+      });
     </script>
   </body>
 </html>
