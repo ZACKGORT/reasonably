@@ -728,7 +728,6 @@
       <a href="#section-10">One Sixty Over Ninety</a>
     </nav>
 
-
     <!-- Background SVG -->
     <svg class="background-svg" xmlns="http://www.w3.org/2000/svg">
       <defs>
@@ -1228,6 +1227,7 @@
     </div>
 
     <script>
+      // Back-to-top functionality
       const backLabel = document.getElementById('back-to-top');
       const backRadio = document.getElementById('free');
       function scrollToTop() {
@@ -1258,7 +1258,7 @@
       lightRadio.addEventListener('change', () => { if (lightRadio.checked) applyTheme('light'); });
       darkRadio.addEventListener('change', () => { if (darkRadio.checked) applyTheme('dark'); });
 
-      // DOMContentLoaded event: set defaults
+      // Set up nav links action: prevent default hash navigation and remove hash from URL.
       document.addEventListener('DOMContentLoaded', () => {
         // Set theme default to light
         document.documentElement.dataset.theme = 'light';
@@ -1271,8 +1271,7 @@
           scrollToTop();
         }
 
-
-        // Set up nav links active state update
+        // Set up nav links without updating the URL hash
         const navLinks = document.querySelectorAll('.nav-links a');
         const sections = [
           document.querySelector('.introduction'),
@@ -1295,6 +1294,20 @@
         updateActiveLink();
         window.addEventListener('scroll', updateActiveLink);
         window.addEventListener('resize', updateActiveLink);
+
+        // Override default anchor click behavior to prevent hash update
+        navLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const target = document.getElementById(targetId);
+            if(target) {
+              target.scrollIntoView({ behavior: 'smooth' });
+            }
+            // Remove the hash from the URL without reloading the page
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          });
+        });
 
         // Default nav active state and control fade-in
         navLinks.forEach(a => a.classList.remove('active'));
