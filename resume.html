@@ -588,8 +588,7 @@
             var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
           );
           --fluid-preferred: calc(
-            (var(--fluid-max) - var(--fluid-min)) /
-              (var(--font-width-max) - var(--font-width-min))
+            (var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min))
           );
           --fluid-type: clamp(
             (var(--fluid-min) / 16) * 1rem,
@@ -639,16 +638,14 @@
         backdrop-filter: blur(10px);
       }
 
-
-
-    /* fade-in effect */
-    .control {
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    .control.visible {
-      opacity: 1;
-    }
+      /* fade-in effect */
+      .control {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .control.visible {
+        opacity: 1;
+      }
 
       /* Dark-mode overrides for nav & links */
       [data-theme="dark"] .nav-links {
@@ -680,51 +677,37 @@
         color: #ffffff;
       }
 
+      /* Container for layered blur effect */
+      .blur {
+        position: fixed;
+        inset: 0;
+        z-index: 1100;
+        pointer-events: none;
+        overflow: hidden;
+      }
 
-/* Container for layered blur effect */
-.blur {
-  position: fixed;
-  inset: 0;
-  z-index: 1100;              /* sit behind your main content */
-  pointer-events: none;     /* clicks pass through */
-  overflow: hidden;
-}
+      /* Each child div becomes one blur layer */
+      .blur > div {
+        --y-offset: calc(var(--i) * 15px);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: translateY(var(--y-offset));
+        filter: blur(calc(var(--i) * var(--blur-amount)));
+        opacity: calc(1 - (var(--i) - 1) * 0.15);
+        background: inherit;
+      }
 
-/* Each child div becomes one blur layer */
-.blur > div {
-  /* how far each layer is offset */
-  --y-offset: calc(var(--i) * 15px);
-
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transform: translateY(var(--y-offset));
-  /* amount of blur grows with layer index */
-  filter: blur(calc(var(--i) * var(--blur-amount)));
-  /* fade out the farther layers */
-  opacity: calc(1 - (var(--i) - 1) * 0.15);
-  /* show underlying page background */
-  background: inherit;
-}
-
-
-/* 1) Hide scroll bars globally */
-  /* Chrome, Safari, Opera */
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  /* Firefox */
-  html {
-    scrollbar-width: none;
-    -ms-overflow-style: none;  /* IE and Edge */
-  }
-
-
-
-
-  
+      /* 1) Hide scroll bars globally */
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      html {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
     </style>
   </head>
   <body>
@@ -745,9 +728,8 @@
       <a href="#section-10">One Sixty Over Ninety</a>
     </nav>
 
-    <div class="blur"></div>
+
     <!-- Background SVG -->
-    
     <svg class="background-svg" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="dottedGrid" width="30" height="30" patternUnits="userSpaceOnUse">
@@ -756,8 +738,6 @@
       </defs>
       <rect width="100%" height="100%" fill="url(#dottedGrid)" />
     </svg>
-
-
 
     <div class="introduction" id="section-1">
       <h1>A Reasonable Resume</h1>
@@ -779,7 +759,6 @@
         </button>
       </div>
     </div>
-
 
     <!-- Section 1: Phenom -->
     <div class="layout-container" id="section-2">
@@ -1260,34 +1239,28 @@
     <div class="control">
       <div class="control__track">
         <div class="indicator"></div>
-
         <!-- Back to Top -->
         <label for="free" id="back-to-top">Back to Top</label>
         <input class="sr-only" type="radio" name="tier" id="free" checked />
-
         <!-- Light / Dark toggles -->
         <div class="premium">
           <div class="indicator"></div>
           <label for="solo"><span>Light</span><span class="sr-only">Light/Dark</span></label>
           <input class="sr-only" type="radio" name="tier" id="solo" />
-
           <label for="team"><span>Dark</span><span class="sr-only">Light/Dark</span></label>
           <input class="sr-only" type="radio" name="tier" id="team" />
         </div>
       </div>
     </div>
 
-
     <script>
-// ==== script.js ====
-      // 1) Back to Top
       const backLabel = document.getElementById('back-to-top');
       const backRadio = document.getElementById('free');
       function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-      backRadio.addEventListener('change', () => {
-        if (backRadio.checked) scrollToTop();
+      backRadio.addEventListener('change', () => { 
+        if (backRadio.checked) scrollToTop(); 
       });
       backLabel.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1295,7 +1268,7 @@
         scrollToTop();
       });
 
-      // 2) Theme Toggle
+      // Theme Toggle functionality
       const lightRadio = document.getElementById('solo');
       const darkRadio  = document.getElementById('team');
       function applyTheme(theme) {
@@ -1308,105 +1281,57 @@
           document.body.style.color = '#000000';
         }
       }
-      lightRadio.addEventListener('change', () => {
-        if (lightRadio.checked) applyTheme('light');
-      });
-      darkRadio.addEventListener('change', () => {
-        if (darkRadio.checked) applyTheme('dark');
-      });
+      lightRadio.addEventListener('change', () => { if (lightRadio.checked) applyTheme('light'); });
+      darkRadio.addEventListener('change', () => { if (darkRadio.checked) applyTheme('dark'); });
 
-      // 3) Initialize on load
-      window.addEventListener('DOMContentLoaded', () => {
-        const existing = document.documentElement.dataset.theme;
-        if (existing === 'dark') {
-          darkRadio.checked = true;
-          applyTheme('dark');
-        } else {
-          lightRadio.checked = true;
-          applyTheme('light');
+      // DOMContentLoaded event: set defaults
+      document.addEventListener('DOMContentLoaded', () => {
+        // Set theme default to light
+        document.documentElement.dataset.theme = 'light';
+        lightRadio.checked = true;
+        applyTheme('light');
+
+        // Ensure Back to Top is active (radio "free" remains checked by default)
+        if (!backRadio.checked) {
+          backRadio.checked = true;
+          scrollToTop();
         }
-      });
 
 
-// Add this at the bottom of your <script> block in reasonable-resume.html
-
-// 1) Configure how many blur layers you want
-const configBlur = { layers: 5 };
-
-// 2) Grab the container
-const blurContainer = document.querySelector(".blur");
-
-// 3) Build the layers
-function updateBlurLayers() {
-  if (!blurContainer) return;
-  // clear any existing layers
-  blurContainer.innerHTML = "";
-  // create 'layers' number of <div> children
-  for (let i = 1; i <= configBlur.layers; i++) {
-    const layer = document.createElement("div");
-    // expose the index to CSS
-    layer.style.setProperty("--i", i);
-    blurContainer.appendChild(layer);
-  }
-}
-
-// 4) Initialize on load
-window.addEventListener("DOMContentLoaded", updateBlurLayers);
-// (optional) if you want to re-build on resize:
-window.addEventListener("resize", updateBlurLayers);
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const navLinks = document.querySelectorAll('.nav-links a');
-    const sections = [
-      document.querySelector('.introduction'),
-      ...document.querySelectorAll('.layout-container')
-    ].filter(Boolean);
-
-    function updateActiveLink() {
-      const midpoint = window.scrollY + window.innerHeight / 2;
-      // find the last section whose top is <= midpoint
-      let currentSection = sections[0];
-      for (const sec of sections) {
-        if (sec.offsetTop <= midpoint) {
-          currentSection = sec;
-        } else {
-          break;
+        // Set up nav links active state update
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = [
+          document.querySelector('.introduction'),
+          ...document.querySelectorAll('.layout-container')
+        ].filter(Boolean);
+        function updateActiveLink() {
+          const midpoint = window.scrollY + window.innerHeight / 2;
+          let currentSection = sections[0];
+          for (const sec of sections) {
+            if (sec.offsetTop <= midpoint) {
+              currentSection = sec;
+            } else {
+              break;
+            }
+          }
+          navLinks.forEach(a => a.classList.remove('active'));
+          const active = document.querySelector(`.nav-links a[href="#${currentSection.id}"]`);
+          if (active) active.classList.add('active');
         }
-      }
-      // highlight its nav link
-      navLinks.forEach(a => a.classList.remove('active'));
-      const active = document.querySelector(`.nav-links a[href="#${currentSection.id}"]`);
-      if (active) active.classList.add('active');
-    }
+        updateActiveLink();
+        window.addEventListener('scroll', updateActiveLink);
+        window.addEventListener('resize', updateActiveLink);
 
-    // initialize on load
-    updateActiveLink();
-    // update on scroll and resize
-    window.addEventListener('scroll', updateActiveLink);
-    window.addEventListener('resize', updateActiveLink);
-  });
-
-
-    document.addEventListener('DOMContentLoaded', () => {
-      // 1) Default the nav to "Introduction"
-      const navLinks = document.querySelectorAll('.nav-links a');
-      navLinks.forEach(a => a.classList.remove('active'));
-      const introLink = document.querySelector('.nav-links a[href="#section-1"]');
-      if (introLink) introLink.classList.add('active');
-
-      // 2) Collapse the control (only "Back to Top" visible)…
-      const controlEl = document.querySelector('.control');
-      controlEl.classList.add('collapsed');
-
-      // 3) …then fade it in after 3 seconds
-      setTimeout(() => {
-        controlEl.classList.add('visible');
-      }, 1000);
-    });
-
-
-
-    
+        // Default nav active state and control fade-in
+        navLinks.forEach(a => a.classList.remove('active'));
+        const introLink = document.querySelector('.nav-links a[href="#section-1"]');
+        if (introLink) introLink.classList.add('active');
+        const controlEl = document.querySelector('.control');
+        controlEl.classList.add('collapsed');
+        setTimeout(() => {
+          controlEl.classList.add('visible');
+        }, 1000);
+      });
     </script>
   </body>
 </html>
