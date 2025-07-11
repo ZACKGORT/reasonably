@@ -123,6 +123,12 @@
               flex: 0 0 auto;
             }
 
+            .nav-links a.active,
+            .nav-links a:hover,
+            .nav-links a:active {
+              color: #ffffff;
+            }
+
             .nav-links a::after {
               content: "";
               position: absolute;
@@ -135,20 +141,7 @@
               transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             }
 
-            .nav-links a:hover {
-              color: #ffffff;
-            }
-
-            .nav-links a:hover::after {
-              width: 100%;
-              background-color: #000000;
-            }
-
-            .nav-links a:active,
-            .nav-links a.active {
-              color: #ffffff;
-            }
-
+            .nav-links a:hover::after,
             .nav-links a:active::after,
             .nav-links a.active::after {
               width: 100%;
@@ -857,16 +850,15 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            At Phenom, I reimagined the corporate website with a focus on
-            data-driven design—balancing robust analytics with a strategic
-            roadmap.
+            Managed corporate website with a focus on
+            developing stratgic content and product roadmap.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
             Introduced forward-thinking practices to transition third-party
-            integrations and refine live event management.
+            integrations and refine live event management and product demos  .
           </p>
         </div>
         <div class="service-item">
@@ -880,7 +872,7 @@
           <h3>Core Strengths</h3>
           <p>
             Leveraged expertise in Contentful, Jira, and digital content
-            management to elevate user experience.
+            management to support cross-departmental initiatives.
           </p>
         </div>
         <div class="service-item">
@@ -893,8 +885,7 @@
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Developed innovative templates that instilled renewed creative
-            confidence and streamlined campaign execution.
+            Created a comprehensive filter and search model for an extensive and ever-growing content model. 
           </p>
         </div>
       </div>
@@ -914,7 +905,7 @@
           <h3>Experience Optimization</h3>
           <p>
             Spearheaded product design for Financial Services, optimizing
-            digital interfaces with precision.
+            digital interfaces with precision for <strong>BNY Melon - Pershing X</strong>
           </p>
         </div>
         <div class="service-item">
@@ -968,8 +959,8 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Revolutionized interactive digital experiences for TikTok For
-            Business by integrating comprehensive UX strategies.
+            Redefined interactive digital experiences for <strong>TikTok For
+            Business</strong> by integrating comprehensive UX strategies and interactive experiences catered to a B2B audience.
           </p>
         </div>
         <div class="service-item">
@@ -1023,7 +1014,7 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Led the comprehensive redesign for GNC, establishing a compelling
+            Led the comprehensive redesign for <strong>GNC</strong>, establishing a compelling
             visual identity on Shopify.
           </p>
         </div>
@@ -1478,6 +1469,30 @@
             if (darkRadio) {
               darkRadio.addEventListener('change', () => { if (darkRadio.checked) applyTheme('dark'); });
             }
+
+            // Intersection Observer to update active navigation link based on section visibility
+            const observerOptions = {
+              threshold: 0.5
+            };
+            const observerCallback = (entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const sectionId = entry.target.getAttribute('id');
+                  navLinks.forEach(link => {
+                    if (link.getAttribute('href') === '#' + sectionId) {
+                      link.classList.add('active');
+                    } else {
+                      link.classList.remove('active');
+                    }
+                  });
+                }
+              });
+            };
+            const sectionObserver = new IntersectionObserver(observerCallback, observerOptions);
+            const sections = document.querySelectorAll('div[id^="section-"]');
+            sections.forEach(section => {
+              sectionObserver.observe(section);
+            });
 
             // DOMContentLoaded: initial configuration
             document.addEventListener('DOMContentLoaded', () => {
