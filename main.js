@@ -1309,3 +1309,18 @@ $(function () {
     activateSection($(this).data("type"), true);
   });
 });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const hoverSound = document.getElementById("hoverSound");
+      document.querySelectorAll("nav ul.content li a").forEach((link) => {
+        link.addEventListener("mouseenter", () => {
+          if (hoverSound) {
+            hoverSound.currentTime = 0;
+            hoverSound.volume = 0.4;
+            hoverSound.play().catch((error) => {
+              console.error("Error playing sound:", error);
+            });
+          }
+        });
+      });
+    });
