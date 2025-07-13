@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>A Reasonable Resume</title>
+    <title>A Reasonably Resolute Resume</title>
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
@@ -12,815 +12,815 @@
       rel="stylesheet"
     />
     <style>
-            @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+                  @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+                  :root {
+                    --spacing-base: 1rem;
+                    --spacing-md: 1.5rem;
+                    --spacing-lg: 2rem;
+                    --color-text: #ffffff;
+                    --color-text-dim: 0.6;
+                    --transition-medium: 0.3s ease;
+                    --font-size-base: 12px;
+                    --glass-bg: rgba(255, 255, 255, 0.1);
+                    --glass-border: rgba(255, 255, 255, 0.2);
+                    --glass-shadow: rgba(0, 0, 0, 0.1);
+                    --blur-amount: 4px;
+                    /* Gooey cursor variables */
+                    --cursor-size: 28px;
+                    --bg: #FFFFFF;
+                  }
+
+                  /* Prevent horizontal shifting by hiding any horizontal overflow */
+                  html,
+                  body {
+                    overflow-x: hidden;
+                  }
+
+                  /* Reset */
+                  * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    user-select: none;
+                  }
+
+                  /* Global body styling */
+                  body {
+                    font-family: "Poppins", sans-serif;
+                    background-color: #ffffff;
+                    color: #000000;
+                    margin: 0;
+                    padding: 10px;
+                    position: relative;
+                    touch-action: pan-y;
+                  }
+
+                  /* Prevent dragging of images */
+                  img {
+                    -webkit-user-drag: none;
+                  }
+
+                  /* Updated Introduction Section */
+                  .introduction {
+                    max-width: 900px;
+                    width: 100%;
+                    margin: 100px auto 0;
+                    padding: 20px;
+                    text-align: left;
+                    background-color: transparent;
+                    position: relative;
+                    z-index: 5;
+                  }
+
+                  .introduction h1 {
+                    font-size: 1.5rem;
+                    margin-bottom: 20px;
+                  }
+
+                  .introduction p {
+                    font-size: 0.9rem;
+                    line-height: 1.5;
+                    margin: 0;
+                  }
+
+                  /* Scroll Spacer at Bottom of Content */
+                  .scroll-spacer {
+                    height: 300px;
+                    width: 100%;
+                    display: block;
+                  }
+
+                  /* Navigation Links Styling (Frosted Glass Background) */
+                  .nav-links {
+                    padding: var(--spacing-base);
+                    display: flex;
+                    justify-content: center;
+                    gap: var(--spacing-md);
+                    background-color: rgba(255, 255, 255, 0.5);
+                    backdrop-filter: blur(5px);
+                    -webkit-backdrop-filter: blur(10px);
+                    width: 100%;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    z-index: 10001;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    will-change: transform;
+                    transform: translateX(0);
+                  }
+
+                  .nav-links a {
+                    position: relative;
+                    cursor: pointer;
+                    color: #000000;
+                    text-decoration: none;
+                    font-size: var(--font-size-base);
+                    font-weight: 700;
+                    opacity: 1;
+                    transition: color var(--transition-medium);
+                    flex: 0 0 auto;
+                  }
+
+                  .nav-links a::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 0;
+                    height: 100%;
+                    background-color: #000000;
+                    z-index: -1;
+                    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                  }
+
+                  .nav-links a:hover {
+                    color: #ffffff;
+                  }
+
+                  .nav-links a:hover::after {
+                    width: 100%;
+                    background-color: #000000;
+                  }
+
+                  .nav-links a:active,
+                  .nav-links a.active {
+                    color: #ffffff;
+                  }
+
+                  .nav-links a:active::after,
+                  .nav-links a.active::after {
+                    width: 100%;
+                    background-color: #000000;
+                  }
+
+                  html {
+                    scroll-behavior: smooth;
+                  }
+
+                  /* Layout Containers (Glassmorphism) */
+                  .layout-container {
+                    scroll-margin-top: 80px;
+                    width: 80%;
+                    max-width: 900px;
+                    margin: 4em auto 0;
+                    padding: 20px;
+                    background: var(--glass-bg);
+                    border: 1px solid var(--glass-border);
+                    border-radius: 10px;
+                    backdrop-filter: blur(var(--blur-amount));
+                    -webkit-backdrop-filter: blur(var(--blur-amount));
+                    box-shadow: 0 4px 30px var(--glass-shadow);
+                    position: relative;
+                    z-index: 5;
+                  }
 
             :root {
-              --spacing-base: 1rem;
-              --spacing-md: 1.5rem;
-              --spacing-lg: 2rem;
-              --color-text: #ffffff;
-              --color-text-dim: 0.6;
-              --transition-medium: 0.3s ease;
-              --font-size-base: 12px;
-              --glass-bg: rgba(255, 255, 255, 0.1);
-              --glass-border: rgba(255, 255, 255, 0.2);
-              --glass-shadow: rgba(0, 0, 0, 0.1);
-              --blur-amount: 4px;
-              /* Gooey cursor variables */
-              --cursor-size: 28px;
-              --bg: #FFFFFF;
+              --glow-light-default: #FFFFFF;
+              --glow-light-hover: #FAFAFA;
+              --glow-dark-default: #fff2;
+              --glow-dark-hover: #fff6;
             }
 
-            /* Prevent horizontal shifting by hiding any horizontal overflow */
-            html,
-            body {
-              overflow-x: hidden;
+            /* Default glow for light mode */
+            .layout-container .glow {
+              background-image: radial-gradient(circle at 50% -20%, var(--glow-light-default), #0000000f);
+            }
+            /* Default glow for dark mode */
+            [data-theme="dark"] .layout-container .glow {
+              background-image: radial-gradient(circle at 50% -20%, var(--glow-dark-default), #0000000f);
             }
 
-            /* Reset */
-            * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-              user-select: none;
-            }
-
-            /* Global body styling */
-            body {
-              font-family: "Poppins", sans-serif;
-              background-color: #ffffff;
-              color: #000000;
-              margin: 0;
-              padding: 10px;
-              position: relative;
-              touch-action: pan-y;
-            }
-
-            /* Prevent dragging of images */
-            img {
-              -webkit-user-drag: none;
-            }
-
-            /* Updated Introduction Section */
-            .introduction {
-              max-width: 900px;
-              width: 100%;
-              margin: 100px auto 0;
-              padding: 20px;
-              text-align: left;
-              background-color: transparent;
-              position: relative;
-              z-index: 5;
-            }
-
-            .introduction h1 {
-              font-size: 1.5rem;
-              margin-bottom: 20px;
-            }
-
-            .introduction p {
-              font-size: 0.9rem;
-              line-height: 1.5;
-              margin: 0;
-            }
-
-            /* Scroll Spacer at Bottom of Content */
-            .scroll-spacer {
-              height: 300px;
-              width: 100%;
-              display: block;
-            }
-
-            /* Navigation Links Styling (Frosted Glass Background) */
-            .nav-links {
-              padding: var(--spacing-base);
-              display: flex;
-              justify-content: center;
-              gap: var(--spacing-md);
-              background-color: rgba(255, 255, 255, 0.5);
-              backdrop-filter: blur(5px);
-              -webkit-backdrop-filter: blur(10px);
-              width: 100%;
-              position: fixed;
-              top: 0;
-              left: 0;
-              z-index: 10001;
-              overflow-x: auto;
-              -webkit-overflow-scrolling: touch;
-              will-change: transform;
-              transform: translateX(0);
-            }
-
-            .nav-links a {
-              position: relative;
-              cursor: pointer;
-              color: #000000;
-              text-decoration: none;
-              font-size: var(--font-size-base);
-              font-weight: 700;
-              opacity: 1;
-              transition: color var(--transition-medium);
-              flex: 0 0 auto;
-            }
-
-            .nav-links a::after {
-              content: "";
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 0;
-              height: 100%;
-              background-color: #000000;
-              z-index: -1;
-              transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            }
-
-            .nav-links a:hover {
-              color: #ffffff;
-            }
-
-            .nav-links a:hover::after {
-              width: 100%;
-              background-color: #000000;
-            }
-
-            .nav-links a:active,
-            .nav-links a.active {
-              color: #ffffff;
-            }
-
-            .nav-links a:active::after,
-            .nav-links a.active::after {
-              width: 100%;
-              background-color: #000000;
-            }
-
-            html {
-              scroll-behavior: smooth;
-            }
-
-            /* Layout Containers (Glassmorphism) */
+            /* --- New Hover Effect for layout containers --- */
             .layout-container {
-              scroll-margin-top: 80px;
-              width: 80%;
-              max-width: 900px;
-              margin: 4em auto 0;
-              padding: 20px;
-              background: var(--glass-bg);
-              border: 1px solid var(--glass-border);
-              border-radius: 10px;
-              backdrop-filter: blur(var(--blur-amount));
-              -webkit-backdrop-filter: blur(var(--blur-amount));
-              box-shadow: 0 4px 30px var(--glass-shadow);
               position: relative;
-              z-index: 5;
+              transition-duration: 300ms;
+              transition-property: transform, box-shadow;
+              transition-timing-function: ease-out;
+              transform: rotate3d(0, 0, 0, 0deg);
             }
-
-      :root {
-        --glow-light-default: #FFFFFF;
-        --glow-light-hover: #FAFAFA;
-        --glow-dark-default: #fff2;
-        --glow-dark-hover: #fff6;
-      }
-
-      /* Default glow for light mode */
-      .layout-container .glow {
-        background-image: radial-gradient(circle at 50% -20%, var(--glow-light-default), #0000000f);
-      }
-      /* Default glow for dark mode */
-      [data-theme="dark"] .layout-container .glow {
-        background-image: radial-gradient(circle at 50% -20%, var(--glow-dark-default), #0000000f);
-      }
-
-      /* --- New Hover Effect for layout containers --- */
-      .layout-container {
-        position: relative;
-        transition-duration: 300ms;
-        transition-property: transform, box-shadow;
-        transition-timing-function: ease-out;
-        transform: rotate3d(0, 0, 0, 0deg);
-      }
-      .layout-container:hover {
-        transition-duration: 150ms;
-      }
-      .layout-container .glow {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        color: white;
-        pointer-events: none;
-      }
-
-            .layout-header {
-              display: flex;
-              align-items: center;
-              justify-content: flex-start;
-              padding: 10px;
-              border-bottom: 1px solid var(--glass-border);
+            .layout-container:hover {
+              transition-duration: 150ms;
             }
-
-            .layout-header h1 {
-              font-size: 2.2em;
-              font-weight: bold;
-              margin: 0;
-            }
-
-            .layout-progress {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 10px;
-              border-bottom: 1px solid var(--glass-border);
-              font-size: 0.9em;
-            }
-
-            .shortcut-info {
-              font-size: 1em;
-              opacity: 0.7;
-            }
-
-            .layout-services {
-              display: grid;
-              grid-template-columns: repeat(3, 1fr);
-              gap: 10px;
-              padding: 10px 0;
-            }
-
-            .service-item {
-              background: rgba(255, 255, 255, 0.05);
-              padding: 15px;
-              border: 1px solid var(--glass-border);
-              border-radius: 8px;
-              box-shadow: inset 0 0 5px var(--glass-shadow);
-            }
-
-            .service-item h3 {
-              margin: 0 0 10px;
-              font-size: 1em;
-            }
-
-            .service-item p {
-              font-size: 0.75em;
-              line-height: 1.4;
-              margin: 0;
-            }
-
-            .service-item code {
-              background: rgba(255, 255, 255, 0.1);
-              padding: 2px 4px;
-              border-radius: 3px;
-              font-size: 12px;
-            }
-
-            .tweakpane-container {
-              position: fixed;
-              top: 20px;
-              right: 20px;
-              transition: opacity 0.3s ease;
-              z-index: 100;
-            }
-
-            /* Adjust layout for smaller screens */
-            @media (max-width: 960px) {
-              .nav-links {
-                position: fixed;
-                top: 0;
-                justify-content: flex-start;
-              }
-              .layout-services {
-                grid-template-columns: 1fr;
-              }
-              .layout-container {
-                width: 100%;
-                padding: 20px;
-              }
-              table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 0 2rem;
-              }
-              table th,
-              table td {
-                padding: 12px;
-              }
-            }
-
-            /* Background SVG */
-            .background-svg {
+            .layout-container .glow {
               position: absolute;
               width: 100%;
               height: 100%;
-              z-index: -2;
-            }
-
-            /* Glass Buttons styling within the introduction */
-            .glass-buttons {
-              position: absolute;
-              top: 20px;
-              right: 20px;
-              display: flex;
-              gap: var(--spacing-md);
-            }
-
-            .glass-button {
-              background: white;
-              border: 1px solid var(--glass-border);
-              border-radius: 8px;
-              color: #000;
-              font-size: var(--font-size-base);
-              padding: 0.5rem 1rem;
-              cursor: pointer;
-              backdrop-filter: blur(var(--blur-amount));
-              -webkit-backdrop-filter: blur(var(--blur-amount));
-              transition: background var(--transition-medium);
-            }
-
-            .glass-button:hover {
-              background: rgba(255, 255, 255, 0.2);
-            }
-
-            .glass-buttons a.glass-button {
-              text-decoration: none;
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-            }
-
-            /* Remove old back-to-top button */
-            .glassy-button-container {
-              display: none;
-            }
-
-            /* New Multi-functional Control Styles */
-            @import url('https://unpkg.com/normalize.css') layer(normalize);
-            @layer normalize, base, demo, flip, debug;
-
-            @layer debug {
-              [data-debug='true'] input.sr-only {
-                position: absolute;
-                width: 20px;
-                height: 20px;
-                padding: 0;
-                margin: unset;
-                overflow: visible;
-                clip: unset;
-                white-space: nowrap;
-                border-width: unset;
-                accent-color: red;
-                outline: none;
-                cursor: pointer;
-                animation: reveal calc(var(--duration) * 1s) ease-out;
-              }
-
-              @keyframes reveal {
-                0% {
-                  opacity: 0;
-                }
-              }
-
-              [data-debug='true'] .control__track > input {
-                left: 25%;
-                bottom: 200%;
-                translate: -50% 0;
-              }
-              [data-debug='true'] .premium > input:nth-of-type(1) {
-                left: 25%;
-                bottom: calc(200% + 2px);
-                translate: -50% 0;
-              }
-              [data-debug='true'] .premium > input:nth-of-type(2) {
-                left: 75%;
-                bottom: calc(200% + 2px);
-                translate: -50% 0;
-              }
-            }
-
-            @layer flip {
-              :root {
-                --shadow-color: 0deg 0% 63%;
-                --primary: light-dark(hsl(0 0% 10%), #fff);
-                --secondary: canvas;
-                --inactive: light-dark(hsl(0 0% 60%), hsl(0 0% 50%));
-                --duration: 0.22;
-                --drop-off: 0.4;
-                --ease: ease-out;
-                --ease: linear(
-                  0 0%, 0.2342 12.49%, 0.4374 24.99%,
-                  0.6093 37.49%, 0.6835 43.74%,
-                  0.7499 49.99%, 0.8086 56.25%,
-                  0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,
-                  0.9648 81.25%, 0.9844 87.5%,
-                  0.9961 93.75%, 1 100%
-                );
-                --border: light-dark(hsl(0 0% 80%), hsl(0 0% 60%));
-                @media (prefers-color-scheme: dark) {
-                  --shadow-color: 0deg 0% 0%;
-                }
-              }
-              [data-theme='dark'] {
-                --shadow-color: 0deg 0% 0%;
-              }
-              [data-theme='light'] {
-                --shadow-color: 0deg 0% 63%;
-              }
-              .premium:has(:checked)::before {
-                translate: -50% -250%;
-                scale: 0.85;
-              }
-              .premium:has(:checked) label span {
-                scale: 1;
-              }
-              .premium:has(:checked) .indicator {
-                background: var(--secondary);
-                clip-path: inset(0 0 0 0 round 100px);
-              }
-              .premium:has(:checked) label {
-                color: var(--inactive);
-                opacity: 0.75;
-              }
-              .premium:has(:nth-of-type(1):checked) label:nth-of-type(1),
-              .premium:has(:nth-of-type(2):checked) label:nth-of-type(2) {
-                color: var(--primary);
-                opacity: 1;
-              }
-              .premium:has(:nth-of-type(1):checked) .indicator {
-                translate: -100% 0;
-              }
-              .premium:has(:nth-of-type(2):checked) .indicator {
-                translate: 0 0;
-              }
-
-              .control label {
-                transition-property: color, opacity;
-                transition-duration: calc(var(--duration) * 1s);
-                transition-timing-function: var(--ease);
-              }
-
-              .control__track:not(:has(> :checked)) > label {
-                color: var(--primary);
-                opacity: var(--drop-off);
-              }
-              .control__track:not(:has(> :checked)) > .indicator {
-                translate: 100% 0;
-              }
-              .indicator {
-                transition: translate calc(var(--duration) * 1s) var(--ease);
-              }
-              .premium .indicator {
-                transition-property: translate, clip-path, background;
-                transition-duration: calc(var(--duration) * 1s);
-                transition-timing-function: var(--ease);
-                clip-path: inset(
-                  73cqh calc(50% + 1px) calc(27cqh - 2px) calc(50% - 3px) round 100px
-                );
-              }
-              .premium::before {
-                transition-property: scale, translate;
-                transition-duration: calc(var(--duration) * 1s);
-                transition-timing-function: var(--ease);
-              }
-              .control__track:has(> :checked) .premium .indicator {
-                background: var(--inactive);
-              }
-              .control__track:has(> :checked) .premium label {
-                color: var(--inactive);
-              }
-            }
-
-            @layer demo {
-              .indicator {
-                position: absolute;
-                width: 50%;
-                left: 0;
-                top: 0;
-                bottom: 0;
-                background: var(--primary);
-                border-radius: 100px;
-              }
-
-              .premium .indicator {
-                background: var(--primary);
-                left: 50%;
-                top: 0;
-                translate: -50% 0;
-              }
-
-              .control {
-                scale: 1.2;
-                letter-spacing: 0.5px;
-                position: relative;
-                width: 260px;
-                height: 38px;
-                aspect-ratio: 300 / 38;
-                background: var(--secondary);
-                border-radius: 100px;
-                border: 1px solid var(--border);
-                padding: 2px;
-                box-shadow: -0.1px 1px 1px hsl(var(--shadow-color) / 0.22),
-                  -0.2px 3.2px 3.1px -0.4px hsl(var(--shadow-color) / 0.26),
-                  -0.3px 5.7px 5.5px -0.8px hsl(var(--shadow-color) / 0.24),
-                  -0.5px 9.3px 8.9px -1.2px hsl(var(--shadow-color) / 0.22),
-                  -0.8px 14.8px 14.2px -1.6px hsl(var(--shadow-color) / 0.19),
-                  -1.3px 23.1px 22.2px -2px hsl(var(--shadow-color) / 0.17),
-                  -2px 35px 33.7px -2.4px hsl(var(--shadow-color) / 0.14),
-                  -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
-                  -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
-                  -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
-
-                .control__track {
-                  display: grid;
-                  place-items: center;
-                  grid-template-columns: repeat(4, 1fr);
-                  width: 100%;
-                  height: 100%;
-                  position: relative;
-                }
-
-                .premium::before {
-                  content: 'Preference';
-                  position: absolute;
-                  left: 50%;
-                  top: 50%;
-                  translate: -50% -80%;
-                  color: var(--primary);
-                  font-size: 0.75rem;
-                  z-index: 2;
-                }
-
-                label {
-                  display: inline-block;
-                  height: 100%;
-                  width: 100%;
-                  display: grid;
-                  place-items: center;
-                  cursor: pointer;
-                  font-size: 0.75rem;
-                  color: var(--primary);
-                  z-index: 2;
-                }
-
-                .control__track > label {
-                  color: var(--secondary);
-                }
-
-                .premium {
-                  width: 100%;
-                  height: 100%;
-                  display: grid;
-                  position: relative;
-                  grid-template-columns: 1fr 1fr;
-                  border: 1px solid transparent;
-                  container-type: size;
-                }
-
-                .premium,
-                .control__track > label:nth-of-type(1) {
-                  grid-column: span 2;
-                }
-
-                label span {
-                  display: grid;
-                  place-items: center;
-                  height: 100%;
-                  width: 100%;
-                  transition: scale calc(var(--duration) * 1s) var(--ease);
-                }
-
-                .premium label:nth-of-type(1) span {
-                  scale: 0.75;
-                  transform-origin: 150% 150%;
-                  border-radius: 100px;
-                }
-                .premium label:nth-of-type(2) span {
-                  scale: 0.75;
-                  transform-origin: -65% 150%;
-                  border-radius: 100px;
-                }
-              }
-            }
-
-            @layer base {
-              :root {
-                --font-size-min: 16;
-                --font-size-max: 20;
-                --font-ratio-min: 1.2;
-                --font-ratio-max: 1.33;
-                --font-width-min: 375;
-                --font-width-max: 1500;
-              }
-
-              html {
-                color-scheme: light dark;
-              }
-
-              [data-theme='light'] {
-                color-scheme: light only;
-              }
-
-              [data-theme='dark'] {
-                color-scheme: dark only;
-              }
-
-              :where(.fluid) {
-                --fluid-min: calc(
-                  var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
-                );
-                --fluid-max: calc(
-                  var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
-                );
-                --fluid-preferred: calc(
-                  (var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min))
-                );
-                --fluid-type: clamp(
-                  (var(--fluid-min) / 16) * 1rem,
-                  ((var(--fluid-min) / 16) * 1rem) - 
-                    (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
-                    (var(--fluid-preferred) * var(--variable-unit, 100vi)),
-                  (var(--fluid-max) / 16) * 1rem
-                );
-                font-size: var(--fluid-type);
-              }
-
-              *,
-              *:after,
-              *:before {
-                box-sizing: border-box;
-              }
-
-              body {
-                display: grid;
-                place-items: center;
-                min-height: 100vh;
-                font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
-                  Helvetica, Arial, sans-serif, system-ui;
-              }
-
-              /* Utilities */
-              .sr-only {
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                padding: 0;
-                margin: -1px;
-                overflow: hidden;
-                clip: rect(0, 0, 0, 0);
-                white-space: nowrap;
-                border-width: 0;
-              }
-            }
-
-            /* Override multi-functional control positioning and add blur */
-            .control {
-              position: fixed;
-              bottom: calc(2.4em + env(safe-area-inset-bottom));
-              left: 55%;
-              transform: translateX(-50%);
-              z-index: 1200;
-              backdrop-filter: blur(10px);
-            }
-
-            /* fade-in effect */
-            .control {
-              opacity: 0;
-              transition: opacity 0.5s ease;
-            }
-            .control.visible {
-              opacity: 1;
-            }
-
-            /* Dark-mode overrides for nav & links */
-            [data-theme="dark"] .nav-links {
-              background-color: rgba(0, 0, 0, 0.5);
-            }
-            [data-theme="dark"] .nav-links a {
-              color: #ffffff;
-            }
-            [data-theme="dark"] .nav-links a:hover,
-            [data-theme="dark"] .nav-links a:active,
-            [data-theme="dark"] .nav-links a.active {
-              color: #000000 !important;
-            }
-            [data-theme="dark"] .nav-links a:hover::after,
-            [data-theme="dark"] .nav-links a:active::after,
-            [data-theme="dark"] .nav-links a.active::after {
-              background-color: #ffffff;
-            }
-
-            /* Ensure the “Save as PDF” button is visible in dark mode */
-            [data-theme="dark"] .glass-button,
-            [data-theme="dark"] .glass-buttons a.glass-button {
-              color: #ffffff !important;
-              background: rgba(255, 255, 255, 0.2);
-            }
-
-            /* All other (non-nav) links in dark mode remain white */
-            [data-theme="dark"] body :not(.nav-links) a {
-              color: #ffffff;
-            }
-
-            /* Container for layered blur effect */
-            .blur {
-              position: fixed;
-              inset: 0;
-              z-index: 1100;
+              top: 0;
+              left: 0;
+              color: white;
               pointer-events: none;
-              overflow: hidden;
             }
 
-            /* Each child div becomes one blur layer */
-            .blur > div {
-              --y-offset: calc(var(--i) * 15px);
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              transform: translateY(var(--y-offset));
-              filter: blur(calc(var(--i) * var(--blur-amount)));
-              opacity: calc(1 - (var(--i) - 1) * 0.15);
-              background: inherit;
-            }
+                  .layout-header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding: 10px;
+                    border-bottom: 1px solid var(--glass-border);
+                  }
 
-            /* 1) Hide scroll bars globally */
-            ::-webkit-scrollbar {
-              display: none;
-            }
-            html {
-              scrollbar-width: none;
-              -ms-overflow-style: none;
-            }
+                  .layout-header h1 {
+                    font-size: 2.2em;
+                    font-weight: bold;
+                    margin: 0;
+                  }
 
-            /* ------ Gooey Cursor CSS ------ */
-            /* The cursor element that uses the goo filter */
-            #cursor {
+                  .layout-progress {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px;
+                    border-bottom: 1px solid var(--glass-border);
+                    font-size: 0.9em;
+                  }
+
+                  .shortcut-info {
+                    font-size: 1em;
+                    opacity: 0.7;
+                  }
+
+                  .layout-services {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 10px;
+                    padding: 10px 0;
+                  }
+
+                  .service-item {
+                    background: rgba(255, 255, 255, 0.05);
+                    padding: 15px;
+                    border: 1px solid var(--glass-border);
+                    border-radius: 8px;
+                    box-shadow: inset 0 0 5px var(--glass-shadow);
+                  }
+
+                  .service-item h3 {
+                    margin: 0 0 10px;
+                    font-size: .8em;
+                  }
+
+                  .service-item p {
+                    font-size: 0.75em;
+                    line-height: 1.4;
+                    margin: 0;
+                  }
+
+                  .service-item code {
+                    background: rgba(255, 255, 255, 0.1);
+                    padding: 2px 4px;
+                    border-radius: 3px;
+                    font-size: 12px;
+                  }
+
+                  .tweakpane-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    transition: opacity 0.3s ease;
+                    z-index: 100;
+                  }
+
+                  /* Adjust layout for smaller screens */
+                  @media (max-width: 960px) {
+                    .nav-links {
+                      position: fixed;
+                      top: 0;
+                      justify-content: flex-start;
+                    }
+                    .layout-services {
+                      grid-template-columns: 1fr;
+                    }
+                    .layout-container {
+                      width: 100%;
+                      padding: 20px;
+                    }
+                    table {
+                      width: 100%;
+                      border-collapse: collapse;
+                      margin: 0 2rem;
+                    }
+                    table th,
+                    table td {
+                      padding: 12px;
+                    }
+                  }
+
+                  /* Background SVG */
+                  .background-svg {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    z-index: -2;
+                  }
+
+                  /* Glass Buttons styling within the introduction */
+                  .glass-buttons {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    display: flex;
+                    gap: var(--spacing-md);
+                  }
+
+                  .glass-button {
+                    background: white;
+                    border: 1px solid var(--glass-border);
+                    border-radius: 8px;
+                    color: #000;
+                    font-size: var(--font-size-base);
+                    padding: 0.5rem 1rem;
+                    cursor: pointer;
+                    backdrop-filter: blur(var(--blur-amount));
+                    -webkit-backdrop-filter: blur(var(--blur-amount));
+                    transition: background var(--transition-medium);
+                  }
+
+                  .glass-button:hover {
+                    background: rgba(255, 255, 255, 0.2);
+                  }
+
+                  .glass-buttons a.glass-button {
+                    text-decoration: none;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+
+                  /* Remove old back-to-top button */
+                  .glassy-button-container {
+                    display: none;
+                  }
+
+                  /* New Multi-functional Control Styles */
+                  @import url('https://unpkg.com/normalize.css') layer(normalize);
+                  @layer normalize, base, demo, flip, debug;
+
+                  @layer debug {
+                    [data-debug='true'] input.sr-only {
+                      position: absolute;
+                      width: 20px;
+                      height: 20px;
+                      padding: 0;
+                      margin: unset;
+                      overflow: visible;
+                      clip: unset;
+                      white-space: nowrap;
+                      border-width: unset;
+                      accent-color: red;
+                      outline: none;
+                      cursor: pointer;
+                      animation: reveal calc(var(--duration) * 1s) ease-out;
+                    }
+
+                    @keyframes reveal {
+                      0% {
+                        opacity: 0;
+                      }
+                    }
+
+                    [data-debug='true'] .control__track > input {
+                      left: 25%;
+                      bottom: 200%;
+                      translate: -50% 0;
+                    }
+                    [data-debug='true'] .premium > input:nth-of-type(1) {
+                      left: 25%;
+                      bottom: calc(200% + 2px);
+                      translate: -50% 0;
+                    }
+                    [data-debug='true'] .premium > input:nth-of-type(2) {
+                      left: 75%;
+                      bottom: calc(200% + 2px);
+                      translate: -50% 0;
+                    }
+                  }
+
+                  @layer flip {
+                    :root {
+                      --shadow-color: 0deg 0% 63%;
+                      --primary: light-dark(hsl(0 0% 10%), #fff);
+                      --secondary: canvas;
+                      --inactive: light-dark(hsl(0 0% 60%), hsl(0 0% 50%));
+                      --duration: 0.22;
+                      --drop-off: 0.4;
+                      --ease: ease-out;
+                      --ease: linear(
+                        0 0%, 0.2342 12.49%, 0.4374 24.99%,
+                        0.6093 37.49%, 0.6835 43.74%,
+                        0.7499 49.99%, 0.8086 56.25%,
+                        0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,
+                        0.9648 81.25%, 0.9844 87.5%,
+                        0.9961 93.75%, 1 100%
+                      );
+                      --border: light-dark(hsl(0 0% 80%), hsl(0 0% 60%));
+                      @media (prefers-color-scheme: dark) {
+                        --shadow-color: 0deg 0% 0%;
+                      }
+                    }
+                    [data-theme='dark'] {
+                      --shadow-color: 0deg 0% 0%;
+                    }
+                    [data-theme='light'] {
+                      --shadow-color: 0deg 0% 63%;
+                    }
+                    .premium:has(:checked)::before {
+                      translate: -50% -250%;
+                      scale: 0.85;
+                    }
+                    .premium:has(:checked) label span {
+                      scale: 1;
+                    }
+                    .premium:has(:checked) .indicator {
+                      background: var(--secondary);
+                      clip-path: inset(0 0 0 0 round 100px);
+                    }
+                    .premium:has(:checked) label {
+                      color: var(--inactive);
+                      opacity: 0.75;
+                    }
+                    .premium:has(:nth-of-type(1):checked) label:nth-of-type(1),
+                    .premium:has(:nth-of-type(2):checked) label:nth-of-type(2) {
+                      color: var(--primary);
+                      opacity: 1;
+                    }
+                    .premium:has(:nth-of-type(1):checked) .indicator {
+                      translate: -100% 0;
+                    }
+                    .premium:has(:nth-of-type(2):checked) .indicator {
+                      translate: 0 0;
+                    }
+
+                    .control label {
+                      transition-property: color, opacity;
+                      transition-duration: calc(var(--duration) * 1s);
+                      transition-timing-function: var(--ease);
+                    }
+
+                    .control__track:not(:has(> :checked)) > label {
+                      color: var(--primary);
+                      opacity: var(--drop-off);
+                    }
+                    .control__track:not(:has(> :checked)) > .indicator {
+                      translate: 100% 0;
+                    }
+                    .indicator {
+                      transition: translate calc(var(--duration) * 1s) var(--ease);
+                    }
+                    .premium .indicator {
+                      transition-property: translate, clip-path, background;
+                      transition-duration: calc(var(--duration) * 1s);
+                      transition-timing-function: var(--ease);
+                      clip-path: inset(
+                        73cqh calc(50% + 1px) calc(27cqh - 2px) calc(50% - 3px) round 100px
+                      );
+                    }
+                    .premium::before {
+                      transition-property: scale, translate;
+                      transition-duration: calc(var(--duration) * 1s);
+                      transition-timing-function: var(--ease);
+                    }
+                    .control__track:has(> :checked) .premium .indicator {
+                      background: var(--inactive);
+                    }
+                    .control__track:has(> :checked) .premium label {
+                      color: var(--inactive);
+                    }
+                  }
+
+                  @layer demo {
+                    .indicator {
+                      position: absolute;
+                      width: 50%;
+                      left: 0;
+                      top: 0;
+                      bottom: 0;
+                      background: var(--primary);
+                      border-radius: 100px;
+                    }
+
+                    .premium .indicator {
+                      background: var(--primary);
+                      left: 50%;
+                      top: 0;
+                      translate: -50% 0;
+                    }
+
+                    .control {
+                      scale: 1.2;
+                      letter-spacing: 0.5px;
+                      position: relative;
+                      width: 260px;
+                      height: 38px;
+                      aspect-ratio: 300 / 38;
+                      background: var(--secondary);
+                      border-radius: 100px;
+                      border: 1px solid var(--border);
+                      padding: 2px;
+                      box-shadow: -0.1px 1px 1px hsl(var(--shadow-color) / 0.22),
+                        -0.2px 3.2px 3.1px -0.4px hsl(var(--shadow-color) / 0.26),
+                        -0.3px 5.7px 5.5px -0.8px hsl(var(--shadow-color) / 0.24),
+                        -0.5px 9.3px 8.9px -1.2px hsl(var(--shadow-color) / 0.22),
+                        -0.8px 14.8px 14.2px -1.6px hsl(var(--shadow-color) / 0.19),
+                        -1.3px 23.1px 22.2px -2px hsl(var(--shadow-color) / 0.17),
+                        -2px 35px 33.7px -2.4px hsl(var(--shadow-color) / 0.14),
+                        -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
+                        -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
+                        -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
+
+                      .control__track {
+                        display: grid;
+                        place-items: center;
+                        grid-template-columns: repeat(4, 1fr);
+                        width: 100%;
+                        height: 100%;
+                        position: relative;
+                      }
+
+                      .premium::before {
+                        content: 'Preference';
+                        position: absolute;
+                        left: 50%;
+                        top: 50%;
+                        translate: -50% -80%;
+                        color: var(--primary);
+                        font-size: 0.75rem;
+                        z-index: 2;
+                      }
+
+                      label {
+                        display: inline-block;
+                        height: 100%;
+                        width: 100%;
+                        display: grid;
+                        place-items: center;
+                        cursor: pointer;
+                        font-size: 0.75rem;
+                        color: var(--primary);
+                        z-index: 2;
+                      }
+
+                      .control__track > label {
+                        color: var(--secondary);
+                      }
+
+                      .premium {
+                        width: 100%;
+                        height: 100%;
+                        display: grid;
+                        position: relative;
+                        grid-template-columns: 1fr 1fr;
+                        border: 1px solid transparent;
+                        container-type: size;
+                      }
+
+                      .premium,
+                      .control__track > label:nth-of-type(1) {
+                        grid-column: span 2;
+                      }
+
+                      label span {
+                        display: grid;
+                        place-items: center;
+                        height: 100%;
+                        width: 100%;
+                        transition: scale calc(var(--duration) * 1s) var(--ease);
+                      }
+
+                      .premium label:nth-of-type(1) span {
+                        scale: 0.75;
+                        transform-origin: 150% 150%;
+                        border-radius: 100px;
+                      }
+                      .premium label:nth-of-type(2) span {
+                        scale: 0.75;
+                        transform-origin: -65% 150%;
+                        border-radius: 100px;
+                      }
+                    }
+                  }
+
+                  @layer base {
+                    :root {
+                      --font-size-min: 16;
+                      --font-size-max: 20;
+                      --font-ratio-min: 1.2;
+                      --font-ratio-max: 1.33;
+                      --font-width-min: 375;
+                      --font-width-max: 1500;
+                    }
+
+                    html {
+                      color-scheme: light dark;
+                    }
+
+                    [data-theme='light'] {
+                      color-scheme: light only;
+                    }
+
+                    [data-theme='dark'] {
+                      color-scheme: dark only;
+                    }
+
+                    :where(.fluid) {
+                      --fluid-min: calc(
+                        var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+                      );
+                      --fluid-max: calc(
+                        var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+                      );
+                      --fluid-preferred: calc(
+                        (var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min))
+                      );
+                      --fluid-type: clamp(
+                        (var(--fluid-min) / 16) * 1rem,
+                        ((var(--fluid-min) / 16) * 1rem) -
+                          (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+                          (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+                        (var(--fluid-max) / 16) * 1rem
+                      );
+                      font-size: var(--fluid-type);
+                    }
+
+                    *,
+                    *:after,
+                    *:before {
+                      box-sizing: border-box;
+                    }
+
+                    body {
+                      display: grid;
+                      place-items: center;
+                      min-height: 100vh;
+                      font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+                        Helvetica, Arial, sans-serif, system-ui;
+                    }
+
+                    /* Utilities */
+                    .sr-only {
+                      position: absolute;
+                      width: 1px;
+                      height: 1px;
+                      padding: 0;
+                      margin: -1px;
+                      overflow: hidden;
+                      clip: rect(0, 0, 0, 0);
+                      white-space: nowrap;
+                      border-width: 0;
+                    }
+                  }
+
+                  /* Override multi-functional control positioning and add blur */
+                  .control {
+                    position: fixed;
+                    bottom: calc(2.4em + env(safe-area-inset-bottom));
+                    left: 55%;
+                    transform: translateX(-50%);
+                    z-index: 1200;
+                    backdrop-filter: blur(10px);
+                  }
+
+                  /* fade-in effect */
+                  .control {
+                    opacity: 0;
+                    transition: opacity 0.5s ease;
+                  }
+                  .control.visible {
+                    opacity: 1;
+                  }
+
+                  /* Dark-mode overrides for nav & links */
+                  [data-theme="dark"] .nav-links {
+                    background-color: rgba(0, 0, 0, 0.5);
+                  }
+                  [data-theme="dark"] .nav-links a {
+                    color: #ffffff;
+                  }
+                  [data-theme="dark"] .nav-links a:hover,
+                  [data-theme="dark"] .nav-links a:active,
+                  [data-theme="dark"] .nav-links a.active {
+                    color: #000000 !important;
+                  }
+                  [data-theme="dark"] .nav-links a:hover::after,
+                  [data-theme="dark"] .nav-links a:active::after,
+                  [data-theme="dark"] .nav-links a.active::after {
+                    background-color: #ffffff;
+                  }
+
+                  /* Ensure the “Save as PDF” button is visible in dark mode */
+                  [data-theme="dark"] .glass-button,
+                  [data-theme="dark"] .glass-buttons a.glass-button {
+                    color: #ffffff !important;
+                    background: rgba(255, 255, 255, 0.2);
+                  }
+
+                  /* All other (non-nav) links in dark mode remain white */
+                  [data-theme="dark"] body :not(.nav-links) a {
+                    color: #ffffff;
+                  }
+
+                  /* Container for layered blur effect */
+                  .blur {
+                    position: fixed;
+                    inset: 0;
+                    z-index: 1100;
+                    pointer-events: none;
+                    overflow: hidden;
+                  }
+
+                  /* Each child div becomes one blur layer */
+                  .blur > div {
+                    --y-offset: calc(var(--i) * 15px);
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    transform: translateY(var(--y-offset));
+                    filter: blur(calc(var(--i) * var(--blur-amount)));
+                    opacity: calc(1 - (var(--i) - 1) * 0.15);
+                    background: inherit;
+                  }
+
+                  /* 1) Hide scroll bars globally */
+                  ::-webkit-scrollbar {
+                    display: none;
+                  }
+                  html {
+                    scrollbar-width: none;
+                    -ms-overflow-style: none;
+                  }
+
+                  /* ------ Gooey Cursor CSS ------ */
+                  /* The cursor element that uses the goo filter */
+                  #cursor {
+                    position: fixed;
+                    top: calc(var(--cursor-size) * -0.5);
+                    left: calc(var(--cursor-size) * -0.5);
+                    pointer-events: none;
+                    touch-action: none;
+                    mix-blend-mode: difference;
+                    filter: url(#goo);
+                    z-index: 20000;
+                  }
+                  /* Each circle in the cursor tail */
+                  .cursor-circle {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: var(--cursor-size);
+                    height: var(--cursor-size);
+                    border-radius: 50%;
+                    background: var(--bg);
+                    transform-origin: center center;
+                  }
+                  /* Hide the svg element (the goo filter) */
+                  .goo {
+                    display: none;
+                  }
+
+                  /* Added background canvas style */
+                  canvas {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: -10;
+                  }
+
+            .noise-overlay {
               position: fixed;
-              top: calc(var(--cursor-size) * -0.5);
-              left: calc(var(--cursor-size) * -0.5);
+              top: -50%;
+              left: -50%;
+              width: 200%;
+              height: 200%;
+              background: url("https://assets.iceable.com/img/noise-transparent.png") 0 0/300px 300px repeat;
+              animation: noise-anim 0.3s steps(5) infinite;
+              opacity: .9;
               pointer-events: none;
-              touch-action: none;
-              mix-blend-mode: difference;
-              filter: url(#goo);
-              z-index: 20000;
-            }
-            /* Each circle in the cursor tail */
-            .cursor-circle {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: var(--cursor-size);
-              height: var(--cursor-size);
-              border-radius: 50%;
-              background: var(--bg);
-              transform-origin: center center;
-            }
-            /* Hide the svg element (the goo filter) */
-            .goo {
-              display: none;
+              z-index: 50;
             }
 
-            /* Added background canvas style */
-            canvas {
-              position: fixed;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              z-index: -10;
+            @keyframes noise-anim {
+              0% { transform: translate(0, 0); }
+              10% { transform: translate(-2%, -3%); }
+              20% { transform: translate(-4%, 2%); }
+              30% { transform: translate(2%, -4%); }
+              40% { transform: translate(-2%, 5%); }
+              50% { transform: translate(-4%, 2%); }
+              60% { transform: translate(3%, 0); }
+              70% { transform: translate(0, 3%); }
+              80% { transform: translate(-3%, 0); }
+              90% { transform: translate(2%, 2%); }
+              100% { transform: translate(1%, 0); }
             }
 
-      .noise-overlay {
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: url("https://assets.iceable.com/img/noise-transparent.png") 0 0/300px 300px repeat;
-        animation: noise-anim 0.3s steps(5) infinite;
-        opacity: .9;
-        pointer-events: none;
-        z-index: 50;
+
+      [data-theme="light"] .layout-container .glow {
+        display: none !important;
       }
-
-      @keyframes noise-anim {
-        0% { transform: translate(0, 0); }
-        10% { transform: translate(-2%, -3%); }
-        20% { transform: translate(-4%, 2%); }
-        30% { transform: translate(2%, -4%); }
-        40% { transform: translate(-2%, 5%); }
-        50% { transform: translate(-4%, 2%); }
-        60% { transform: translate(3%, 0); }
-        70% { transform: translate(0, 3%); }
-        80% { transform: translate(-3%, 0); }
-        90% { transform: translate(2%, 2%); }
-        100% { transform: translate(1%, 0); }
-      }
-
-
-[data-theme="light"] .layout-container .glow {
-  display: none !important;
-}
     </style>
   </head>
   <body>
@@ -846,35 +846,34 @@
     <!-- Navigation Links -->
     <nav class="nav-links">
       <a href="#section-1">Info</a>
-      <a href="#section-2">HRTech</a>
-      <a href="#section-3">FinTech</a>
-      <a href="#section-4">Social Media</a>
-      <a href="#section-5">Shopify E-commerce</a>
-      <a href="#section-6">Lifestyle/Bookings</a>
-      <a href="#section-7">SalesForce E-commerce</a>
-      <a href="#section-8">SaaS E-commerce</a>
-      <a href="#section-9">iOS Digital Product</a>
-      <a href="#section-10">Advertising & Branding</a>
+      <a href="#section-2">Phenom</a>
+      <a href="#section-3">Publicis Sapient</a>
+      <a href="#section-4">Code &amp; Theory</a>
+      <a href="#section-5">Elva Design Group</a>
+      <a href="#section-6">HUGE Inc.</a>
+      <a href="#section-7">PFSWeb Livearea</a>
+      <a href="#section-8">Workarea</a>
+      <a href="#section-9">O3 World</a>
+      <a href="#section-10">ONE SIXTY OVER NINETY</a>
     </nav>
 
     <div class="noise-overlay"></div>
 
     <!-- Introduction Section -->
     <div class="introduction" id="section-1">
-      <h1>A Reasonable Resume</h1>
+      <h1>a reasonably resolute résumé</h1>
       <p>
-        <b>Zachary Gort</b><br />
-        "Web Designer"<br />
-        <a href="https://reasonably.cc" target="_blank" rel="noopener">
-          https://reasonably.cc </a
-        ><br />
+        <strong>Zachary Gort</strong><br />
+        "UX, Visual, &amp; Technical SaaS Product Designer"<br />
+        <a href="https://reasonandresolution.com" target="_blank" rel="noopener">
+          reasonandresolution.com</a><br />
         <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
         <a
           href="https://linkedin.com/in/zackgort"
           target="_blank"
           rel="noopener"
         >
-          LinkedIn/in/zackgort
+          linkedin.com/in/zackgort
         </a>
       </p>
       <!-- Glass Button Container: use <button> instead of href="javascript:" -->
@@ -885,7 +884,7 @@
       </div>
     </div>
 
-    <!-- Section 2: Phenom -->
+    <!-- Section 2: Phenom (unchanged as no resume data provided) -->
     <div class="layout-container" id="section-2">
       <div class="layout-header">
         <h1 class="layout-title">Phenom</h1>
@@ -898,15 +897,15 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Managed corporate website with a focus on
-            developing stratgic content and product roadmap.
+            Managed corporate website with a focus on developing stratgic
+            content and product roadmap.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
             Introduced forward-thinking practices to transition third-party
-            integrations and refine live event management and product demos  .
+            integrations and refine live event management and product demos.
           </p>
         </div>
         <div class="service-item">
@@ -919,21 +918,19 @@
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Leveraged expertise in Contentful, Jira, and digital content
-            management to support cross-departmental initiatives.
+            Leveraged expertise in Contentful, Jira, and digital content management.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Built strong, cross-departmental relationships that enriched
-            strategic initiatives.
+            Built strong, cross-departmental relationships that enriched strategic initiatives.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Created a comprehensive filter and search model for an extensive and ever-growing content model. 
+            Created a comprehensive filter and search model for an ever-growing content ecosystem.
           </p>
         </div>
       </div>
@@ -945,50 +942,44 @@
         <h1 class="layout-title">Publicis Sapient</h1>
       </div>
       <div class="layout-progress">
-        <div>Senior User Experience Designer</div>
-        <div class="shortcut-info">2022-2023</div>
+        <div>Senior User Experience Designer II (full-time)</div>
+        <div class="shortcut-info">4.25.2022 - 3.17.2023</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Spearheaded product design for Financial Services, optimizing
-            digital interfaces with precision for <strong>BNY Melon - Pershing X</strong>
+            Led the BNY Mellon project, serving as interim Product Owner and primary client liaison.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Stepped into a mentor and interim Product Manager role, driving
-            creative and technical processes.
+            Delivered data-driven improvements to the design system, driving measurable UX outcomes.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Enhanced team deliverables through detailed product demos and
-            collaborative research sessions.
+            Coordinated multi-track efforts across Agile teams, securing contract extensions through impactful design strategy and prototype development.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Demonstrated mastery in Information Architecture, UX Research, and
-            comprehensive design systems.
+            Utilized robust UX methodologies and design principles to enhance digital products.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Fostered an environment of mentorship and mutual growth for junior
-            designers.
+            Fostered strong communication and teamwork to drive innovative design solutions.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Delivered a pioneering full-ecosystem FinTech application that set
-            new industry benchmarks.
+            Implemented forward-thinking strategies to set new industry benchmarks.
           </p>
         </div>
       </div>
@@ -1000,50 +991,44 @@
         <h1 class="layout-title">Code &amp; Theory</h1>
       </div>
       <div class="layout-progress">
-        <div>Senior User Experience Designer</div>
-        <div class="shortcut-info">2021-2022</div>
+        <div>Senior Interaction Designer (contract)</div>
+        <div class="shortcut-info">8.18.2021 - 4.04.2022</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Redefined interactive digital experiences for <strong>TikTok For
-            Business</strong> by integrating comprehensive UX strategies and interactive experiences catered to a B2B audience.
+            Mentored junior designers and optimized B2B strategies for TikTok For Business.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Mentored emerging design talents while refining techniques under
-            shifting project dynamics.
+            Conducted workshops and internal knowledge-sharing sessions on emerging UX technologies.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Steered team efforts through transitional phases by providing
-            adaptive strategic oversight.
+            Delivered comprehensive UX research and implementation across projects.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Excelled in Competitive Analysis, adherence to UX standards, and
-            iterative prototype development.
+            Enhanced design frameworks through strategic insights and iterative methodologies.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Cultivated a culture of collaboration, urging creative breakthroughs
-            across interdisciplinary teams.
+            Encouraged cross-team collaboration and creative problem-solving.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Instituted forward-looking design methodologies that anticipated
-            evolving digital trends.
+            Pioneered innovative design practices to stay ahead in a competitive market.
           </p>
         </div>
       </div>
@@ -1055,215 +1040,191 @@
         <h1 class="layout-title">Elva Design Group</h1>
       </div>
       <div class="layout-progress">
-        <div>Creative Director</div>
-        <div class="shortcut-info">2021</div>
+        <div>Senior User Experience Designer (contract)</div>
+        <div class="shortcut-info">4.01.2021 - 8.01.2021</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Led the comprehensive redesign for <strong>GNC</strong>, establishing a compelling
-            visual identity on Shopify.
+            Developed a mobile-first E-commerce navigation schema for GNC, aligning design with business KPIs.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Oversaw end-to-end UX research and prototype development in a
-            fast-paced boutique agency.
+            Applied object-oriented methodologies to optimize content architecture and improve UX performance.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Delivered a seamlessly integrated e-commerce platform fortified by
-            strategic design principles.
+            Launched key features on time despite tight deadlines, driving platform growth.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Demonstrated sharp competitive analysis and a nuanced content
-            strategy that elevated brand presence.
+            Exhibited strategic thinking and technical execution in design.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Harmonized creative efforts with project teams, ensuring every
-            detail resonated with the brand’s vision.
+            Collaborated efficiently with cross-functional teams to meet project objectives.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Pioneered design innovations that redefined ground-up website
-            development on the Shopify platform.
+            Implemented forward-thinking design and navigation systems, setting a new standard.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Section 6: Huge -->
+    <!-- Section 6: HUGE Inc. -->
     <div class="layout-container" id="section-6">
       <div class="layout-header">
-        <h1 class="layout-title">Huge</h1>
+        <h1 class="layout-title">HUGE Inc.</h1>
       </div>
       <div class="layout-progress">
-        <div>Senior User Experience Designer</div>
-        <div class="shortcut-info">2021</div>
+        <div>Senior User Experience Designer (contract)</div>
+        <div class="shortcut-info">3.5.2021 - 3.26.2021</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Engineered engaging booking experiences for high-profile clients
-            such as Sentral Lifestyle Apartments.
+            Provided UX support and prototypes; led client workshops for Sentral Lifestyle Apartments.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Delivered swift, actionable UX improvements within aggressive
-            timelines.
+            Consulted on Brand Activation Strategy and Competitive Analysis.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Ensured design deliverables met high standards through rigorous
-            process control.
+            Implemented heuristic reviews and MVP prototyping to optimize user experience.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Leveraged deep expertise in Information Architecture and
-            high-fidelity prototypes to drive results.
+            Leveraged deep UX insights to drive effective design improvements.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Excelled as an autonomous contributor while aligning with larger
-            agency objectives.
+            Facilitated dynamic collaboration during critical project phases.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Adapted to evolving client needs through innovative, contract-based
-            creative solutions.
+            Adopted future-state strategies to enhance overall user experience.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Section 7: LiveArea -->
+    <!-- Section 7: PFSWeb Livearea -->
     <div class="layout-container" id="section-7">
       <div class="layout-header">
-        <h1 class="layout-title">LiveArea</h1>
+        <h1 class="layout-title">PFSWeb Livearea</h1>
       </div>
       <div class="layout-progress">
-        <div>Digital Experience Designer</div>
-        <div class="shortcut-info">2020-2021</div>
+        <div>Manager, UX (full-time)</div>
+        <div class="shortcut-info">1/27/2020 - 2.16.2021</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Revitalized SalesForce e-commerce interfaces for renowned retail
-            brands.
+            Managed UX for Salesforce and SAP Hybris e-commerce builds, supporting B2C clients like YETI and West Marine.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Assumed a pivotal role as Solutions Architect, blending creative
-            design with technical execution.
+            Increased conversion rates through data-backed design improvements and enhanced product pages.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Navigated pandemic challenges by streamlining communications between
-            internal teams and clients.
+            Led a multi-disciplinary team ensuring seamless handoffs and agile workflows.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Demonstrated proficiency in competitive analysis and the development
-            of high-fidelity prototypes.
+            Implemented robust UX strategies across enterprise e-commerce platforms.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Coordinated creative processes with teams to produce unified visual
-            narratives.
+            Unified creative processes among designers and developers.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Pushed SalesForce strategies forward with adaptive, future-focused
-            design implementations.
+            Drove continuous improvement in digital product experiences.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Section 8: Workarea -->
+    <!-- Section 8: Workarea (WebLinc Workarea) -->
     <div class="layout-container" id="section-8">
       <div class="layout-header">
         <h1 class="layout-title">Workarea</h1>
       </div>
       <div class="layout-progress">
-        <div>Experience Director</div>
-        <div class="shortcut-info">2018-2019</div>
+        <div>Senior User Experience Designer (full-time)</div>
+        <div class="shortcut-info">7.3.2017 - 9.19.2018</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Workarea redefined e-commerce for growing retail brands. Structured
-            as a SaaS platform, it enabled rapid iteration on product offerings.
+            Focused on SaaS E-Commerce with effective wireframe prototyping and rigorous user testing.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Implemented forward-thinking strategies that streamlined operations
-            while enhancing overall user experience.
+            Conducted in-depth user interviews and implemented iterative design improvements.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Combined robust design principles with functional excellence to
-            elevate day-to-day interactions.
+            Streamlined developer hand-offs and optimized design workflows for efficiency.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Focused on ergonomics, efficiency, and design innovation to deliver
-            projects that balanced style with substance.
+            Specialized in Information Architecture and visual UI design.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Aligned closely with clients to tailor solutions that dynamically
-            met evolving business needs.
+            Collaborated closely with diverse client teams including Century 21 Fashion and WoodCraft.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Explored emerging technologies and trends to create modern,
-            adaptable workspaces.
+            Adopted modern design methodologies for scalable, future-proof solutions.
           </p>
         </div>
       </div>
@@ -1275,105 +1236,93 @@
         <h1 class="layout-title">O3 World</h1>
       </div>
       <div class="layout-progress">
-        <div>Visual Storyteller</div>
-        <div class="shortcut-info">2016-2017</div>
+        <div>User Experience Designer (full-time)</div>
+        <div class="shortcut-info">7.27.2016 - 6.16.2017</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Crafted immersive visual narratives that enhanced brand
-            storytelling.
+            Crafted immersive visual narratives that enhanced brand storytelling.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Translated abstract ideas into compelling visuals using a blend of
-            traditional and digital techniques.
+            Translated abstract ideas into compelling visuals using both traditional and digital techniques.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Seamlessly integrated artistic tradition with modern digital
-            innovation.
+            Integrated artistic tradition with modern digital innovation for optimal designs.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Leveraged deep expertise in color theory, typography, and
-            composition to craft striking designs.
+            Exhibited expertise in color theory, typography, and composition.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Coordinated creative processes with teams to produce unified visual
-            narratives.
+            Worked collaboratively within an Agile, Scrum-led environment.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Embraced emerging trends to continually push the boundaries of
-            visual innovation.
+            Embraced emerging trends to continually push the boundaries of visual innovation.
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Section 10: One Sixty Over Ninety -->
+    <!-- Section 10: ONE SIXTY OVER NINETY -->
     <div class="layout-container" id="section-10">
       <div class="layout-header">
-        <h1 class="layout-title">One Sixty Over Ninety</h1>
+        <h1 class="layout-title">ONE SIXTY OVER NINETY</h1>
       </div>
       <div class="layout-progress">
-        <div>Innovative Designer</div>
-        <div class="shortcut-info">2014-2016</div>
+        <div>Interaction Designer (full-time)</div>
+        <div class="shortcut-info">9.23.2014 - 7.9.2016</div>
       </div>
       <div class="layout-services">
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Pushed conventional design boundaries with avant-garde strategies
-            that set bold new standards.
+            Pushed conventional design boundaries with avant-garde interactive strategies.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Translated abstract ideas into distinctive, visually arresting
-            designs that captured modern sensibilities.
+            Translated abstract ideas into distinctive, visually arresting designs.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Integrated cutting-edge software and strategic design processes to
-            deliver consistent results.
+            Implemented comprehensive information architecture for digital consumer branding.
           </p>
         </div>
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Exhibited a strong aptitude for modern design methodologies combined
-            with creative innovation.
+            Exhibited strong aptitude in design methodologies combined with technical execution.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Partnered closely with clients to merge visionary insights with
-            effective implementation.
+            Partnered with renowned clients like Comcast and Philadelphia Eagles to merge visionary insights with effective implementation.
           </p>
         </div>
         <div class="service-item">
           <h3>Future-Ready Design</h3>
           <p>
-            Constantly researched emerging trends to ensure a future-forward
-            approach in every project.
+            Constantly researched emerging trends to ensure a future-forward approach in every project.
           </p>
         </div>
       </div>
@@ -1409,257 +1358,287 @@
 
     <!-- Resume related JavaScript -->
     <script>
-// Resume related JavaScript
+      // Resume related JavaScript
 
-// PRINT FUNCTIONALITY: Print raw HTML without any CSS/styles.
-const printBtn = document.getElementById('print-btn');
-if (printBtn) {
-  printBtn.addEventListener('click', () => {
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) return;
-    const clone = document.body.cloneNode(true);
-    // Remove tables if any
-    const tables = clone.querySelectorAll('table');
-    tables.forEach(table => table.remove());
-    // Remove the control container so it does not appear in print view
-    const controlContainer = clone.querySelector('.control');
-    if (controlContainer) controlContainer.remove();
-    const rawBody = clone.innerHTML;
-    printWindow.document.write(`<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Print View</title>
-</head>
-<body style="background-color: white;">
-  ${rawBody}
-</body>
-</html>`);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-    printWindow.close();
-  });
-}
-
-// SCROLL TRACKING & BACK-TO-TOP BUTTON
-let maxScrollPosition = 0;
-const SCROLL_THRESHOLD = 300;
-const backLabel = document.getElementById('back-to-top');
-const backRadio = document.getElementById('free');
-const controlEl = document.querySelector('.control');
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 0) {
-    if (window.scrollY > maxScrollPosition) {
-      maxScrollPosition = window.scrollY;
-    }
-    backLabel.innerText = "Back to Top";
-    controlEl.classList.remove('default');
-  } else {
-    backLabel.innerText = (maxScrollPosition > SCROLL_THRESHOLD) ? "Take Me Back" : "Get Started";
-    controlEl.classList.add('default');
-  }
-});
-
-// NAVIGATION LINKS & SMOOTH SCROLLING
-const navLinks = document.querySelectorAll('.nav-links a');
-navLinks.forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetId = link.getAttribute('href').substring(1);
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-      if (targetId === "section-1") {
-        maxScrollPosition = 0;
+      // PRINT FUNCTIONALITY: Print raw HTML without any CSS/styles.
+      const printBtn = document.getElementById('print-btn');
+      if (printBtn) {
+        printBtn.addEventListener('click', () => {
+          const printWindow = window.open('', '_blank');
+          if (!printWindow) return;
+          const clone = document.body.cloneNode(true);
+          // Remove tables if any
+          const tables = clone.querySelectorAll('table');
+          tables.forEach(table => table.remove());
+          // Remove the control container so it does not appear in print view
+          const controlContainer = clone.querySelector('.control');
+          if (controlContainer) controlContainer.remove();
+          const rawBody = clone.innerHTML;
+          printWindow.document.write(`<!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <title>Print View</title>
+      </head>
+      <body style="background-color: white;">
+        ${rawBody}
+      </body>
+      </html>`);
+          printWindow.document.close();
+          printWindow.focus();
+          printWindow.print();
+          printWindow.close();
+        });
       }
-    }
-    history.replaceState(null, '', window.location.pathname + window.location.search);
-  });
-});
 
-backLabel.addEventListener('click', (e) => {
-  e.preventDefault();
-  const btnText = backLabel.innerText;
-  if (btnText === "Get Started") {
-    const firstContent = document.getElementById('section-2');
-    if (firstContent) {
-      firstContent.scrollIntoView({ behavior: 'smooth' });
-    }
-  } else if (btnText === "Back to Top") {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    maxScrollPosition = 0;
-    backRadio.checked = true;
-    controlEl.classList.add('collapsed');
-    controlEl.classList.add('default');
-  } else if (btnText === "Take Me Back") {
-    window.scrollTo({ top: maxScrollPosition, behavior: 'smooth' });
-  }
-});
+      // SCROLL TRACKING & BACK-TO-TOP BUTTON
+      let maxScrollPosition = 0;
+      const SCROLL_THRESHOLD = 300;
+      const backLabel = document.getElementById('back-to-top');
+      const backRadio = document.getElementById('free');
+      const controlEl = document.querySelector('.control');
 
-// THEME TOGGLING: LIGHT / DARK MODE
-const lightRadio = document.getElementById('solo');
-const darkRadio = document.getElementById('team');
-function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  if (theme === 'dark') {
-    document.body.style.backgroundColor = '#000000';
-    document.body.style.color = '#ffffff';
-    controlEl.classList.add('collapsed');
-  } else {
-    // For light mode we force the background as pure white.
-    document.body.style.backgroundColor = '#ffffff';
-    document.body.style.color = '#000000';
-  }
-}
-if (lightRadio) {
-  lightRadio.addEventListener('change', () => { 
-    if (lightRadio.checked) applyTheme('light'); 
-  });
-}
-if (darkRadio) {
-  darkRadio.addEventListener('change', () => { 
-    if (darkRadio.checked) applyTheme('dark'); 
-  });
-}
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 0) {
+          if (window.scrollY > maxScrollPosition) {
+            maxScrollPosition = window.scrollY;
+          }
+          backLabel.innerText = "Back to Top";
+          controlEl.classList.remove('default');
+        } else {
+          backLabel.innerText = (maxScrollPosition > SCROLL_THRESHOLD) ? "Take Me Back" : "Get Started";
+          controlEl.classList.add('default');
+        }
+      });
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.documentElement.dataset.theme = 'light';
-  if (lightRadio) lightRadio.checked = true;
-  applyTheme('light');
-  if (!backRadio.checked) {
-    backRadio.checked = true;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-  navLinks.forEach(a => a.classList.remove('active'));
-  const introLink = document.querySelector('.nav-links a[href="#section-1"]');
-  if (introLink) introLink.classList.add('active');
-  controlEl.classList.add('collapsed');
-  setTimeout(() => {
-    controlEl.classList.add('visible');
-  }, 1000);
-});
+      // NAVIGATION LINKS & SMOOTH SCROLLING
+      const navLinks = document.querySelectorAll('.nav-links a');
+      navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href').substring(1);
+          const target = document.getElementById(targetId);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+            if (targetId === "section-1") {
+              maxScrollPosition = 0;
+            }
+          }
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        });
+      });
 
-// GOOEY CURSOR SETUP & ANIMATION
-console.clear();
-const TAIL_LENGTH = 20;
-const cursor = document.getElementById('cursor');
-let mouseX = 0;
-let mouseY = 0;
-let cursorCircles;
-let cursorHistory = Array(TAIL_LENGTH).fill({ x: 0, y: 0 });
+      backLabel.addEventListener('click', (e) => {
+        e.preventDefault();
+        const btnText = backLabel.innerText;
+        if (btnText === "Get Started") {
+          const firstContent = document.getElementById('section-2');
+          if (firstContent) {
+            firstContent.scrollIntoView({ behavior: 'smooth' });
+          }
+        } else if (btnText === "Back to Top") {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          maxScrollPosition = 0;
+          backRadio.checked = true;
+          controlEl.classList.add('collapsed');
+          controlEl.classList.add('default');
+        } else if (btnText === "Take Me Back") {
+          window.scrollTo({ top: maxScrollPosition, behavior: 'smooth' });
+        }
+      });
 
-function onMouseMove(event) {
-  mouseX = event.clientX;
-  mouseY = event.clientY;
-}
-function onTouch(event) {
-  const touch = event.touches[0];
-  mouseX = touch.clientX;
-  mouseY = touch.clientY;
-}
-function initCursor() {
-  for (let i = 0; i < TAIL_LENGTH; i++) {
-    const div = document.createElement('div');
-    div.classList.add('cursor-circle');
-    cursor.append(div);
-  }
-  cursorCircles = Array.from(document.querySelectorAll('.cursor-circle'));
-}
-function updateCursor() {
-  cursorHistory.shift();
-  cursorHistory.push({ x: mouseX, y: mouseY });
-  for (let i = 0; i < TAIL_LENGTH; i++) {
-    const current = cursorHistory[i];
-    const next = cursorHistory[i + 1] || cursorHistory[TAIL_LENGTH - 1];
-    const xDiff = next.x - current.x;
-    const yDiff = next.y - current.y;
-    current.x += xDiff * 0.35;
-    current.y += yDiff * 0.35;
-    cursorCircles[i].style.transform = `translate(${current.x}px, ${current.y}px) scale(${i / TAIL_LENGTH})`;
-  }
-  requestAnimationFrame(updateCursor);
-}
+      // THEME TOGGLING: LIGHT / DARK MODE
+      const lightRadio = document.getElementById('solo');
+      const darkRadio = document.getElementById('team');
+      function applyTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'dark') {
+          document.body.style.backgroundColor = '#000000';
+          document.body.style.color = '#ffffff';
+          controlEl.classList.add('collapsed');
+        } else {
+          // For light mode we force the background as pure white.
+          document.body.style.backgroundColor = '#ffffff';
+          document.body.style.color = '#000000';
+        }
+      }
+      if (lightRadio) {
+        lightRadio.addEventListener('change', () => {
+          if (lightRadio.checked) applyTheme('light');
+        });
+      }
+      if (darkRadio) {
+        darkRadio.addEventListener('change', () => {
+          if (darkRadio.checked) applyTheme('dark');
+        });
+      }
 
-document.addEventListener('mousemove', onMouseMove, false);
-document.addEventListener('touchstart', onTouch, { passive: true });
-document.addEventListener('touchmove', onTouch, { passive: true });
-initCursor();
-updateCursor();
+      document.addEventListener('DOMContentLoaded', () => {
+        document.documentElement.dataset.theme = 'light';
+        if (lightRadio) lightRadio.checked = true;
+        applyTheme('light');
+        if (!backRadio.checked) {
+          backRadio.checked = true;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        navLinks.forEach(a => a.classList.remove('active'));
+        const introLink = document.querySelector('.nav-links a[href="#section-1"]');
+        if (introLink) introLink.classList.add('active');
+        controlEl.classList.add('collapsed');
+        setTimeout(() => {
+          controlEl.classList.add('visible');
+        }, 1000);
+      });
 
-// LAYOUT CONTAINER HOVER EFFECT: Rotation & GLOW 
-function rotateToMouse(e) {
-  const container = e.currentTarget;
-  const mouseX = e.clientX;
-  const mouseY = e.clientY;
-  const bounds = container.bounds;
-  const leftX = mouseX - bounds.x;
-  const topY = mouseY - bounds.y;
-  const center = {
-    x: leftX - bounds.width / 2,
-    y: topY - bounds.height / 2
-  };
-  const distance = Math.sqrt(center.x * center.x + center.y * center.y);
+      // GOOEY CURSOR SETUP & ANIMATION
+      console.clear();
+      const TAIL_LENGTH = 20;
+      const cursor = document.getElementById('cursor');
+      let mouseX = 0;
+      let mouseY = 0;
+      let cursorCircles;
+      let cursorHistory = Array(TAIL_LENGTH).fill({ x: 0, y: 0 });
 
-  // Adjusted values for a more subtle transform effect:
-  const scaleFactor = 1.005; // from 1.01 to 1.005
-  const rotationFactor = 1 / 200; // use center values divided by 200 instead of 100
-  const angle = Math.log(distance + 1) * 2 * rotationFactor;
+      function onMouseMove(event) {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+      }
+      function onTouch(event) {
+        const touch = event.touches[0];
+        mouseX = touch.clientX;
+        mouseY = touch.clientY;
+      }
+      function initCursor() {
+        for (let i = 0; i < TAIL_LENGTH; i++) {
+          const div = document.createElement('div');
+          div.classList.add('cursor-circle');
+          cursor.append(div);
+        }
+        cursorCircles = Array.from(document.querySelectorAll('.cursor-circle'));
+      }
+      function updateCursor() {
+        cursorHistory.shift();
+        cursorHistory.push({ x: mouseX, y: mouseY });
+        for (let i = 0; i < TAIL_LENGTH; i++) {
+          const current = cursorHistory[i];
+          const next = cursorHistory[i + 1] || cursorHistory[TAIL_LENGTH - 1];
+          const xDiff = next.x - current.x;
+          const yDiff = next.y - current.y;
+          current.x += xDiff * 0.35;
+          current.y += yDiff * 0.35;
+          cursorCircles[i].style.transform = `translate(${current.x}px, ${current.y}px) scale(${i / TAIL_LENGTH})`;
+        }
+        requestAnimationFrame(updateCursor);
+      }
 
-  container.style.transitionDuration = "0.15s";
-  container.style.transitionTimingFunction = "ease-out";
-  container.style.transitionProperty = "transform, box-shadow";
-  container.style.transform = `
-    scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor})
-    rotate3d(${center.y * rotationFactor}, ${-center.x * rotationFactor}, 0, ${angle}deg)
-  `;
+      document.addEventListener('mousemove', onMouseMove, false);
+      document.addEventListener('touchstart', onTouch, { passive: true });
+      document.addEventListener('touchmove', onTouch, { passive: true });
+      initCursor();
+      updateCursor();
 
-  const glowElem = container.querySelector('.glow');
-  if (glowElem) {
-    const theme = document.documentElement.dataset.theme || 'light';
-    const glowColor = theme === 'dark'
-      ? getComputedStyle(document.documentElement).getPropertyValue('--glow-dark-hover').trim() || '#fff6'
-      : getComputedStyle(document.documentElement).getPropertyValue('--glow-light-hover').trim() || '#ffffffcc';
-    glowElem.style.backgroundImage = `
-      radial-gradient(
-        circle at ${center.x * 2 + bounds.width / 2}px ${center.y * 2 + bounds.height / 2}px,
-        ${glowColor},
-        #0000000f
-      )
-    `;
-  }
-}
+      // LAYOUT CONTAINER HOVER EFFECT: Rotation & GLOW
+      function rotateToMouse(e) {
+        const container = e.currentTarget;
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const bounds = container.bounds;
+        const leftX = mouseX - bounds.x;
+        const topY = mouseY - bounds.y;
+        const center = {
+          x: leftX - bounds.width / 2,
+          y: topY - bounds.height / 2
+        };
+        const distance = Math.sqrt(center.x * center.x + center.y * center.y);
 
-const layoutContainers = document.querySelectorAll('.layout-container');
-layoutContainers.forEach((container) => {
-  container.addEventListener('mouseenter', () => {
-    container.bounds = container.getBoundingClientRect();
-    // Create the glow element if it doesn't exist
-    if (!container.querySelector('.glow')) {
-      const glowElem = document.createElement('div');
-      glowElem.classList.add('glow');
-      container.appendChild(glowElem);
-    }
-    container.addEventListener('mousemove', rotateToMouse);
-  });
+        // Adjusted values for a more subtle transform effect:
+        const scaleFactor = 1.005;
+        const rotationFactor = 1 / 200;
+        const angle = Math.log(distance + 1) * 2 * rotationFactor;
 
-  container.addEventListener('mouseleave', () => {
-    container.removeEventListener('mousemove', rotateToMouse);
-    container.style.transitionDuration = "0.3s";
-    container.style.transitionTimingFunction = "ease-out";
-    container.style.transitionProperty = "transform, box-shadow";
-    container.style.transform = "rotate3d(0, 0, 0, 0deg)";
-    // Remove the glow element on mouse leave to return to default state.
-    const glowElem = container.querySelector('.glow');
-    if (glowElem) {
-      glowElem.remove();
-    }
-  });
-});
+        container.style.transitionDuration = "0.15s";
+        container.style.transitionTimingFunction = "ease-out";
+        container.style.transitionProperty = "transform, box-shadow";
+        container.style.transform = `
+          scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor})
+          rotate3d(${center.y * rotationFactor}, ${-center.x * rotationFactor}, 0, ${angle}deg)
+        `;
 
-// End of JavaScript code.
-      // Existing script code continues...
+        const glowElem = container.querySelector('.glow');
+        if (glowElem) {
+          const theme = document.documentElement.dataset.theme || 'light';
+          const glowColor = theme === 'dark'
+            ? getComputedStyle(document.documentElement).getPropertyValue('--glow-dark-hover').trim() || '#fff6'
+            : getComputedStyle(document.documentElement).getPropertyValue('--glow-light-hover').trim() || '#ffffffcc';
+          glowElem.style.backgroundImage = `
+            radial-gradient(
+              circle at ${center.x * 2 + bounds.width / 2}px ${center.y * 2 + bounds.height / 2}px,
+              ${glowColor},
+              #0000000f
+            )
+          `;
+        }
+      }
+
+      const layoutContainers = document.querySelectorAll('.layout-container');
+      layoutContainers.forEach((container) => {
+        container.addEventListener('mouseenter', () => {
+          container.bounds = container.getBoundingClientRect();
+          // Create the glow element if it doesn't exist
+          if (!container.querySelector('.glow')) {
+            const glowElem = document.createElement('div');
+            glowElem.classList.add('glow');
+            container.appendChild(glowElem);
+          }
+          container.addEventListener('mousemove', rotateToMouse);
+        });
+
+        container.addEventListener('mouseleave', () => {
+          container.removeEventListener('mousemove', rotateToMouse);
+          container.style.transitionDuration = "0.3s";
+          container.style.transitionTimingFunction = "ease-out";
+          container.style.transitionProperty = "transform, box-shadow";
+          container.style.transform = "rotate3d(0, 0, 0, 0deg)";
+          // Remove the glow element on mouse leave to return to default state.
+          const glowElem = container.querySelector('.glow');
+          if (glowElem) {
+            glowElem.remove();
+          }
+        });
+      });
+
+      // Attach active state to nav links based on scroll position
+      document.addEventListener('scroll', () => {
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = Array.from(document.querySelectorAll('.introduction, .layout-container'));
+        let currentSectionId = '';
+
+        // Loop through each section to find which one is in view.
+        sections.forEach(section => {
+          // Use a slight offset to account for your fixed nav
+          const sectionTop = section.offsetTop - 80;
+          const sectionHeight = section.offsetHeight;
+          if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+            currentSectionId = section.getAttribute('id');
+          }
+        });
+
+        // Default to section-1 if no section is in view.
+        if (!currentSectionId) {
+          currentSectionId = 'section-1';
+        }
+
+        // Update the active nav link based on the current section id.
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          const targetId = link.getAttribute('href').substring(1);
+          if (targetId === currentSectionId) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // End of JavaScript code.
     </script>
   </body>
 </html>
