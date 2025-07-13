@@ -1310,17 +1310,53 @@ $(function () {
   });
 });
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const hoverSound = document.getElementById("hoverSound");
-      document.querySelectorAll("nav ul.content li a").forEach((link) => {
-        link.addEventListener("mouseenter", () => {
-          if (hoverSound) {
-            hoverSound.currentTime = 0;
-            hoverSound.volume = 0.4;
-            hoverSound.play().catch((error) => {
-              console.error("Error playing sound:", error);
-            });
-          }
-        });
-      });
+document.addEventListener("DOMContentLoaded", () => {
+  // Create audio objects for hover and click events:
+  const hoverSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-cool-interface-click-tone-2568.mp3");
+  const clickSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-glass-hitting-a-metal-2183.mp3");
+
+  // Function to play the hover sound:
+  function playHoverSound() {
+    hoverSound.currentTime = 0;
+    hoverSound.volume = 0.4;
+    hoverSound.play().catch(error => {
+      console.error("Error playing hover sound:", error);
     });
+  }
+
+  // Function to play the click sound:
+  function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.volume = 0.4;
+    clickSound.play().catch(error => {
+      console.error("Error playing click sound:", error);
+    });
+  }
+
+  // Attach hover and click handlers to interactive elements
+
+  // For all anchor (<a>) elements
+  document.querySelectorAll("a").forEach(anchor => {
+    anchor.addEventListener("mouseenter", playHoverSound);
+    anchor.addEventListener("click", playClickSound);
+  });
+
+  // For all button elements
+  document.querySelectorAll("button").forEach(button => {
+    button.addEventListener("mouseenter", playHoverSound);
+    button.addEventListener("click", playClickSound);
+  });
+
+  // For all labels (useful for toggles and other clickable elements)
+  document.querySelectorAll("label").forEach(label => {
+    label.addEventListener("mouseenter", playHoverSound);
+    label.addEventListener("click", playClickSound);
+  });
+
+  // Optionally attach to any other interactive elements as needed
+  // For example, if you have elements with class "project-item":
+  document.querySelectorAll(".project-item").forEach(item => {
+    item.addEventListener("mouseenter", playHoverSound);
+    item.addEventListener("click", playClickSound);
+  });
+});
