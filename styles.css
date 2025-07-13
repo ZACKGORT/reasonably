@@ -1387,107 +1387,234 @@ h1, .mast__title, .mast__title.js-spanize {
 
 
 
-.glassy-button, .glassy-button * {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-  user-select: none;
-  touch-action: manipulation;
-  font-family: "Inter", sans-serif;
-}
-.glassy-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  padding-top: var(--glassy-button-container-top, 8em);
-  box-sizing: border-box;
-}
-.glassy-button-wrap {
-  position: relative;
-  z-index: 2;
-  border-radius: 999vw;
-  background: transparent;
-  pointer-events: none;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-}
-.glassy-button-shadow {
-  --shadow-cuttoff-fix: 2em;
-  position: absolute;
-  width: calc(100% + var(--shadow-cuttoff-fix));
-  height: calc(100% + var(--shadow-cuttoff-fix));
-  top: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  left: calc(0% - var(--shadow-cuttoff-fix) / 2);
-  filter: blur(clamp(2px, 0.125em, 12px));
-  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-  -moz-filter: blur(clamp(2px, 0.125em, 12px));
-  -ms-filter: blur(clamp(2px, 0.125em, 12px));
-  overflow: visible;
-  pointer-events: none;
-}
-.glassy-button-shadow::after {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  border-radius: 999vw;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
-  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
-  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
-  padding: 0.125em;
-  box-sizing: border-box;
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-  overflow: visible;
-  opacity: 1;
-}
-.glassy-button {
-  --border-width: clamp(1px, 0.0625em, 4px);
-  all: unset;
-  cursor: pointer;
-  position: relative;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  pointer-events: auto;
-  z-index: 3;
-  background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-  border-radius: 999vw;
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-              inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-              0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
-              0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
-              0 0 0 0 rgba(255, 255, 255, 1);
-  backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
-  transition: all var(--anim--hover-time) var(--anim--hover-ease);
-}
-.glassy-button:hover {
-  transform: scale(0.975);
-  backdrop-filter: blur(0.01em);
-  -webkit-backdrop-filter: blur(0.01em);
-  -moz-backdrop-filter: blur(0.01em);
-  -ms-backdrop-filter: blur(0.01em);
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-              inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-              0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
-              0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
-              0 0 0 0 rgba(255, 255, 255, 1);
-}
-.glassy-button span {
-  position: relative;
+    /* Glassy Button styles */
+    .glassy-button, .glassy-button * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      user-select: none;
+      touch-action: manipulation;
+      font-family: "Inter", sans-serif;
+    }
+    .glassy-button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding-top: var(--glassy-button-container-top, 8em);
+      box-sizing: border-box;
+    }
+    .glassy-button-wrap {
+      position: relative;
+      z-index: 2;
+      border-radius: 999vw;
+      background: transparent;
+      pointer-events: none;
+      transition: all var(--anim--hover-time) var(--anim--hover-ease);
+    }
+    .glassy-button-shadow {
+      --shadow-cuttoff-fix: 2em;
+      position: absolute;
+      width: calc(100% + var(--shadow-cuttoff-fix));
+      height: calc(100% + var(--shadow-cuttoff-fix));
+      top: calc(0% - var(--shadow-cuttoff-fix) / 2);
+      left: calc(0% - var(--shadow-cuttoff-fix) / 2);
+      filter: blur(clamp(2px, 0.125em, 12px));
+      -webkit-filter: blur(clamp(2px, 0.125em, 12px));
+      -moz-filter: blur(clamp(2px, 0.125em, 12px));
+      -ms-filter: blur(clamp(2px, 0.125em, 12px));
+      overflow: visible;
+      pointer-events: none;
+    }
+    .glassy-button-shadow::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      border-radius: 999vw;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+      width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+      height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+      top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+      left: calc(var(--shadow-cuttoff-fix) - 0.875em);
+      padding: 0.125em;
+      box-sizing: border-box;
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      transition: all var(--anim--hover-time) var(--anim--hover-ease);
+      overflow: visible;
+      opacity: 1;
+    }
+    .glassy-button {
+      --border-width: clamp(1px, 0.0625em, 4px);
+      all: unset;
+      cursor: pointer;
+      position: relative;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      pointer-events: auto;
+      z-index: 3;
+      background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+      border-radius: 999vw;
+      box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+                  inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+                  0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+                  0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2),
+                  0 0 0 0 rgba(255, 255, 255, 1);
+      backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+      -webkit-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+      -moz-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+      -ms-backdrop-filter: blur(clamp(1px, 0.125em, 4px));
+      transition: all var(--anim--hover-time) var(--anim--hover-ease);
+    }
+    .glassy-button:hover {
+      transform: scale(0.975);
+      backdrop-filter: blur(0.01em);
+      -webkit-backdrop-filter: blur(0.01em);
+      -moz-backdrop-filter: blur(0.01em);
+      -ms-backdrop-filter: blur(0.01em);
+      box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+                  inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+                  0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
+                  0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5),
+                  0 0 0 0 rgba(255, 255, 255, 1);
+    }
+    .glassy-button span {
+      position: relative;
+      display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      font-family: "Inter", sans-serif;
+      letter-spacing: -0.05em;
+      font-weight: 500;
+      font-size: 1em;
+      color: rgba(50, 50, 50, 1);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-shadow: 0 0.25em 0.05em rgba(0, 0, 0, 0.1);
+      transition: all var(--anim--hover-time) var(--anim--hover-ease);
+      padding-inline: 1.5em;
+      padding-block: 0.875em;
+    }
+    .glassy-button:hover span { 
+      text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12); 
+    }
+    .glassy-button span::after {
+      content: "";
+      display: block;
+      position: absolute;
+      z-index: 1;
+      width: calc(100% - var(--border-width));
+      height: calc(100% - var(--border-width));
+      top: calc(0% + var(--border-width)/2);
+      left: calc(0% + var(--border-width)/2);
+      box-sizing: border-box;
+      border-radius: 999vw;
+      overflow: clip;
+      background: linear-gradient(var(--angle-2), rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 40% 50%, rgba(255, 255, 255, 0) 55%);
+      z-index: 3;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      background-size: 200% 200%;
+      background-position: 0% 50%;
+      background-repeat: no-repeat;
+      transition: background-position calc(var(--anim--hover-time)*1.25) var(--anim--hover-ease), --angle-2 calc(var(--anim--hover-time)*1.25) var(--anim--hover-ease);
+    }
+    .glassy-button:hover span::after { 
+      background-position: 25% 50%; 
+    }
+    .glassy-button:active span::after { 
+      background-position: 50% 15%; 
+      --angle-2: -15deg; 
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .glassy-button span::after,
+      .glassy-button:active span::after { 
+        --angle-2: -45deg; 
+      }
+    }
+    .glassy-button::after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      border-radius: 999vw;
+      width: calc(100% + var(--border-width));
+      height: calc(100% + var(--border-width));
+      top: calc(0% - var(--border-width)/2);
+      left: calc(0% - var(--border-width)/2);
+      padding: var(--border-width);
+      box-sizing: border-box;
+      background: conic-gradient(from var(--angle-1) at 50% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 5% 40%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 60% 95%, rgba(0, 0, 0, 0.5)),
+                  linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
+      mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      transition: all var(--anim--hover-time) var(--anim--hover-ease), --angle-1 500ms ease;
+      box-shadow: inset 0 0 0 calc(var(--border-width)/2) rgba(255, 255, 255, 0.5);
+    }
+    .glassy-button:hover::after { 
+      --angle-1: -125deg; 
+    }
+    .glassy-button:active::after { 
+      --angle-1: -75deg; 
+    }
+    @media (hover: none) and (pointer: coarse) {
+      .glassy-button::after,
+      .glassy-button:hover::after,
+      .glassy-button:active::after { 
+        --angle-1: -75deg; 
+      }
+    }
+    .glassy-button-wrap:has(.glassy-button:hover) .glassy-button-shadow {
+      filter: blur(clamp(2px, 0.0625em, 6px));
+      -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
+      -moz-filter: blur(clamp(2px, 0.0625em, 6px));
+      -ms-filter: blur(clamp(2px, 0.0625em, 6px));
+      transition: filter var(--anim--hover-time) var(--anim--hover-ease);
+    }
+    .glassy-button-wrap:has(.glassy-button:hover) .glassy-button-shadow::after {
+      top: calc(var(--shadow-cuttoff-fix) - 0.875em);
+      opacity: 1;
+    }
+    .glassy-button-wrap:has(.glassy-button:active) { 
+      transform: rotate3d(1, 0, 0, 25deg); 
+    }
+    .glassy-button-wrap:has(.glassy-button:active) .glassy-button {
+      box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+                  inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+                  0 0.1em 0.25em 0.25em rgba(255, 255, 255, 0.2),
+                  0 0 0 0 rgba(255, 255, 255, 1);
+    }
+    .glassy-button-wrap:has(.glassy-button:active) .glassy-button-shadow {
+      filter: blur(clamp(2px, 0.125em, 12px));
+      -webkit-filter: blur(clamp(2px, 0.125em, 12px));
+      -moz-filter: blur(clamp(2px, 0.125em, 12px));
+      -ms-filter: blur(clamp(2px, 0.125em, 12px));
+    }
+    .glassy-button-wrap:has(.glassy-button:active) .glassy-button-shadow::after {
+      top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+      opacity: 0.75;
+    }
+    .glassy-button-wrap:has(.glassy-button:active) span {
+      text-shadow: 0.025em 0.25em 0.05em rgba(0, 0, 0, 0.12);
+    }
+/* Glassy Button Styling (unchanged except for lower positioning) */
+.work-glassy-button-container {
+  position: fixed;           /* Position relative to the viewport */
+  bottom: 4.4rem;              /* 6rem from the bottom */
+  left: 50%;                 /* Center horizontally (50% of viewport width) */
+  transform: translateX(-50%);  /* Offset by half the element's width */
+  z-index: 787654;              /* Ensure it appears above other elements */
   display: block;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   font-family: "Inter", sans-serif;
-  letter-spacing: -0.05em;
+  letter-spacing: 0.5em;
   font-weight: 500;
-  font-size: 1em;
+  font-size: .75em;
   color: rgba(50, 50, 50, 1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -1496,104 +1623,6 @@ h1, .mast__title, .mast__title.js-spanize {
   padding-inline: 1.5em;
   padding-block: 0.875em;
 }
-.glassy-button:hover span { text-shadow: 0.025em 0.025em 0.025em rgba(0, 0, 0, 0.12); }
-.glassy-button span::after {
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: 1;
-  width: calc(100% - var(--border-width));
-  height: calc(100% - var(--border-width));
-  top: calc(0% + var(--border-width)/2);
-  left: calc(0% + var(--border-width)/2);
-  box-sizing: border-box;
-  border-radius: 999vw;
-  overflow: clip;
-  background: linear-gradient(var(--angle-2), rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 40% 50%, rgba(255, 255, 255, 0) 55%);
-  z-index: 3;
-  mix-blend-mode: screen;
-  pointer-events: none;
-  background-size: 200% 200%;
-  background-position: 0% 50%;
-  background-repeat: no-repeat;
-  transition: background-position calc(var(--anim--hover-time)*1.25) var(--anim--hover-ease), --angle-2 calc(var(--anim--hover-time)*1.25) var(--anim--hover-ease);
-}
-.glassy-button:hover span::after { background-position: 25% 50%; }
-.glassy-button:active span::after { background-position: 50% 15%; --angle-2: -15deg; }
-
-@media (hover: none) and (pointer: coarse) {
-  .glassy-button span::after,
-  .glassy-button:active span::after { --angle-2: -45deg; }
-}
-
-.glassy-button::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  border-radius: 999vw;
-  width: calc(100% + var(--border-width));
-  height: calc(100% + var(--border-width));
-  top: calc(0% - var(--border-width)/2);
-  left: calc(0% - var(--border-width)/2);
-  padding: var(--border-width);
-  box-sizing: border-box;
-  background: conic-gradient(from var(--angle-1) at 50% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 5% 40%, rgba(0, 0, 0, 0.5) 50%, rgba(0, 0, 0, 0) 60% 95%, rgba(0, 0, 0, 0.5)),
-              linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5));
-  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  transition: all var(--anim--hover-time) var(--anim--hover-ease), --angle-1 500ms ease;
-  box-shadow: inset 0 0 0 calc(var(--border-width)/2) rgba(255, 255, 255, 0.5);
-}
-.glassy-button:hover::after { --angle-1: -125deg; }
-.glassy-button:active::after { --angle-1: -75deg; }
-
-@media (hover: none) and (pointer: coarse) {
-  .glassy-button::after,
-  .glassy-button:hover::after,
-  .glassy-button:active::after { --angle-1: -75deg; }
-}
-
-.glassy-button-wrap:has(.glassy-button:hover) .glassy-button-shadow {
-  filter: blur(clamp(2px, 0.0625em, 6px));
-  -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
-  -moz-filter: blur(clamp(2px, 0.0625em, 6px));
-  -ms-filter: blur(clamp(2px, 0.0625em, 6px));
-  transition: filter var(--anim--hover-time) var(--anim--hover-ease);
-}
-.glassy-button-wrap:has(.glassy-button:hover) .glassy-button-shadow::after {
-  top: calc(var(--shadow-cuttoff-fix) - 0.875em);
-  opacity: 1;
-}
-.glassy-button-wrap:has(.glassy-button:active) { transform: rotate3d(1, 0, 0, 25deg); }
-.glassy-button-wrap:has(.glassy-button:active) .glassy-button {
-  box-shadow: inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
-              inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
-              0 0.1em 0.25em 0.25em rgba(255, 255, 255, 0.2),
-              0 0 0 0 rgba(255, 255, 255, 1);
-}
-.glassy-button-wrap:has(.glassy-button:active) .glassy-button-shadow {
-  filter: blur(clamp(2px, 0.125em, 12px));
-  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
-  -moz-filter: blur(clamp(2px, 0.125em, 12px));
-  -ms-filter: blur(clamp(2px, 0.125em, 12px));
-}
-.glassy-button-wrap:has(.glassy-button:active) .glassy-button-shadow::after {
-  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
-  opacity: 0.75;
-}
-.glassy-button-wrap:has(.glassy-button:active) span {
-  text-shadow: 0.025em 0.25em 0.05em rgba(0, 0, 0, 0.12);
-}
-
-
-
-
-
-
-
-
-
 
 @media only screen and (max-width: 600px) {
   .project-title { font-size: 1em; letter-spacing: 0.01em; }
