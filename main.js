@@ -1,7 +1,5 @@
 /* jshint esversion: 6 */
 
-// Optimized for performance without affecting functionality
-
 // Utility debouncer function used for resize/scroll events
 const debounce = (func, wait) => {
   let timeout;
@@ -527,14 +525,12 @@ document.addEventListener("DOMContentLoaded", () => {
   navigation.resizeLogoCenter(logoSpotlight.centreLogo);
   navigation.setActivePage("page-home");
 
-// Remove all nav active states (so none are active on first load)
-const homeLink = document.querySelector('nav a[data-page="home"]');
-if (homeLink) {
-  document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
-  // Do NOT set any link as active here
-  // Optionally, you may want to hide or move the nav light offscreen if desired:
-  // navigation.moveNavLight(-1000); // Move the nav light far out of view if needed
-}
+  // Remove all nav active states on first load
+  const homeLink = document.querySelector('nav a[data-page="home"]');
+  if (homeLink) {
+    document.querySelectorAll("nav a").forEach(link => link.removeAttribute("data-active"));
+    // Do not set any link as active here.
+  }
 
   const logoWrapper = document.querySelector(".logo-wrapper");
   if (logoWrapper) {
@@ -556,58 +552,58 @@ if (homeLink) {
   new GooeyCursor("cursor", 16);
 
   const isMobile = window.matchMedia("(max-width: 600px)").matches;
-new HomeGallery({
-  items: [
-    "Gallery Image 1", "Gallery Image 2", "Gallery Image 3", "Gallery Image 4", "Gallery Image 5",
-    "Gallery Image 6", "Gallery Image 7", "Gallery Image 8", "Gallery Image 9", "Gallery Image 10",
-    "Gallery Image 11", "Gallery Image 12", "Gallery Image 13", "Gallery Image 14", "Gallery Image 15",
-    "Gallery Image 16", "Gallery Image 17", "Gallery Image 18", "Gallery Image 19", "Gallery Image 20",
-    "Gallery Image 21", "Gallery Image 22", "Gallery Image 23", "Gallery Image 24", "Gallery Image 25",
-    "Gallery Image 26", "Gallery Image 27", "Gallery Image 28", "Gallery Image 29", "Gallery Image 30",
-    "Gallery Image 31", "Gallery Image 32", "Gallery Image 33", "Gallery Image 34", "Gallery Image 35",
-    "Gallery Image 36", "Gallery Image 37", "Gallery Image 38", "Gallery Image 39"
-  ],
-  imageUrls: [
-    "https://i.ibb.co/PztRrNhR/603a93eddcd3ab104d64fcbb-ZAX09767.webp",
-    "https://i.ibb.co/9HzBPc7Y/603a93eea83b1aab7a98c35b-DSC08228.webp",
-    "https://i.ibb.co/mrYPqc5K/603a93eedcd3ab4b2e64fcbc-IMG-4204.webp",
-    "https://i.ibb.co/RG7ymtn5/603a93eedce047078935438a-IMG-5686.webp",
-    "https://i.ibb.co/VcxChJB1/603a93eef8754819192222f7-DSC09720.webp",
-    "https://i.ibb.co/bjCjbfbT/603a93efdfd184c21ef2d238-IMG-3352.webp",
-    "https://i.ibb.co/39wDDcbS/603a93f0e815e830d1783e07-IMG-2033.webp",
-    "https://i.ibb.co/wNFR8hJR/603a93f1d03490ae9d2aa64a-IMG-3824.webp",
-    "https://i.ibb.co/5Xr0MDSw/603a93f06a41f45766a3361a-DSC09212.webp",
-    "https://i.ibb.co/FLS6ZdgN/603a95ed29478f4bc91875b5-DSC08933.webp",
-    "https://i.ibb.co/9HWqZ86P/603a95edd9a3b56723de7edc-DSC00910.webp",
-    "https://i.ibb.co/fdT1YyzJ/603a95edd03490eb412aaedc-DSC08676.webp",
-    "https://i.ibb.co/zWBgb5Sj/603a95ee83ba30ff4ac9bc6a-DSC00423-1.webp",
-    "https://i.ibb.co/0yjJ4j8L/603a967a5dc3e982f571b744-ZAX00968.webp",
-    "https://i.ibb.co/Kph6fp3M/603a967a6a41f4d56ca33b1a-ZAX00794.webp",
-    "https://i.ibb.co/tpK7LjSv/603a967ac64cec73069e2454-ZAX09877.webp",
-    "https://i.ibb.co/rR91Q0Z4/603a967ad03490104c2aaefe-ZAX01042-2.webp",
-    "https://i.ibb.co/m5sNTvYX/603a967916b10d5bef5a6dd8-ZAX02712-1.webp",
-    "https://i.ibb.co/QvHqKh2P/603afe37ba16f8f9174cf501-IMG-1878.webp",
-    "https://i.ibb.co/JX320Vw/603b3890dcd3ab104d67d405-ZAX01233-2.webp",
-    "https://i.ibb.co/VYQs1pyb/603d0b8abf1990616037cc35-ZAX03810.webp",
-    "https://i.ibb.co/yFz4P7cG/603d0b8b04655c6fd42d2253-DSC08281.webp",
-    "https://i.ibb.co/9HZMK0nw/603d0b8b038105ae6904872a-DSC08334.webp",
-    "https://i.ibb.co/8njbYh3K/603d0b5635e8053bc120bec7-DSC09034.webp",
-    "https://i.ibb.co/5gddKNw3/603d0bb2331da47ee88db089-DSC02085.webp",
-    "https://i.ibb.co/Fbr1sSb6/603d8d7a3a6df470a4a661a1-DSC00726.webp",
-    "https://i.ibb.co/zWkXCBb9/603d61b96ca6f0c336165b6e-DSC09310.webp",
-    "https://i.ibb.co/DPyhP1T7/603d100d889053cc334ee5fc-IMG-2083.webp",
-    "https://i.ibb.co/KjzkkW68/603d102d0f02c70fdf7d84eb-IMG-4696.webp",
-    "https://i.ibb.co/N2cSNMf4/603d102d9f59a611886a6893-IMG-2151.webp",
-    "https://i.ibb.co/RkfwmHWj/603d102dae26b192aef6ab4a-IMG-3023.webp",
-    "https://i.ibb.co/QFKMY1sH/603d138e1d5ed053b509992a-IMG-5199.webp",
-    "https://i.ibb.co/pvFThr4K/603d1185b8ec32082f451ba9-IMG-3882.webp",
-    "https://i.ibb.co/WNtnFQqP/603d1185cafcb2591f42b1ad-IMG-3932.webp",
-    "https://i.ibb.co/1Y2gsgBy/603d6207dcd0225713fe1549-IMG-4484.webp",
-    "https://i.ibb.co/k2svMNFv/603d10120fba838e599b6b5e-IMG-1563.webp",
-    "https://i.ibb.co/BKv7177j/603d6216612acc7c7e54bef2-IMG-1158.webp",
-    "https://i.ibb.co/6Rqf37ft/6039d4bbb15be328fc33b54d-IMG-6478.webp",
-    "https://i.ibb.co/ccSZT30x/603985613b870e6cd6c49a29-IMG-3457.webp"
-  ],
+  new HomeGallery({
+    items: [
+      "Gallery Image 1", "Gallery Image 2", "Gallery Image 3", "Gallery Image 4", "Gallery Image 5",
+      "Gallery Image 6", "Gallery Image 7", "Gallery Image 8", "Gallery Image 9", "Gallery Image 10",
+      "Gallery Image 11", "Gallery Image 12", "Gallery Image 13", "Gallery Image 14", "Gallery Image 15",
+      "Gallery Image 16", "Gallery Image 17", "Gallery Image 18", "Gallery Image 19", "Gallery Image 20",
+      "Gallery Image 21", "Gallery Image 22", "Gallery Image 23", "Gallery Image 24", "Gallery Image 25",
+      "Gallery Image 26", "Gallery Image 27", "Gallery Image 28", "Gallery Image 29", "Gallery Image 30",
+      "Gallery Image 31", "Gallery Image 32", "Gallery Image 33", "Gallery Image 34", "Gallery Image 35",
+      "Gallery Image 36", "Gallery Image 37", "Gallery Image 38", "Gallery Image 39"
+    ],
+    imageUrls: [
+      "https://i.ibb.co/PztRrNhR/603a93eddcd3ab104d64fcbb-ZAX09767.webp",
+      "https://i.ibb.co/9HzBPc7Y/603a93eea83b1aab7a98c35b-DSC08228.webp",
+      "https://i.ibb.co/mrYPqc5K/603a93eedcd3ab4b2e64fcbc-IMG-4204.webp",
+      "https://i.ibb.co/RG7ymtn5/603a93eedce047078935438a-IMG-5686.webp",
+      "https://i.ibb.co/VcxChJB1/603a93eef8754819192222f7-DSC09720.webp",
+      "https://i.ibb.co/bjCjbfbT/603a93efdfd184c21ef2d238-IMG-3352.webp",
+      "https://i.ibb.co/39wDDcbS/603a93f0e815e830d1783e07-IMG-2033.webp",
+      "https://i.ibb.co/wNFR8hJR/603a93f1d03490ae9d2aa64a-IMG-3824.webp",
+      "https://i.ibb.co/5Xr0MDSw/603a93f06a41f45766a3361a-DSC09212.webp",
+      "https://i.ibb.co/FLS6ZdgN/603a95ed29478f4bc91875b5-DSC08933.webp",
+      "https://i.ibb.co/9HWqZ86P/603a95edd9a3b56723de7edc-DSC00910.webp",
+      "https://i.ibb.co/fdT1YyzJ/603a95edd03490eb412aaedc-DSC08676.webp",
+      "https://i.ibb.co/zWBgb5Sj/603a95ee83ba30ff4ac9bc6a-DSC00423-1.webp",
+      "https://i.ibb.co/0yjJ4j8L/603a967a5dc3e982f571b744-ZAX00968.webp",
+      "https://i.ibb.co/Kph6fp3M/603a967a6a41f4d56ca33b1a-ZAX00794.webp",
+      "https://i.ibb.co/tpK7LjSv/603a967ac64cec73069e2454-ZAX09877.webp",
+      "https://i.ibb.co/rR91Q0Z4/603a967ad03490104c2aaefe-ZAX01042-2.webp",
+      "https://i.ibb.co/m5sNTvYX/603a967916b10d5bef5a6dd8-ZAX02712-1.webp",
+      "https://i.ibb.co/QvHqKh2P/603afe37ba16f8f9174cf501-IMG-1878.webp",
+      "https://i.ibb.co/JX320Vw/603b3890dcd3ab104d67d405-ZAX01233-2.webp",
+      "https://i.ibb.co/VYQs1pyb/603d0b8abf1990616037cc35-ZAX03810.webp",
+      "https://i.ibb.co/yFz4P7cG/603d0b8b04655c6fd42d2253-DSC08281.webp",
+      "https://i.ibb.co/9HZMK0nw/603d0b8b038105ae6904872a-DSC08334.webp",
+      "https://i.ibb.co/8njbYh3K/603d0b5635e8053bc120bec7-DSC09034.webp",
+      "https://i.ibb.co/5gddKNw3/603d0bb2331da47ee88db089-DSC02085.webp",
+      "https://i.ibb.co/Fbr1sSb6/603d8d7a3a6df470a4a661a1-DSC00726.webp",
+      "https://i.ibb.co/zWkXCBb9/603d61b96ca6f0c336165b6e-DSC09310.webp",
+      "https://i.ibb.co/DPyhP1T7/603d100d889053cc334ee5fc-IMG-2083.webp",
+      "https://i.ibb.co/KjzkkW68/603d102d0f02c70fdf7d84eb-IMG-4696.webp",
+      "https://i.ibb.co/N2cSNMf4/603d102d9f59a611886a6893-IMG-2151.webp",
+      "https://i.ibb.co/RkfwmHWj/603d102dae26b192aef6ab4a-IMG-3023.webp",
+      "https://i.ibb.co/QFKMY1sH/603d138e1d5ed053b509992a-IMG-5199.webp",
+      "https://i.ibb.co/pvFThr4K/603d1185b8ec32082f451ba9-IMG-3882.webp",
+      "https://i.ibb.co/WNtnFQqP/603d1185cafcb2591f42b1ad-IMG-3932.webp",
+      "https://i.ibb.co/1Y2gsgBy/603d6207dcd0225713fe1549-IMG-4484.webp",
+      "https://i.ibb.co/k2svMNFv/603d10120fba838e599b6b5e-IMG-1563.webp",
+      "https://i.ibb.co/BKv7177j/603d6216612acc7c7e54bef2-IMG-1158.webp",
+      "https://i.ibb.co/6Rqf37ft/6039d4bbb15be328fc33b54d-IMG-6478.webp",
+      "https://i.ibb.co/ccSZT30x/603985613b870e6cd6c49a29-IMG-3457.webp"
+    ],
     settings: isMobile ? {
       baseWidth: 320,
       smallHeight: 320,
@@ -644,7 +640,7 @@ new HomeGallery({
     containerSelector: "#page-home .container",
     canvasSelector: "canvas"
   });
-  
+
   initBlur();
 
   if (typeof Sketch === "function") {
@@ -659,25 +655,82 @@ new HomeGallery({
   setupHoverEvents(backgroundImage, projectsContainer);
 });
 
-// Optimized back-to-top & related scroll events with passive listeners and debouncing
-const button = document.querySelector(".spotlight-button");
-const ellipse = button ? button.querySelector(".spotlight-ellipse") : null;
+/* ===================================================================== */
+/* RESUME BUTTON CREATION & VISIBILITY TOGGLING FUNCTIONALITY */
+/* ===================================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  // Create the glassy button container and its inner elements
+  const resumeContainer = document.createElement('div');
+  resumeContainer.classList.add('work-glassy-button-container');
+  // Initially hide the container with display:none and 0 opacity
+  resumeContainer.style.display = 'none';
+  resumeContainer.style.opacity = '0';
+  resumeContainer.style.transition = 'opacity 0.5s ease-in';
 
-if (button && ellipse) {
-  button.addEventListener("pointermove", (e) => {
-    const rect = button.getBoundingClientRect();
-    const percX = ((e.clientX - rect.left) / rect.width) * 100;
-    const percY = ((e.clientY - rect.top) / rect.height) * 70 + 20;
-    ellipse.setAttribute("cx", `${percX}%`);
-    ellipse.setAttribute("cy", `${percY}`);
+  const wrap = document.createElement('div');
+  wrap.classList.add('glassy-button-wrap');
+
+  const shadow = document.createElement('div');
+  shadow.classList.add('glassy-button-shadow');
+
+  const button = document.createElement('button');
+  button.classList.add('glassy-button');
+  button.type = 'button';
+  button.addEventListener('click', () => {
+    window.location.href = 'https://reasonably.cc/resume';
   });
 
-  button.addEventListener("pointerleave", () => {
-    ellipse.setAttribute("cx", "50%");
-    ellipse.setAttribute("cy", "54");
-  });
-}
+  const span = document.createElement('span');
+  span.textContent = 'View Resume';
 
+  // Assemble the button elements
+  button.appendChild(span);
+  wrap.appendChild(shadow);
+  wrap.appendChild(button);
+  resumeContainer.appendChild(wrap);
+
+  // Append the resume container to the body
+  document.body.appendChild(resumeContainer);
+
+  // Function to update resume button visibility based on active page id
+  function toggleResumeButton() {
+    const activePage = document.querySelector(".page.active");
+    if (activePage && (activePage.id === "page-home" || activePage.id === "page-connect")) {
+      // Hide resume button on homepage and connect page
+      resumeContainer.style.display = "none";
+      resumeContainer.style.opacity = "0";
+    } else {
+      // Show the resume button on all other pages
+      resumeContainer.style.display = "block";
+      // Force reflow to ensure the opacity transition takes effect
+      void resumeContainer.offsetWidth;
+      resumeContainer.style.opacity = "1";
+    }
+  }
+
+  // Call toggle function on load
+  toggleResumeButton();
+
+  // Use a MutationObserver to watch for changes in page active state
+  const pages = document.querySelectorAll(".page");
+  const observer = new MutationObserver(toggleResumeButton);
+  pages.forEach(page => {
+    observer.observe(page, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+  });
+
+  // Listen for hashchange and popstate for additional navigation events
+  window.addEventListener("hashchange", toggleResumeButton);
+  window.addEventListener("popstate", toggleResumeButton);
+});
+
+/* ===================================================================== */
+/* Additional Back-to-Top & Scroll Events, WebGL sketch code, etc. Below */
+/* ===================================================================== */
+
+// Back-to-top button handling for the Life page
 (function () {
   const backToTopBtn = document.getElementById("back-to-top-life");
   const lifePage = document.getElementById("page-life");
@@ -697,6 +750,7 @@ if (button && ellipse) {
   }
 })();
 
+// Responsive scaling
 (function (minWidth = 375) {
   const adjustScale = () => {
     document.documentElement.style.minWidth = `${minWidth}px`;
@@ -718,6 +772,7 @@ if (button && ellipse) {
   adjustScale();
 })(375);
 
+// Back-to-glassy button functionality
 (function () {
   const container = document.getElementById("back-to-glassy-container");
   const button = document.getElementById("back-to-glassy");
@@ -751,6 +806,7 @@ if (button && ellipse) {
   toggleVisibility();
 })();
 
+// Additional back-to-top for Life page
 (function () {
   const backToTop = document.getElementById("back-to-top-life");
   const lifePage = document.getElementById("page-life");
@@ -769,7 +825,7 @@ if (button && ellipse) {
   }
 })();
 
-// WebGL sketch code
+// WebGL Sketch Code
 const vertex = `
   varying vec3 pos;
   uniform float time;
@@ -1009,8 +1065,9 @@ $(function () {
     spanize($(this), 0.02);
   });
 
+  // Default: "&" active instead of "Reason"
   $(".mast__title, .mast__text").removeClass("active");
-  activateSection("reason", true);
+  activateSection("and", true);
 
   $(".mast__title").on("click", function () {
     activateSection($(this).data("type"), true);
@@ -1100,8 +1157,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 })();
 
-
-
 // Optionally, request full-screen mode to minimize system UI interference
 function lockScreen() {
   const elem = document.documentElement;
@@ -1115,16 +1170,8 @@ function lockScreen() {
 }
 lockScreen();
 
-
-
-
-
-// ... (rest of your file above remains unchanged)
-
+// MAST SEQUENTIAL ANIMATION FOR CONNECT PAGE
 document.addEventListener("DOMContentLoaded", function () {
-  // MAST SEQUENTIAL ANIMATION FOR CONNECT PAGE
-
-  // Helper: animate an element by adding a class and waiting
   function animateIn(elem, delay = 0, className = 'mast-fadein') {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -1134,12 +1181,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Helper: get all mast h1s and their associated p lines in desired order
-  // ORDER: &, Reason, Resolution
   function getMastElements() {
     const container = document.querySelector('.connect-container .mast__header');
     if (!container) return null;
-
     const h1s = [
       container.querySelector('.mast__title[data-type="and"]'),
       container.querySelector('.mast__title[data-type="reason"]'),
@@ -1153,7 +1197,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return { h1s, ps };
   }
 
-  // CSS: ensure all elements start hidden and fade in
   const mastStyles = document.createElement('style');
   mastStyles.textContent = `
     .connect-container .mast__title, 
@@ -1171,29 +1214,20 @@ document.addEventListener("DOMContentLoaded", function () {
   document.head.appendChild(mastStyles);
 
   async function runMastSequence() {
-    // Hide glassy button instantly via class, not inline style
     const glassyButtonCont = document.querySelector('.connect-container .glassy-button-container');
     if (glassyButtonCont) {
       glassyButtonCont.classList.remove('mast-fadein');
     }
-
-    // Hide all mast h1s and ps instantly
     const mast = getMastElements();
     if (!mast) return;
     mast.h1s.forEach(h1 => h1 && h1.classList.remove('mast-fadein'));
     mast.ps.forEach(p => { if (p) p.classList.remove('mast-fadein'); });
-
-    // Animate h1s in sequence, 350ms apart
     for (let i = 0; i < mast.h1s.length; i++) {
       if (mast.h1s[i]) await animateIn(mast.h1s[i], i === 0 ? 0 : 350);
     }
-
-    // Animate ps in sequence, 300ms apart
     for (let i = 0; i < mast.ps.length; i++) {
       if (mast.ps[i]) await animateIn(mast.ps[i], 300);
     }
-
-    // After last p, animate glassy button (e.g. after 400ms)
     if (glassyButtonCont) {
       setTimeout(() => {
         glassyButtonCont.classList.add('mast-fadein');
@@ -1201,7 +1235,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Immediately hide glassy button when leaving CONNECT page
   function hideGlassyButton() {
     const glassyButtonCont = document.querySelector('.connect-container .glassy-button-container');
     if (glassyButtonCont) {
@@ -1209,19 +1242,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Only run on CONNECT page
   function onConnectPageActive() {
-    // Check if CONNECT page is active
     const connectPage = document.getElementById('page-connect');
     if (connectPage && connectPage.classList.contains('active')) {
       runMastSequence();
     }
   }
-
-  // Run on load and on navigation to CONNECT page
   onConnectPageActive();
-
-  // Monitor for navigation: hide button when leaving connect page
   let lastWasConnect = false;
   setInterval(() => {
     const isConnect = document.getElementById('page-connect')?.classList.contains('active');
@@ -1233,7 +1260,6 @@ document.addEventListener("DOMContentLoaded", function () {
     lastWasConnect = isConnect;
   }, 200);
 
-  // Existing glassy button fade-in and mailto logic (no change needed)
   const glassyBtn = document.querySelector('.connect-container .glassy-button');
   if (glassyBtn) {
     glassyBtn.addEventListener('click', function () {
@@ -1242,7 +1268,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-// Set "&" and its p as the default active mast section on CONNECT page (for jQuery spanize logic)
 $(function () {
   function spanize($elem, delayFactor) {
     const originalText = $elem.data("original") || $elem.text();
@@ -1277,7 +1302,6 @@ $(function () {
     spanize($(this), 0.02);
   });
 
-  // Default: "&" active instead of "Reason"
   $(".mast__title, .mast__text").removeClass("active");
   activateSection("and", true);
 
@@ -1285,68 +1309,3 @@ $(function () {
     activateSection($(this).data("type"), true);
   });
 });
-
-
-
-
-// Map page ids to instruction text
-// Map page ids to instruction text
-const instructionTexts = {
-  "page-home": "drag me",
-  "page-work": "tap me",
-  "page-life": "scroll me",
-  "page-balance": "roll me",
-  "page-connect": "say hello!"
-};
-
-let instructionTimeouts = {
-  fadeIn: null,
-  fadeOut: null
-};
-
-function showInstructionWithDelay() {
-  clearTimeout(instructionTimeouts.fadeIn);
-  clearTimeout(instructionTimeouts.fadeOut);
-
-  const activePage = document.querySelector('.page.active');
-  const instruction = document.getElementById('gallery-instruction');
-  const instructionText = document.getElementById('instruction-text');
-  if (!instruction || !instructionText || !activePage || !instructionTexts[activePage.id]) {
-    if (instruction) instruction.style.opacity = 0;
-    return;
-  }
-
-  instruction.style.display = '';
-  instruction.style.opacity = 0;
-  instructionText.textContent = instructionTexts[activePage.id];
-
-  // Fade in after 1.5s
-  instructionTimeouts.fadeIn = setTimeout(() => {
-    instruction.style.transition = 'opacity 0.65s';
-    instruction.style.opacity = 1;
-
-    // Fade out after 5s visible
-    instructionTimeouts.fadeOut = setTimeout(() => {
-      instruction.style.opacity = 0;
-    }, 5000);
-  }, 1500);
-}
-
-function hideInstructionImmediate() {
-  clearTimeout(instructionTimeouts.fadeIn);
-  clearTimeout(instructionTimeouts.fadeOut);
-  const instruction = document.getElementById('gallery-instruction');
-  if (instruction) instruction.style.opacity = 0;
-}
-
-// Initial call on DOMContentLoaded
-document.addEventListener('DOMContentLoaded', showInstructionWithDelay);
-
-// Listen for changes in the .active page (using MutationObserver)
-const pageRoots = document.querySelectorAll('.page');
-const mo = new MutationObserver(showInstructionWithDelay);
-pageRoots.forEach(page => mo.observe(page, { attributes: true, attributeFilter: ['class'] }));
-
-// Optionally, listen for navigation events if you use history API or hashchange
-window.addEventListener('hashchange', showInstructionWithDelay);
-window.addEventListener('popstate', showInstructionWithDelay);
