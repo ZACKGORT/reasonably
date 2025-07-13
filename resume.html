@@ -1,4 +1,20 @@
 <!DOCTYPE html>
+<html>
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>content update</title>
+
+  <style>
+    
+  </style>
+
+  
+</head>
+<body>
+  <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -897,15 +913,15 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Managed corporate website with a focus on developing stratgic
-            content and product roadmap.
+            Managed corporate website with a focus on developing strategic
+            content and product roadmap; while addressing 
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
             Introduced forward-thinking practices to transition third-party
-            integrations and refine live event management and product demos.
+            integrations {UnBounce/Webflow/Contenful} while refining live event management and product demos.
           </p>
         </div>
         <div class="service-item">
@@ -918,19 +934,19 @@
         <div class="service-item">
           <h3>Core Strengths</h3>
           <p>
-            Leveraged expertise in Contentful, Jira, and digital content management.
+            Leveraged expertise in Contentful, Jira, and digital content creation.
           </p>
         </div>
         <div class="service-item">
           <h3>Collaborative Spirit</h3>
           <p>
-            Built strong, cross-departmental relationships that enriched strategic initiatives.
+            Built strong cross-departmental relationships that enriched strategic initiatives.
           </p>
         </div>
         <div class="service-item">
-          <h3>Key Takeaway</h3>
+          <h3>Future-Ready Design</h3>
           <p>
-            Incredible company with a powerful product, though still burdened by operational silos and a top-weighted organizational structure.
+            Created a comprehensive filter and search model for an ever-growing content ecosystem.
           </p>
         </div>
       </div>
@@ -949,13 +965,13 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Led the BNY Mellon project, serving as interim Product Owner and primary client liaison.
+            Stepped into FinTech as interim Product Owner and primary client liaison working with BNY Mellon.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Delivered data-driven improvements to the design system, driving measurable UX outcomes.
+            Through comprehensive product and market analysis, we provided a modern design system that could support a complex interconnected ecosystem.  
           </p>
         </div>
         <div class="service-item">
@@ -977,9 +993,9 @@
           </p>
         </div>
         <div class="service-item">
-          <h3>Key Takeaway</h3>
+          <h3>Future-Ready Design</h3>
           <p>
-            BNY Mellon - Pershing X had evolved from a comprehensive, but cluttered array of applications to a centralized and interconnected ecosystem using a modular canonical design system.  
+            Implemented forward-thinking strategies to set new industry benchmarks.
           </p>
         </div>
       </div>
@@ -998,19 +1014,19 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Lead UX & interactive designer partnering with strategists, developers, and as client POC, charged with producing an optimized B2B strategy for TikTok For Business.
+            Mentored junior designers and optimized B2B strategies for TikTok For Business.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Conducted workshops and internal knowledge-sharing sessions on Information Architecture {for Contentful}, Modular Design Systems, and designing within a headless CMS.  
+            Conducted workshops and internal knowledge-sharing sessions on emerging UX technologies.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            As per some internal resourcing hurdles, I adopted the role of strategist, responsible for competitve landscape audits, market research, and feature-development oversight.
+            Delivered comprehensive UX research and implementation across projects.
           </p>
         </div>
         <div class="service-item">
@@ -1026,9 +1042,9 @@
           </p>
         </div>
         <div class="service-item">
-          <h3>Key Takeaway</h3>
+          <h3>Future-Ready Design</h3>
           <p>
-            There was a fine balance we needed to maintain between brand experiences towards supporting B2B engagement. Additionally, there was internal and client enlightenment in migrating into a headless CMS.   
+            Pioneered innovative design practices to stay ahead in a competitive market.
           </p>
         </div>
       </div>
@@ -1356,6 +1372,13 @@
     <!-- The gooey cursor element -->
     <div id="cursor"></div>
 
+
+  <!-- Add your audio element (ensure the sound file exists in your project) -->
+<audio id="hoverSound" preload="auto">
+  <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg">
+</audio>
+
+
     <!-- Resume related JavaScript -->
     <script>
       // Resume related JavaScript
@@ -1638,7 +1661,58 @@
         });
       });
 
+document.addEventListener("DOMContentLoaded", () => {
+  // Create audio objects for the various sound effects:
+  const hoverSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-cool-interface-click-tone-2568.mp3");
+  const clickSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-page-turn-single-1104.mp3");
+
+  // Function to play hover sound
+  function playHoverSound() {
+    hoverSound.currentTime = 0;
+    hoverSound.volume = 0.4;
+    hoverSound.play().catch(error => {
+      console.error("Error playing hover sound:", error);
+    });
+  }
+
+  // Function to play click sound
+  function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.volume = 0.4;
+    clickSound.play().catch(error => {
+      console.error("Error playing click sound:", error);
+    });
+  }
+
+  // Attach hover and click events for nav links
+  const navLinks = document.querySelectorAll("nav a");
+  navLinks.forEach(link => {
+    link.addEventListener("mouseenter", playHoverSound);
+    link.addEventListener("click", playClickSound);
+  });
+
+  // Attach hover and click events for control toggles (labels within the .control container)
+  const controlToggles = document.querySelectorAll(".control label");
+  controlToggles.forEach(toggle => {
+    toggle.addEventListener("mouseenter", playHoverSound);
+    toggle.addEventListener("click", playClickSound);
+  });
+
+  // Optionally, attach the click sound to all button actions
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", playClickSound);
+  });
+});
+
+
       // End of JavaScript code.
     </script>
   </body>
+</html>
+
+  <script>
+    
+  </script>
+</body>
 </html>
