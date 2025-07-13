@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
   <link rel="canonical" href="https://codepen.io/zackgort/pen/jEPXaRP" />
 
   <!-- Stylesheets -->
@@ -16,10 +13,6 @@
   <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.4.0/umd/split-type.min.js"></script>
-
-  <title>Reason & Resolution</title>
-</head>
-<body>
 
 <!-- SVG FILTERS (spotlight, ambience, gooey, etc.) -->
 <svg aria-hidden="true" class="sr-only">
@@ -164,32 +157,24 @@
     <div class="canvas" id="canvas"></div>
     <div class="overlay" id="overlay"></div>
 
-
   <div class="project-title">
     <p></p>
   </div>
 </section>
 
-<!-- WORK PAGE -->
-<section id="page-work" class="page">
-  <div id="background-image-container">
-    <img id="background-image" crossorigin="anonymous" alt="" />
-  </div>
-  <div class="container">
-    <div class="projects-container">
-      <!-- Projects will be rendered here by script.js -->
-    </div>
-  </div>
-</section>
+    <!-- WORK PAGE -->
+    <section id="page-work" class="page">
+      <div id="background-image-container">
+        <img id="background-image" src="background.jpg" crossorigin="anonymous" alt="" />
+      </div>
+      <div class="container">
+        <div class="projects-container">
+          <!-- Projects will be rendered here by script.js -->
+        </div>
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>My Life Page</title>
-  </head>
-  <body>
+      </div>
+    </section>
+
     <!-- LIFE PAGE (Popover UI Demo, only this version present) -->
     <section id="page-life" class="page">
       <div class="content">
@@ -620,7 +605,6 @@
                 </p>
               </div>
 
-
 <!-- Glassy Button with JavaScript mailto -->
 <div class="glassy-button-container">
   <div class="glassy-button-wrap">
@@ -638,9 +622,6 @@
   </div>
 </section>
 
-
-
-
 <!-- Instruction overlay -->
 <div class="instruction" id="gallery-instruction">
   <svg viewBox="0 0 144 141" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -654,12 +635,19 @@
   <span id="instruction-text">Drag me!</span>
 </div>
 
-
-
-
-
-
-
+        <!-- Glassy Button Container for the single button
+        <div class="work-glassy-button-container">
+          <div class="glassy-button-wrap">
+            <div class="glassy-button-shadow"></div>
+            <button
+              class="glassy-button"
+              type="button"
+              onclick="window.location.href='https://reasonably.cc/resume'">
+              <span>View Resume</span>
+            </button>
+          </div>
+        </div>
+ -->
 
 <!-- Vignette overlays (global, always rendered) -->
 <div class="page-vignette-container">
@@ -688,5 +676,3 @@
 <script src="main.js"></script>
 
 <!-- Main JS file (Remove this if using CodePen/JSFiddle JS panel) -->
-</body>
-</html>
