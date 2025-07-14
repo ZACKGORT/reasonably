@@ -3,7 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <title>A Reasonable Resume</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
       rel="stylesheet"
@@ -28,10 +31,20 @@
         --bg: #FFFFFF;
       }
 
-      /* Prevent horizontal shifting by hiding any horizontal overflow */
-      html,
-      body {
-        overflow-x: hidden;
+      /* Enable custom scrollbar with a black scroll indicator */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #000000;
+        border-radius: 4px;
+      }
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: #000000 #f1f1f1;
       }
 
       /* Reset */
@@ -59,7 +72,7 @@
       }
 
       /* Updated Introduction Section
-         Added scroll-margin-top so the h1 won't stick to the top */
+         Added extra scroll-margin-top so the h1 is not flush with the top */
       .introduction {
         max-width: 900px;
         width: 100%;
@@ -257,7 +270,7 @@
 
       .service-item h3 {
         margin: 0 0 10px;
-        font-size: 0.8em;
+        font-size: .8em;
       }
 
       .service-item p {
@@ -527,6 +540,77 @@
             -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
             -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
             -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
+
+          .control__track {
+            display: grid;
+            place-items: center;
+            grid-template-columns: repeat(4, 1fr);
+            width: 100%;
+            height: 100%;
+            position: relative;
+          }
+
+          .premium::before {
+            content: 'Preference';
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            translate: -50% -80%;
+            color: var(--primary);
+            font-size: 0.75rem;
+            z-index: 2;
+          }
+
+          label {
+            display: inline-block;
+            height: 100%;
+            width: 100%;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--primary);
+            z-index: 2;
+          }
+
+          .control__track > label {
+            color: var(--secondary);
+          }
+
+          .premium {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            position: relative;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid transparent;
+            container-type: size;
+          }
+
+          .premium,
+          .control__track > label:nth-of-type(1) {
+            grid-column: span 2;
+          }
+
+          label span {
+            display: grid;
+            place-items: center;
+            height: 100%;
+            width: 100%;
+            transition: scale calc(var(--duration) * 1s) var(--ease);
+          }
+
+          .premium label:nth-of-type(1) span {
+            scale: 0.75;
+            transform-origin: 150% 150%;
+            border-radius: 100px;
+          }
+          .premium label:nth-of-type(2) span {
+            scale: 0.75;
+            transform-origin: -65% 150%;
+            border-radius: 100px;
+          }
+        }
       }
 
       @layer base {
@@ -538,15 +622,19 @@
           --font-width-min: 375;
           --font-width-max: 1500;
         }
+
         html {
           color-scheme: light dark;
         }
+
         [data-theme='light'] {
           color-scheme: light only;
         }
+
         [data-theme='dark'] {
           color-scheme: dark only;
         }
+
         :where(.fluid) {
           --fluid-min: calc(
             var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
@@ -559,18 +647,19 @@
           );
           --fluid-type: clamp(
             (var(--fluid-min) / 16) * 1rem,
-            ((var(--fluid-min) / 16) * 1rem) -
-              (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+            ((var(--fluid-min) / 16) * 1rem) - (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
               (var(--fluid-preferred) * var(--variable-unit, 100vi)),
             (var(--fluid-max) / 16) * 1rem
           );
           font-size: var(--fluid-type);
         }
+
         *,
         *:after,
         *:before {
           box-sizing: border-box;
         }
+
         body {
           display: grid;
           place-items: center;
@@ -578,6 +667,7 @@
           font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
             Helvetica, Arial, sans-serif, system-ui;
         }
+
         /* Utilities */
         .sr-only {
           position: absolute;
@@ -664,15 +754,6 @@
         background: inherit;
       }
 
-      /* 1) Hide scroll bars globally */
-      ::-webkit-scrollbar {
-        display: none;
-      }
-      html {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-
       /* ------ Gooey Cursor CSS ------ */
       /* The cursor element that uses the goo filter */
       #cursor {
@@ -746,13 +827,28 @@
   <body>
     <!-- Removed the WebGL canvas and associated shader scripts to eliminate the gradient background -->
     <!-- <canvas></canvas> -->
-    <!-- (Shader scripts removed) -->
+    <!-- Vertex Shader -->
+    <!-- <script id="vs" type="x-shader/x-vertex">
+      ... (removed for gradient background removal) ...
+    </script>
+    -->
+    <!-- Fragment Shader -->
+    <!-- <script id="fs" type="x-shader/x-fragment">
+      ... (removed for gradient background removal) ...
+    </script>
+    -->
+    <!-- WebGL Setup Script for Shader Background -->
+    <!-- <script>
+      ... (removed for gradient background removal) ...
+    </script>
+    -->
 
     <!-- Resume Content Begins Here -->
     <!-- Navigation Links -->
     <nav class="nav-links">
       <a href="#section-1">Introduction</a>
       <a href="#section-2">Work</a>
+
       <a href="#section-11">Testimonials</a>
       <a href="#section-12">Contact</a>
     </nav>
@@ -765,13 +861,22 @@
       <p>
         <strong>Zachary Gort</strong><br />
         "Web Designer"<br />
-        <a href="https://reasonably.cc" target="_blank" rel="noopener">reasonably.cc</a><br />
+        <a href="https://reasonably.cc" target="_blank" rel="noopener">
+          reasonably.cc</a><br />
         <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
-        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">linkedin.com/in/zackgort</a>
+        <a
+          href="https://linkedin.com/in/zackgort"
+          target="_blank"
+          rel="noopener"
+        >
+          linkedin.com/in/zackgort
+        </a>
       </p>
-      <!-- Glass Button Container -->
+      <!-- Glass Button Container: use <button> instead of href="javascript:" -->
       <div class="glass-buttons">
-        <button id="print-btn" class="glass-button" type="button">Save as PDF</button>
+        <button id="print-btn" class="glass-button" type="button">
+          Save as PDF
+        </button>
       </div>
     </div>
 
@@ -788,19 +893,22 @@
         <div class="service-item">
           <h3>Experience Optimization</h3>
           <p>
-            Managed corporate website with a focus on developing stratgic content and product roadmap.
+            Managed corporate website with a focus on developing stratgic
+            content and product roadmap.
           </p>
         </div>
         <div class="service-item">
           <h3>Innovative Solutions</h3>
           <p>
-            Introduced forward-thinking practices to transition third-party integrations and refine live event management and product demos.
+            Introduced forward-thinking practices to transition third-party
+            integrations and refine live event management and product demos.
           </p>
         </div>
         <div class="service-item">
           <h3>Operational Excellence</h3>
           <p>
-            Facilitated seamless collaboration across Marketing, Sales, and Product teams by centralizing campaign management.
+            Facilitated seamless collaboration across Marketing, Sales, and
+            Product teams by centralizing campaign management.
           </p>
         </div>
         <div class="service-item">
@@ -824,9 +932,405 @@
       </div>
     </div>
 
-    <!-- (Sections 3 through 10 omitted for brevity) -->
+    <!-- Section 3: Publicis Sapient -->
+    <div class="layout-container" id="section-3">
+      <div class="layout-header">
+        <h1 class="layout-title">Publicis Sapient</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">04/2022 - 03/2023</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Led the BNY Mellon project, serving as interim Product Owner and primary client liaison.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Delivered data-driven improvements to the design system, driving measurable UX outcomes.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Coordinated multi-track efforts across Agile teams, securing contract extensions through impactful design strategy and prototype development.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Utilized robust UX methodologies and design principles to enhance digital products.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Fostered strong communication and teamwork to drive innovative design solutions.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            BNY Mellon - Pershing X had evolved from a comprehensive, but cluttered array of applications to a centralized and interconnected ecosystem using a modular canonical design system.  
+          </p>
+        </div>
+      </div>
+    </div>
 
-    <!-- Section 11: TESTIMONIALS -->
+    <!-- Section 4: Code &amp; Theory -->
+    <div class="layout-container" id="section-4">
+      <div class="layout-header">
+        <h1 class="layout-title">Code &amp; Theory</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior Interaction Designer</div>
+        <div class="shortcut-info">08/2021 - 04/2022</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Lead UX & interactive designer partnering with strategists, developers, and as client POC, charged with producing an optimized B2B strategy for TikTok For Business.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Conducted workshops and internal knowledge-sharing sessions on Information Architecture {for Contentful}, Modular Design Systems, and designing within a headless CMS.  
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            As per some internal resourcing hurdles, I adopted the role of strategist, responsible for competitve landscape audits, market research, and feature-development oversight.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Enhanced design frameworks through strategic insights and iterative methodologies.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Encouraged cross-team collaboration and creative problem-solving.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            There was a fine balance we needed to maintain between brand experiences towards supporting B2B engagement. Additionally, there was internal and client enlightenment in migrating into a headless CMS.   
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Elva Design Group -->
+    <div class="layout-container" id="section-5">
+      <div class="layout-header">
+        <h1 class="layout-title">Elva Design Group</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">04/2021 - 08/2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Owned UX throughout every phase of the build {from discovery to research, to high-fidelity prototyping, to a complete modular design system}.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Pioneered a modular component-basee framework optimized for on-the-go mobile e-commerce with an future-ready navigation and taxonomy schema.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Delivered on design deliverables within an aggressive 12-week contract. Shipped it successfully.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Exhibited strategic thinking and technical execution in design, strategy, and hand-off.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Collaborated efficiently with cross-functional teams and agency leadership to meet project objectives.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            I enjoyed the autonomy [here] to push creative limits. The agency had a formula, but when the formula didn't fit the client's needs, out of the box thinking brought them back into the fold. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Section 6: HUGE Inc. -->
+    <div class="layout-container" id="section-6">
+      <div class="layout-header">
+        <h1 class="layout-title">HUGE Inc.</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">03.2021 - 04.2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Contract opportunity with Huge responsible for defining the end-to-end user experience and booking flow for Sentral Lifestyle Apartments.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Consulted on Brand Activation Strategy and Competitive Analysis which informed UX Strategy.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Responsible for a critical set of UX flows for a luxury/lifestyle booking client, working with limited access to resources, and delivering on time what ultimately shipped.    
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Competitive Landscape Analysis, UX Research, Information Architecture, User Flow.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            I would love to say that I collaborated closely across a large multi-disciplinary agency team, but I was a contractor with a single albeit all-encompassing task.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            A small, but critically important cog in a Huge wheel.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Section 7: PFSWeb Livearea -->
+    <div class="layout-container" id="section-7">
+      <div class="layout-header">
+        <h1 class="layout-title">PFSWeb Livearea</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Manager, UX</div>
+        <div class="shortcut-info">01/2020 - 02/2021</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            UX Manager leading full-spectrum Salesforce e-commerce builds, supporting B2B+B2C clients including: {Aquasana, Hardinge, Simpson Strong-Tie, West Marine, YETI}.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Our clients had unique challenges ranging from consumer conversion funnel optimization to post-sale re-engagement strategies, to managing deep inventories for B2B operations.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Functioned as primary UX strategy and design resource involved with every phase of the project.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Information Architecture, Salesforce Solutions Architecture, Design Systems.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Livearea was acquired by PFSweb just at the impetus of the pandemic, which introduced new challenges to ways of working both internally and client dynamics. 
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            My time at Livearea offered me unprecedented opportunity for growth. I was enabled by my position to lead. I listened to our clients and delivered on some exceptionally perplexing business objectives/challenges. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 8: Workarea (WebLinc Workarea) -->
+    <div class="layout-container" id="section-8">
+      <div class="layout-header">
+        <h1 class="layout-title">Workarea</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Senior User Experience Designer</div>
+        <div class="shortcut-info">07/2017 - 09/2018</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Focused on building upon our SaaS E-Commerce platform through direct client relationships and platform user data.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Spearheaded iterative design methodologies and data insights to expand on platform features and client business objectives.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Streamlined developer hand-offs and optimized design workflows for efficiency. Napkin sketches and a casual chat with our in-house developers were usually all that were needed.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Specialized in Information Architecture, Data Analysis, Design Systems, Research, UX Technical Writing.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Collaborated closely with diverse client teams including Century 21 Fashion, WoodCraft, Paragon Sports, Rachel Roy, Lime Crime, Worldwide Stereo.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            Hands-down the best work environment and experience I have ever enjoyed. The Workarea platform was ultimately sold and workforce dispersed. 
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 9: O3 World -->
+    <div class="layout-container" id="section-9">
+      <div class="layout-header">
+        <h1 class="layout-title">O3 World</h1>
+      </div>
+      <div class="layout-progress">
+        <div>User Experience Designer</div>
+        <div class="shortcut-info">07/2016 - 06/2017</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            Specialized in Lean UX methodologies in a true-to-form scrum-led Agile environment designing for FinTech and iOS digital products.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            Whiteboard sessions, wireframes in Balsamiq, Trello boards and sprint cycles, all towards MVP and post-launch upkeep. 
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+           Agency leadership set exceptional standards of execution through all phases of a project. 
+           While every project started on a whiteboard, the end results consistently redefined paradigms.   
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Lean UX, Agile workflow, Information Architecture, {Product} Design Systems.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Collaborated closely with in-house development team, user experience researchers, PMs, and agency leadership.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            "Trust the process" is a phrase popularized in Philadelphia, and it most certainly applies to O3 World. Their disciplined and focused environment served as the impetus of a shift in my career focus.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 10: ONE SIXTY OVER NINETY -->
+    <div class="layout-container" id="section-10">
+      <div class="layout-header">
+        <h1 class="layout-title">ONE SIXTY OVER NINETY</h1>
+      </div>
+      <div class="layout-progress">
+        <div>Interaction Designer</div>
+        <div class="shortcut-info">09.2014 - 07/2016</div>
+      </div>
+      <div class="layout-services">
+        <div class="service-item">
+          <h3>Experience Optimization</h3>
+          <p>
+            160OVER90 was the preeminent design agency in the .EDU space; providing full-service capabilities {agency creative, photo/video, and interactive} 
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Innovative Solutions</h3>
+          <p>
+            As one of just two Interactive Designers, we were responsible for the full-spectrum builds for each of our .EDU partners. 
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Operational Excellence</h3>
+          <p>
+            Our efforts included specialization in Information Architecture, Interactive & ADA-Compliant Design Systems.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Core Strengths</h3>
+          <p>
+            Information Architecture, Wireframe Prototyping, UI Design Systems, Creative Copywriting, Visual Design.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Collaborative Spirit</h3>
+          <p>
+            Client-facing creative lead working with .EDU clients and one-off projects for Comcast and The Philadelphia Eagles.
+          </p>
+        </div>
+        <div class="service-item">
+          <h3>Key Takeaway</h3>
+          <p>
+            Here, I became a specialist in Information Architecture and ADA-compliance. I successfully translated visual design and brand guidelines into usable and engaging digital experiences.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Section 7: TESTIMONIALS -->
     <div class="layout-container" id="section-11">
       <div class="layout-header">
         <h1 class="layout-title">Testimonials</h1>
@@ -835,25 +1339,34 @@
         <div>Trusted Feedback from Industry Leaders</div>
         <div class="shortcut-info">Various 2022-2023</div>
       </div>
+      <!-- Adjusted so testimonials appear per row -->
       <div class="layout-services" style="grid-template-columns: 1fr;">
         <div class="service-item">
           <h3>Christopher Bayle {ACD UX, Publicis Sapient}</h3>
           <p>
-            “Zack has a deep connection to emotions, imagination, and sensitivity—the quintessential idealist. His greatest strength is his depth of sensitivity and empathy, which allows him to give voice to human connections in a way that works with people on a profound level. Zack brings fresh perspective to things when I felt in a rut—a great person to work with.”
+            “Zack has a deep connection to emotions, imagination, and sensitivity—the quintessential idealist. His greatest strength is his depth of sensitivity and empathy, 
+            which allows him to give voice to human connections in a way that works with people on a profound level. Zack brings fresh perspective to things when I felt in a rut—a great person to work with.”
           </p>
         </div>
         <div class="service-item">
           <h3>Andrés Moros, MPS {Sr. UX Designer, Publicis Sapient}</h3>
           <p>
-            “Zack is one of the most talented, hard-working, and knowledgeable individuals I have had the pleasure of working with. He fosters communication not only between us but also with the whole team, setting them up for success. He always gives his best and more. I truly enjoyed working with him, and I feel he should be recognized for his tremendous effort and for being such a great team player."
+            “Zack is one of the most talented, hard-working, and knowledgeable individuals I have had the pleasure of working with. He fosters communication not only between us
+             but also with the whole team, setting them up for success. He always gives his best and more. I truly enjoyed working with him, and I feel he should be recognized for his 
+             tremendous effort and for being such a great team player."
           </p>
         </div>
       </div>
     </div>
 
-    <!-- Section 12: CONTACT -->
-    <div class="layout-container" id="section-12">
-      <div class="layout-header">
+
+
+
+
+
+<!-- Section 12: CONTACT -->
+<div class="layout-container" id="section-12">
+  <div class="layout-header">
         <h1 class="layout-title">Contact</h1>
       </div>
       <div class="layout-progress">
@@ -882,6 +1395,18 @@
       </div>
     </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- Scroll Spacer -->
     <div class="scroll-spacer"></div>
 
@@ -889,20 +1414,19 @@
     <div class="control">
       <div class="control__track">
         <div class="indicator"></div>
-        <!-- Back-to-Top Button with functionality:
-             "Get Started" scrolls to section‑2,
-             "Back to Top" scrolls to the top of section‑2,
-             "Take Me Back" scrolls to maxScrollPosition -->
+        <!-- Back-to-Top Button with updated behavior -->
         <label for="free" id="back-to-top">Get Started</label>
         <input class="sr-only" type="radio" name="tier" id="free" checked />
         <!-- Light / Dark toggles -->
         <div class="premium">
           <div class="indicator"></div>
           <label for="solo"
-            ><span>Light</span><span class="sr-only">Light/Dark</span></label>
+            ><span>Light</span><span class="sr-only">Light/Dark</span></label
+          >
           <input class="sr-only" type="radio" name="tier" id="solo" />
           <label for="team"
-            ><span>Dark</span><span class="sr-only">Light/Dark</span></label>
+            ><span>Dark</span><span class="sr-only">Light/Dark</span></label
+          >
           <input class="sr-only" type="radio" name="tier" id="team" />
         </div>
       </div>
@@ -911,10 +1435,12 @@
     <!-- The gooey cursor element -->
     <div id="cursor"></div>
 
-    <!-- Add your audio element (ensure the sound file exists in your project) -->
-    <audio id="hoverSound" preload="auto">
-      <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg" />
-    </audio>
+
+  <!-- Add your audio element (ensure the sound file exists in your project) -->
+<audio id="hoverSound" preload="auto">
+  <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg">
+</audio>
+
 
     <!-- Resume related JavaScript -->
     <script>
@@ -993,11 +1519,7 @@
             firstContent.scrollIntoView({ behavior: 'smooth' });
           }
         } else if (btnText === "Back to Top") {
-          // Scroll to the top of section-2 instead of top of window
-          const section2 = document.getElementById('section-2');
-          if (section2) {
-            section2.scrollIntoView({ behavior: 'smooth' });
-          }
+          window.scrollTo({ top: 0, behavior: 'smooth' });
           maxScrollPosition = 0;
           backRadio.checked = true;
           controlEl.classList.add('collapsed');
