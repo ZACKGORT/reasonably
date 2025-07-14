@@ -1361,3 +1361,86 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+
+
+
+
+// This script enables nuanced swipe and tap navigation on the balance page.
+(function() {
+  const balancePage = document.getElementById("page-balance");
+  if (!balancePage) return;
+  
+  const totalItems = 26; // Update this if the number of items changes
+  let touchStartX = null;
+  let touchStartY = null;
+  const swipeThreshold = 50; // Minimum pixels to consider as a swipe
+
+  // Helper function to change the selected wheel item based on direction ('next' or 'prev')
+  function changeStep(direction) {
+    const currentRadio = balancePage.querySelector('input[type="radio"]:checked');
+    if (!currentRadio) return;
+    // Get current index from the input id (e.g., "item-5")
+    const currentIndex = parseInt(currentRadio.id.split('-')[1], 10);
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % totalItems;
+    } else if (direction === 'prev') {
+      newIndex = (currentIndex - 1 + totalItems) % totalItems;
+    }
+    const newRadio = document.getElementById(`item-${newIndex}`);
+    if (newRadio) newRadio.checked = true;
+  }
+
+  // TOUCH EVENTS: detect swipe gestures
+  balancePage.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  balancePage.addEventListener('touchend', (e) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    // Determine the dominant direction of the swipe
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+      // Horizontal swipe
+      if (deltaX > 0) {
+        // Swiped right → forward
+        changeStep('next');
+      } else {
+        // Swiped left → back
+        changeStep('prev');
+      }
+    } else if (Math.abs(deltaY) > swipeThreshold) {
+      // Vertical swipe
+      if (deltaY > 0) {
+        // Swiped down → forward
+        changeStep('next');
+      } else {
+        // Swiped up → back
+        changeStep('prev');
+      }
+    }
+    // Reset starting positions
+    touchStartX = null;
+    touchStartY = null;
+  }, { passive: true });
+
+  // CLICK EVENTS: detects tap location on the balance page
+  balancePage.addEventListener('click', (e) => {
+    const rect = balancePage.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    if (clickX < rect.width / 2) {
+      // Tapped on the left half → back
+      changeStep('prev');
+    } else {
+      // Tapped on the right half → forward
+      changeStep('next');
+    }
+  });
+})();
