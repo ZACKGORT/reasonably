@@ -1734,6 +1734,66 @@
           btn.addEventListener("click", playClickSound);
         });
       });
+
+
+
+
+      // Create the custom scrollbar element and add it to the document body
+const scrollbar = document.createElement('div');
+scrollbar.id = 'custom-scrollbar';
+document.body.appendChild(scrollbar);
+
+// Apply basic styling to the scrollbar using JavaScript
+Object.assign(scrollbar.style, {
+  position: 'fixed',
+  right: '10px',
+  top: '0',
+  width: '8px',
+  backgroundColor: 'black', // default for light mode
+  borderRadius: '4px',
+  transition: 'background-color 0.3s ease, height 0.3s ease, top 0.3s ease',
+  zIndex: 20000
+});
+
+// Function to update the scrollbar's height and position based on scroll
+function updateScrollbar() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight;
+  const winHeight = window.innerHeight;
+  
+  // Calculate the height proportional to the viewport height
+  const scrollbarHeight = Math.max((winHeight / docHeight) * winHeight, 30); // Minimum height of 30px
+  // Calculate the top offset based on scroll position
+  const topOffset = (scrollTop / (docHeight - winHeight)) * (winHeight - scrollbarHeight);
+  
+  scrollbar.style.height = `${scrollbarHeight}px`;
+  scrollbar.style.top = `${topOffset}px`;
+}
+
+window.addEventListener('scroll', updateScrollbar);
+window.addEventListener('resize', updateScrollbar);
+updateScrollbar();
+
+// Function to update the scrollbar color based on the current theme
+function updateScrollbarTheme() {
+  const theme = document.documentElement.dataset.theme || 'light';
+  if (theme === 'dark') {
+    scrollbar.style.backgroundColor = 'white';
+  } else {
+    scrollbar.style.backgroundColor = 'black';
+  }
+}
+
+// Observe changes to the data-theme attribute on the document element
+const observer = new MutationObserver(updateScrollbarTheme);
+observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+updateScrollbarTheme();
     </script>
   </body>
 </html>
+
+
+
+
+
+
