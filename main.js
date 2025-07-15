@@ -1444,3 +1444,91 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 })();
+
+
+
+(function() {
+  const balancePage = document.getElementById("page-balance");
+  if (!balancePage) return;
+  
+  const totalItems = 26;
+  let wheelTimeout;  // Variable to throttle wheel events
+
+  // Helper function to change the active item
+  function changeStep(direction) { 
+    const currentRadio = balancePage.querySelector('input[type="radio"]:checked');
+    if (!currentRadio) return;
+    const currentIndex = parseInt(currentRadio.id.split('-')[1], 10);
+    let newIndex;
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % totalItems;
+    } else if (direction === 'prev') {
+      newIndex = (currentIndex - 1 + totalItems) % totalItems;
+    }
+    const newRadio = document.getElementById(`item-${newIndex}`);
+    if (newRadio) newRadio.checked = true;
+  }
+
+  // Add wheel (scroll) event listener:
+  balancePage.addEventListener("wheel", (e) => {
+    // Prevent the default scroll behavior
+    e.preventDefault();
+    // Throttle: ignore events until the timeout resets
+    if (wheelTimeout) return;
+    if (e.deltaY > 0) {
+      changeStep('next');  // Down is forward
+    } else if (e.deltaY < 0) {
+      changeStep('prev');  // Up is backward
+    }
+    wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 300); // 300ms delay between steps
+  }, { passive: false });
+
+  // TOUCH EVENTS: detect swipe gestures on the balance page
+  let touchStartX = null;
+  let touchStartY = null;
+  const swipeThreshold = 50;
+
+  balancePage.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  balancePage.addEventListener('touchend', (e) => {
+    if (touchStartX === null || touchStartY === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaX = touchEndX - touchStartX;
+    const deltaY = touchEndY - touchStartY;
+    
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+      // Horizontal swipe detected
+      if (deltaX > 0) {
+        changeStep('next');
+      } else {
+        changeStep('prev');
+      }
+    } else if (Math.abs(deltaY) > swipeThreshold) {
+      // Vertical swipe detected
+      if (deltaY > 0) {
+        changeStep('next');
+      } else {
+        changeStep('prev');
+      }
+    }
+    touchStartX = null;
+    touchStartY = null;
+  }, { passive: true });
+
+  // CLICK EVENTS: detects tap location on the balance page
+  balancePage.addEventListener('click', (e) => {
+    const rect = balancePage.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    if (clickX < rect.width / 2) {
+      changeStep('prev');
+    } else {
+      changeStep('next');
+    }
+  });
+})();
