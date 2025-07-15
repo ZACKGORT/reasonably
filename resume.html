@@ -1772,7 +1772,7 @@ function updateScrollbar() {
   // Determine the bottom margin:
   // On mobile, set it to 20% of the viewport height; otherwise, use a fixed 20px margin.
   const isMobile = window.matchMedia("(max-width: 767px)").matches;
-  const bottomMargin = isMobile ? winHeight * 0.2 : 20;
+  const bottomMargin = isMobile ? winHeight * 0.1 : 10;
   
   // Compute available height between the header and the bottom margin
   const availableHeight = winHeight - marginTop - bottomMargin;
