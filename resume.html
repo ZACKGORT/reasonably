@@ -1747,6 +1747,7 @@ const navHeader = document.querySelector('.nav-links');
 
 // Define extra spacing values
 const extraTopSpacing = 10; // additional space below nav header
+const bottomMargin = 20;    // margin before the bottom of the page
 
 // Apply basic styling to the scrollbar using JavaScript
 Object.assign(scrollbar.style, {
@@ -1765,22 +1766,17 @@ function updateScrollbar() {
   const docHeight = document.documentElement.scrollHeight;
   const winHeight = window.innerHeight;
   
-  // Get the nav header height. If not found, default to zero.
+  // Calculate the top margin from nav header plus extra spacing
   const navHeight = navHeader ? navHeader.offsetHeight : 0;
   const marginTop = navHeight + extraTopSpacing;
   
-  // Determine the bottom margin:
-  // On mobile, set it to 20% of the viewport height; otherwise, use a fixed 20px margin.
-  const isMobile = window.matchMedia("(max-width: 767px)").matches;
-  const bottomMargin = isMobile ? winHeight * 0.1 : 10;
-  
-  // Compute available height between the header and the bottom margin
+  // Determine the available height between the header and the bottom margin
   const availableHeight = winHeight - marginTop - bottomMargin;
   
-  // Compute scrollbar height proportional to the available height.
+  // Compute scrollbar height proportionally based on available height
   const scrollbarHeight = Math.max((availableHeight / docHeight) * availableHeight, 30); // minimum height is 30px
   
-  // Calculate the top offset in the available area.
+  // Calculate the scroll fraction and compute top offset for scrollbar in available area
   const maxScroll = docHeight - winHeight;
   const scrollFraction = scrollTop / maxScroll;
   const topOffset = marginTop + scrollFraction * (availableHeight - scrollbarHeight);
