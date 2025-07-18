@@ -53,6 +53,15 @@ body {
   touch-action: pan-y;
 }
 
+
+body.bg-off {
+  background-image: none !important;
+  background-color: #fff !important;
+}
+[data-theme="dark"] body.bg-off {
+  background-color: #111 !important;
+}
+
 :root {
   --bg-image: url('https://i.gifer.com/74w1.gif');
 }
@@ -67,7 +76,11 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center center;
+  
 }
+
+
+
 
 /* Prevent dragging of images */
 img {
@@ -941,16 +954,16 @@ html {
       <!-- Background Toggle Button, Top Right -->
       <div class="nav-bg-toggle">
         <button id="bg-toggle-btn" aria-label="Toggle animated background">
-          <!-- Play Icon (default: background ON) -->
-          <svg id="bg-toggle-play" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="8,5 21,12 8,19"/>
-          </svg>
-          <!-- Pause Icon (hidden initially) -->
-          <svg id="bg-toggle-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-            <rect x="6" y="5" width="4" height="14" rx="1"/>
-            <rect x="14" y="5" width="4" height="14" rx="1"/>
-          </svg>
-        </button>
+    <!-- Pause Icon: show when background is ON -->
+    <svg id="bg-toggle-play" viewBox="0 0 24 24" fill="currentColor">
+      <rect x="6" y="5" width="4" height="14" rx="1"/>
+      <rect x="14" y="5" width="4" height="14" rx="1"/>
+    </svg>
+    <!-- Play Icon: show when background is OFF -->
+    <svg id="bg-toggle-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+      <polygon points="8,5 21,12 8,19"/>
+    </svg>
+  </button>
       </div>
     </nav>
     <div class="noise-overlay"></div>
@@ -1503,7 +1516,7 @@ html {
 
 
 
-
+<body class="bg-off">
 
 
     <!-- Scroll Spacer -->
@@ -1914,6 +1927,11 @@ function updateScrollbarTheme() {
 const observer = new MutationObserver(updateScrollbarTheme);
 observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 updateScrollbarTheme();
+
+
+
+
+
     </script>
   </body>
 </html>
