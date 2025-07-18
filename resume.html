@@ -25,7 +25,7 @@
   --glass-bg: rgba(255, 255, 255, 0.1);
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-shadow: rgba(0, 0, 0, 0.1);
-  --blur-amount: 12px;
+  --blur-amount: 6px;
   /* Gooey cursor variables */
   --cursor-size: 28px;
   --bg: #FFFFFF;
@@ -185,12 +185,7 @@ html {
   position: relative;
   z-index: 5;
   /* For smooth transition on hover */
-  transition:
-    background 1.9s cubic-bezier(0.4,0,0.2,1),
-    box-shadow 1.9s cubic-bezier(0.4,0,0.2,1),
-    backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
-    -webkit-backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
-    border-color 1.9s cubic-bezier(0.4,0,0.2,1);
+  
 }
 
 /* FROSTIER HOVER for both light and dark mode */
@@ -198,8 +193,14 @@ html {
   background: rgba(255,255,255,0.35) !important;
   border-color: rgba(255,255,255,0.3) !important;
   box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 1.5px 6px rgba(255,255,255,0.06) !important;
-  backdrop-filter: blur(40px) saturate(1.4) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
   -webkit-backdrop-filter: blur(12px) saturate(1.4) !important;
+  transition:
+    background 1.9s cubic-bezier(0.4,0,0.2,1),
+    box-shadow 1.9s cubic-bezier(0.4,0,0.2,1),
+    backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
+    -webkit-backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
+    border-color 1.9s cubic-bezier(0.4,0,0.2,1);
 }
 
 [data-theme="dark"] .layout-container:hover {
