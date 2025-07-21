@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Blank HTML Document</title>
+  <style>
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..900&family=Boldonse&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  /* Colors */
+  --color-primary: #0a0a0a;
+  --color-secondary: #161616;
+  --color-accent: #ff2c2c;
+  --color-text: #f5f5f5;
+  --color-text-muted: rgba(245, 245, 245, 0.7);
+  --color-border: rgba(255, 255, 255, 0.05);
+  --color-overlay: rgba(0, 0, 0, 0.10);
+
+  /* Typography */
+  --font-primary: "Inter", sans-serif;
+  --font-display: "Instrument Sans", sans-serif; /* Large font changed to Instrument Sans */
+  --font-serif: "EB Garamond", serif;
+  --text-xs: 0.7rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 2rem;
+  --text-3xl: 3rem;
+  --text-mega: clamp(7rem, 15vw, 12rem);
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4rem;
+  --space-12: 6rem;
+
+  /* Layout */
+  --menu-width: 250px;
+  --menu-collapsed-width: 60px;
+  --panel-padding: 5%;
+
+  /* Animations */
+  --transition-fast: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --word-stagger-delay: 0.02s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  overflow: hidden;
+  cursor: grab;
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  position: relative;
+}
+
+body:active {
+  cursor: grabbing;
+}
+
+/* Left menu styles with enhanced animations */
+.left-menu {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: var(--menu-collapsed-width);
+  background-color: #111;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--color-border);
+  transition: width var(--transition-slow);
+  overflow: hidden;
+}
+
+.left-menu.expanded {
+  width: var(--menu-width);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Push menu implementation */
+body.menu-expanded .page-container {
+  left: var(--menu-width);
+}
+
+.page-container {
+  position: fixed;
+  top: 0;
+  left: var(--menu-collapsed-width);
+  right: 0;
+  bottom: 0;
+  transition: left var(--transition-slow);
+}
+
+.left-menu-top {
+  position: absolute;
+  top: var(--space-5);
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 101;
+}
+
+.left-menu-middle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  transform: translateY(-50%);
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: var(--text-lg);
+  color: var(--color-text);
+  white-space: nowrap;
+  transform: rotate(-90deg);
+  transition: transform var(--transition-slow), opacity var(--transition-medium);
+}
+
+.left-menu.expanded .logo {
+  opacity: 0;
+  transform: rotate(-90deg) translateY(20px);
+}
+
+.menu-btn {
+  width: 24px;
+  height: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 200;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.menu-btn span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-text);
+  transition: transform var(--transition-medium),
+    opacity var(--transition-medium);
+}
+
+.left-menu.expanded .menu-btn span:nth-child(1) {
+  transform: translateY(9px) rotate(45deg);
+}
+
+.left-menu.expanded .menu-btn span:nth-child(2) {
+  opacity: 0;
+}
+
+.left-menu.expanded .menu-btn span:nth-child(3) {
+  transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Section navigation styles with enhanced animations */
+.section-nav {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-medium),
+    visibility var(--transition-medium);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: var(--menu-collapsed-width);
+  padding-right: var(--space-5);
+  background-color: #111;
+}
+
+.left-menu.expanded .section-nav {
+  opacity: 1;
+  visibility: visible;
+}
+
+.section-nav-item {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  margin: var(--space-3) 0;
+  font-size: var(--text-sm);
+  opacity: 0;
+  transition: opacity var(--transition-slow), transform var(--transition-slow),
+    color var(--transition-fast);
+  cursor: pointer;
+  transform: translateX(-20px);
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.section-nav-item.animate-in {
+  opacity: 0.7;
+  transform: translateX(0);
+  transition-timing-function: var(--ease-out-back);
+}
+
+.section-nav-item:hover {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
+.section-nav-item.active {
+  opacity: 1;
+  color: var(--color-accent);
+}
+
+.section-nav-item-number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-xs);
+  opacity: 0.6;
+  margin-right: var(--space-3);
+  min-width: 20px;
+  transform: translateX(-10px);
+  transition: transform var(--transition-medium),
+    opacity var(--transition-medium);
+}
+
+.section-nav-item.animate-in .section-nav-item-number,
+.section-nav-item:hover .section-nav-item-number {
+  transform: translateX(0);
+  opacity: 0.8;
+}
+
+/* Improved staggered animation of menu items */
+.left-menu.expanded .section-nav-item:nth-child(1) {
+  transition-delay: 0.05s;
+}
+.left-menu.expanded .section-nav-item:nth-child(2) {
+  transition-delay: 0.08s;
+}
+.left-menu.expanded .section-nav-item:nth-child(3) {
+  transition-delay: 0.11s;
+}
+.left-menu.expanded .section-nav-item:nth-child(4) {
+  transition-delay: 0.14s;
+}
+.left-menu.expanded .section-nav-item:nth-child(5) {
+  transition-delay: 0.17s;
+}
+.left-menu.expanded .section-nav-item:nth-child(6) {
+  transition-delay: 0.2s;
+}
+.left-menu.expanded .section-nav-item:nth-child(7) {
+  transition-delay: 0.23s;
+}
+.left-menu.expanded .section-nav-item:nth-child(8) {
+  transition-delay: 0.26s;
+}
+.left-menu.expanded .section-nav-item:nth-child(9) {
+  transition-delay: 0.29s;
+}
+
+/* Horizontal container */
+.horizontal-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.panels-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  display: flex;
+  will-change: transform;
+}
+
+.panels-container.transitioning {
+  transition: transform var(--transition-slow);
+}
+
+.panel {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Split panel layout */
+.panel-split {
+  display: flex;
+}
+
+.panel-left,
+.panel-right {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--panel-padding);
+}
+
+.panel-left {
+  background-color: #121212;
+  color: var(--color-text);
+}
+
+.panel-right {
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+/* Common image wrapper for parallax effect */
+.image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Full background panel layout */
+.panel-full {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-full-background {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  z-index: 1;
+  will-change: transform;
+  filter: brightness(.9);
+}
+
+.panel-full-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-overlay);
+  z-index: 2;
+  overflow: hidden;
+}
+
+/* Vignette effect: linear gradient from left bottom to top right */
+.panel-full-overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  border-radius: inherit;
+  /* Moderately dramatic linear vignette */
+  filter: blur(36px); /* Smooth the vignette edge */
+}
+
+.panel-full-content {
+  position: relative;
+  z-index: 3;
+  width: 80%;
+  max-width: 800px;
+  color: var(--color-text);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+
+/* Video panel styles */
+.panel-video {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.video-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  object-fit: cover;
+}
+
+.panel-video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+.panel-video-content {
+  position: relative;
+  z-index: 3;
+  width: 80%;
+  max-width: 800px;
+  color: var(--color-text);
+  text-align: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+
+/* Contact panel styles - Improved */
+.panel-contact {
+  position: relative;
+  background-color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-container {
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.contact-content {
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+}
+
+.contact-name {
+  font-size: clamp(6rem, 15vw, 10rem);
+  color: var(--color-text) !important;
+  margin-bottom: var(--space-12);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+}
+
+.email-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: var(--space-4) var(--space-6);
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: transform var(--transition-medium),
+    background-color var(--transition-medium);
+}
+
+.email-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+.email {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.email:hover {
+  color: var(--color-accent);
+}
+
+.copy-email {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  opacity: 0.7;
+  padding: var(--space-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: opacity var(--transition-fast),
+    background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.copy-email:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.copy-email:active {
+  transform: scale(0.95);
+}
+
+.copy-tooltip {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color-accent);
+  color: white;
+  padding: var(--space-1) var(--space-3);
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-medium),
+    visibility var(--transition-medium);
+}
+
+.copy-tooltip.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Animation effects */
+.panel-content {
+  width: 90%;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
+  overflow: visible;
+}
+
+.panel.active .panel-content,
+.panel.active .panel-full-content,
+.panel.active .panel-video-content,
+.panel.active .contact-content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel.visited .panel-content,
+.panel.visited .panel-full-content,
+.panel.visited .panel-video-content,
+.panel.visited .contact-content {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+.panel-full-background,
+.panel-fixed-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 90vw;
+  height: 90vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  object-fit: cover;
+  will-change: transform;
+  transform: none !important;
+  z-index: 1;
+}
+
+.word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.4s var(--ease-out-expo),
+    transform 0.4s var(--ease-out-expo);
+}
+
+.panel.active .word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel.visited .word {
+  opacity: 0.7;
+  transform: translateY(0);
+}
+
+/* Text elements */
+.chapter {
+  text-transform: uppercase;
+  margin-bottom: var(--space-6);
+  font-size: var(--text-sm);
+  letter-spacing: -0.03em;
+  color: var(--color-accent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  margin-bottom: var(--space-6);
+  letter-spacing: -0.03em;
+  line-height: 1.3;
+  font-weight: 700;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: var(--space-8);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+.space-text {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 5rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-6);
+  color: var(--color-accent);
+}
+
+.beyond-text {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 5rem);
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-6);
+  letter-spacing: -0.03em;
+}
+
+.mega-text {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 15vw, 5rem);
+  line-height: 0.9;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: var(--space-6);
+  letter-spacing: -0.05em;
+  text-shadow: 0 0 20px rgba(255, 44, 44, 0.3);
+}
+
+.text {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  line-height: 1.4;
+  letter-spacing: normal;
+  color: var(--color-text);
+  width: 100%;
+}
+
+.text p {
+  margin-bottom: var(--space-5);
+}
+
+.quote {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-5);
+  line-height: 1.4;
+  position: relative;
+  font-style: italic;
+  color: var(--color-text);
+  letter-spacing: -0.03em;
+  max-width: 100%;
+}
+
+.author {
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-6);
+  color: var(--color-accent);
+}
+
+.image-container {
+  width: 100%;
+  max-width: 450px;
+  height: 300px;
+  margin-bottom: var(--space-6);
+  position: relative;
+  overflow: hidden;
+  transform: translateZ(0);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+}
+
+.image-container .image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Editorial layout with improved image handling */
+.editorial-split {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  height: 100%;
+}
+
+.editorial-content {
+  padding: var(--panel-padding);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--color-primary);
+}
+
+.editorial-image {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.editorial-image .image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.editorial-image img {
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  filter: brightness(.9);
+  will-change: transform;
+}
+
+.panel-fixed {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.panel-fixed-image {
+  width: 110%;
+  height: 110%;
+  object-fit: cover;
+  filter: brightness(.9);
+  will-change: transform;
+}
+
+.panel-fixed-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  z-index: 2;
+  padding: 0;
+}
+
+/* Parallax effects */
+.parallax {
+  will-change: transform;
+  transition: opacity var(--transition-medium);
+  opacity: 0;
+}
+
+.parallax.loaded {
+  opacity: 1;
+}
+
+/* Navigation */
+.navigation {
+  position: fixed;
+  bottom: var(--space-6);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  z-index: 100;
+  color: white;
+  mix-blend-mode: difference;
+}
+
+.nav-progress {
+  width: 150px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.nav-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  transform-origin: left;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+.nav-text {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Left/Right labels */
+.direction-label {
+  text-transform: uppercase;
+  font-size: var(--text-xs);
+  letter-spacing: 1px;
+  margin-bottom: var(--space-2);
+  color: var(--color-accent);
+}
+
+/* Last section fixes */
+.conversation-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.quote-container {
+  position: relative;
+  margin-top: var(--space-4);
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-accent);
+  width: 100%;
+}
+
+.full-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  margin-bottom: var(--space-5);
+  width: 100%;
+}
+
+.conclusion-text {
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+  background-color: rgba(255, 44, 44, 0.08);
+  border-left: 3px solid var(--color-accent);
+  width: 100%;
+  border-radius: 0 4px 4px 0;
+}
+
+@media (max-width: 768px) {
+  .panel-split {
+    flex-direction: column;
+  }
+
+  .panel-left,
+  .panel-right {
+    width: 100%;
+    height: 50%;
+    padding: var(--space-6);
+  }
+
+  .panel-content,
+  .panel-full-content {
+    width: 95%;
+  }
+
+  .title {
+    font-size: var(--text-2xl);
+  }
+
+  .subtitle {
+    font-size: var(--text-xl);
+  }
+
+  .image-container {
+    height: 180px;
+  }
+
+  .editorial-split {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .mega-text {
+    font-size: clamp(4rem, 15vw, 8rem);
+  }
+
+  .contact-name {
+    font-size: clamp(4rem, 12vw, 8rem);
+    margin-bottom: var(--space-8);
+  }
+
+  .email-wrapper {
+    flex-direction: column;
+    padding: var(--space-3);
+  }
+
+  .email {
+    font-size: var(--text-xl);
+  }
+
+  .copy-email {
+    margin-top: var(--space-2);
+  }
+}
+
+
+
+
+
+            .noise-overlay {
+              position: fixed;
+              top: -50%;
+              left: -50%;
+              width: 200%;
+              height: 200%;
+              background: url("https://assets.iceable.com/img/noise-transparent.png") 0 0/300px 300px repeat;
+              animation: noise-anim 0.3s steps(5) infinite;
+              opacity: .9;
+              pointer-events: none;
+              z-index: 50;
+            }
+
+            @keyframes noise-anim {
+              0% { transform: translate(0, 0); }
+              10% { transform: translate(-2%, -3%); }
+              20% { transform: translate(-4%, 2%); }
+              30% { transform: translate(2%, -4%); }
+              40% { transform: translate(-2%, 5%); }
+              50% { transform: translate(-4%, 2%); }
+              60% { transform: translate(3%, 0); }
+              70% { transform: translate(0, 3%); }
+              80% { transform: translate(-3%, 0); }
+              90% { transform: translate(2%, 2%); }
+              100% { transform: translate(1%, 0); }
+            }
+
+
+
+.blur-overlay-edge {
+  position: fixed;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* LEFT SIDE: Extra dramatic, ultra-wide grayscale blur */
+.blur-overlay-edge--left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 111px; /* Even wider for extra drama */
+  mask: linear-gradient(
+    90deg,
+    #000 0%,
+    #000d 45%,
+    #000a 72%,
+    #0006 85%,
+    #0000 100%
+  );
+  background: none;
+  backdrop-filter: blur(48px); /* Much stronger blur */
+  box-shadow: 0 0 180px90px rgba(0,0,0,0.87);
+}
+
+/* BOTTOM: Most dramatic, strong fade and high blur */
+.blur-overlay-edge--bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 160px; /* Taller for stronger effect */
+  mask: linear-gradient(
+    0deg,
+    #000 0%,
+    #000d 40%,
+    #000a 70%,
+    #0006 85%,
+    #0000 100%
+  );
+  background: none;
+  backdrop-filter: blur(120px); /* Extreme blur at base */
+  -webkit-backdrop-filter: blur(180px);
+  box-shadow: 0 0 260px 1000px rgba(0,0,0,0.33); /* Wider, darker spread for fade */
+  z-index: 20; /* Ensure it's on top of other overlays */
+  pointer-events: none;
+}
+
+/* (Optional) Top and right: slightly lighter but still present */
+.blur-overlay-edge--top {
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 160px;
+  mask: linear-gradient(
+    180deg,
+    #0008 40%,
+    #0006 50%,
+    #0000 100%
+  );
+  background: none;
+  backdrop-filter: blur(120px);
+  box-shadow: 0 0 100px 90px rgba(0,0,0,0.10);
+}
+
+.blur-overlay-edge--right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 80px;
+  mask: linear-gradient(
+    270deg,
+    #0008 0%,
+    #0006 50%,
+    #0000 100%
+  );
+  background: none;
+  backdrop-filter: blur(45px);
+  box-shadow: 0 0 50px 20px rgba(0,0,0,0.10);
+}
+
+
+
+.frosted-glass {
+  background: rgba(255,255,255,0.68);
+  border-radius: 8px;
+  border: 1.5px solid rgba(255,255,255,0.13);
+  box-shadow: 0 8px 48px 0 rgba(0,0,0,0.16);
+  backdrop-filter: blur(24px) saturate(.1);
+  -webkit-backdrop-filter: blur(24px) saturate(.1);
+  padding: 2vw 2vw;
+  margin: 5vw auto;
+  max-width: 560px;
+  width: 92vw;
+  color: var(--color-text, #fff);
+  position: relative;
+  z-index: 101;
+  line-height: 1.25; /* tighter base line height */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+}
+
+.frosted-glass .title,
+.frosted-glass .space-text,
+.frosted-glass .mega-text,
+.frosted-glass .beyond-text {
+  font-size: 2rem !important;
+  line-height: 1.13 !important; /* tighter heading */
+  margin-bottom: 0.7em !important; /* reduce space below */
+  color: #000 !important;  
+}
+
+.frosted-glass .subtitle {
+  font-size: 1.6rem !important;
+  line-height: 1.12 !important;
+  margin-bottom: 0.5em !important;
+  color: #000 !important;  
+}
+
+.frosted-glass .chapter {
+  font-size: 0.82rem !important;
+  margin-bottom: 0.3em !important;
+  color: #000;  
+}
+
+.frosted-glass .text,
+.frosted-glass p,
+.frosted-glass .quote,
+.frosted-glass .author {
+  font-size: 0.91rem !important;
+  line-height: 1.22 !important; /* tighter line spacing */
+  margin-bottom: 0.65em !important; /* less bottom margin */
+  color: #000 !important;
+}
+
+.frosted-glass p:last-child,
+.frosted-glass .text:last-child,
+.frosted-glass .quote:last-child,
+.frosted-glass .author:last-child {
+  margin-bottom: 0 !important; /* avoid extra spacing at end */
+}
+
+
+
+
+@media (max-width: 768px) {
+  .left-menu {
+    width: 70px !important;        /* Keep enough width for menu-btn */
+    min-width: 0 !important;
+    max-width: 70px !important;
+    overflow: visible !important;
+    transition: none;
+  }
+  .left-menu-middle,
+  .section-nav {
+    display: none !important;      /* Hide everything except menu button */
+  }
+  /* Optionally hide logo if not inside .menu-btn */
+  .logo {
+    display: none !important;
+  }
+  .page-container {
+    left: 70px !important;         /* Match left-menu width */
+  }
+  /* Navigation bar stays centered and full width */
+  .navigation {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--space-6);
+    width: 100vw;
+    justify-content: center;
+    z-index: 100;
+    transform: none;
+  }
+}
+  </style>
+</head>
+<body>
+<div class="blur-overlay-edge blur-overlay-edge--top"></div>
+<div class="blur-overlay-edge blur-overlay-edge--bottom"></div>
+<div class="blur-overlay-edge blur-overlay-edge--left"></div>
+<div class="blur-overlay-edge blur-overlay-edge--right"></div>
+
+
+    <div class="noise-overlay"></div>
+    
+<!-- Left Menu -->
+<div class="left-menu">
+  <div class="left-menu-top">
+    <button class="menu-btn" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <div class="left-menu-middle">
+    <div class="logo">FRANKLY</div>
+  </div>
+  <div class="section-nav"></div>
+</div>
+<div class="page-container">
+  <div class="horizontal-container">
+    <div class="panels-container">
+      <!-- ========== PANELS: NO data-index ATTRIBUTES ========== -->
+
+      <!-- Introduction -->
+      <section class="panel panel-split editorial-split">
+        <div class="editorial-content">
+          <div class="panel-content">
+            <div class="chapter">Career Case Studies - Zack Gort, UX Designer</div>
+            <h1 class="title split-text">Respectfully,</h1>
+            <div class="text">
+              <p class="split-text">Don't feel offended if this isn't a true to form "case study". It isn't. I simply do not have access to the data to support my UX contributions. Anything I put up would be a half-truth at best.</p>
+              But what I can share, truthfully and with genuine transparency, are my contributions to the team effort, my immersion into the company culture, and vignettes of final deliverables shipped to our clients.
+            </div>
+          </div>
+        </div>
+        <div class="editorial-image">
+          <div class="image-wrapper">
+            <img src="https://i.ibb.co/NZ0y6Hn/2272303929273225747-5144774570.jpg" alt="Space perspective" class="parallax" data-speed="0.3">
+          </div>
+        </div>
+      </section>
+
+            <!-- Chapter 1 -->
+      <section class="panel panel-fixed" data-index="1">
+        <div class="image-wrapper">
+          <img src="https://cdn.cosmos.so/47895928-9611-45a3-b94d-0d8ef8ac02dc.jpeg" alt="Galaxy view" class="panel-fixed-image parallax" data-speed="0.25">
+        </div>
+        <div class="panel-fixed-content">
+          <div class="space-text">BNY MELON</div>
+          <div class="chapter">Financial Product Design • Publicis Sapient</div>
+          
+        </div>
+      </section>
+
+      <!-- Chapter 1a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/mCK7D4Xb/1-Oen-HCQm-Ga10wp-Cz-R8o9-Pt-A.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+        <div class="panel-full-overlay"></div>
+        
+          <div class="panel-content-blur-edges">
+        <div class="panel-full-content">
+
+          <h2 class="title split-text">Pershing X required a total data & design overhaul towards unifying their financial product ecosystem.</h2>
+          <div class="text">
+            <p class="split-text">Through a collaborative multi-track effort, we partnered with the technology teams at Pershing X to deep dive into their product ecosystem with a focus on data architecture and branded design systems.
+
+The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+        </div>
+      </section>
+
+            <!-- Chapter 1b -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*3gnCq0a4KbY8MGJyVKyP-A.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+          <div class="panel-content-blur-edges">
+        <div class="panel-full-content">
+
+          <h2 class="title split-text">Tech stack migration, data refactorization, & design systems.</h2>
+          <div class="text">
+            <p class="split-text">Here, I led product discovery sessions, UX and Data Architecture workshops, as well as design-system integrations leveraging React.js and Tailwind.</p>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- Chapter 1c -->
+      <section class="panel panel-split">
+        <div class="panel-left">
+          <div class="panel-content">
+            <div class="direction-label">Matthew</div>
+            <div class="quote-container">
+              <div class="quote">"“Zack is one of the most talented, hard-working, and knowledgeable individuals I have had the pleasure of working with. He fosters communication not only between us
+             but also with the whole team, setting them up for success. He always gives his best and more. I truly enjoyed working with him, and I feel he should be recognized for his 
+             tremendous effort and for being such a great team player."</div>
+              <div class="author">INTERSTELLAR, 2014</div>
+            </div>
+            <div class="image-container">
+              <div class="image-wrapper">
+                <img src="https://i.ibb.co/B6vFwH6/zoom-zack.gif" alt="Space journey" class="parallax" data-speed="0.15">
+              </div>
+            </div>
+            <div class="conclusion-text">
+              <p class="split-text">Looking out there is really looking in here. The questions we ask about the stars are really questions about ourselves.</p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-right">
+          <div class="panel-content">
+            <div class="direction-label">Rick</div>
+            <div class="quote-container">
+              <div class="quote">"“Zack has a deep connection to emotions, imagination, and sensitivity—the quintessential idealist. His greatest strength is his depth of sensitivity and empathy, 
+            which allows him to give voice to human connections in a way that works with people on a profound level. Zack brings fresh perspective to things when I felt in a rut—a great person to work with.”</div>
+              <div class="author">Christopher Bayle {ACD UX, Publicis Sapient}</div>
+            </div>
+            <div class="full-quote">
+              "The universe doesn't rush, yet everything gets done. That's the paradox we're trying to understand – infinite patience paired with constant evolution."
+            </div>
+            <div class="text">
+              <p class="split-text">What we discover out there transforms everything down here. Each revelation about a distant galaxy reshapes how we see ourselves on this pale blue dot.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+            <!-- Chapter 1d -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*q-zgZhKnCs6abK8CIpE00Q.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+          <div class="panel-content-blur-edges">
+        <div class="panel-full-content">
+              <div class="frosted-glass">
+
+          <h2 class="title split-text">The work wasn't sexy. It was smart</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+            <!-- Chapter 1e -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/4R68K9d5/openingmanagedaccountpreview.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+          <div class="panel-content-blur-edges">
+        <div class="panel-full-content">
+          <div class="frosted-glass">       
+
+          <h2 class="title split-text">We needed to understand the function before the form</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+                  <!-- Chapter 1f -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*-sJ-pN8tBwwsHq1XcDSLLw.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+
+          <h2 class="title split-text">Our design system documentation was comprehensive, capable, and future-proofed</h2>
+          <div class="text">
+            <p class="split-text">A modernized design system leveraging Tailwind CSS within a REACT environment that unified the product experience.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+                        <!-- Chapter 1g -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/XkM2hn8n/bny1.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+        </div>
+      </section>
+                        <!-- Chapter 1g -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/vvMZmq94/bny2.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+        </div>
+      </section>
+                              <!-- Chapter 1g -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/xS49C07B/bny3.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+        </div>
+      </section>
+                              <!-- Chapter 1g -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/wZY2bhKF/bny4.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+        </div>
+      </section>
+      <!-- 
+https://i.ibb.co/CsDT0TQ6/huge1.webp
+https://i.ibb.co/4wCckR12/huge2.webp
+https://i.ibb.co/fdQngRq4/huge3.webp
+https://i.ibb.co/tw13G2XX/huge4.webp
+https://i.ibb.co/gZb2Zqfv/tiktok1.webp
+https://i.ibb.co/HTRJDL9w/tiktok2.webp
+https://i.ibb.co/Kc09Jpsz/tiktok3.webp
+ -->
+
+
+      <!-- TikTok Title -->
+      <section class="panel panel-fixed">
+        <div class="image-wrapper">
+          <img src="https://cdn.cosmos.so/47895928-9611-45a3-b94d-0d8ef8ac02dc.jpeg" alt="Galaxy view" class="panel-fixed-image parallax" data-speed="0.25">
+        </div>
+        <div class="panel-fixed-content">
+          <div class="space-text">TikTok</div>
+          <div class="chapter">Brand Activation {Contentful}  •  Code & Theory</div>          
+        </div>
+      </section>
+
+
+
+      <!-- TikTok a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/9qFzTQH/tiktok-proto-gif.gif" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- TikTok e -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/Kc09Jpsz/tiktok3.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 3</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- TikTok d -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/gZb2Zqfv/tiktok1.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- TikTok e -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/HTRJDL9w/tiktok2.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 2</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- TikTok b -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:786/format:webp/1*1gjrEffBioJYoEAvMWHfKQ.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">   
+          <h2 class="title split-text">Code & Theory</h2>
+          <div class="text">
+            <p class="split-text">Suffice to say, while the project ultimately was delivered successfully, I'd nay say it was a success. The design team, the tech team, the strategy team, the excecutive team; all great in their own right, but also admittedely amidst a restructuring phase ... which ultimately showed in the final product.
+
+It was a true learning experience.</p>
+          </div>
+        </div>
+        </div>
+      </section>
+
+
+      <!-- TikTok a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/Z69xjMQY/tiktok-cat.gif" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+           
+          <div class="chapter">  </div>
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+
+          </div>
+        </div>
+      </section>
+
+
+<!-- 
+
+https://i.ibb.co/spHgPH6N/1.webp
+https://i.ibb.co/ynjWYqv8/2.webp
+https://i.ibb.co/cXg5Phdc/3.webp
+https://i.ibb.co/gZ58PKyk/4.webp
+https://i.ibb.co/Y7pGqJ69/5.webp
+https://i.ibb.co/99h2bQMh/6.webp
+https://i.ibb.co/yB4RwkTf/7.webp
+https://i.ibb.co/7N2rDqrN/8.webp
+https://i.ibb.co/rft2bf0T/9.webp
+https://i.ibb.co/vx76zjgf/10.webp
+https://i.ibb.co/x8Jy9P1f/11.webp
+-->
+
+
+
+      <!-- GNC Title -->
+      <section class="panel panel-fixed">
+        <div class="image-wrapper">
+          <img src="https://cdn.cosmos.so/47895928-9611-45a3-b94d-0d8ef8ac02dc.jpeg" alt="Galaxy view" class="panel-fixed-image parallax" data-speed="0.25">
+        </div>
+        <div class="panel-fixed-content">
+          <div class="space-text">GNC</div>
+          <div class="chapter">{Shopify E-commerce}  •  Elva Design Group</div>            
+        </div>
+      </section>
+
+
+     
+      <!-- Chapter 1a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/bgmCG0qb/ZAX02330.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+        <div class="panel-full-overlay"></div>
+        
+          <div class="panel-content-blur-edges">
+        <div class="panel-full-content">
+
+          <h2 class="title split-text">"If the bar ain't bending, you're just pretending"</h2>
+          <div class="text">
+            <p class="split-text">- my neighbor from Fairmount, Philadelphia</p>
+          </div>
+        </div>
+      </section>
+
+
+      
+      <!-- GNC a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/spHgPH6N/1.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text">  </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GNC B -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/ynjWYqv8/2.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text">  </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- GNC C -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/cXg5Phdc/3.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text">  </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GNC D -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/gZ58PKyk/4.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter"> </div>
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GNC E -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/Y7pGqJ69/5.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text">  </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GNC F -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/99h2bQMh/6.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="chapter">  </div>
+          <h2 class="title split-text">  </h2>
+          <div class="text">
+            <p class="split-text">  </p>
+          </div>
+        </div>
+      </section>
+
+
+
+            <!-- GNC G -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/yB4RwkTf/7.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+            <!-- GNC G -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/7N2rDqrN/8.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+
+
+            <!-- GNC G -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/rft2bf0T/9.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+
+
+            <!-- GNC G -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/vx76zjgf/10.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+
+
+            <!-- GNC G -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/x8Jy9P1f/11.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+
+          <h2 class="title split-text"> </h2>
+          <div class="text">
+            <p class="split-text"> </p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- #Agency Life Title -->
+      <section class="panel panel-fixed">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/jkcCXSkL/IMG-20150415-134735718.jpg" alt="Galaxy view" class="panel-fixed-image parallax" data-speed="0.25">
+        </div>
+        <div class="panel-fixed-content">
+          <div class="space-text">#agencylife</div>
+          <div class="chapter">{HUGE}  •  {ONE SIXTY OVER NINETY}  •  {WorkArea}  •  {Livearea}  •  {O3 World}</div>          
+        </div>
+      </section>
+
+      <!-- #agencylife 1 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/m5yN57gn/IMG-20160526-164803987-01.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">160OVER90</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #agencylife 2 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/h1K4ngF/image-409-min.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">#allnighters</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- #agencylife 3 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/q34v0ByL/IMG-20150419-175021862.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">#weekendwarrior</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+            <!-- #agencylife 4 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/HpXh5NPN/IMG-20160407-150604368-1.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">#freelunch</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+            <!-- #agencylife example -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/VYS1xRzh/work2.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">From Basic</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+            <!-- #agencylife example -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/MrFyzRt/work3.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">To Blue-sky</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+      </section>
+
+            <!-- #agencylife example -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/rmYrSsk/wisc-mobile.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">Mobile-minded</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- #agencylife 5 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/PswtrTff/IMG-20170104-184947-650.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+            <!-- #agencylife 5 example -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*tYdDX2QlVLwXI7gm3evMLw.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">iOS. MVP. Agile.</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+            <!-- #agencylife 5 example -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/PhqGJgc/wovn-wireframes.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter"> </div>
+          <h2 class="title split-text">Sprints. Drops. Lean UX</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #agencylife 6 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/nz4HvC4/image-417-min.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">O3 World</div>
+          <h2 class="title split-text">Team vibes</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #agencylife 7 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/TDk7M7zh/1-KE8g-FA6w4wud1u-DAr-A4-Yv-Q.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">O3 World</div>
+          <h2 class="title split-text">Developer-friendly</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #agencylife 8 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/KcLtFPg3/IMG-20170310-150927-864.jpg" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">O3 World</div>
+          <h2 class="title split-text">#lockedin</h2>
+          <div class="text">
+            <p class="split-text">Please pardon my focus face. Not to be mistaken for my game face.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- #agencylife 9 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/N2yd0jJV/1-l-EJetj-Ut85-CTbb24d-BTFk-A.webp" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">O3 World</div>
+          <h2 class="title split-text">Weblinc {Workarea}</h2>
+          <div class="text">
+            <p class="split-text">A Philly-grown SaaS E-commerce platform.  I don't actually have any work to show, but shown is Gidget, our enthusiastically attentitive PM adjunct.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- #agencylife 10 -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*a9toSr99x6NtE5YC7bGnzw.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">Post Pandemic</div>
+          <h2 class="title split-text">#WFH ⇔ #RTO</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+
+
+
+      <!-- #Bootstrap Title -->
+      <section class="panel panel-fixed">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/7xd84m10/ZAX02375.jpg" alt="Galaxy view" class="panel-fixed-image parallax" data-speed="0.25">
+        </div>
+        <div class="panel-fixed-content">
+          <div class="space-text">#design</div>
+          <div class="chapter">Vignettes of my contributions to the design zeitgeist.</div>          
+        </div>
+      </section>
+
+      <!-- #Bootstrap a -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/h1K4ngF/image-409-min.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+        <div class="panel-full-overlay"></div>
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #Bootstrap b -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/TLKRCBk/image-1-Copy-Copy.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">TikTok</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+      <!-- #Bootstrap d -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/yW8hrcz/image-8.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">#boostrap</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #Bootstrap d -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://i.ibb.co/yW8hrcz/image-8.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">#boostrap</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #Bootstrap e -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:3962/format:webp/1*TutCePQB0bSCoMfMTWJb-Q.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">#boostrap</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #Bootstrap f -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*1QGGK09DGx0R4p-dJg6xiw.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">#boostrap</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- #Bootstrap g -->
+      <section class="panel panel-full">
+        <div class="image-wrapper">
+          <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*a9toSr99x6NtE5YC7bGnzw.png" alt="Cave opening" class="panel-full-background parallax" data-speed="0.2">
+        </div>
+
+        <div class="panel-full-content">
+          <div class="frosted-glass">          
+          <div class="chapter">#boostrap</div>
+          <h2 class="title split-text">example 1</h2>
+          <div class="text">
+            <p class="split-text">The work wasn't wow-worthy. The client wasn't expecting spectacle. They wanted smart, carefully considered actionable deliverables to propel them forward.</p>
+          </div>
+          </div>
+        </div>
+      </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <!-- Contact -->
+      <section class="panel panel-contact">
+        <div class="contact-container">
+          <div class="contact-content">
+            <div class="space-text contact-name">GET IN TOUCH</div>
+            <div class="email-wrapper">
+              <a href="mailto:hi@filip.fyi" class="email">zack@reasonably.cc</a>
+              <button class="copy-email" title="Copy email" aria-label="Copy email to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+              </button>
+              <span class="copy-tooltip">Copied!</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- End of panels -->
+    </div>
+  </div>
+</div>
+<div class="navigation">
+  <div class="nav-text">SCROLL</div>
+  <div class="nav-progress">
+    <div class="nav-progress-fill"></div>
+  </div>
+  <div class="nav-text">01 / 09</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const pageContainer = document.querySelector(".page-container");
+  const horizontalContainer = document.querySelector(".horizontal-container");
+  const panelsContainer = document.querySelector(".panels-container");
+  const panels = document.querySelectorAll(".panel");
+  const progressFill = document.querySelector(".nav-progress-fill");
+  const navText = document.querySelectorAll(".nav-text")[1];
+  const parallaxElements = document.querySelectorAll(".parallax");
+  const leftMenu = document.querySelector(".left-menu");
+  const menuBtn = document.querySelector(".menu-btn");
+  const sectionNav = document.querySelector(".section-nav");
+  const videoBackground = document.querySelector(".video-background");
+  const copyEmailBtn = document.querySelector(".copy-email");
+  const copyTooltip = document.querySelector(".copy-tooltip");
+
+  const SMOOTH_FACTOR = 0.065;
+  const WHEEL_SENSITIVITY = 1.0;
+
+  let targetX = 0;
+  let currentX = 0;
+  let currentProgress = 0;
+  let targetProgress = 0;
+  let panelWidth = window.innerWidth;
+  let isAnimating = false;
+  let currentPanel = 0;
+  let lastPanel = -1;
+  let menuExpanded = false;
+  let PANEL_COUNT, maxScroll;
+
+  let isDragging = false;
+  let startX = 0;
+  let startScrollX = 0;
+  let velocityX = 0;
+  let lastTouchX = 0;
+  let lastTouchTime = 0;
+
+  const lerp = (start, end, factor) => start + (end - start) * factor;
+  const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+  // 1. Find the explicit panels you want in nav
+  function getNavSections() {
+    const navSections = [];
+
+    // Introduction: first .panel with .chapter "Introduction"
+    for (let i = 0; i < panels.length; i++) {
+      const chapter = panels[i].querySelector('.chapter');
+      if (chapter && chapter.textContent.trim().toLowerCase().includes("introduction")) {
+        navSections.push({ idx: i, text: "Introduction" });
+        break;
+      }
+    }
+
+    // BNY Mellon: first .panel-fixed with .space-text "BNY MELON"
+    for (let i = 0; i < panels.length; i++) {
+      if (
+        panels[i].classList.contains("panel-fixed") &&
+        panels[i].querySelector('.space-text') &&
+        panels[i].querySelector('.space-text').textContent.trim().toUpperCase().includes("BNY MELON")
+      ) {
+        navSections.push({ idx: i, text: "Financial Product" });
+        break;
+      }
+    }
+
+    // TikTok for Business: first .panel-fixed with a TikTok/TT4B marker
+    for (let i = 0; i < panels.length; i++) {
+      if (
+        panels[i].classList.contains("panel-fixed") &&
+        panels[i].querySelector('.space-text') &&
+        (
+          panels[i].querySelector('.space-text').textContent.trim().toUpperCase().includes("TT4B") ||
+          panels[i].querySelector('.space-text').textContent.trim().toLowerCase().includes("tiktok")
+        )
+      ) {
+        navSections.push({ idx: i, text: "Social Media" });
+        break;
+      }
+    }
+
+    // GNC: first .panel-fixed with .space-text "GNC"
+    for (let i = 0; i < panels.length; i++) {
+      if (
+        panels[i].classList.contains("panel-fixed") &&
+        panels[i].querySelector('.space-text') &&
+        panels[i].querySelector('.space-text').textContent.trim().toUpperCase().includes("GNC")
+      ) {
+        navSections.push({ idx: i, text: "E-commerce" });
+        break;
+      }
+    }
+
+    // #AgencyLife: first .panel-fixed with .space-text "#agencylife"
+    for (let i = 0; i < panels.length; i++) {
+      if (
+        panels[i].classList.contains("panel-fixed") &&
+        panels[i].querySelector('.space-text') &&
+        panels[i].querySelector('.space-text').textContent.trim().toLowerCase().includes("#agencylife")
+      ) {
+        navSections.push({ idx: i, text: "#AgencyLife" });
+        break;
+      }
+    }
+
+
+    
+    // #Bootstrap: first .panel-fixed with .space-text "#agencylife"
+    for (let i = 0; i < panels.length; i++) {
+      if (
+        panels[i].classList.contains("panel-fixed") &&
+        panels[i].querySelector('.space-text') &&
+        panels[i].querySelector('.space-text').textContent.trim().toLowerCase().includes("#bootstrap")
+      ) {
+        navSections.push({ idx: i, text: "#Bootstrap" });
+        break;
+      }
+    }
+
+
+
+    // Contact: last panel with .panel-contact
+    for (let i = panels.length - 1; i >= 0; i--) {
+      if (panels[i].classList.contains("panel-contact")) {
+        navSections.push({ idx: i, text: "Connect" });
+        break;
+      }
+    }
+
+    return navSections;
+  }
+
+  // 2. Build the nav
+  let navSections = getNavSections();
+  function buildSectionNav() {
+    sectionNav.innerHTML = "";
+    navSections.forEach((item, i) => {
+      const navItem = document.createElement("a");
+      navItem.className = "section-nav-item";
+      navItem.dataset.index = item.idx;
+      navItem.innerHTML = `<span class="section-nav-item-number">${(i+1).toString().padStart(2,"0")}</span>
+        <span>${item.text}</span>`;
+      sectionNav.appendChild(navItem);
+    });
+  }
+  buildSectionNav();
+  let sectionNavItems = document.querySelectorAll(".section-nav-item");
+
+  // 3. Map all panel indices to their nav section
+  let panelToNavIndex = [];
+  function buildPanelToNavMap() {
+    let navIdx = 0;
+    for (let i = 0; i < panels.length; i++) {
+      if (navIdx < navSections.length - 1 && i >= navSections[navIdx + 1].idx) navIdx++;
+      panelToNavIndex[i] = navIdx;
+    }
+  }
+  buildPanelToNavMap();
+
+  // 4. Nav click handler
+  sectionNavItems.forEach((item, navIdx) => {
+    item.addEventListener("click", () => {
+      const panelIdx = parseInt(item.getAttribute("data-index"));
+      targetX = panelIdx * panelWidth;
+      sectionNavItems.forEach((navItem) => navItem.classList.remove("active"));
+      item.classList.add("active");
+      startAnimation();
+      if (window.innerWidth < 768 && menuExpanded) {
+        menuExpanded = false;
+        leftMenu.classList.remove("expanded");
+        document.body.classList.remove("menu-expanded");
+        animateMenuItems(false);
+        setTimeout(() => updateDimensions(false), 400);
+      }
+    });
+  });
+
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener("click", () => {
+      const email = document.querySelector(".email").textContent;
+      navigator.clipboard.writeText(email).then(() => {
+        copyTooltip.classList.add("active");
+        setTimeout(() => {
+          copyTooltip.classList.remove("active");
+        }, 2000);
+      });
+    });
+  }
+
+  const animateMenuItems = (show) => {
+    sectionNavItems.forEach((item, index) => {
+      if (show) {
+        setTimeout(() => {
+          item.classList.add("animate-in");
+        }, 50 + index * 30);
+      } else {
+        item.classList.remove("animate-in");
+      }
+    });
+  };
+
+  menuBtn.addEventListener("click", () => {
+    menuExpanded = !menuExpanded;
+    leftMenu.classList.toggle("expanded");
+    document.body.classList.toggle("menu-expanded");
+    if (menuExpanded) {
+      setTimeout(() => animateMenuItems(true), 150);
+    } else {
+      animateMenuItems(false);
+    }
+    setTimeout(() => updateDimensions(false), 400);
+  });
+
+  const updateParallax = () => {
+    parallaxElements.forEach((element) => {
+      if (!element) return;
+      const speed = Number.parseFloat(element.dataset.speed) || 0.2;
+      const PARALLAX_INTENSITY = 0.2;
+      const moveX = -currentX * speed * PARALLAX_INTENSITY;
+      element.style.transform = `translateX(${moveX}px)`;
+    });
+  };
+
+  function updatePanelCountVars() {
+    PANEL_COUNT = panels.length;
+    maxScroll = (PANEL_COUNT - 1) * panelWidth;
+  }
+
+  const updateDimensions = (animate = true) => {
+    panelWidth = window.innerWidth;
+    updatePanelCountVars();
+    targetX = currentPanel * panelWidth;
+    currentX = targetX;
+    panels.forEach((panel) => {
+      panel.style.width = `${panelWidth}px`;
+    });
+    if (animate) {
+      panelsContainer.classList.add("transitioning");
+      setTimeout(() => {
+        panelsContainer.classList.remove("transitioning");
+      }, 400);
+    }
+    panelsContainer.style.transform = `translateX(-${currentX}px)`;
+    updateParallax();
+    buildPanelToNavMap();
+  };
+
+  const updatePageCount = () => {
+    updatePanelCountVars();
+    const panelIdx = Math.round(currentX / panelWidth);
+    const activeNavIdx = panelToNavIndex[panelIdx] || 0;
+    const formattedIndex = (activeNavIdx + 1).toString().padStart(2, "0");
+    const totalPanels = sectionNavItems.length.toString().padStart(2, "0");
+    navText.textContent = `${formattedIndex} / ${totalPanels}`;
+    sectionNavItems.forEach((item, i) => {
+      item.classList.toggle("active", i === activeNavIdx);
+    });
+  };
+
+  const updateProgress = () => {
+    updatePanelCountVars();
+    targetProgress = currentX / maxScroll;
+    currentProgress = lerp(currentProgress, targetProgress, SMOOTH_FACTOR * 1.5);
+    progressFill.style.transform = `scaleX(${currentProgress})`;
+  };
+
+  const updateActivePanel = () => {
+    updatePanelCountVars();
+    currentPanel = Math.round(currentX / panelWidth);
+    if (currentPanel !== lastPanel) {
+      panels.forEach((panel) => {
+        panel.classList.remove("was-active");
+      });
+      if (lastPanel >= 0 && panels[lastPanel]) {
+        panels[lastPanel].classList.remove("active");
+      }
+      if (panels[currentPanel]) {
+        panels[currentPanel].classList.add("active");
+      }
+      for (let i = 0; i < panels.length; i++) {
+        if (i < currentPanel) {
+          panels[i].classList.add("visited");
+        } else {
+          panels[i].classList.remove("visited");
+        }
+      }
+      lastPanel = currentPanel;
+    }
+  };
+
+  const animate = () => {
+    currentX = lerp(currentX, targetX, SMOOTH_FACTOR);
+    panelsContainer.style.transform = `translateX(-${currentX}px)`;
+    updateProgress();
+    updatePageCount();
+    updateActivePanel();
+    updateParallax();
+    if (Math.abs(targetX - currentX) > 0.1 || isAnimating) {
+      requestAnimationFrame(animate);
+    } else {
+      isAnimating = false;
+    }
+  };
+
+  const startAnimation = () => {
+    if (!isAnimating) {
+      isAnimating = true;
+      requestAnimationFrame(animate);
+    }
+  };
+
+  const handleWheel = (e) => {
+    e.preventDefault();
+    updatePanelCountVars();
+    targetX = clamp(targetX + e.deltaY * WHEEL_SENSITIVITY, 0, maxScroll);
+    startAnimation();
+  };
+
+  const handleMouseDown = (e) => {
+    if (e.target.closest(".left-menu") || e.target.closest(".copy-email")) return;
+    isDragging = true;
+    startX = e.clientX;
+    startScrollX = currentX;
+    lastTouchX = e.clientX;
+    lastTouchTime = Date.now();
+    document.body.style.cursor = "grabbing";
+    e.preventDefault();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    updatePanelCountVars();
+    const dx = e.clientX - startX;
+    targetX = clamp(startScrollX - dx, 0, maxScroll);
+    const currentTime = Date.now();
+    const timeDelta = currentTime - lastTouchTime;
+    if (timeDelta > 0) {
+      const touchDelta = lastTouchX - e.clientX;
+      velocityX = (touchDelta / timeDelta) * 15;
+    }
+    lastTouchX = e.clientX;
+    lastTouchTime = currentTime;
+    startAnimation();
+  };
+
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    document.body.style.cursor = "grab";
+    updatePanelCountVars();
+    if (Math.abs(velocityX) > 0.5) {
+      targetX = clamp(targetX + velocityX * 8, 0, maxScroll);
+    }
+    const nearestPanel = Math.round(targetX / panelWidth);
+    targetX = nearestPanel * panelWidth;
+    startAnimation();
+  };
+
+  const handleTouchStart = (e) => {
+    if (e.target.closest(".left-menu") || e.target.closest(".copy-email")) return;
+    isDragging = true;
+    startX = e.touches[0].clientX;
+    startScrollX = currentX;
+    lastTouchX = e.touches[0].clientX;
+    lastTouchTime = Date.now();
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging) return;
+    updatePanelCountVars();
+    const dx = e.touches[0].clientX - startX;
+    targetX = clamp(startScrollX - dx, 0, maxScroll);
+    const currentTime = Date.now();
+    const timeDelta = currentTime - lastTouchTime;
+    if (timeDelta > 0) {
+      const touchDelta = lastTouchX - e.touches[0].clientX;
+      velocityX = (touchDelta / timeDelta) * 12;
+    }
+    lastTouchX = e.touches[0].clientX;
+    lastTouchTime = currentTime;
+    e.preventDefault();
+    startAnimation();
+  };
+
+  const handleTouchEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    updatePanelCountVars();
+    if (Math.abs(velocityX) > 0.5) {
+      targetX = clamp(targetX + velocityX * 6, 0, maxScroll);
+    }
+    const nearestPanel = Math.round(targetX / panelWidth);
+    targetX = nearestPanel * panelWidth;
+    startAnimation();
+  };
+
+  horizontalContainer.addEventListener("wheel", handleWheel, { passive: false });
+  horizontalContainer.addEventListener("mousedown", handleMouseDown);
+  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("mouseup", handleMouseUp);
+  horizontalContainer.addEventListener("touchstart", handleTouchStart, { passive: true });
+  horizontalContainer.addEventListener("touchmove", handleTouchMove, { passive: false });
+  horizontalContainer.addEventListener("touchend", handleTouchEnd, { passive: true });
+  window.addEventListener("resize", () => { 
+    updateDimensions();
+    buildPanelToNavMap();
+  });
+
+  parallaxElements.forEach((img) => {
+    if (img.tagName === "IMG") {
+      if (img.complete) {
+        img.classList.add("loaded");
+      } else {
+        img.addEventListener("load", () => { img.classList.add("loaded"); });
+      }
+    }
+  });
+
+  if (videoBackground) {
+    videoBackground.playbackRate = 0.6;
+  }
+
+  updatePanelCountVars();
+  updateDimensions();
+  updateActivePanel();
+  updatePageCount();
+  startAnimation();
+
+  setTimeout(() => {
+    panels[0].classList.add("active");
+    if (sectionNavItems.length) sectionNavItems[0].classList.add("active");
+  }, 100);
+
+  setTimeout(() => {
+    updateParallax();
+  }, 200);
+});
+
+
+
+
+
+
+
+
+
+(function(){
+  // Configurable
+  const layers = 5;
+  const blurMax = 40;
+  const maskStop = 25;
+
+  document.documentElement.style.setProperty('--layers', layers);
+  document.documentElement.style.setProperty('--blur-max', blurMax);
+  document.documentElement.style.setProperty('--mask-stop', maskStop);
+
+  const blur = document.querySelector('.blur-overlay');
+  blur.innerHTML = Array.from({length: layers}, (_, i) =>
+    `<div class="blur-overlay-layer" style="--i:${i+1};"></div>`
+  ).join('');
+})();
+
+
+</script>
+</body>
+</html>
