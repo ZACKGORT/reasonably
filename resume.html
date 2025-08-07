@@ -1,968 +1,1025 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Zack Gort applying to Google</title>
-    <meta
-      name="viewport"
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
- @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
-
-:root {
-  --spacing-base: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --color-text: #ffffff;
-  --color-text-dim: 0.6;
-  --transition-medium: 0.3s ease;
-  --font-size-base: 12px;
-  --glass-bg: rgba(255, 255, 255, 0.1);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --glass-shadow: rgba(0, 0, 0, 0.1);
-  --blur-amount: 6px;
-  /* Gooey cursor variables */
-  --cursor-size: 28px;
-  --bg: #FFFFFF;
-}
-
-html,
-body {
-  overflow-x: hidden;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #ffffff;
-  color: #000000;
-  margin: 0;
-  padding: 10px;
-  position: relative;
-  touch-action: pan-y;
-}
-
-
-body.bg-off {
-  background-image: none !important;
-  background-color: #fff !important;
-}
-[data-theme="dark"] body.bg-off {
-  background-color: #111 !important;
-}
-
-
-
-body {
-  background-image: var(--bg-image);
-  background-size: calc(55em);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center center;
-  
-}
-
-
-
-
-
-
-
-/* Prevent dragging of images */
-img {
-  -webkit-user-drag: none;
-}
-
-.introduction {
-  max-width: 900px;
-  width: 100%;
-  margin: 100px auto 0;
-  padding: 20px;
-  text-align: left;
-  background-color: transparent;
-  position: relative;
-  z-index: 5;
-}
-
-.introduction h1 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.introduction p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.scroll-spacer {
-  height: 150px;
-  width: 100%;
-  display: block;
-}
-
-.nav-links {
-  padding: var(--spacing-base);
-  display: flex;
-  justify-content: center;
-  gap: var(--spacing-md);
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(10px);
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 10001;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  will-change: transform;
-  transform: translateX(0);
-}
-
-.nav-links a {
-  position: relative;
-  cursor: pointer;
-  color: #000000;
-  text-decoration: none;
-  font-size: var(--font-size-base);
-  font-weight: 700;
-  opacity: 1;
-  transition: color var(--transition-medium);
-  flex: 0 0 auto;
-}
-
-.nav-links a::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 100%;
-  background-color: #000000;
-  z-index: -1;
-  transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.nav-links a:hover {
-  color: #ffffff;
-}
-
-.nav-links a:hover::after {
-  width: 100%;
-  background-color: #000000;
-}
-
-.nav-links a:active,
-.nav-links a.active {
-  color: #ffffff;
-}
-
-.nav-links a:active::after,
-.nav-links a.active::after {
-  width: 100%;
-  background-color: #000000;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-/* Layout Containers (Glassmorphism) */
-.layout-container {
-  scroll-margin-top: 80px;
-  width: 80%;
-  max-width: 900px;
-  margin: 4em auto 0;
-  padding: 20px;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: 10px;
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  box-shadow: 0 4px 30px var(--glass-shadow);
-  position: relative;
-  z-index: 5;
-  /* For smooth transition on hover */
-  
-}
-
-/* FROSTIER HOVER for both light and dark mode */
-.layout-container:hover {
-  background: rgba(255,255,255,0.05) !important;
-  border-color: rgba(255,255,255,0.3) !important;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.18), 0 1.5px 6px rgba(255,255,255,0.06) !important;
-  backdrop-filter: blur(12px) saturate(0) !important;
-  -webkit-backdrop-filter: blur(8px) saturate(0) !important;
-  transition:
-    background 1.9s cubic-bezier(0.4,0,0.2,1),
-    box-shadow 1.9s cubic-bezier(0.4,0,0.2,1),
-    backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
-    -webkit-backdrop-filter 1.9s cubic-bezier(0.4,0,0.2,1),
-    border-color 1.9s cubic-bezier(0.4,0,0.2,1);
-}
-
-[data-theme="dark"] .layout-container:hover {
-  background: rgba(20, 20, 30, 0.55) !important;
-  border-color: rgba(255,255,255,0.2) !important;
-  box-shadow: 0 8px 44px rgba(0,0,0,0.30), 0 1.5px 6px rgba(255,255,255,0.06) !important;
-  /* The rest is inherited from .layout-container:hover */
-}
-
-/* Glow variables remain unchanged */
-:root {
-  --glow-light-default: #FFFFFF;
-  --glow-light-hover: #FAFAFA;
-  --glow-dark-default: #fff2;
-  --glow-dark-hover: #fff6;
-}
-
-/* Default glow for light mode */
-.layout-container .glow {
-  background-image: radial-gradient(circle at 50% -20%, var(--glow-light-default), #0000000f);
-}
-/* Default glow for dark mode */
-[data-theme="dark"] .layout-container .glow {
-  background-image: radial-gradient(circle at 50% -20%, var(--glow-dark-default), #0000000f);
-}
-
-/* --- New Hover Effect for layout containers --- */
-.layout-container {
-  position: relative;
-  transition-duration: 300ms;
-  transition-property: transform, box-shadow;
-  transition-timing-function: ease-out;
-  transform: rotate3d(0, 0, 0, 0deg);
-}
-.layout-container:hover {
-  transition-duration: 150ms;
-}
-.layout-container .glow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  color: white;
-  pointer-events: none;
-}
-
-.layout-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 10px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.layout-header h1 {
-  font-size: 2.2em;
-  font-weight: bold;
-  margin: 0;
-}
-
-.layout-progress {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid var(--glass-border);
-  font-size: 0.9em;
-}
-
-.shortcut-info {
-  font-size: 1em;
-  opacity: 0.7;
-}
-
-.layout-services {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  padding: 10px 0;
-}
-
-.service-item {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  box-shadow: inset 0 0 5px var(--glass-shadow);
-}
-
-.service-item h3 {
-  margin: 0 0 10px;
-  font-size: .70em;
-  font-weight: 600;  
-  text-transform: uppercase;
-  opacity: 35%;
-}
-
-.service-item p {
-  font-size: 0.85em;
-  line-height: 1.4;
-  margin: 0;
-  opacity: 0.75;  
-}
-
-
-.service-item code {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 4px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-
-
-.tweakpane-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  transition: opacity 0.3s ease;
-  z-index: 100;
-}
-
-/* Adjust layout for smaller screens */
-@media (max-width: 960px) {
-  .nav-links {
-    position: fixed;
-    top: 0;
-    justify-content: flex-start;
-  }
-  .layout-services {
-    grid-template-columns: 1fr;
-  }
-  .layout-container {
-    width: 100%;
-    padding: 20px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 2rem;
-  }
-  table th,
-  table td {
-    padding: 12px;
-  }
-}
-
-.background-svg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-}
-
-.glass-buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  gap: var(--spacing-md);
-}
-
-.glass-button {
-  background: white;
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  color: #000;
-  font-size: var(--font-size-base);
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  backdrop-filter: blur(var(--blur-amount));
-  -webkit-backdrop-filter: blur(var(--blur-amount));
-  transition: background var(--transition-medium);
-}
-
-.glass-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.glass-buttons a.glass-button {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.glassy-button-container {
-  display: none;
-}
-
-
-
-
-                  /* New Multi-functional Control Styles */
-                  @import url('https://unpkg.com/normalize.css') layer(normalize);
-                  @layer normalize, base, demo, flip, debug;
-
-                  @layer debug {
-                    [data-debug='true'] input.sr-only {
-                      position: absolute;
-                      width: 20px;
-                      height: 20px;
-                      padding: 0;
-                      margin: unset;
-                      overflow: visible;
-                      clip: unset;
-                      white-space: nowrap;
-                      border-width: unset;
-                      accent-color: red;
-                      outline: none;
-                      cursor: pointer;
-                      animation: reveal calc(var(--duration) * 1s) ease-out;
-                    }
-
-                    @keyframes reveal {
-                      0% {
-                        opacity: 0;
-                      }
-                    }
-
-                    [data-debug='true'] .control__track > input {
-                      left: 25%;
-                      bottom: 200%;
-                      translate: -50% 0;
-                    }
-                    [data-debug='true'] .premium > input:nth-of-type(1) {
-                      left: 25%;
-                      bottom: calc(200% + 2px);
-                      translate: -50% 0;
-                    }
-                    [data-debug='true'] .premium > input:nth-of-type(2) {
-                      left: 75%;
-                      bottom: calc(200% + 2px);
-                      translate: -50% 0;
-                    }
-                  }
-
-                  @layer flip {
-                    :root {
-                      --shadow-color: 0deg 0% 63%;
-                      --primary: light-dark(hsl(0 0% 10%), #fff);
-                      --secondary: canvas;
-                      --inactive: light-dark(hsl(0 0% 60%), hsl(0 0% 50%));
-                      --duration: 0.22;
-                      --drop-off: 0.4;
-                      --ease: ease-out;
-                      --ease: linear(
-                        0 0%, 0.2342 12.49%, 0.4374 24.99%,
-                        0.6093 37.49%, 0.6835 43.74%,
-                        0.7499 49.99%, 0.8086 56.25%,
-                        0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,
-                        0.9648 81.25%, 0.9844 87.5%,
-                        0.9961 93.75%, 1 100%
-                      );
-                      --border: light-dark(hsl(0 0% 80%), hsl(0 0% 60%));
-                      @media (prefers-color-scheme: dark) {
-                        --shadow-color: 0deg 0% 0%;
-                      }
-                    }
-                    [data-theme='dark'] {
-                      --shadow-color: 0deg 0% 0%;
-                    }
-                    [data-theme='light'] {
-                      --shadow-color: 0deg 0% 63%;
-                    }
-                    .premium:has(:checked)::before {
-                      translate: -50% -250%;
-                      scale: 0.85;
-                    }
-                    .premium:has(:checked) label span {
-                      scale: 1;
-                    }
-                    .premium:has(:checked) .indicator {
-                      background: var(--secondary);
-                      clip-path: inset(0 0 0 0 round 100px);
-                    }
-                    .premium:has(:checked) label {
-                      color: var(--inactive);
-                      opacity: 0.75;
-                    }
-                    .premium:has(:nth-of-type(1):checked) label:nth-of-type(1),
-                    .premium:has(:nth-of-type(2):checked) label:nth-of-type(2) {
-                      color: var(--primary);
-                      opacity: 1;
-                    }
-                    .premium:has(:nth-of-type(1):checked) .indicator {
-                      translate: -100% 0;
-                    }
-                    .premium:has(:nth-of-type(2):checked) .indicator {
-                      translate: 0 0;
-                    }
-
-                    .control label {
-                      transition-property: color, opacity;
-                      transition-duration: calc(var(--duration) * 1s);
-                      transition-timing-function: var(--ease);
-                    }
-
-                    .control__track:not(:has(> :checked)) > label {
-                      color: var(--primary);
-                      opacity: var(--drop-off);
-                    }
-                    .control__track:not(:has(> :checked)) > .indicator {
-                      translate: 100% 0;
-                    }
-                    .indicator {
-                      transition: translate calc(var(--duration) * 1s) var(--ease);
-                    }
-                    .premium .indicator {
-                      transition-property: translate, clip-path, background;
-                      transition-duration: calc(var(--duration) * 1s);
-                      transition-timing-function: var(--ease);
-                      clip-path: inset(
-                        73cqh calc(50% + 1px) calc(27cqh - 2px) calc(50% - 3px) round 100px
-                      );
-                    }
-                    .premium::before {
-                      transition-property: scale, translate;
-                      transition-duration: calc(var(--duration) * 1s);
-                      transition-timing-function: var(--ease);
-                    }
-                    .control__track:has(> :checked) .premium .indicator {
-                      background: var(--inactive);
-                    }
-                    .control__track:has(> :checked) .premium label {
-                      color: var(--inactive);
-                    }
-                  }
-
-                  @layer demo {
-                    .indicator {
-                      position: absolute;
-                      width: 50%;
-                      left: 0;
-                      top: 0;
-                      bottom: 0;
-                      background: var(--primary);
-                      border-radius: 100px;
-                    }
-
-                    .premium .indicator {
-                      background: var(--primary);
-                      left: 50%;
-                      top: 0;
-                      translate: -50% 0;
-                    }
-
-                    .control {
-                      scale: 1.2;
-                      letter-spacing: 0.5px;
-                      position: relative;
-                      width: 260px;
-                      height: 38px;
-                      aspect-ratio: 300 / 38;
-                      background: var(--secondary);
-                      border-radius: 100px;
-                      border: 1px solid var(--border);
-                      padding: 2px;
-                      backdrop-filter: blur(0px);
-                      background: rgba(255,255,255,0.6);  
-                      box-shadow: -0.1px 1px 1px hsl(var(--shadow-color) / 0.22),
-                        -0.2px 3.2px 3.1px -0.4px hsl(var(--shadow-color) / 0.26),
-                        -0.3px 5.7px 5.5px -0.8px hsl(var(--shadow-color) / 0.24),
-                        -0.5px 9.3px 8.9px -1.2px hsl(var(--shadow-color) / 0.22),
-                        -0.8px 14.8px 14.2px -1.6px hsl(var(--shadow-color) / 0.19),
-                        -1.3px 23.1px 22.2px -2px hsl(var(--shadow-color) / 0.17),
-                        -2px 35px 33.7px -2.4px hsl(var(--shadow-color) / 0.14),
-                        -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
-                        -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
-                        -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
-
-                      .control__track {
-                        display: grid;
-                        place-items: center;
-                        grid-template-columns: repeat(4, 1fr);
-                        width: 100%;
-                        height: 100%;
-                        position: relative;
-                      }
-
-                      .premium::before {
-                        content: 'Preference';
-                        position: absolute;
-                        left: 50%;
-                        top: 50%;
-                        translate: -50% -80%;
-                        color: var(--primary);
-                        font-size: 0.75rem;
-                        z-index: 2;
-                      }
-
-                      label {
-                        display: inline-block;
-                        height: 100%;
-                        width: 100%;
-                        display: grid;
-                        place-items: center;
-                        cursor: pointer;
-                        font-size: 0.75rem;
-                        color: var(--primary);
-                        z-index: 2;
-                      }
-
-                      .control__track > label {
-                        color: var(--secondary);
-                      }
-
-                      .premium {
-                        width: 100%;
-                        height: 100%;
-                        display: grid;
-                        position: relative;
-                        grid-template-columns: 1fr 1fr;
-                        border: 1px solid transparent;
-                        container-type: size;
-                      }
-
-                      .premium,
-                      .control__track > label:nth-of-type(1) {
-                        grid-column: span 2;
-                      }
-
-                      label span {
-                        display: grid;
-                        place-items: center;
-                        height: 100%;
-                        width: 100%;
-                        transition: scale calc(var(--duration) * 1s) var(--ease);
-                      }
-
-                      .premium label:nth-of-type(1) span {
-                        scale: 0.75;
-                        transform-origin: 150% 150%;
-                        border-radius: 100px;
-                      }
-                      .premium label:nth-of-type(2) span {
-                        scale: 0.75;
-                        transform-origin: -65% 150%;
-                        border-radius: 100px;
-                      }
-                    }
-                  }
-
-                  @layer base {
-                    :root {
-                      --font-size-min: 16;
-                      --font-size-max: 20;
-                      --font-ratio-min: 1.2;
-                      --font-ratio-max: 1.33;
-                      --font-width-min: 375;
-                      --font-width-max: 1500;
-                    }
-
-                    html {
-                      color-scheme: light dark;
-                    }
-
-                    [data-theme='light'] {
-                      color-scheme: light only;
-                    }
-
-                    [data-theme='dark'] {
-                      color-scheme: dark only;
-                    }
-
-                    :where(.fluid) {
-                      --fluid-min: calc(
-                        var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
-                      );
-                      --fluid-max: calc(
-                        var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
-                      );
-                      --fluid-preferred: calc(
-                        (var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min))
-                      );
-                      --fluid-type: clamp(
-                        (var(--fluid-min) / 16) * 1rem,
-                        ((var(--fluid-min) / 16) * 1rem) -
-                          (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
-                          (var(--fluid-preferred) * var(--variable-unit, 100vi)),
-                        (var(--fluid-max) / 16) * 1rem
-                      );
-                      font-size: var(--fluid-type);
-                    }
-
-                    *,
-                    *:after,
-                    *:before {
-                      box-sizing: border-box;
-                    }
-
-                    body {
-                      display: grid;
-                      place-items: center;
-                      min-height: 100vh;
-                      font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
-                        Helvetica, Arial, sans-serif, system-ui;
-                    }
-
-                    /* Utilities */
-                    .sr-only {
-                      position: absolute;
-                      width: 1px;
-                      height: 1px;
-                      padding: 0;
-                      margin: -1px;
-                      overflow: hidden;
-                      clip: rect(0, 0, 0, 0);
-                      white-space: nowrap;
-                      border-width: 0;
-                    }
-                  }
-
-                  /* Override multi-functional control positioning and add blur */
-                  .control {
-                    position: fixed;
-                    bottom: calc(2.6em + env(safe-area-inset-bottom));
-                    left: 52.5%;
-                    transform: translateX(-50%);
-                    z-index: 1200;
-                    backdrop-filter: blur(10px);
-                  }
-
-                  /* fade-in effect */
-                  .control {
-                    opacity: 0;
-                    transition: opacity 0.5s ease;
-                  }
-                  .control.visible {
-                    opacity: 1;
-                  }
-
-                  /* Dark-mode overrides for nav & links */
-                  [data-theme="dark"] .nav-links {
-                    background-color: rgba(0, 0, 0, 0.5);
-                  }
-                  [data-theme="dark"] .nav-links a {
-                    color: #ffffff;
-                  }
-                  [data-theme="dark"] .nav-links a:hover,
-                  [data-theme="dark"] .nav-links a:active,
-                  [data-theme="dark"] .nav-links a.active {
-                    color: #000000 !important;
-                  }
-                  [data-theme="dark"] .nav-links a:hover::after,
-                  [data-theme="dark"] .nav-links a:active::after,
-                  [data-theme="dark"] .nav-links a.active::after {
-                    background-color: #ffffff;
-                  }
-
-                  /* Ensure the “Save as PDF” button is visible in dark mode */
-                  [data-theme="dark"] .glass-button,
-                  [data-theme="dark"] .glass-buttons a.glass-button {
-                    color: #ffffff !important;
-                    background: rgba(255, 255, 255, 0.2);
-                  }
-
-                  /* All other (non-nav) links in dark mode remain white */
-                  [data-theme="dark"] body :not(.nav-links) a {
-                    color: #ffffff;
-                  }
-
-                  /* Container for layered blur effect */
-                  .blur {
-                    position: fixed;
-                    inset: 0;
-                    z-index: 1100;
-                    pointer-events: none;
-                    overflow: hidden;
-                  }
-
-                  /* Each child div becomes one blur layer */
-                  .blur > div {
-                    --y-offset: calc(var(--i) * 15px);
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    transform: translateY(var(--y-offset));
-                    filter: blur(calc(var(--i) * var(--blur-amount)));
-                    opacity: calc(1 - (var(--i) - 1) * 0.15);
-                    background: inherit;
-                  }
-
-                  /* 1) Hide scroll bars globally */
-                  ::-webkit-scrollbar {
-                    display: none;
-                  }
-                  html {
-                    scrollbar-width: none;
-                    -ms-overflow-style: none;
-                  }
-
-                  /* ------ Gooey Cursor CSS ------ */
-                  /* The cursor element that uses the goo filter */
-                  #cursor {
-                    position: fixed;
-                    top: calc(var(--cursor-size) * -0.5);
-                    left: calc(var(--cursor-size) * -0.5);
-                    pointer-events: none;
-                    touch-action: none;
-                    mix-blend-mode: difference;
-                    filter: url(#goo);
-                    z-index: 20000;
-                  }
-                  /* Each circle in the cursor tail */
-                  .cursor-circle {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: var(--cursor-size);
-                    height: var(--cursor-size);
-                    border-radius: 50%;
-                    background: var(--bg);
-                    transform-origin: center center;
-                  }
-                  /* Hide the svg element (the goo filter) */
-                  .goo {
-                    display: none;
-                  }
-
-                  /* Added background canvas style */
-                  canvas {
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: -10;
-                  }
-
-            .noise-overlay {
-              position: fixed;
-              top: -50%;
-              left: -50%;
-              width: 200%;
-              height: 200%;
-              background: url("https://assets.iceable.com/img/noise-transparent.png") 0 0/300px 300px repeat;
-              animation: noise-anim 0.3s steps(5) infinite;
-              opacity: .9;
-              pointer-events: none;
-              z-index: 50;
-            }
-
-            @keyframes noise-anim {
-              0% { transform: translate(0, 0); }
-              10% { transform: translate(-2%, -3%); }
-              20% { transform: translate(-4%, 2%); }
-              30% { transform: translate(2%, -4%); }
-              40% { transform: translate(-2%, 5%); }
-              50% { transform: translate(-4%, 2%); }
-              60% { transform: translate(3%, 0); }
-              70% { transform: translate(0, 3%); }
-              80% { transform: translate(-3%, 0); }
-              90% { transform: translate(2%, 2%); }
-              100% { transform: translate(1%, 0); }
-            }
-
-
-      [data-theme="light"] .layout-container .glow {
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Zack Gort, UX designer</title>
+  <meta name="viewport" <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
+
+    :root {
+      --spacing-base: 1rem;
+      --spacing-md: 1.5rem;
+      --spacing-lg: 2rem;
+      --color-text: #ffffff;
+      --color-text-dim: 0.6;
+      --transition-medium: 0.3s ease;
+      --font-size-base: 12px;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --glass-shadow: rgba(0, 0, 0, 0.1);
+      --blur-amount: 6px;
+      /* Gooey cursor variables */
+      --cursor-size: 28px;
+      --bg: #FFFFFF;
+    }
+
+    html,
+    body {
+      overflow-x: hidden;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      margin: 0;
+      padding: 10px;
+      position: relative;
+      touch-action: pan-y;
+    }
+
+
+    body.bg-off {
+      background-image: none !important;
+      background-color: #fff !important;
+    }
+
+    [data-theme="dark"] body.bg-off {
+      background-color: #111 !important;
+    }
+
+
+
+    body {
+      background-image: var(--bg-image);
+      background-size: calc(55em);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: center center;
+
+    }
+
+
+
+
+
+
+
+    /* Prevent dragging of images */
+    img {
+      -webkit-user-drag: none;
+    }
+
+    .introduction {
+      max-width: 900px;
+      width: 100%;
+      margin: 100px auto 0;
+      padding: 20px;
+      text-align: left;
+      background-color: transparent;
+      position: relative;
+      z-index: 5;
+    }
+
+    .introduction h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    .introduction p {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .scroll-spacer {
+      height: 150px;
+      width: 100%;
+      display: block;
+    }
+
+    .nav-links {
+      padding: var(--spacing-base);
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-md);
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(10px);
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10001;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      will-change: transform;
+      transform: translateX(0);
+    }
+
+    .nav-links a {
+      position: relative;
+      cursor: pointer;
+      color: #000000;
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      opacity: 1;
+      transition: color var(--transition-medium);
+      flex: 0 0 auto;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background-color: #000000;
+      z-index: -1;
+      transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+      background-color: #000000;
+    }
+
+    .nav-links a:active,
+    .nav-links a.active {
+      color: #ffffff;
+    }
+
+    .nav-links a:active::after,
+    .nav-links a.active::after {
+      width: 100%;
+      background-color: #000000;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Layout Containers (Glassmorphism) */
+    .layout-container {
+      scroll-margin-top: 80px;
+      width: 80%;
+      max-width: 900px;
+      margin: 4em auto 0;
+      padding: 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      backdrop-filter: blur(var(--blur-amount));
+      -webkit-backdrop-filter: blur(var(--blur-amount));
+      box-shadow: 0 4px 30px var(--glass-shadow);
+      position: relative;
+      z-index: 5;
+      /* For smooth transition on hover */
+
+    }
+
+    /* FROSTIER HOVER for both light and dark mode */
+    .layout-container:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.18), 0 1.5px 6px rgba(255, 255, 255, 0.06) !important;
+      backdrop-filter: blur(12px) saturate(0) !important;
+      -webkit-backdrop-filter: blur(8px) saturate(0) !important;
+      transition:
+        background 1.9s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 1.9s cubic-bezier(0.4, 0, 0.2, 1),
+        backdrop-filter 1.9s cubic-bezier(0.4, 0, 0.2, 1),
+        -webkit-backdrop-filter 1.9s cubic-bezier(0.4, 0, 0.2, 1),
+        border-color 1.9s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] .layout-container:hover {
+      background: rgba(20, 20, 30, 0.55) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      box-shadow: 0 8px 44px rgba(0, 0, 0, 0.30), 0 1.5px 6px rgba(255, 255, 255, 0.06) !important;
+      /* The rest is inherited from .layout-container:hover */
+    }
+
+    /* Glow variables remain unchanged */
+    :root {
+      --glow-light-default: #FFFFFF;
+      --glow-light-hover: #FAFAFA;
+      --glow-dark-default: #fff2;
+      --glow-dark-hover: #fff6;
+    }
+
+    /* Default glow for light mode */
+    .layout-container .glow {
+      background-image: radial-gradient(circle at 50% -20%, var(--glow-light-default), #0000000f);
+    }
+
+    /* Default glow for dark mode */
+    [data-theme="dark"] .layout-container .glow {
+      background-image: radial-gradient(circle at 50% -20%, var(--glow-dark-default), #0000000f);
+    }
+
+    /* --- New Hover Effect for layout containers --- */
+    .layout-container {
+      position: relative;
+      transition-duration: 300ms;
+      transition-property: transform, box-shadow;
+      transition-timing-function: ease-out;
+      transform: rotate3d(0, 0, 0, 0deg);
+    }
+
+    .layout-container:hover {
+      transition-duration: 150ms;
+    }
+
+    .layout-container .glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      color: white;
+      pointer-events: none;
+    }
+
+    .layout-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px;
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .layout-header h1 {
+      font-size: 2.2em;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .layout-progress {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid var(--glass-border);
+      font-size: 0.9em;
+    }
+
+    .shortcut-info {
+      font-size: 1em;
+      opacity: 0.7;
+    }
+
+    .layout-services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 10px 0;
+    }
+
+    .service-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px var(--glass-shadow);
+    }
+
+    .service-item h3 {
+      margin: 0 0 10px;
+      font-size: .70em;
+      font-weight: 600;
+      text-transform: uppercase;
+      opacity: 35%;
+    }
+
+    .service-item p {
+      font-size: 0.85em;
+      line-height: 1.4;
+      margin: 0;
+      opacity: 0.75;
+    }
+
+
+    .service-item code {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+
+
+    .tweakpane-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+
+    /* Adjust layout for smaller screens */
+    @media (max-width: 960px) {
+      .nav-links {
+        position: fixed;
+        top: 0;
+        justify-content: flex-start;
+      }
+
+      .layout-services {
+        grid-template-columns: 1fr;
+      }
+
+      .layout-container {
+        width: 100%;
+        padding: 20px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 2rem;
+      }
+
+      table th,
+      table td {
+        padding: 12px;
+      }
+    }
+
+    .background-svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+
+    .glass-buttons {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: var(--spacing-md);
+    }
+
+    .glass-button {
+      background: white;
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      color: #000;
+      font-size: var(--font-size-base);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(var(--blur-amount));
+      -webkit-backdrop-filter: blur(var(--blur-amount));
+      transition: background var(--transition-medium);
+    }
+
+    .glass-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .glass-buttons a.glass-button {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glassy-button-container {
+      display: none;
+    }
+
+
+
+
+    /* New Multi-functional Control Styles */
+    @import url('https://unpkg.com/normalize.css') layer(normalize);
+    @layer normalize, base, demo, flip, debug;
+
+    @layer debug {
+      [data-debug='true'] input.sr-only {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        padding: 0;
+        margin: unset;
+        overflow: visible;
+        clip: unset;
+        white-space: nowrap;
+        border-width: unset;
+        accent-color: red;
+        outline: none;
+        cursor: pointer;
+        animation: reveal calc(var(--duration) * 1s) ease-out;
+      }
+
+      @keyframes reveal {
+        0% {
+          opacity: 0;
+        }
+      }
+
+      [data-debug='true'] .control__track>input {
+        left: 25%;
+        bottom: 200%;
+        translate: -50% 0;
+      }
+
+      [data-debug='true'] .premium>input:nth-of-type(1) {
+        left: 25%;
+        bottom: calc(200% + 2px);
+        translate: -50% 0;
+      }
+
+      [data-debug='true'] .premium>input:nth-of-type(2) {
+        left: 75%;
+        bottom: calc(200% + 2px);
+        translate: -50% 0;
+      }
+    }
+
+    @layer flip {
+      :root {
+        --shadow-color: 0deg 0% 63%;
+        --primary: light-dark(hsl(0 0% 10%), #fff);
+        --secondary: canvas;
+        --inactive: light-dark(hsl(0 0% 60%), hsl(0 0% 50%));
+        --duration: 0.22;
+        --drop-off: 0.4;
+        --ease: ease-out;
+        --ease: linear(0 0%, 0.2342 12.49%, 0.4374 24.99%,
+            0.6093 37.49%, 0.6835 43.74%,
+            0.7499 49.99%, 0.8086 56.25%,
+            0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,
+            0.9648 81.25%, 0.9844 87.5%,
+            0.9961 93.75%, 1 100%);
+        --border: light-dark(hsl(0 0% 80%), hsl(0 0% 60%));
+
+        @media (prefers-color-scheme: dark) {
+          --shadow-color: 0deg 0% 0%;
+        }
+      }
+
+      [data-theme='dark'] {
+        --shadow-color: 0deg 0% 0%;
+      }
+
+      [data-theme='light'] {
+        --shadow-color: 0deg 0% 63%;
+      }
+
+      .premium:has(:checked)::before {
+        translate: -50% -250%;
+        scale: 0.85;
+      }
+
+      .premium:has(:checked) label span {
+        scale: 1;
+      }
+
+      .premium:has(:checked) .indicator {
+        background: var(--secondary);
+        clip-path: inset(0 0 0 0 round 100px);
+      }
+
+      .premium:has(:checked) label {
+        color: var(--inactive);
+        opacity: 0.75;
+      }
+
+      .premium:has(:nth-of-type(1):checked) label:nth-of-type(1),
+      .premium:has(:nth-of-type(2):checked) label:nth-of-type(2) {
+        color: var(--primary);
+        opacity: 1;
+      }
+
+      .premium:has(:nth-of-type(1):checked) .indicator {
+        translate: -100% 0;
+      }
+
+      .premium:has(:nth-of-type(2):checked) .indicator {
+        translate: 0 0;
+      }
+
+      .control label {
+        transition-property: color, opacity;
+        transition-duration: calc(var(--duration) * 1s);
+        transition-timing-function: var(--ease);
+      }
+
+      .control__track:not(:has(> :checked))>label {
+        color: var(--primary);
+        opacity: var(--drop-off);
+      }
+
+      .control__track:not(:has(> :checked))>.indicator {
+        translate: 100% 0;
+      }
+
+      .indicator {
+        transition: translate calc(var(--duration) * 1s) var(--ease);
+      }
+
+      .premium .indicator {
+        transition-property: translate, clip-path, background;
+        transition-duration: calc(var(--duration) * 1s);
+        transition-timing-function: var(--ease);
+        clip-path: inset(73cqh calc(50% + 1px) calc(27cqh - 2px) calc(50% - 3px) round 100px);
+      }
+
+      .premium::before {
+        transition-property: scale, translate;
+        transition-duration: calc(var(--duration) * 1s);
+        transition-timing-function: var(--ease);
+      }
+
+      .control__track:has(> :checked) .premium .indicator {
+        background: var(--inactive);
+      }
+
+      .control__track:has(> :checked) .premium label {
+        color: var(--inactive);
+      }
+    }
+
+    @layer demo {
+      .indicator {
+        position: absolute;
+        width: 50%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: var(--primary);
+        border-radius: 100px;
+      }
+
+      .premium .indicator {
+        background: var(--primary);
+        left: 50%;
+        top: 0;
+        translate: -50% 0;
+      }
+
+      .control {
+        scale: 1.2;
+        letter-spacing: 0.5px;
+        position: relative;
+        width: 260px;
+        height: 38px;
+        aspect-ratio: 300 / 38;
+        background: var(--secondary);
+        border-radius: 100px;
+        border: 1px solid var(--border);
+        padding: 2px;
+        backdrop-filter: blur(0px);
+        background: rgba(255, 255, 255, 0.6);
+        box-shadow: -0.1px 1px 1px hsl(var(--shadow-color) / 0.22),
+          -0.2px 3.2px 3.1px -0.4px hsl(var(--shadow-color) / 0.26),
+          -0.3px 5.7px 5.5px -0.8px hsl(var(--shadow-color) / 0.24),
+          -0.5px 9.3px 8.9px -1.2px hsl(var(--shadow-color) / 0.22),
+          -0.8px 14.8px 14.2px -1.6px hsl(var(--shadow-color) / 0.19),
+          -1.3px 23.1px 22.2px -2px hsl(var(--shadow-color) / 0.17),
+          -2px 35px 33.7px -2.4px hsl(var(--shadow-color) / 0.14),
+          -2.9px 51.2px 49.2px -2.8px hsl(var(--shadow-color) / 0.12),
+          -4.1px 72.6px 69.8px -3.2px hsl(var(--shadow-color) / 0.2),
+          -5.6px 100px 96.2px -3.6px hsl(var(--shadow-color) / 0.07);
+
+        .control__track {
+          display: grid;
+          place-items: center;
+          grid-template-columns: repeat(4, 1fr);
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
+
+        .premium::before {
+          content: 'Preference';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          translate: -50% -80%;
+          color: var(--primary);
+          font-size: 0.75rem;
+          z-index: 2;
+        }
+
+        label {
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          font-size: 0.75rem;
+          color: var(--primary);
+          z-index: 2;
+        }
+
+        .control__track>label {
+          color: var(--secondary);
+        }
+
+        .premium {
+          width: 100%;
+          height: 100%;
+          display: grid;
+          position: relative;
+          grid-template-columns: 1fr 1fr;
+          border: 1px solid transparent;
+          container-type: size;
+        }
+
+        .premium,
+        .control__track>label:nth-of-type(1) {
+          grid-column: span 2;
+        }
+
+        label span {
+          display: grid;
+          place-items: center;
+          height: 100%;
+          width: 100%;
+          transition: scale calc(var(--duration) * 1s) var(--ease);
+        }
+
+        .premium label:nth-of-type(1) span {
+          scale: 0.75;
+          transform-origin: 150% 150%;
+          border-radius: 100px;
+        }
+
+        .premium label:nth-of-type(2) span {
+          scale: 0.75;
+          transform-origin: -65% 150%;
+          border-radius: 100px;
+        }
+      }
+    }
+
+    @layer base {
+      :root {
+        --font-size-min: 16;
+        --font-size-max: 20;
+        --font-ratio-min: 1.2;
+        --font-ratio-max: 1.33;
+        --font-width-min: 375;
+        --font-width-max: 1500;
+      }
+
+      html {
+        color-scheme: light dark;
+      }
+
+      [data-theme='light'] {
+        color-scheme: light only;
+      }
+
+      [data-theme='dark'] {
+        color-scheme: dark only;
+      }
+
+      :where(.fluid) {
+        --fluid-min: calc(var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0)));
+        --fluid-max: calc(var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0)));
+        --fluid-preferred: calc((var(--fluid-max) - var(--fluid-min)) / (var(--font-width-max) - var(--font-width-min)));
+        --fluid-type: clamp((var(--fluid-min) / 16) * 1rem,
+            ((var(--fluid-min) / 16) * 1rem) - (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) + (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+            (var(--fluid-max) / 16) * 1rem);
+        font-size: var(--fluid-type);
+      }
+
+      *,
+      *:after,
+      *:before {
+        box-sizing: border-box;
+      }
+
+      body {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        font-family: 'SF Pro Text', 'SF Pro Icons', 'AOS Icons', 'Helvetica Neue',
+          Helvetica, Arial, sans-serif, system-ui;
+      }
+
+      /* Utilities */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+      }
+    }
+
+    /* Override multi-functional control positioning and add blur */
+    .control {
+      position: fixed;
+      bottom: calc(2.6em + env(safe-area-inset-bottom));
+      left: 52.5%;
+      transform: translateX(-50%);
+      z-index: 1200;
+      backdrop-filter: blur(10px);
+    }
+
+    /* fade-in effect */
+    .control {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .control.visible {
+      opacity: 1;
+    }
+
+    /* Dark-mode overrides for nav & links */
+    [data-theme="dark"] .nav-links {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    [data-theme="dark"] .nav-links a {
+      color: #ffffff;
+    }
+
+    [data-theme="dark"] .nav-links a:hover,
+    [data-theme="dark"] .nav-links a:active,
+    [data-theme="dark"] .nav-links a.active {
+      color: #000000 !important;
+    }
+
+    [data-theme="dark"] .nav-links a:hover::after,
+    [data-theme="dark"] .nav-links a:active::after,
+    [data-theme="dark"] .nav-links a.active::after {
+      background-color: #ffffff;
+    }
+
+    /* Ensure the “Save as PDF” button is visible in dark mode */
+    [data-theme="dark"] .glass-button,
+    [data-theme="dark"] .glass-buttons a.glass-button {
+      color: #ffffff !important;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* All other (non-nav) links in dark mode remain white */
+    [data-theme="dark"] body :not(.nav-links) a {
+      color: #ffffff;
+    }
+
+    /* Container for layered blur effect */
+    .blur {
+      position: fixed;
+      inset: 0;
+      z-index: 1100;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* Each child div becomes one blur layer */
+    .blur>div {
+      --y-offset: calc(var(--i) * 15px);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: translateY(var(--y-offset));
+      filter: blur(calc(var(--i) * var(--blur-amount)));
+      opacity: calc(1 - (var(--i) - 1) * 0.15);
+      background: inherit;
+    }
+
+    /* 1) Hide scroll bars globally */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    html {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    /* ------ Gooey Cursor CSS ------ */
+    /* The cursor element that uses the goo filter */
+    #cursor {
+      position: fixed;
+      top: calc(var(--cursor-size) * -0.5);
+      left: calc(var(--cursor-size) * -0.5);
+      pointer-events: none;
+      touch-action: none;
+      mix-blend-mode: difference;
+      filter: url(#goo);
+      z-index: 20000;
+    }
+
+    /* Each circle in the cursor tail */
+    .cursor-circle {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--cursor-size);
+      height: var(--cursor-size);
+      border-radius: 50%;
+      background: var(--bg);
+      transform-origin: center center;
+    }
+
+    /* Hide the svg element (the goo filter) */
+    .goo {
+      display: none;
+    }
+
+    /* Added background canvas style */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: url("https://assets.iceable.com/img/noise-transparent.png") 0 0/300px 300px repeat;
+      animation: noise-anim 0.3s steps(5) infinite;
+      opacity: .9;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    @keyframes noise-anim {
+      0% {
+        transform: translate(0, 0);
+      }
+
+      10% {
+        transform: translate(-2%, -3%);
+      }
+
+      20% {
+        transform: translate(-4%, 2%);
+      }
+
+      30% {
+        transform: translate(2%, -4%);
+      }
+
+      40% {
+        transform: translate(-2%, 5%);
+      }
+
+      50% {
+        transform: translate(-4%, 2%);
+      }
+
+      60% {
+        transform: translate(3%, 0);
+      }
+
+      70% {
+        transform: translate(0, 3%);
+      }
+
+      80% {
+        transform: translate(-3%, 0);
+      }
+
+      90% {
+        transform: translate(2%, 2%);
+      }
+
+      100% {
+        transform: translate(1%, 0);
+      }
+    }
+
+
+    [data-theme="light"] .layout-container .glow {
+      display: none !important;
+    }
+
+
+    @media (min-width: 960px) {
+      .control {
+        bottom: calc(3.4em);
+        /* adjust 20px as needed */
+      }
+    }
+
+
+
+
+
+
+    /* TOP-RIGHT NAV ACTION BUTTON */
+    .nav-bg-toggle {
+      position: absolute;
+      top: 0;
+      right: 2rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      z-index: 20000;
+    }
+
+    .nav-bg-toggle button {
+      background: rgba(255, 255, 255, 0.7);
+      border: none;
+      border-radius: 999px;
+      padding: 0.4em 0.7em;
+      font-size: 1.35em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-left: 1.2em;
+      transition: background 0.2s;
+      outline: none;
+    }
+
+    .nav-bg-toggle button:hover,
+    .nav-bg-toggle button:focus {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .nav-bg-toggle svg {
+      display: block;
+      width: .75em;
+      height: .75em;
+    }
+
+    /* Hide background if .bg-off is toggled */
+    body.bg-off {
+      background-image: none !important;
+      background-color: #fff !important;
+    }
+
+    [data-theme="dark"] body.bg-off {
+      background-color: #111 !important;
+    }
+
+
+
+
+    @media (max-width: 960px) {
+      .nav-bg-toggle {
         display: none !important;
       }
 
-
-      @media (min-width: 960px) {
-  .control {
-    bottom: calc(3.4em); /* adjust 20px as needed */
-  }
-}
-
-
-
-
-
-
-      /* TOP-RIGHT NAV ACTION BUTTON */
-      .nav-bg-toggle {
-        position: absolute;
-        top: 0;
-        right: 2rem;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        z-index: 20000;
+      body {
+        /* Disable custom grab/drag scroll on mobile */
+        touch-action: auto !important;
+        cursor: auto !important;
+        user-select: auto !important;
       }
-      .nav-bg-toggle button {
-        background: rgba(255,255,255,0.7);
-        border: none;
-        border-radius: 999px;
-        padding: 0.4em 0.7em;
-        font-size: 1.35em;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        margin-left: 1.2em;
-        transition: background 0.2s;
-        outline: none;
-      }
-      .nav-bg-toggle button:hover,
-      .nav-bg-toggle button:focus {
-        background: rgba(0,0,0,0.08);
-      }
-      .nav-bg-toggle svg {
-        display: block;
-        width: .75em;
-        height: .75em;
-      }
-      /* Hide background if .bg-off is toggled */
-      body.bg-off {
-        background-image: none !important;
-        background-color: #fff !important;
-      }
-      [data-theme="dark"] body.bg-off {
-        background-color: #111 !important;
-      }
+    }
 
 
+    #bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -10;
+      display: none;
+    }
 
+    #bg-video {
+      filter: grayscale(100%);
+    }
+  </style>
+</head>
 
-      @media (max-width: 960px) {
-  .nav-bg-toggle {
-    display: none !important;
-  }
-  body {
-    /* Disable custom grab/drag scroll on mobile */
-    touch-action: auto !important;
-    cursor: auto !important;
-    user-select: auto !important;
-  }
-}
+<body>
 
-
-#bg-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -10;
-  display: none;
-}
-
-#bg-video {
-  filter: grayscale(100%);
-}
-    </style>
-  </head>
-  <body>
   <body class="bg-off">
     <!-- Video Background for Light/Dark Theme -->
     <video id="bg-video" autoplay loop muted playsinline preload="auto">
@@ -975,22 +1032,22 @@ html {
       <a href="#section-1">Profile</a>
       <a href="#section-2">Work</a>
       <a href="#section-11">Skills</a>
-      <a href="#section-12">Testimonials</a>      
+      <a href="#section-12">Testimonials</a>
       <a href="#section-13">Education</a>
       <a href="#section-14">Contact</a>
       <!-- Background Toggle Button, Top Right -->
       <div class="nav-bg-toggle">
         <button id="bg-toggle-btn" aria-label="Toggle animated background">
-    <!-- Pause Icon: show when background is ON -->
-    <svg id="bg-toggle-play" viewBox="0 0 24 24" fill="currentColor">
-      <rect x="6" y="5" width="4" height="14" rx="1"/>
-      <rect x="14" y="5" width="4" height="14" rx="1"/>
-    </svg>
-    <!-- Play Icon: show when background is OFF -->
-    <svg id="bg-toggle-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none">
-      <polygon points="8,5 21,12 8,19"/>
-    </svg>
-  </button>
+          <!-- Pause Icon: show when background is ON -->
+          <svg id="bg-toggle-play" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="6" y="5" width="4" height="14" rx="1" />
+            <rect x="14" y="5" width="4" height="14" rx="1" />
+          </svg>
+          <!-- Play Icon: show when background is OFF -->
+          <svg id="bg-toggle-pause" viewBox="0 0 24 24" fill="currentColor" style="display:none">
+            <polygon points="8,5 21,12 8,19" />
+          </svg>
+        </button>
       </div>
     </nav>
     <div class="noise-overlay"></div>
@@ -998,34 +1055,34 @@ html {
 
 
 
-<!-- Introduction Section with Profile Details and Specializations -->
-<div class="introduction" id="section-1">
-  <h1>Zachary Gort</h1>
-  <p>
-    <strong>Senior UX Designer</strong><br>
-    <a href="https://zackgort.com" target="_blank" rel="noopener">zackgort.com</a><br />
-    <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
-    <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">linkedin.com/in/zackgort</a>
-  </p>
-<br>
-  <p>
-    Creative designer, facilitator, and visual storyteller with over a decade of experience leading end-to-end user experience {UX} initiatives. Autodidactic expertise in digital prototyping for e-commerce and enterprise products; leveraging mainstream design stack practices with an intrinsic drive to learn, grow and adapt in the age of AI.<br>
-  </p>
-  <br>
-  <br>
-<code>
-  <a href="#section-2" class="jump-link">Phenom</a> / 
-  <a href="#section-3" class="jump-link">Publicis Sapient</a> / 
-  <a href="#section-4" class="jump-link">Code & Theory</a> / 
-  <a href="#section-5" class="jump-link">Huge Inc.</a> /     
-  <a href="#section-6" class="jump-link">LiveArea</a> / 
-  <a href="#section-7" class="jump-link">Workarea</a> / 
-  <a href="#section-8" class="jump-link">O3 World</a> / 
-  <a href="#section-9" class="jump-link">160over90</a> / 
+    <!-- Introduction Section with Profile Details and Specializations -->
+    <div class="introduction" id="section-1">
+      <h1>Zachary Gort</h1>
+      <p>
+        <strong>Senior UX Designer</strong><br>
+        <a href="https://zackgort.com" target="_blank" rel="noopener">zackgort.com</a><br />
+        <a href="mailto:zack@reasonably.cc">zack@reasonably.cc</a><br />
+        <a href="https://linkedin.com/in/zackgort" target="_blank" rel="noopener">linkedin.com/in/zackgort</a>
+      </p>
+      <br>
+      <p>
+        Creative designer, facilitator, and visual storyteller with over a decade of experience leading end-to-end user experience {UX} initiatives. Autodidactic expertise in digital prototyping for e-commerce and enterprise products; leveraging mainstream design stack practices with an intrinsic drive to learn, grow and adapt in the age of AI.<br>
+      </p>
+      <br>
+      <br>
+      <code>
+        <a href="#section-2" class="jump-link">Phenom</a> /
+        <a href="#section-3" class="jump-link">Publicis Sapient</a> /
+        <a href="#section-4" class="jump-link">Code & Theory</a> /
+        <a href="#section-5" class="jump-link">Huge Inc.</a> /
+        <a href="#section-6" class="jump-link">LiveArea</a> /
+        <a href="#section-7" class="jump-link">Workarea</a> /
+        <a href="#section-8" class="jump-link">O3 World</a> /
+        <a href="#section-9" class="jump-link">160over90</a> /
 
 
-</code>
-</div>
+      </code>
+    </div>
 
 
     <!-- Section 2: Phenom -->
@@ -1071,7 +1128,7 @@ html {
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            Incredible company with a powerful product. Positive team culture, though internal operational silos existed both locally and across global offices. 
+            Incredible company with a powerful product. Positive team culture, though internal operational silos existed both locally and across global offices.
           </p>
         </div>
       </div>
@@ -1120,7 +1177,7 @@ html {
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            BNY Mellon - Pershing X had evolved from a comprehensive, but cluttered array of applications to a centralized and interconnected ecosystem using a modular canonical design system.  
+            BNY Mellon - Pershing X had evolved from a comprehensive, but cluttered array of applications to a centralized and interconnected ecosystem using a modular canonical design system.
           </p>
         </div>
       </div>
@@ -1145,7 +1202,7 @@ html {
         <div class="service-item">
           <h3>Innovations</h3>
           <p>
-            Conducted workshops and internal knowledge-sharing sessions on Information Architecture (for Contentful), Modular Design Systems, and designing within a headless CMS.  
+            Conducted workshops and internal knowledge-sharing sessions on Information Architecture (for Contentful), Modular Design Systems, and designing within a headless CMS.
           </p>
         </div>
         <div class="service-item">
@@ -1169,7 +1226,7 @@ html {
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            There was a fine balance we needed to maintain between brand experiences towards supporting B2B engagement. Additionally, there was internal and client enlightenment in migrating into a headless CMS.   
+            There was a fine balance we needed to maintain between brand experiences towards supporting B2B engagement. Additionally, there was internal and client enlightenment in migrating into a headless CMS.
           </p>
         </div>
       </div>
@@ -1218,7 +1275,7 @@ html {
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            I enjoyed the autonomy to push creative limits. The agency had a formula, but when the formula didn't fit the client's needs, out-of-the-box thinking brought them back into the fold. 
+            I enjoyed the autonomy to push creative limits. The agency had a formula, but when the formula didn't fit the client's needs, out-of-the-box thinking brought them back into the fold.
           </p>
         </div>
       </div>
@@ -1250,7 +1307,7 @@ html {
         <div class="service-item">
           <h3>Responsibilities</h3>
           <p>
-            Responsible for a critical set of UX flows for a luxury/lifestyle booking client, working with limited access to resources, and delivering on time what ultimately shipped.    
+            Responsible for a critical set of UX flows for a luxury/lifestyle booking client, working with limited access to resources, and delivering on time what ultimately shipped.
           </p>
         </div>
         <div class="service-item">
@@ -1312,13 +1369,13 @@ html {
         <div class="service-item">
           <h3>Success</h3>
           <p>
-            Livearea was acquired by PFSweb just at the impetus of the pandemic, which introduced new challenges to ways of working both internally and client dynamics. 
+            Livearea was acquired by PFSweb just at the impetus of the pandemic, which introduced new challenges to ways of working both internally and client dynamics.
           </p>
         </div>
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            My time at Livearea offered me unprecedented opportunity for growth. I was enabled by my position to lead. I listened to our clients and delivered on some exceptionally perplexing business objectives/challenges. 
+            My time at Livearea offered me unprecedented opportunity for growth. I was enabled by my position to lead. I listened to our clients and delivered on some exceptionally perplexing business objectives/challenges.
           </p>
         </div>
       </div>
@@ -1367,7 +1424,7 @@ html {
         <div class="service-item">
           <h3>Takeaway</h3>
           <p>
-            Hands-down the best work environment and experience I have ever enjoyed. The Workarea platform was ultimately sold and workforce dispersed. 
+            Hands-down the best work environment and experience I have ever enjoyed. The Workarea platform was ultimately sold and workforce dispersed.
           </p>
         </div>
       </div>
@@ -1392,14 +1449,14 @@ html {
         <div class="service-item">
           <h3>Innovations</h3>
           <p>
-            Whiteboard sessions, wireframes in Balsamiq, Trello boards and sprint cycles, all towards MVP and post-launch upkeep. 
+            Whiteboard sessions, wireframes in Balsamiq, Trello boards and sprint cycles, all towards MVP and post-launch upkeep.
           </p>
         </div>
         <div class="service-item">
           <h3>Responsibilities</h3>
           <p>
-            Agency leadership set exceptional standards of execution through all phases of a project. 
-            While every project started on a whiteboard, the end results consistently redefined paradigms.   
+            Agency leadership set exceptional standards of execution through all phases of a project.
+            While every project started on a whiteboard, the end results consistently redefined paradigms.
           </p>
         </div>
         <div class="service-item">
@@ -1513,13 +1570,13 @@ html {
         <div class="service-item">
           <h3>Communication & Storytelling</h3>
           <p>Strong written and verbal communication, and storytelling skills; excels in empathizing with audience towards addressing their business objectives.</p>
-        </div>                                        
+        </div>
 
         <div class="service-item">
           <h3>Project Management</h3>
           <p>Deliver results on time, within budget, with attention to detail and organizational excellence.</p>
-        </div>                                        
-                                   
+        </div>
+
 
       </div>
     </div>
@@ -1539,7 +1596,7 @@ html {
         <div class="service-item">
           <h3>Christopher Bayle {ACD UX, Publicis Sapient}</h3>
           <p>
-            “Zack has a deep connection to emotions, imagination, and sensitivity—the quintessential idealist. His greatest strength is his depth of sensitivity and empathy, 
+            “Zack has a deep connection to emotions, imagination, and sensitivity—the quintessential idealist. His greatest strength is his depth of sensitivity and empathy,
             which allows him to give voice to human connections in a way that works with people on a profound level. Zack brings fresh perspective to things when I felt in a rut—a great person to work with.”
           </p>
         </div>
@@ -1547,8 +1604,8 @@ html {
           <h3>Andrés Moros, MPS {Sr. UX Designer, Publicis Sapient}</h3>
           <p>
             “Zack is one of the most talented, hard-working, and knowledgeable individuals I have had the pleasure of working with. He fosters communication not only between us
-             but also with the whole team, setting them up for success. He always gives his best and more. I truly enjoyed working with him, and I feel he should be recognized for his 
-             tremendous effort and for being such a great team player."
+            but also with the whole team, setting them up for success. He always gives his best and more. I truly enjoyed working with him, and I feel he should be recognized for his
+            tremendous effort and for being such a great team player."
           </p>
         </div>
       </div>
@@ -1613,392 +1670,471 @@ html {
       </div>
     </div>
 
-<body class="bg-off">
+    <body class="bg-off">
 
 
 
 
-    <!-- Scroll Spacer -->
-    <div class="scroll-spacer"></div>
+      <!-- Scroll Spacer -->
+      <div class="scroll-spacer"></div>
 
-    <div class="scroll-spacer"></div>
-    <!-- Multi-functional control with percentage -->
-    <div class="control">
-      <div class="control__track">
-        <div class="indicator"></div>
-        <label for="free" id="back-to-top"><span id="scroll-percent">Get Started</span></label>
-        <input class="sr-only" type="radio" name="tier" id="free" checked />
-        <div class="premium">
+      <div class="scroll-spacer"></div>
+      <!-- Multi-functional control with percentage -->
+      <div class="control">
+        <div class="control__track">
           <div class="indicator"></div>
-          <label for="solo"><span>Light</span><span class="sr-only">Light/Dark</span></label>
-          <input class="sr-only" type="radio" name="tier" id="solo" />
-          <label for="team"><span>Dark</span><span class="sr-only">Light/Dark</span></label>
-          <input class="sr-only" type="radio" name="tier" id="team" />
+          <label for="free" id="back-to-top"><span id="scroll-percent">Get Started</span></label>
+          <input class="sr-only" type="radio" name="tier" id="free" checked />
+          <div class="premium">
+            <div class="indicator"></div>
+            <label for="solo"><span>Light</span><span class="sr-only">Light/Dark</span></label>
+            <input class="sr-only" type="radio" name="tier" id="solo" />
+            <label for="team"><span>Dark</span><span class="sr-only">Light/Dark</span></label>
+            <input class="sr-only" type="radio" name="tier" id="team" />
+          </div>
         </div>
       </div>
-    </div>
-    <div id="cursor"></div>
-    <audio id="hoverSound" preload="auto">
-      <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg">
-    </audio>
+      <div id="cursor"></div>
+      <audio id="hoverSound" preload="auto">
+        <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg">
+      </audio>
 
 
 
 
 
-    <script>
-      // --- Utility: Debounce ---
-      function debounce(fn, delay = 50) {
-        let timer;
-        return function (...args) {
-          clearTimeout(timer);
-          timer = setTimeout(() => fn.apply(this, args), delay);
-        };
-      }
-
-      // Define video URLs for each theme
-      const lightVideoUrl = "https://videos.pexels.com/video-files/13924707/13924707-hd_1920_1080_25fps.mp4";
-      const darkVideoUrl  = "https://videos.pexels.com/video-files/16798904/16798904-uhd_2560_1440_60fps.mp4";
-
-      // --- BG Toggle Logic ---
-      const bgToggleBtn = document.getElementById('bg-toggle-btn');
-      const bgPlayIcon = document.getElementById('bg-toggle-play');
-      const bgPauseIcon = document.getElementById('bg-toggle-pause');
-      const bgVideo = document.getElementById('bg-video');
-
-      let bgOn = !document.body.classList.contains('bg-off');
-      bgToggleBtn.addEventListener('click', () => {
-        bgOn = !bgOn;
-        document.body.classList.toggle('bg-off', !bgOn);
-        bgPlayIcon.style.display = bgOn ? '' : 'none';
-        bgPauseIcon.style.display = bgOn ? 'none' : '';
-        
-        // Update video display based on theme and toggle state
-        if (document.documentElement.dataset.theme === 'dark') {
-          bgVideo.style.display = bgOn ? 'block' : 'none';
-        } else if (document.documentElement.dataset.theme === 'light') {
-          bgVideo.style.display = bgOn ? 'block' : 'none';
+      <script>
+        // --- Utility: Debounce ---
+        function debounce(fn, delay = 50) {
+          let timer;
+          return function(...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+          };
         }
-      });
-      (function () {
-        bgPlayIcon.style.display = bgOn ? '' : 'none';
-        bgPauseIcon.style.display = bgOn ? 'none' : '';
-      })();
 
-      // --- SCROLL TRACKING & CONTROL BUTTON ---
-      let maxScrollPosition = 0;
-      const SCROLL_THRESHOLD = 300;
-      const SHOW_BACK_TO_TOP_HOVER_THRESHOLD = 160;
-      const backLabel = document.getElementById('back-to-top');
-      const backRadio = document.getElementById('free');
-      const controlEl = document.querySelector('.control');
-      let scrollPercentSpan = document.getElementById('scroll-percent');
+        // Define video URLs for each theme
+        const lightVideoUrl = "https://videos.pexels.com/video-files/13924707/13924707-hd_1920_1080_25fps.mp4";
+        const darkVideoUrl = "https://videos.pexels.com/video-files/16798904/16798904-uhd_2560_1440_60fps.mp4";
 
-      function shouldShowTakeMeBack() {
-        return (window.scrollY === 0 && maxScrollPosition > SCROLL_THRESHOLD);
-      }
-      function getScrollPercent() {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        return docHeight <= 0 ? 100 : (scrollTop / docHeight) * 100;
-      }
-      function renderPercentOrGetStartedOrTakeMeBack() {
-        if (shouldShowTakeMeBack()) {
-          scrollPercentSpan.textContent = "Take Me Back";
-        } else if (window.scrollY === 0) {
-          scrollPercentSpan.textContent = "Get Started";
-        } else {
-          scrollPercentSpan.textContent = getScrollPercent().toFixed(2) + "%";
-        }
-      }
-      backLabel.addEventListener('mouseenter', () => {
-        if (window.scrollY > SHOW_BACK_TO_TOP_HOVER_THRESHOLD) {
-          backLabel.textContent = "Back to Top";
-        }
-      });
-      backLabel.addEventListener('mouseleave', () => {
-        backLabel.innerHTML = `<span id="scroll-percent"></span>`;
-        scrollPercentSpan = document.getElementById('scroll-percent');
-        renderPercentOrGetStartedOrTakeMeBack();
-      });
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > maxScrollPosition) maxScrollPosition = window.scrollY;
-        renderPercentOrGetStartedOrTakeMeBack();
-        controlEl.classList.toggle('default', window.scrollY === 0);
-      });
-      document.addEventListener('DOMContentLoaded', () => {
-        backLabel.innerHTML = `<span id="scroll-percent"></span>`;
-        scrollPercentSpan = document.getElementById('scroll-percent');
-        renderPercentOrGetStartedOrTakeMeBack();
-      });
+        // --- BG Toggle Logic ---
+        const bgToggleBtn = document.getElementById('bg-toggle-btn');
+        const bgPlayIcon = document.getElementById('bg-toggle-play');
+        const bgPauseIcon = document.getElementById('bg-toggle-pause');
+        const bgVideo = document.getElementById('bg-video');
 
-      // --- NAVIGATION LINKS & SMOOTH SCROLLING ---
-      const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
-      navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetId = link.getAttribute('href').substring(1);
-          const target = document.getElementById(targetId);
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
-            if (targetId === "section-1") maxScrollPosition = 0;
-          }
-          history.replaceState(null, '', window.location.pathname + window.location.search);
-        });
-      });
+        let bgOn = !document.body.classList.contains('bg-off');
+        bgToggleBtn.addEventListener('click', () => {
+          bgOn = !bgOn;
+          document.body.classList.toggle('bg-off', !bgOn);
+          bgPlayIcon.style.display = bgOn ? '' : 'none';
+          bgPauseIcon.style.display = bgOn ? 'none' : '';
 
-      // --- ACTIVE NAVIGATION LOGIC: Section in viewport only ---
-      const sectionIds = navLinks.map(a => a.getAttribute('href').replace('#', ''));
-      const sections = sectionIds.map(id => document.getElementById(id));
-      let currentActiveId = null;
-      function navLinkForSection(id) {
-        return navLinks.find(a => a.getAttribute('href') === `#${id}`);
-      }
-      const observerOptions = {
-        root: null,
-        rootMargin: '0px 0px -60% 0px',
-        threshold: 0.3
-      };
-      function handleSectionIntersect(entries) {
-        let mostVisible = null;
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (!mostVisible || entry.intersectionRatio > mostVisible.intersectionRatio) {
-              mostVisible = entry;
-            }
+          // Update video display based on theme and toggle state
+          if (document.documentElement.dataset.theme === 'dark') {
+            bgVideo.style.display = bgOn ? 'block' : 'none';
+          } else if (document.documentElement.dataset.theme === 'light') {
+            bgVideo.style.display = bgOn ? 'block' : 'none';
           }
         });
-        if (mostVisible) {
-          const id = mostVisible.target.id;
-          if (currentActiveId !== id) {
-            navLinks.forEach(a => a.classList.remove('active'));
-            const navLink = navLinkForSection(id);
-            if (navLink) navLink.classList.add('active');
-            currentActiveId = id;
-          }
-        }
-      }
-      const sectionObserver = new IntersectionObserver(handleSectionIntersect, observerOptions);
-      sections.forEach(section => {
-        if (section) sectionObserver.observe(section);
-      });
-      window.addEventListener('DOMContentLoaded', () => {
-        let found = false;
-        for (const section of sections) {
-          if (section) {
-            const rect = section.getBoundingClientRect();
-            if (rect.top < window.innerHeight && rect.bottom > 0) {
-              navLinks.forEach(a => a.classList.remove('active'));
-              const navLink = navLinkForSection(section.id);
-              if (navLink) navLink.classList.add('active');
-              found = true;
-              break;
-            }
-          }
-        }
-        if (!found && navLinks.length) {
-          navLinks.forEach(a => a.classList.remove('active'));
-          navLinks[0].classList.add('active');
-        }
-      });
+        (function() {
+          bgPlayIcon.style.display = bgOn ? '' : 'none';
+          bgPauseIcon.style.display = bgOn ? 'none' : '';
+        })();
 
-      // --- CLICK LOGIC FOR CONTROL BUTTON ---
-      backLabel.addEventListener('click', (e) => {
-        e.preventDefault();
-        const currentText = scrollPercentSpan.textContent || backLabel.textContent;
-        if (currentText === "Get Started") {
-          document.getElementById('section-2')?.scrollIntoView({ behavior: 'smooth' });
-        } else if (
-          currentText === "Back to Top" ||
-          (currentText.endsWith("%") && window.scrollY > SHOW_BACK_TO_TOP_HOVER_THRESHOLD)
-        ) {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          maxScrollPosition = 0;
-          backRadio.checked = true;
-          controlEl.classList.add('collapsed', 'default');
-          setTimeout(renderPercentOrGetStartedOrTakeMeBack, 400);
-        } else if (currentText === "Take Me Back") {
-          window.scrollTo({ top: maxScrollPosition, behavior: 'smooth' });
-          setTimeout(renderPercentOrGetStartedOrTakeMeBack, 400);
-        }
-      });
+        // --- SCROLL TRACKING & CONTROL BUTTON ---
+        let maxScrollPosition = 0;
+        const SCROLL_THRESHOLD = 300;
+        const SHOW_BACK_TO_TOP_HOVER_THRESHOLD = 160;
+        const backLabel = document.getElementById('back-to-top');
+        const backRadio = document.getElementById('free');
+        const controlEl = document.querySelector('.control');
+        let scrollPercentSpan = document.getElementById('scroll-percent');
 
-      // --- THEME TOGGLING: LIGHT / DARK MODE ---
-      const lightRadio = document.getElementById('solo');
-      const darkRadio = document.getElementById('team');
-      function applyTheme(theme) {
-        document.documentElement.dataset.theme = theme;
-        document.body.style.backgroundColor = theme === 'dark' ? '#000' : '#fff';
-        document.body.style.color = theme === 'dark' ? '#fff' : '#000';
-        if (theme === 'dark') {
-          controlEl.classList.add('collapsed');
-          bgVideo.src = darkVideoUrl;
-          if (bgOn) {
-            bgVideo.style.display = 'block';
-          }
-        } else if (theme === 'light') {
-          controlEl.classList.remove('collapsed');
-          bgVideo.src = lightVideoUrl;
-          if (bgOn) {
-            bgVideo.style.display = 'block';
+        function shouldShowTakeMeBack() {
+          return (window.scrollY === 0 && maxScrollPosition > SCROLL_THRESHOLD);
+        }
+
+        function getScrollPercent() {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          return docHeight <= 0 ? 100 : (scrollTop / docHeight) * 100;
+        }
+
+        function renderPercentOrGetStartedOrTakeMeBack() {
+          if (shouldShowTakeMeBack()) {
+            scrollPercentSpan.textContent = "Take Me Back";
+          } else if (window.scrollY === 0) {
+            scrollPercentSpan.textContent = "Get Started";
           } else {
-            bgVideo.style.display = 'none';
+            scrollPercentSpan.textContent = getScrollPercent().toFixed(2) + "%";
           }
         }
-      }
-      lightRadio?.addEventListener('change', () => { if (lightRadio.checked) applyTheme('light'); });
-      darkRadio?.addEventListener('change', () => { if (darkRadio.checked) applyTheme('dark'); });
-      document.addEventListener('DOMContentLoaded', () => {
-        document.documentElement.dataset.theme = 'light';
-        if (lightRadio) lightRadio.checked = true;
-        applyTheme('light');
-        if (!backRadio.checked) {
-          backRadio.checked = true;
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        controlEl.classList.add('collapsed');
-        setTimeout(() => controlEl.classList.add('visible'), 1000);
-        renderPercentOrGetStartedOrTakeMeBack();
-      });
-
-      // --- GOOEY CURSOR SETUP & ANIMATION ---
-      const TAIL_LENGTH = 20;
-      const cursor = document.getElementById('cursor');
-      let mouseX = 0, mouseY = 0;
-      let cursorHistory = Array(TAIL_LENGTH).fill({ x: 0, y: 0 });
-      function onMouseMove(e) { mouseX = e.clientX; mouseY = e.clientY; }
-      function onTouch(e) { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }
-      function initCursor() {
-        for (let i = 0; i < TAIL_LENGTH; i++) {
-          const div = document.createElement('div');
-          div.classList.add('cursor-circle');
-          cursor.append(div);
-        }
-      }
-      function updateCursor() {
-        cursorHistory.shift();
-        cursorHistory.push({ x: mouseX, y: mouseY });
-        cursor.querySelectorAll('.cursor-circle').forEach((circle, i) => {
-          const current = cursorHistory[i];
-          const next = cursorHistory[i + 1] || cursorHistory[TAIL_LENGTH - 1];
-          current.x += (next.x - current.x) * 0.35;
-          current.y += (next.y - current.y) * 0.35;
-          circle.style.transform = `translate(${current.x}px, ${current.y}px) scale(${i / TAIL_LENGTH})`;
-        });
-        requestAnimationFrame(updateCursor);
-      }
-      document.addEventListener('mousemove', onMouseMove, false);
-      document.addEventListener('touchstart', onTouch, { passive: true });
-      document.addEventListener('touchmove', onTouch, { passive: true });
-      initCursor();
-      updateCursor();
-
-      // --- LAYOUT CONTAINER HOVER EFFECT: Rotation & GLOW ---
-      document.querySelectorAll('.layout-container').forEach((container) => {
-        container.addEventListener('mouseenter', () => {
-          container.bounds = container.getBoundingClientRect();
-          if (!container.querySelector('.glow')) {
-            const glowElem = document.createElement('div');
-            glowElem.classList.add('glow');
-            container.appendChild(glowElem);
+        backLabel.addEventListener('mouseenter', () => {
+          if (window.scrollY > SHOW_BACK_TO_TOP_HOVER_THRESHOLD) {
+            backLabel.textContent = "Back to Top";
           }
-          container.addEventListener('mousemove', rotateToMouse);
         });
-        container.addEventListener('mouseleave', () => {
-          container.removeEventListener('mousemove', rotateToMouse);
-          container.style.transitionDuration = "0.3s";
-          container.style.transitionTimingFunction = "ease-out";
-          container.style.transitionProperty = "transform, box-shadow";
-          container.style.transform = "rotate3d(0, 0, 0, 0deg)";
-          container.querySelector('.glow')?.remove();
+        backLabel.addEventListener('mouseleave', () => {
+          backLabel.innerHTML = `<span id="scroll-percent"></span>`;
+          scrollPercentSpan = document.getElementById('scroll-percent');
+          renderPercentOrGetStartedOrTakeMeBack();
         });
-      });
-      function rotateToMouse(e) {
-        const container = e.currentTarget;
-        const { x, y, width, height } = container.bounds;
-        const leftX = e.clientX - x;
-        const topY = e.clientY - y;
-        const center = { x: leftX - width / 2, y: topY - height / 2 };
-        const distance = Math.sqrt(center.x ** 2 + center.y ** 2);
-        const scaleFactor = 1.005, rotationFactor = 1 / 200;
-        const angle = Math.log(distance + 1) * 2 * rotationFactor;
-        container.style.transitionDuration = "0.15s";
-        container.style.transitionTimingFunction = "ease-out";
-        container.style.transitionProperty = "transform, box-shadow";
-        container.style.transform = `scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor}) rotate3d(${center.y * rotationFactor}, ${-center.x * rotationFactor}, 0, ${angle}deg)`;
-        const glowElem = container.querySelector('.glow');
-        if (glowElem) {
-          const theme = document.documentElement.dataset.theme || 'light';
-          const glowColor = theme === 'dark'
-            ? getComputedStyle(document.documentElement).getPropertyValue('--glow-dark-hover').trim() || '#fff6'
-            : getComputedStyle(document.documentElement).getPropertyValue('--glow-light-hover').trim() || '#ffffffcc';
-          glowElem.style.backgroundImage = `radial-gradient(circle at ${center.x * 2 + width / 2}px ${center.y * 2 + height / 2}px, ${glowColor}, #0000000f)`;
-        }
-      }
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > maxScrollPosition) maxScrollPosition = window.scrollY;
+          renderPercentOrGetStartedOrTakeMeBack();
+          controlEl.classList.toggle('default', window.scrollY === 0);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+          backLabel.innerHTML = `<span id="scroll-percent"></span>`;
+          scrollPercentSpan = document.getElementById('scroll-percent');
+          renderPercentOrGetStartedOrTakeMeBack();
+        });
 
-      // --- Sound Effects ---
-      const hoverSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-cool-interface-click-tone-2568.mp3");
-      const clickSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-page-turn-single-1104.mp3");
-      function playHoverSound() { hoverSound.currentTime = 0; hoverSound.volume = 0.4; hoverSound.play().catch(() => {}); }
-      function playClickSound() { clickSound.currentTime = 0; clickSound.volume = 0.4; clickSound.play().catch(() => {}); }
-      [...navLinks, ...document.querySelectorAll(".control label"), ...document.querySelectorAll("button")].forEach(el => {
-        el.addEventListener("mouseenter", playHoverSound);
-        el.addEventListener("click", playClickSound);
-      });
-
-      // --- Custom Scrollbar ---
-      const scrollbar = document.createElement('div');
-      scrollbar.id = 'custom-scrollbar';
-      document.body.appendChild(scrollbar);
-      const navHeader = document.querySelector('.nav-links');
-      const extraTopSpacing = 10, bottomMargin = 20;
-      Object.assign(scrollbar.style, {
-        position: 'fixed', right: '10px', width: '8px', backgroundColor: 'black',
-        borderRadius: '4px', transition: 'background-color 0.3s, height 0.3s, top 0.3s',
-        zIndex: 20000
-      });
-      function updateScrollbar() {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const navHeight = navHeader.offsetHeight;
-        const marginTop = navHeight + extraTopSpacing;
-        const availableHeight = winHeight - marginTop - bottomMargin;
-        const scrollbarHeight = Math.max((availableHeight / docHeight) * availableHeight, 30);
-        const maxScroll = docHeight - winHeight;
-        const scrollFraction = scrollTop / maxScroll;
-        const topOffset = marginTop + scrollFraction * (availableHeight - scrollbarHeight);
-        scrollbar.style.height = `${scrollbarHeight}px`;
-        scrollbar.style.top = `${topOffset}px`;
-      }
-      window.addEventListener('scroll', debounce(updateScrollbar, 20));
-      window.addEventListener('resize', debounce(updateScrollbar, 50));
-      function updateScrollbarTheme() {
-        const theme = document.documentElement.dataset.theme || 'light';
-        scrollbar.style.backgroundColor = theme === 'dark' ? 'white' : 'black';
-      }
-      new MutationObserver(updateScrollbarTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-      updateScrollbar();
-      updateScrollbarTheme();
-
-      // --- Smooth Scroll for Hash Links ---
-      document.addEventListener('DOMContentLoaded', () => {
-        if (window.location.hash) {
-          history.replaceState(null, '', window.location.pathname + window.location.search);
-          window.scrollTo({ top: 0, behavior: 'auto' });
-        }
-        document.querySelectorAll('a[href^="#"]').forEach(link => {
-          link.addEventListener('click', function (e) {
+        // --- NAVIGATION LINKS & SMOOTH SCROLLING ---
+        const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+        navLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
             const target = document.getElementById(targetId);
             if (target) {
-              e.preventDefault();
-              target.scrollIntoView({ behavior: 'smooth' });
-              history.replaceState(null, '', window.location.pathname + window.location.search);
+              target.scrollIntoView({
+                behavior: 'smooth'
+              });
+              if (targetId === "section-1") maxScrollPosition = 0;
             }
+            history.replaceState(null, '', window.location.pathname + window.location.search);
           });
         });
-      });
-    </script>
-  </body>
+
+        // --- ACTIVE NAVIGATION LOGIC: Section in viewport only ---
+        const sectionIds = navLinks.map(a => a.getAttribute('href').replace('#', ''));
+        const sections = sectionIds.map(id => document.getElementById(id));
+        let currentActiveId = null;
+
+        function navLinkForSection(id) {
+          return navLinks.find(a => a.getAttribute('href') === `#${id}`);
+        }
+        const observerOptions = {
+          root: null,
+          rootMargin: '0px 0px -60% 0px',
+          threshold: 0.3
+        };
+
+        function handleSectionIntersect(entries) {
+          let mostVisible = null;
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              if (!mostVisible || entry.intersectionRatio > mostVisible.intersectionRatio) {
+                mostVisible = entry;
+              }
+            }
+          });
+          if (mostVisible) {
+            const id = mostVisible.target.id;
+            if (currentActiveId !== id) {
+              navLinks.forEach(a => a.classList.remove('active'));
+              const navLink = navLinkForSection(id);
+              if (navLink) navLink.classList.add('active');
+              currentActiveId = id;
+            }
+          }
+        }
+        const sectionObserver = new IntersectionObserver(handleSectionIntersect, observerOptions);
+        sections.forEach(section => {
+          if (section) sectionObserver.observe(section);
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+          let found = false;
+          for (const section of sections) {
+            if (section) {
+              const rect = section.getBoundingClientRect();
+              if (rect.top < window.innerHeight && rect.bottom > 0) {
+                navLinks.forEach(a => a.classList.remove('active'));
+                const navLink = navLinkForSection(section.id);
+                if (navLink) navLink.classList.add('active');
+                found = true;
+                break;
+              }
+            }
+          }
+          if (!found && navLinks.length) {
+            navLinks.forEach(a => a.classList.remove('active'));
+            navLinks[0].classList.add('active');
+          }
+        });
+
+        // --- CLICK LOGIC FOR CONTROL BUTTON ---
+        backLabel.addEventListener('click', (e) => {
+          e.preventDefault();
+          const currentText = scrollPercentSpan.textContent || backLabel.textContent;
+          if (currentText === "Get Started") {
+            document.getElementById('section-2')?.scrollIntoView({
+              behavior: 'smooth'
+            });
+          } else if (
+            currentText === "Back to Top" ||
+            (currentText.endsWith("%") && window.scrollY > SHOW_BACK_TO_TOP_HOVER_THRESHOLD)
+          ) {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+            maxScrollPosition = 0;
+            backRadio.checked = true;
+            controlEl.classList.add('collapsed', 'default');
+            setTimeout(renderPercentOrGetStartedOrTakeMeBack, 400);
+          } else if (currentText === "Take Me Back") {
+            window.scrollTo({
+              top: maxScrollPosition,
+              behavior: 'smooth'
+            });
+            setTimeout(renderPercentOrGetStartedOrTakeMeBack, 400);
+          }
+        });
+
+        // --- THEME TOGGLING: LIGHT / DARK MODE ---
+        const lightRadio = document.getElementById('solo');
+        const darkRadio = document.getElementById('team');
+
+        function applyTheme(theme) {
+          document.documentElement.dataset.theme = theme;
+          document.body.style.backgroundColor = theme === 'dark' ? '#000' : '#fff';
+          document.body.style.color = theme === 'dark' ? '#fff' : '#000';
+          if (theme === 'dark') {
+            controlEl.classList.add('collapsed');
+            bgVideo.src = darkVideoUrl;
+            if (bgOn) {
+              bgVideo.style.display = 'block';
+            }
+          } else if (theme === 'light') {
+            controlEl.classList.remove('collapsed');
+            bgVideo.src = lightVideoUrl;
+            if (bgOn) {
+              bgVideo.style.display = 'block';
+            } else {
+              bgVideo.style.display = 'none';
+            }
+          }
+        }
+        lightRadio?.addEventListener('change', () => {
+          if (lightRadio.checked) applyTheme('light');
+        });
+        darkRadio?.addEventListener('change', () => {
+          if (darkRadio.checked) applyTheme('dark');
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+          document.documentElement.dataset.theme = 'light';
+          if (lightRadio) lightRadio.checked = true;
+          applyTheme('light');
+          if (!backRadio.checked) {
+            backRadio.checked = true;
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth'
+            });
+          }
+          controlEl.classList.add('collapsed');
+          setTimeout(() => controlEl.classList.add('visible'), 1000);
+          renderPercentOrGetStartedOrTakeMeBack();
+        });
+
+        // --- GOOEY CURSOR SETUP & ANIMATION ---
+        const TAIL_LENGTH = 20;
+        const cursor = document.getElementById('cursor');
+        let mouseX = 0,
+          mouseY = 0;
+        let cursorHistory = Array(TAIL_LENGTH).fill({
+          x: 0,
+          y: 0
+        });
+
+        function onMouseMove(e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        }
+
+        function onTouch(e) {
+          mouseX = e.touches[0].clientX;
+          mouseY = e.touches[0].clientY;
+        }
+
+        function initCursor() {
+          for (let i = 0; i < TAIL_LENGTH; i++) {
+            const div = document.createElement('div');
+            div.classList.add('cursor-circle');
+            cursor.append(div);
+          }
+        }
+
+        function updateCursor() {
+          cursorHistory.shift();
+          cursorHistory.push({
+            x: mouseX,
+            y: mouseY
+          });
+          cursor.querySelectorAll('.cursor-circle').forEach((circle, i) => {
+            const current = cursorHistory[i];
+            const next = cursorHistory[i + 1] || cursorHistory[TAIL_LENGTH - 1];
+            current.x += (next.x - current.x) * 0.35;
+            current.y += (next.y - current.y) * 0.35;
+            circle.style.transform = `translate(${current.x}px, ${current.y}px) scale(${i / TAIL_LENGTH})`;
+          });
+          requestAnimationFrame(updateCursor);
+        }
+        document.addEventListener('mousemove', onMouseMove, false);
+        document.addEventListener('touchstart', onTouch, {
+          passive: true
+        });
+        document.addEventListener('touchmove', onTouch, {
+          passive: true
+        });
+        initCursor();
+        updateCursor();
+
+        // --- LAYOUT CONTAINER HOVER EFFECT: Rotation & GLOW ---
+        document.querySelectorAll('.layout-container').forEach((container) => {
+          container.addEventListener('mouseenter', () => {
+            container.bounds = container.getBoundingClientRect();
+            if (!container.querySelector('.glow')) {
+              const glowElem = document.createElement('div');
+              glowElem.classList.add('glow');
+              container.appendChild(glowElem);
+            }
+            container.addEventListener('mousemove', rotateToMouse);
+          });
+          container.addEventListener('mouseleave', () => {
+            container.removeEventListener('mousemove', rotateToMouse);
+            container.style.transitionDuration = "0.3s";
+            container.style.transitionTimingFunction = "ease-out";
+            container.style.transitionProperty = "transform, box-shadow";
+            container.style.transform = "rotate3d(0, 0, 0, 0deg)";
+            container.querySelector('.glow')?.remove();
+          });
+        });
+
+        function rotateToMouse(e) {
+          const container = e.currentTarget;
+          const {
+            x,
+            y,
+            width,
+            height
+          } = container.bounds;
+          const leftX = e.clientX - x;
+          const topY = e.clientY - y;
+          const center = {
+            x: leftX - width / 2,
+            y: topY - height / 2
+          };
+          const distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+          const scaleFactor = 1.005,
+            rotationFactor = 1 / 200;
+          const angle = Math.log(distance + 1) * 2 * rotationFactor;
+          container.style.transitionDuration = "0.15s";
+          container.style.transitionTimingFunction = "ease-out";
+          container.style.transitionProperty = "transform, box-shadow";
+          container.style.transform = `scale3d(${scaleFactor}, ${scaleFactor}, ${scaleFactor}) rotate3d(${center.y * rotationFactor}, ${-center.x * rotationFactor}, 0, ${angle}deg)`;
+          const glowElem = container.querySelector('.glow');
+          if (glowElem) {
+            const theme = document.documentElement.dataset.theme || 'light';
+            const glowColor = theme === 'dark' ?
+              getComputedStyle(document.documentElement).getPropertyValue('--glow-dark-hover').trim() || '#fff6' :
+              getComputedStyle(document.documentElement).getPropertyValue('--glow-light-hover').trim() || '#ffffffcc';
+            glowElem.style.backgroundImage = `radial-gradient(circle at ${center.x * 2 + width / 2}px ${center.y * 2 + height / 2}px, ${glowColor}, #0000000f)`;
+          }
+        }
+
+        // --- Sound Effects ---
+        const hoverSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-cool-interface-click-tone-2568.mp3");
+        const clickSound = new Audio("https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-page-turn-single-1104.mp3");
+
+        function playHoverSound() {
+          hoverSound.currentTime = 0;
+          hoverSound.volume = 0.4;
+          hoverSound.play().catch(() => {});
+        }
+
+        function playClickSound() {
+          clickSound.currentTime = 0;
+          clickSound.volume = 0.4;
+          clickSound.play().catch(() => {});
+        }
+        [...navLinks, ...document.querySelectorAll(".control label"), ...document.querySelectorAll("button")].forEach(el => {
+          el.addEventListener("mouseenter", playHoverSound);
+          el.addEventListener("click", playClickSound);
+        });
+
+        // --- Custom Scrollbar ---
+        const scrollbar = document.createElement('div');
+        scrollbar.id = 'custom-scrollbar';
+        document.body.appendChild(scrollbar);
+        const navHeader = document.querySelector('.nav-links');
+        const extraTopSpacing = 10,
+          bottomMargin = 20;
+        Object.assign(scrollbar.style, {
+          position: 'fixed',
+          right: '10px',
+          width: '8px',
+          backgroundColor: 'black',
+          borderRadius: '4px',
+          transition: 'background-color 0.3s, height 0.3s, top 0.3s',
+          zIndex: 20000
+        });
+
+        function updateScrollbar() {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight;
+          const winHeight = window.innerHeight;
+          const navHeight = navHeader.offsetHeight;
+          const marginTop = navHeight + extraTopSpacing;
+          const availableHeight = winHeight - marginTop - bottomMargin;
+          const scrollbarHeight = Math.max((availableHeight / docHeight) * availableHeight, 30);
+          const maxScroll = docHeight - winHeight;
+          const scrollFraction = scrollTop / maxScroll;
+          const topOffset = marginTop + scrollFraction * (availableHeight - scrollbarHeight);
+          scrollbar.style.height = `${scrollbarHeight}px`;
+          scrollbar.style.top = `${topOffset}px`;
+        }
+        window.addEventListener('scroll', debounce(updateScrollbar, 20));
+        window.addEventListener('resize', debounce(updateScrollbar, 50));
+
+        function updateScrollbarTheme() {
+          const theme = document.documentElement.dataset.theme || 'light';
+          scrollbar.style.backgroundColor = theme === 'dark' ? 'white' : 'black';
+        }
+        new MutationObserver(updateScrollbarTheme).observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        });
+        updateScrollbar();
+        updateScrollbarTheme();
+
+        // --- Smooth Scroll for Hash Links ---
+        document.addEventListener('DOMContentLoaded', () => {
+          if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+            window.scrollTo({
+              top: 0,
+              behavior: 'auto'
+            });
+          }
+          document.querySelectorAll('a[href^="#"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+              const targetId = link.getAttribute('href').substring(1);
+              const target = document.getElementById(targetId);
+              if (target) {
+                e.preventDefault();
+                target.scrollIntoView({
+                  behavior: 'smooth'
+                });
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+              }
+            });
+          });
+        });
+      </script>
+    </body>
+
 </html>
