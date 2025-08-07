@@ -2052,19 +2052,20 @@
 
         function playHoverSound() {
           hoverSound.currentTime = 0;
-          hoverSound.volume = 0.4;
+          hoverSound.volume = 0.05; // Lowered to 10%
           hoverSound.play().catch(() => {});
         }
 
         function playClickSound() {
           clickSound.currentTime = 0;
-          clickSound.volume = 0.4;
+          clickSound.volume = 0.05; // Lowered to 10%
           clickSound.play().catch(() => {});
         }
         [...navLinks, ...document.querySelectorAll(".control label"), ...document.querySelectorAll("button")].forEach(el => {
           el.addEventListener("mouseenter", playHoverSound);
           el.addEventListener("click", playClickSound);
         });
+
 
         // --- Custom Scrollbar ---
         const scrollbar = document.createElement('div');
