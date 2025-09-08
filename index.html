@@ -153,16 +153,29 @@
 <!-- HOME PAGE (gallery) -->
 <section id="page-home" class="page">
   <div class="header"></div>
+  
+  <!-- Category filter menu -->
+  <div class="gallery-menu">
+    <button class="menu-item active" data-category="all">All</button>
+    <button class="menu-item" data-category="financial">Financial</button>
+    <button class="menu-item" data-category="social">Social</button>
+    <button class="menu-item" data-category="commerce">Commerce</button>
+    <button class="menu-item" data-category="agency">Agency</button>
+  </div>
+  
   <div class="container">
-
     <!-- Gallery canvas and overlays here -->
     <canvas></canvas>
     <div class="canvas" id="canvas"></div>
     <div class="overlay" id="overlay"></div>
 
-  <div class="project-title">
-    <p></p>
+    <div class="project-title">
+      <p></p>
+    </div>
   </div>
+  
+  <!-- Static grid container for category filtering -->
+  <div class="static-grid"></div>
 </section>
 
     <!-- WORK PAGE -->
