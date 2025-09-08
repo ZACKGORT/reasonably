@@ -551,8 +551,44 @@ document.addEventListener("DOMContentLoaded", () => {
   initLifeScroll();
   new GooeyCursor("cursor", 16);
 
+// Gallery data organized by categories
+const galleryData = {
+  financial: [
+    { name: "BNY Mellon Dashboard", image: "https://i.ibb.co/mCK7D4Xb/1-Oen-HCQm-Ga10wp-Cz-R8o9-Pt-A.webp", width: 400, height: 300 },
+    { name: "Financial Analytics", image: "https://miro.medium.com/v2/resize:fit:1400/format:webp/1*3gnCq0a4KbY8MGJyVKyP-A.png", width: 500, height: 350 },
+    { name: "Investment Portal", image: "https://miro.medium.com/v2/resize:fit:4800/format:webp/1*q-zgZhKnCs6abK8CIpE00Q.png", width: 450, height: 320 },
+    { name: "Trading Interface", image: "https://i.ibb.co/4R68K9d5/openingmanagedaccountpreview.png", width: 400, height: 280 },
+    { name: "Portfolio Management", image: "https://miro.medium.com/v2/resize:fit:4800/format:webp/1*-sJ-pN8tBwwsHq1XcDSLLw.png", width: 480, height: 340 },
+    { name: "Risk Assessment", image: "https://i.ibb.co/XkM2hn8n/bny1.png", width: 420, height: 300 }
+  ],
+  social: [
+    { name: "TikTok Campaign", image: "https://i.ibb.co/9qFzTQH/tiktok-proto-gif.gif", width: 400, height: 400 },
+    { name: "Social Analytics", image: "https://i.ibb.co/Kc09Jpsz/tiktok3.webp", width: 450, height: 320 },
+    { name: "Content Strategy", image: "https://i.ibb.co/gZb2Zqfv/tiktok1.webp", width: 380, height: 280 },
+    { name: "Engagement Metrics", image: "https://i.ibb.co/HTRJDL9w/tiktok2.webp", width: 420, height: 300 },
+    { name: "Brand Activation", image: "https://miro.medium.com/v2/resize:fit:786/format:webp/1*1gjrEffBioJYoEAvMWHfKQ.png", width: 460, height: 340 },
+    { name: "Social Commerce", image: "https://i.ibb.co/Z69xjMQY/tiktok-cat.gif", width: 400, height: 350 }
+  ],
+  commerce: [
+    { name: "GNC E-commerce", image: "https://i.ibb.co/spHgPH6N/1.webp", width: 450, height: 320 },
+    { name: "Product Catalog", image: "https://i.ibb.co/ynjWYqv8/2.webp", width: 400, height: 280 },
+    { name: "Shopping Cart", image: "https://i.ibb.co/cXg5Phdc/3.webp", width: 420, height: 300 },
+    { name: "Checkout Flow", image: "https://i.ibb.co/gZ58PKyk/4.webp", width: 480, height: 340 },
+    { name: "User Account", image: "https://i.ibb.co/Y7pGqJ69/5.webp", width: 440, height: 310 },
+    { name: "Order Management", image: "https://i.ibb.co/99h2bQMh/6.webp", width: 460, height: 330 }
+  ],
+  agency: [
+    { name: "Agency Portfolio", image: "https://i.ibb.co/m5yN57gn/IMG-20160526-164803987-01.jpg", width: 400, height: 300 },
+    { name: "Client Presentation", image: "https://i.ibb.co/h1K4ngF/image-409-min.png", width: 450, height: 320 },
+    { name: "Brand Identity", image: "https://i.ibb.co/q34v0ByL/IMG-20150419-175021862.jpg", width: 420, height: 280 },
+    { name: "Team Collaboration", image: "https://i.ibb.co/HpXh5NPN/IMG-20160407-150604368-1.jpg", width: 480, height: 340 },
+    { name: "Design System", image: "https://i.ibb.co/VYS1xRzh/work2.webp", width: 440, height: 310 },
+    { name: "Mobile Design", image: "https://i.ibb.co/rmYrSsk/wisc-mobile.jpg", width: 300, height: 400 }
+  ]
+};
+
 const isMobile = window.matchMedia("(max-width: 600px)").matches;
-new HomeGallery({
+const homeGallery = new HomeGallery({
   items: [
     "Gallery Image 1", "Gallery Image 2", "Gallery Image 3", "Gallery Image 4", "Gallery Image 5",
     "Gallery Image 6", "Gallery Image 7", "Gallery Image 8", "Gallery Image 9", "Gallery Image 10",
@@ -621,6 +657,173 @@ new HomeGallery({
     },
     containerSelector: "#page-home .container",
     canvasSelector: "canvas"
+  });
+
+  // Gallery filtering functionality
+  const galleryContainer = document.querySelector("#page-home .container");
+  const staticGrid = document.querySelector(".static-grid");
+  const menuItems = document.querySelectorAll(".menu-item");
+  const overlay = document.getElementById("overlay");
+  let currentCategory = "all";
+  let expandedItem = null;
+
+  // Handle menu item clicks
+  menuItems.forEach(item => {
+    item.addEventListener("click", () => {
+      const category = item.dataset.category;
+      
+      // Update active menu item
+      menuItems.forEach(mi => mi.classList.remove("active"));
+      item.classList.add("active");
+      
+      currentCategory = category;
+      
+      if (category === "all") {
+        // Show canvas, hide static grid
+        galleryContainer.style.display = "block";
+        staticGrid.classList.remove("active");
+        // Reset canvas transform if needed
+        if (homeGallery && homeGallery.canvas) {
+          homeGallery.targetX = homeGallery.currentX = (homeGallery.container.clientWidth - homeGallery.columns * homeGallery.cellWidth) / 2;
+          homeGallery.targetY = homeGallery.currentY = (homeGallery.container.clientHeight - Math.ceil(homeGallery.itemCount / homeGallery.columns) * homeGallery.cellHeight) / 2;
+        }
+      } else {
+        // Hide canvas, show static grid
+        galleryContainer.style.display = "none";
+        staticGrid.classList.add("active");
+        renderStaticGrid(category);
+      }
+    });
+  });
+
+  // Render static grid for category
+  function renderStaticGrid(category) {
+    const items = galleryData[category] || [];
+    staticGrid.innerHTML = "";
+    
+    items.forEach((item, index) => {
+      const itemElem = document.createElement("div");
+      itemElem.className = "item";
+      itemElem.dataset.width = item.width;
+      itemElem.dataset.height = item.height;
+      itemElem.dataset.index = index;
+      
+      const imgContainer = document.createElement("div");
+      imgContainer.className = "item-image-container";
+      
+      const img = document.createElement("img");
+      img.src = item.image;
+      img.alt = item.name;
+      img.loading = "lazy";
+      
+      const caption = document.createElement("div");
+      caption.className = "item-caption";
+      
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "item-name";
+      nameDiv.textContent = item.name;
+      
+      const numberDiv = document.createElement("div");
+      numberDiv.className = "item-number";
+      numberDiv.textContent = `#${(index + 1).toString().padStart(3, "0")}`;
+      
+      caption.appendChild(nameDiv);
+      caption.appendChild(numberDiv);
+      imgContainer.appendChild(img);
+      itemElem.appendChild(imgContainer);
+      itemElem.appendChild(caption);
+      
+      // Add click handler for expand functionality
+      itemElem.addEventListener("click", (e) => handleItemClick(e, index, items));
+      
+      staticGrid.appendChild(itemElem);
+    });
+  }
+
+  // Handle item click for expansion
+  function handleItemClick(e, index, items) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (expandedItem !== null) {
+      closeExpandedItem();
+      return;
+    }
+    
+    const item = items[index];
+    expandedItem = index;
+    
+    // Create expanded overlay
+    overlay.innerHTML = "";
+    overlay.style.display = "flex";
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
+    overlay.style.zIndex = "1000";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.opacity = "0";
+    overlay.style.transition = "opacity 0.3s ease";
+    
+    const expandedImg = document.createElement("img");
+    expandedImg.src = item.image;
+    expandedImg.alt = item.name;
+    expandedImg.style.maxWidth = "90%";
+    expandedImg.style.maxHeight = "90%";
+    expandedImg.style.objectFit = "contain";
+    expandedImg.style.borderRadius = "8px";
+    
+    const closeBtn = document.createElement("button");
+    closeBtn.innerHTML = "×";
+    closeBtn.style.position = "absolute";
+    closeBtn.style.top = "2rem";
+    closeBtn.style.right = "2rem";
+    closeBtn.style.background = "rgba(255, 255, 255, 0.2)";
+    closeBtn.style.border = "none";
+    closeBtn.style.color = "#fff";
+    closeBtn.style.fontSize = "2rem";
+    closeBtn.style.cursor = "pointer";
+    closeBtn.style.borderRadius = "50%";
+    closeBtn.style.width = "3rem";
+    closeBtn.style.height = "3rem";
+    closeBtn.style.display = "flex";
+    closeBtn.style.alignItems = "center";
+    closeBtn.style.justifyContent = "center";
+    
+    closeBtn.addEventListener("click", closeExpandedItem);
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay) closeExpandedItem();
+    });
+    
+    overlay.appendChild(expandedImg);
+    overlay.appendChild(closeBtn);
+    
+    // Trigger fade in
+    requestAnimationFrame(() => {
+      overlay.style.opacity = "1";
+    });
+  }
+
+  // Close expanded item
+  function closeExpandedItem() {
+    if (overlay) {
+      overlay.style.opacity = "0";
+      setTimeout(() => {
+        overlay.style.display = "none";
+        overlay.innerHTML = "";
+      }, 300);
+    }
+    expandedItem = null;
+  }
+
+  // Keyboard handler for closing expanded items
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && expandedItem !== null) {
+      closeExpandedItem();
+    }
   });
 
   initBlur();
