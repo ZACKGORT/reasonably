@@ -1,686 +1,985 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reason & Resolution</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gallery Panel — Single File</title>
 
-<!-- Stylesheets -->
-  <link rel="stylesheet" href="styles.css" />
-  
-  <!-- Poppins Google Fonts (for standardized typography) -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
+  <!-- Fonts -->
+  <link href="https://fonts.cdnfonts.com/css/thegoodmonolith" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/pp-neue-montreal" rel="stylesheet">
 
-  <!-- External JS libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.146.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/build/dat.gui.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/split-type@0.4.0/umd/split-type.min.js"></script>
+  <style>
+    @import url("https://fonts.cdnfonts.com/css/thegoodmonolith");
 
-<!-- SVG FILTERS (spotlight, ambience, gooey, etc.) -->
-<svg aria-hidden="true" class="sr-only">
-  <!-- Nav spotlight -->
-  <filter id="spotlight">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="0.8" result="b" />
-    <feSpecularLighting
-      in="b"
-      surfaceScale="0.5"
-      specularConstant="6"
-      specularExponent="65"
-      lighting-color="hsla(234,14%,72%,0.25)"
-      result="l"
-    >
-      <fePointLight x="50" y="54" z="82" />
-    </feSpecularLighting>
-    <feComposite in="l" in2="SourceAlpha" operator="in" result="c" />
-    <feComposite
-      in="merged"
-      in2="c"
-      operator="arithmetic"
-      k1="0"
-      k2="1"
-      k3="1"
-      k4="0"
-    />
-  </filter>
-  <!-- Logo spotlight -->
-  <filter id="logo-spotlight">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="0.8" result="b" />
-    <feSpecularLighting
-      in="b"
-      surfaceScale="0.5"
-      specularConstant="6"
-      specularExponent="65"
-      lighting-color="hsla(234,14%,72%,0.25)"
-      result="l"
-    >
-      <fePointLight id="logoLight" x="0" y="0" z="82" />
-    </feSpecularLighting>
-    <feComposite in="l" in2="SourceAlpha" operator="in" result="c" />
-    <feComposite
-      in="merged"
-      in2="c"
-      operator="arithmetic"
-      k1="0"
-      k2="1"
-      k3="1"
-      k4="0"
-    />
-  </filter>
-  <!-- Nav ambience halo -->
-  <filter id="ambience">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="0.8" result="b" />
-    <feSpecularLighting
-      in="b"
-      surfaceScale="0.5"
-      specularConstant="25"
-      specularExponent="65"
-      lighting-color="hsla(234,14%,72%,0.25)"
-      result="l"
-    >
-      <fePointLight x="120" y="-154" z="160" />
-    </feSpecularLighting>
-    <feComposite in="l" in2="SourceAlpha" operator="in" result="c" />
-    <feComposite
-      in="merged"
-      in2="c"
-      operator="arithmetic"
-      k1="0"
-      k2="1"
-      k3="1"
-      k4="0"
-    />
-  </filter>
-  <!-- Gooey filter -->
-  <filter id="goo">
-    <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b" />
-    <feColorMatrix
-      in="b"
-      mode="matrix"
-      values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 35 -15"
-      result="g"
-    />
-    <feComposite in="SourceGraphic" in2="g" operator="atop" />
-  </filter>
-</svg>
+    /* Using the hosted CSS for PP Neue Montreal so it loads cleanly */
+    :root {
+  --baseWidth: 290px;
+  --smallHeight: 200px;
+  --largeHeight: 200px;
 
-<!-- Global WebGL Background (Three.js shader) -->
-<div id="webgl-bg"></div>
+  --itemGap: 5px;
+  --bufferZone: 1.0;
 
-<!-- Sticky header (logo + nav) -->
-<header class="site-header">
-  <div class="logo-wrapper" aria-label="Reason & Resolution">
-    <a
-      class="button float-shadow"
-      href="#"
-      role="button"
-      aria-label="Home"
-      id="home-button"
-    >
-      <div class="trademark-container">
-        <div class="trademark-symbol"><span class="letter">R</span></div>
-        <span class="superscript-symbol">&amp;</span>
+  --borderRadius: 16px;
+
+  --itemVignetteSize: 200px;
+
+  --pageVignetteStrength: 1.0;
+  --pageVignetteSize: 500px;
+
+  --overlayOpacity: 0.9;
+  --overlayEaseDuration: 0.8s;
+
+  --hoverScale: 1.05;
+  --expandedScale: 0.40;
+  --dragEase: 0.07s;
+  --momentumFactor: 0.20; /* typical default, update if you want */
+  --zoomDuration: 0.6s;
+}
+
+
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+
+    body {
+      font-family: "PP Neue Montreal", -apple-system, BlinkMacSystemFont, Segoe UI, Inter, Roboto, Helvetica, Arial, sans-serif;
+      background-color: #000;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated noise effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: transparent url("http://assets.iceable.com/img/noise-transparent.png") repeat 0 0;
+      background-size: 300px 300px;
+      animation: noise-animation 0.3s steps(5) infinite;
+      opacity: 0.9;
+      will-change: transform;
+      z-index: 100;
+      pointer-events: none;
+    }
+    @keyframes noise-animation {
+      0% { transform: translate(0, 0); }
+      10% { transform: translate(-2%, -3%); }
+      20% { transform: translate(-4%, 2%); }
+      30% { transform: translate(2%, -4%); }
+      40% { transform: translate(-2%, 5%); }
+      50% { transform: translate(-4%, 2%); }
+      60% { transform: translate(3%, 0); }
+      70% { transform: translate(0, 3%); }
+      80% { transform: translate(-3%, 0); }
+      90% { transform: translate(2%, 2%); }
+      100% { transform: translate(1%, 0); }
+    }
+
+    /* Global type & links */
+    a {
+      position: relative;
+      cursor: pointer;
+      color: var(--color-text);
+      padding: 0;
+      display: inline-block;
+      z-index: 1;
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      opacity: 1;
+      transition: color var(--transition-medium);
+      font-weight: 700;
+    }
+    a::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 0; height: 100%;
+      background-color: var(--color-text);
+      z-index: -1;
+      transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    a:hover::after, .links span:hover::after { width: 100%; }
+    a:hover, .links span:hover { color: #000; mix-blend-mode: difference; opacity: 1; }
+
+    p {
+      display: block;
+      text-decoration: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.01rem;
+      -webkit-font-smoothing: antialiased;
+    }
+    ul { list-style: none; }
+    h3 { font-size: 14px; margin-bottom: var(--spacing-base); font-weight: 600; }
+
+    /* Header & Footer grid */
+    .header, .footer {
+      position: absolute;
+      left: 0; width: 100vw;
+      padding: 1.5rem;
+      z-index: 10000;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--spacing-base);
+      pointer-events: none; /* allow canvas drag underneath; re-enable on inner links */
+    }
+    .header a, .footer a { pointer-events: auto; }
+
+    .header { top: 0; }
+    .footer { bottom: 0; }
+
+    /* Grid column assignments */
+    .nav-section { grid-column: 1 / span 3; }
+    .values-section { grid-column: 5 / span 2; }
+    .location-section { grid-column: 7 / span 2; }
+    .contact-section { grid-column: 9 / span 2; }
+    .social-section { grid-column: 11 / span 2; text-align: right; }
+
+    /* Bottom bar */
+    .coordinates-section { grid-column: 1 / span 3; font-family: "TheGoodMonolith", monospace; }
+    .links-section { grid-column: 5 / span 4; text-align: center; display: flex; justify-content: center; align-items: center; gap: var(--spacing-base); }
+    .info-section { grid-column: 9 / span 4; text-align: right; }
+    .footer p { font-family: "TheGoodMonolith", monospace; }
+
+    /* Key hint styling */
+    .key-hint {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0 5px; border: 1px solid var(--color-text);
+      border-radius: 3px; font-size: 12px; margin: 0 3px;
+      min-width: 20px; height: 20px;
+    }
+
+    /* ===== LOGO COMPONENT ===== */
+    .logo-container { margin-bottom: var(--spacing-md); display: block; width: 3rem; height: 1.5rem; position: relative; }
+    .logo-circles { position: relative; width: 100%; height: 100%; }
+    .circle {
+      position: absolute; border-radius: 50%;
+      transition: transform var(--transition-medium);
+      width: 1.4rem; height: 1.4rem; background-color: var(--color-text);
+      top: 50%;
+    }
+    .circle-1 { left: 0; transform: translate(0, -50%); }
+    .circle-2 { left: 0.8rem; transform: translate(0, -50%); mix-blend-mode: exclusion; }
+    .logo-container:hover .circle-1 { transform: translate(-0.5rem, -50%); }
+    .logo-container:hover .circle-2 { transform: translate(0.5rem, -50%); }
+
+    /* Canvas container */
+    .container { position: relative; width: 100vw; height: 100vh; overflow: hidden; cursor: grab; }
+    .canvas { position: absolute; will-change: transform; }
+
+    .item {
+      position: absolute; overflow: hidden; background-color: #000; cursor: pointer;
+      border-radius: var(--border-radius, 0px);
+    }
+    .item-image-container { width: 100%; height: 100%; overflow: hidden; position: relative; }
+    .item-image-container::after {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      box-shadow: inset 0 0 var(--vignette-size, 0px) rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+    .item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; transition: transform 0.3s ease; }
+    .item:hover img { transform: scale(var(--hover-scale, 1.05)); }
+
+    .item-caption { position: absolute; bottom: 0; left: 0; width: 100%; padding: 10px; z-index: 2; }
+    .item-name {
+      font-family: "PP Neue Montreal", sans-serif; color: #fff; font-size: 8px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: -0.03em; margin-bottom: 2px; position: relative; overflow: hidden; height: 16px;opacity:0;
+    }
+    .item-name .word { position: relative; display: inline-block; will-change: transform; }
+    .item-number {
+      font-family: "TheGoodMonolith", monospace; color: #888; font-size: 10px; font-weight: 400;
+      position: relative; overflow: hidden; height: 14px;
+    }
+    .item-number .char { position: relative; display: inline-block; will-change: transform; }
+
+    /* Project title above everything */
+    .project-title {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 100%; text-align: center; pointer-events: none; z-index: 10002;
+    }
+    .project-title p { position: relative; height: 42px; color: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); overflow: hidden; }
+    .project-title p .word {
+      position: relative; display: inline-block; font-family: "PP Neue Montreal", sans-serif; font-size: 36px;
+      letter-spacing: -0.03em; text-transform: uppercase; transform: translateY(0%); will-change: transform;
+    }
+
+    /* Expanded */
+    .expanded-item {
+      position: fixed; z-index: 10000; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background-color: #000; overflow: hidden; cursor: pointer; border-radius: var(--border-radius, 0px);
+    }
+    .expanded-item img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+    .overlay {
+      position: fixed; inset: 0; background-color: #000; pointer-events: none; opacity: 0; z-index: 9999;
+    }
+    .overlay.active { pointer-events: auto; }
+
+    /* Page vignette effect layers */
+    .page-vignette-container { position: fixed; inset: 0; pointer-events: none; z-index: 9998; }
+    .page-vignette { position: absolute; inset: 0; box-shadow: inset 0 0 var(--page-vignette-size, 0px) var(--page-vignette-color); }
+    .page-vignette-strong { position: absolute; inset: 0; box-shadow: inset 0 0 var(--page-vignette-strong-size, 0px) var(--page-vignette-strong-color); }
+    .page-vignette-extreme { position: absolute; inset: 0; box-shadow: inset 0 0 var(--page-vignette-extreme-size, 0px) var(--page-vignette-extreme-color); }
+
+    /* Tweakpane z-index helpers */
+    .tp-dfwv { z-index: 10000 !important; }
+    .tp-rotv { opacity: 0.5 !important; }
+    .tp-rotv.tp-rotv-expanded { opacity: 1 !important; }
+    .tp-rotv.tp-rotv-collapsed { opacity: 0.7 !important; }
+
+    /* Caption animation clone */
+    .caption-clone { position: fixed; z-index: 10002; }
+
+    /* Make header/footer a bit more touch friendly on small screens */
+    @media (max-width: 900px) {
+      .header, .footer { grid-template-columns: repeat(6, 1fr); row-gap: .75rem; }
+      .nav-section { grid-column: 1 / span 3; }
+      .values-section { grid-column: 4 / span 3; }
+      .location-section { grid-column: 1 / span 2; }
+      .contact-section { grid-column: 3 / span 2; }
+      .social-section { grid-column: 5 / span 2; text-align: right; }
+      .coordinates-section { grid-column: 1 / span 3; }
+      .links-section { grid-column: 3 / span 2; }
+      .info-section { grid-column: 5 / span 2; }
+      .project-title p .word { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="nav-section">
+      <div class="logo-container">
+        <div class="header">
+          <h3>ZCKGRT</h3>
+        </div>
       </div>
-    </a>
+    </div>
+
+
+
+    <div class="social-section">
+      <ul>
+        <li><a href="https://zackgort.com">portfolio</a></li>
+        <li><a href="https://zackgort.com/resume">resume</a></li>
+        <li><a href="https://linkedin.com/in/zackgort">LinkedIn</a></li>
+      </ul>
+    </div>
   </div>
-  <nav>
-    <ul aria-hidden="true" class="lit">
-      <li>Work</li>
-      <li>Life</li>
-      <li>Balance</li>
-      <li>Connect</li>
-    </ul>
-    <ul class="content">
-      <li><a href="#" data-page="work" data-active="true">Work</a></li>
-      <li>
-        <a href="#" data-page="life"><span>Life</span></a>
-      </li>
-      <li>
-        <a href="#" data-page="balance"><span>Balance</span></a>
-      </li>
-      <li>
-        <a href="#" data-page="connect"><span>Connect</span></a>
-      </li>
-    </ul>
-  </nav>
-</header>
 
-<!-- Gooey cursor container -->
-<div id="cursor"></div>
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="coordinates-section">
+      <p>All Photos Herein Belong to Zack Gort</p>
+    </div>
 
-<div class="noise-overlay"></div>
+    <div class="info-section">
+      <p>New York, New York</p>
+    </div>
+  </div>
 
-<!-- HOME PAGE (gallery) -->
-<section id="page-home" class="page">
-  <div class="header"></div>
+  <!-- CANVAS -->
   <div class="container">
-
-    <!-- Gallery canvas and overlays here -->
-    <canvas></canvas>
     <div class="canvas" id="canvas"></div>
     <div class="overlay" id="overlay"></div>
-
-  <div class="project-title">
-    <p></p>
   </div>
-</section>
 
-    <!-- WORK PAGE -->
-    <section id="page-work" class="page">
-      <div id="background-image-container">
-        <img id="background-image" src="background.jpg" crossorigin="anonymous" alt="" />
-      </div>
-      <div class="container">
-        <div class="projects-container">
-          <!-- Projects will be rendered here by script.js -->
-        </div>
+  <div class="project-title"><p></p></div>
 
-      </div>
-    </section>
-
-    <!-- LIFE PAGE (Popover UI Demo, only this version present) -->
-    <section id="page-life" class="page">
-      <div class="content">
-        <main>
-          <section id="user-centered-design" class="life-section" style="view-timeline: --one">
-            <div class="heading">
-              <img src="https://i.ibb.co/XLRJ0yL/IMG-20160930-105946.jpg" alt="abcd" class="section-image" />
-              <h2>Hello world. I'm Zack.</h2>
-              <a href="#user-centered-design">
-                <span class="sr-only">Hello world. I'm Zack.</span>
-              </a>
-            </div>
-            <p>
-              Welcome! This is my site; a portfolio of sorts, but one unlike the others. So, what are we looking at?  Well, in the words of Eric Schmidt, show me, don't tell me.
-            </p>
-            <p>
-              Put simply, the contents of my site are not to show off or showcase my work, but to share the content of my character. My hope is that you see how a creative mind sees and interacts with the world.
-            </p>
-          </section>
-  
-          <section id="responsive-layouts" class="life-section" style="view-timeline: --two">
-            <div class="heading">
-              <img src="https://miro.medium.com/v2/resize:fit:4096/format:webp/1*ZpyOMlmzMa0rPlNY--3KXA.png" alt="Responsive layouts across devices" class="section-image" />
-              <h2>Thinker, maker, creative tinkerer.</h2>
-              <a href="#responsive-layouts">
-                <span class="sr-only">Thinker, maker, creative tinkerer.</span>
-              </a>
-            </div>
-            <p>
-              Image caption: What's in my head / Head-first / Headless approach (sans ego)
-            </p>
-            <p>
-              My approach, my perspective, and my unsatiable [creative] curiosity are what define me. It isn't something that I simply turn on and off, but an innate and visceral way of living — and working.
-            </p>
-            <p>
-              My passion for creativity extends well beyond what we see on our screens, but in finding inspiration from real-world environments and "IRL" interactions with real people.
-            </p>
-          </section>
-  
-          <section id="typography" class="life-section" style="view-timeline: --three">
-            <div class="heading">
-              <img src="https://i.ibb.co/Y3spCs9/I10A0969.jpg" alt="Typography sample for readability" class="section-image" />
-              <h2>Functionally, a "web designer"</h2>
-              <a href="#typography">
-                <span class="sr-only">Functionally, a "web designer"</span>
-              </a>
-            </div>
-            <p>
-              Does anyone remember Skeuomorphic design? Twitter Bootstrap? Wireframing with InDesign?
-            </p>
-            <p>
-              Well, Pepperidge Farm remembers. As do I. I remember when websites were designed with Photoshop. I remember receiving client design feedback through the fax machine. I remember when client presentations required we dress in our Sunday best. I remember free lunches on those days.
-            </p>
-            <p>
-              Well, now it's about automation, productivity, and so-called ingenuity. It's no longer about what you've done, it's now about what you can do and how fast can you do it.
-            </p>
-          </section>
-  
-          <section id="color-contrast" class="life-section" style="view-timeline: --four">
-            <div class="heading">
-              <img src="https://miro.medium.com/v2/resize:fit:4466/format:webp/1*kY6yg0chz7Puu-WgrlYNMA.jpeg" alt="Color palette and contrast example" class="section-image" />
-              <h2>Fundamentally, an artist</h2>
-              <a href="#color-contrast">
-                <span class="sr-only">Fundamentally, an artist</span>
-              </a>
-            </div>
-            <p>
-              So, I enjoy crafting things with my hands. While AI can certainly create visually stunning 'art', it will never know the joy of creating something from complete scratch; of pure imagination — nor the feeling of accomplishment.
-            </p>
-            <p>
-              The human eye still matters. The human hand still matters. The human brain matters most.
-            </p>
-            <p>
-              My true specialty, my true talent, is not in what I produce, but in how I bring it to fruition. I observe. I empathize. I walk in your shoes. I take a step back, then dive in deep. At my core, I am an observer. I am the conduit who connects creativity to the seemingly mundane. I can capture creativity from anywhere and channel it into a solution that doesn't just move the business, but feels right with its audience.
-            </p>
-          </section>
-  
-          <section id="motion-design" class="life-section" style="view-timeline: --five">
-            <div class="heading">
-              <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*9EZTgvxttDXOacHzI9axeQ.gif" alt="Motion and animation in web UI" class="section-image" />
-              <h2>Specializing in design + data</h2>
-              <a href="#motion-design">
-                <span class="sr-only">Specializing in design + data</span>
-              </a>
-            </div>
-            <p>
-              So, what the **** am I? Please do pardon my French, but the answer to this question eludes me to this day.
-            </p>
-            <p>
-              I've been called a graphic designer, a web designer, an interactive designer, a UI designer, a UX designer, and so on.
-            </p>
-            <p>
-              Those titles make sense, but they don't tell you anything about my specializations such as: specializing in Information Architecture, Content Taxonomies, Usability & Compliance Standardizations and Optimizations, Interactive Design Systems, Wireframe Prototypes, Technical UX Writing, etc, etc.
-            </p>
-          </section>
-  
-          <section id="accessibility" class="life-section" style="view-timeline: --six">
-            <div class="heading">
-              <img src="https://github.com/ZACKGORT/reasonably/blob/main/tiktok-proto-gif.gif?raw=true" alt="Accessible and inclusive web UI" class="section-image" />
-              <h2>Working with the A-list brands</h2>
-              <a href="#accessibility">
-                <span class="sr-only">Working with the A-list brands</span>
-              </a>
-            </div>
-            <p>
-              My first desk-design job was at a local design firm as an image retoucher and print brochure designer.
-            </p>
-            <p>
-              From there, I spent several years working in start-up environments as a key individual contributor, earning millions in revenue through my efforts in e-commerce UX, email and display-ad marketing, and best-in-class product photography.
-            </p>
-            <p>
-              Then, enter #AgencyLife, where I've had the good fortune of working with world-renowned brands which include the following: TikTok, The Philadelphia Eagles, BNY Mellon, La Colombe, General Nutrition Centers {GNC}, Aquasana, Shop Hardinge, Simpson Strong-Tie, Century 21 Fashion, Rachel Roy, Merck, YETI, Marine One, Organic Girl, Goya, Comcast, Charter, and dozens of philanthropic organizations.
-            </p>
-          </section>
-  
-          <section id="conclusion" class="life-section" style="view-timeline: --seven">
-            <div class="heading">
-              <img src="https://i.ibb.co/Q86g6LC/3128133825639913845-5144774570.jpg" alt="Inspiration and connection on the web" class="section-image" />
-              <h2>My reason. My resolution.</h2>
-              <a href="#conclusion">
-                <span class="sr-only">My reason. My resolution.</span>
-              </a>
-            </div>
-            <p>
-              I have places to go, people to meet, and problems to solve.
-            </p>
-            <p>
-              I seek nothing more than to find a place where I can contribute to the world in a meaningful way, while contributing the same to myself and those I work with.
-            </p>
-
-        <!-- Glassy Back to Top Button (SVG with Text, matches styling) -->
-        <div
-          class="glassy-button-container"
-          id="back-to-top-life-container"
-          style="position:fixed; left:50%; bottom:8rem; transform:translateX(-50%); z-index:1200;"
-        >
-          <div class="glassy-button-wrap">
-            <div class="glassy-button-shadow"></div>
-            <button
-              id="back-to-top-life"
-              class="glassy-button back-to-top-btn"
-              type="button"
-              aria-label="Back to top"
-            >
-              <span>
-                <svg
-                  width="24"
-                  height="24"
-                  aria-hidden="true"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  style="vertical-align:middle; margin-right:0.5em;"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 19V5M5 12l7-7 7 7"
-                  />
-                </svg>
-                Back to Top
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Scroll spacer for extra scroll area at bottom, inside .cards-container for inner scroll -->
-        <div class="scroll-spacer"></div>
-      </section>
-    </main>
+  <!-- Page vignette effects -->
+  <div class="page-vignette-container">
+    <div class="page-vignette"></div>
+    <div class="page-vignette-strong"></div>
+    <div class="page-vignette-extreme"></div>
   </div>
-</section>
 
-<!-- BALANCE PAGE -->
-<section id="page-balance" class="page">
-  <div class="balance-bg-cursor"></div>
-  <div id="app">
-    <div class="cards-container">
-      <ul class="cards" style="--items: 26;">
-        <li style="--i: 0;">
-          <input type="radio" id="item-0" name="gallery-item" checked />
-          <label for="item-0">2000</label>
-          <h2>2000</h2>
-          <p class="balance-paragraph">
-            It all started here...
-          </p>
-        </li>
-        <li style="--i: 1;">
-          <input type="radio" id="item-1" name="gallery-item" />
-          <label for="item-1">2001</label>
-          <h2>2001</h2>
-          <p class="balance-paragraph">
-            Attended Conestoga High School. I had my choice between Carnegie Melon University, and Pratt Institute of Art.
-          </p>
-        </li>
-        <li style="--i: 2;">
-          <input type="radio" id="item-2" name="gallery-item" />
-          <label for="item-2">2002</label>
-          <h2>2002</h2>
-          <p class="balance-paragraph">
-            Frankly, Pratt offered an enticing scholarship, while I was rejected for financial aid to Carnegie.
-          </p>
-        </li>
-        <li style="--i: 3;">
-          <input type="radio" id="item-3" name="gallery-item" />
-          <label for="item-3">2003</label>
-          <h2>2003</h2>
-          <p class="balance-paragraph">
-            'Foundation Year' at Pratt — a great way to waste $38k/year.
-          </p>
-        </li>
-        <li style="--i: 4;">
-          <input type="radio" id="item-4" name="gallery-item" />
-          <label for="item-4">2004</label>
-          <h2>2004</h2>
-          <p class="balance-paragraph">
-            Sophomore year, I {finally} studied 3D Animation & Motion Graphics
-          </p>
-        </li>
-        <li style="--i: 5;">
-          <input type="radio" id="item-5" name="gallery-item" />
-          <label for="item-5">2005</label>
-          <h2>2005</h2>
-          <p class="balance-paragraph">
-            Functioned as adjunct professor in Digital Design courses 
-          </p>
-        </li>
-        <li style="--i: 6;">
-          <input type="radio" id="item-6" name="gallery-item" />
-          <label for="item-6">2006</label>
-          <h2>2006</h2>
-          <p class="balance-paragraph">
-            'Stopped-out' from Pratt due to inability to secure financial aid. So, I decided to explore and study graphic design of my own volition.
-          </p>
-        </li>
-        <li style="--i: 7;">
-          <input type="radio" id="item-7" name="gallery-item" />
-          <label for="item-7">2007</label>
-          <h2>2007</h2>
-          <p class="balance-paragraph">
-            Built up a design portfolio using a pirated copy of Adobe Photoshop and Illustrator. Worked as a design intern with a small local design firm. 
-          </p>
-        </li>
-        <li style="--i: 8;">
-          <input type="radio" id="item-8" name="gallery-item" />
-          <label for="item-8">2008</label>
-          <h2>2008</h2>
-          <p class="balance-paragraph">
-            Was hired by an e-commerce startup. The true impetus of my design career.
-          </p>
-        </li>
-        <li style="--i: 9;">
-          <input type="radio" id="item-9" name="gallery-item" />
-          <label for="item-9">2009</label>
-          <h2>2009</h2>
-          <p class="balance-paragraph">
-            Specialized in product photography, email and ads marketing, web design, and graphic design for digital and print. 
-          </p>
-        </li>
-        <li style="--i: 10;">
-          <input type="radio" id="item-10" name="gallery-item" />
-          <label for="item-10">2010</label>
-          <h2>2010</h2>
-          <p class="balance-paragraph">
-            Grew into a lead design role with a focus on e-commerce user experience. 
-          </p>
-        </li>
-        <li style="--i: 11;">
-          <input type="radio" id="item-11" name="gallery-item" />
-          <label for="item-11">2011</label>
-          <h2>2011</h2>
-          <p class="balance-paragraph">
-            Accepted a job in Philly for a digital product startup working in Lead Generation
-          </p>
-        </li>
-        <li style="--i: 12;">
-          <input type="radio" id="item-12" name="gallery-item" />
-          <label for="item-12">2012</label>
-          <h2>2012</h2>
-          <p class="balance-paragraph">
-            Learned responsive web design, usability, analytics, and funnel optimization.
-          </p>
-        </li>
-        <li style="--i: 13;">
-          <input type="radio" id="item-13" name="gallery-item" />
-          <label for="item-13">2013</label>
-          <h2>2013</h2>
-          <p class="balance-paragraph">
-            Now, having worked side-by-side with developers, I decided I needed to learn how to code.
-          </p>
-        </li>
-        <li style="--i: 14;">
-          <input type="radio" id="item-14" name="gallery-item" />
-          <label for="item-14">2014</label>
-          <h2>2014</h2>
-          <p class="balance-paragraph">
-            My efforts paid off, now capable of crafting things with html+css, I was offered a job as an interactive designer.
-          </p>
-        </li>
-        <li style="--i: 15;">
-          <input type="radio" id="item-15" name="gallery-item" />
-          <label for="item-15">2015</label>
-          <h2>2015</h2>
-          <p class="balance-paragraph">
-            #AgencyLife - Pitch Decks, POCs, SOWs, Billable Hours, Happy Hours, All-Nighters.
-          </p>
-        </li>
-        <li style="--i: 16;">
-          <input type="radio" id="item-16" name="gallery-item" />
-          <label for="item-16">2016</label>
-          <h2>2016</h2>
-          <p class="balance-paragraph">
-            Don't go chasing waterfalls.  Chase #Agile instead.
-          </p>
-        </li>
-        <li style="--i: 17;">
-          <input type="radio" id="item-17" name="gallery-item" />
-          <label for="item-17">2017</label>
-          <h2>2017</h2>
-          <p class="balance-paragraph">
-            Built my first iOS app from ground-up!  #LeanUX #MVP
-          </p>
-        </li>
-        <li style="--i: 18;">
-          <input type="radio" id="item-18" name="gallery-item" />
-          <label for="item-18">2018</label>
-          <h2>2018</h2>
-          <p class="balance-paragraph">
-            Moved into SaaS E-commerce as a UX technical writer, working closely with my developer cohorts.
-          </p>
-        </li>
-        <li style="--i: 19;">
-          <input type="radio" id="item-19" name="gallery-item" />
-          <label for="item-19">2019</label>
-          <h2>2019</h2>
-          <p class="balance-paragraph">
-            Transitioned from PHI to NYC, as part of a life-long goal to build my career in the Big Apple.
-          </p>
-        </li>
-        <li style="--i: 20;">
-          <input type="radio" id="item-20" name="gallery-item" />
-          <label for="item-20">2020</label>
-          <h2>2020</h2>
-          <p class="balance-paragraph">
-            Not just elevating my lifestyle, but my career as well, now "Manager, UX"
-          </p>
-        </li>
-        <li style="--i: 21;">
-          <input type="radio" id="item-21" name="gallery-item" />
-          <label for="item-21">2021</label>
-          <h2>2021</h2>
-          <p class="balance-paragraph">
-            2021, post-COVID, was tumultuous to say the least.
-          </p>
-        </li>
-        <li style="--i: 22;">
-          <input type="radio" id="item-22" name="gallery-item" />
-          <label for="item-22">2022</label>
-          <h2>2022</h2>
-          <p class="balance-paragraph">
-            But, I landed at the top working with one of the big 4 tech agencies.
-          </p>
-        </li>
-        <li style="--i: 23;">
-          <input type="radio" id="item-23" name="gallery-item" />
-          <label for="item-23">2023</label>
-          <h2>2023</h2>
-          <p class="balance-paragraph">
-            Product designer working on FinTech for BNY Mellon
-          </p>
-        </li>
-        <li style="--i: 24;">
-          <input type="radio" id="item-24" name="gallery-item" />
-          <label for="item-24">2024</label>
-          <h2>2024</h2>
-          <p class="balance-paragraph">
-            Been doing some soul-searching lately. I've not just been actively keeping up with AI developments, but proactively being hands-on with it.
-          </p>
-        </li>
-        <li style="--i: 25;">
-          <input type="radio" id="item-25" name="gallery-item" />
-          <label for="item-25">2025</label>
-          <h2>2025</h2>
-          <p class="balance-paragraph">
-            It all comes full-circle in the end.
-          </p>
-        </li>
-      </ul>
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/CustomEase.min.js"></script>
+  <script src="https://unpkg.com/split-type"></script>
 
-      <!-- Scroll spacer for extra scroll area at bottom, inside .cards-container for inner scroll -->
-      <div class="scroll-spacer"></div>
-    </div>
-  </div>
-</section>
+  <!-- App (module so we can import Tweakpane) -->
+  <script type="module">
+    import { Pane } from "https://cdn.skypack.dev/tweakpane@4.0.4";
+    window.Pane = Pane;
 
-<!-- CONNECT PAGE -->
-<section id="page-connect" class="page">
-  <div class="connect-container">
-    <div class="connect-content">
-      <div class="connect-mast-container">
-        <main>
-          <section class="mast">
-            <header class="mast__header">
-              <div class="mast__headings">
-                <h1 class="mast__title js-spanize" data-type="reason">
-                  Reason
-                </h1>
-                <h1 class="mast__title js-spanize" data-type="and">&</h1>
-                <h1 class="mast__title js-spanize" data-type="resolution">
-                  Resolution
-                </h1>
-              </div>
-              <hr class="sep" />
-              <div class="mast__texts">
-                <p class="mast__text js-spanize" data-type="reason">
-  is the power of the mind to think,<br>
-  understand, and form judgments<br>
-  by a process of logic.
-</p>
-                <p class="mast__text js-spanize" data-type="and">
-                  is not extra; it simply is. It is a catalyst for action; a
-                  shift between paradigms.
-                </p>
-                <p class="mast__text js-spanize" data-type="resolution">
-                  is a firm decision to do or not to do something, reflecting
-                  determination or resolve.
-                </p>
-              </div>
+    // Register GSAP plugins
+    gsap.registerPlugin(CustomEase);
+    CustomEase.create("hop", "0.9, 0, 0.1, 1");
 
-<!-- Glassy Button with JavaScript mailto -->
-<div class="glassy-button-container">
-  <div class="glassy-button-wrap">
-    <div class="glassy-button-shadow"></div>
-    <button class="glassy-button" type="button" onclick="window.location.href='mailto:zack@reasonably.cc'">
-      <span>zack@reasonably.cc</span>
-    </button>
-  </div>
-</div>
-            </header>
-          </section>
-        </main>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- Instruction overlay -->
-<div class="instruction" id="gallery-instruction">
-  <svg viewBox="0 0 144 141" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
-      d="M129.189 0.0490494C128.744 0.119441 126.422 0.377545 124.03 0.635648C114.719 1.6446 109.23 2.4893 108.058 3.09936C107.119 3.56864 106.674 4.34295 106.674 5.44576C106.674 6.71281 107.424 7.51058 109.043 7.97986C110.403 8.37875 110.825 8.42567 118.87 9.52847C121.778 9.92736 124.288 10.3028 124.475 10.3732C124.663 10.4436 122.951 11.1006 120.676 11.8749C110.028 15.4414 100.412 20.7677 91.7339 27.9242C88.38 30.7164 81.6957 37.4271 79.2096 40.5009C73.8387 47.2116 69.6874 54.8139 66.5681 63.7302C65.9348 65.4665 65.3484 66.8978 65.2546 66.8978C65.1374 66.8978 63.7771 66.7336 62.2291 66.5693C52.9649 65.5134 43.1847 68.1649 34.1316 74.2186C24.7735 80.46 18.5349 87.7338 10.5371 101.742C2.53943 115.726 -1.0959 127.482 0.287874 135.014C0.89767 138.463 2.0469 140.035 3.97011 140.082C5.28352 140.105 5.37733 139.659 4.20465 139.049C3.05541 138.463 2.6567 137.9 2.32835 136.281C0.616228 128.021 6.24512 113.028 17.4325 96.1104C23.2725 87.241 28.362 81.9147 35.5622 77.1046C43.8649 71.5437 52.7069 69.033 61.1737 69.8308C64.9967 70.1828 64.6917 69.9247 64.1992 72.4822C62.2525 82.5013 63.8005 92.6378 67.9753 97.354C73.1116 103.079 81.9771 102 85.0027 95.2657C86.3395 92.2858 86.3864 87.7103 85.1434 83.9796C83.1498 78.0901 80.007 73.8197 75.4335 70.8163C73.8152 69.7604 70.4848 68.1883 69.875 68.1883C69.359 68.1883 69.4294 67.6487 70.2268 65.3257C72.3377 59.2486 75.457 52.7021 78.4122 48.244C83.2436 40.9232 91.4524 32.5701 99.1687 27.103C105.806 22.4102 113.241 18.5386 120.512 16.0045C123.772 14.8548 129.87 13.1889 130.081 13.3766C130.128 13.447 129.541 14.362 128.791 15.4414C124.78 21.0258 122.716 26.0706 122.388 30.998C122.224 33.7198 122.341 34.588 122.88 34.2595C122.998 34.1891 123.678 32.969 124.405 31.5611C126.281 27.8069 131.722 20.6738 139.579 11.6402C141.127 9.85697 142.652 7.86254 143.027 7.08823C144.552 4.03792 143.52 1.48035 140.377 0.471397C139.439 0.166366 138.102 0.0490408 134.584 0.0255769C132.074 -0.021351 129.635 0.00212153 129.189 0.0490494ZM137.117 4.92955C137.187 5.0234 136.718 5.63346 136.061 6.29045L134.865 7.48712L131.042 6.73627C128.931 6.33739 126.727 5.9385 126.14 5.8681C124.827 5.68039 124.123 5.32843 124.968 5.28151C125.296 5.28151 126.868 5.11725 128.486 4.953C131.3 4.64797 136.812 4.62451 137.117 4.92955ZM71.5168 72.5292C76.2075 74.899 79.4441 78.8175 81.3204 84.355C83.6189 91.1361 81.2266 96.8378 76.0433 96.8847C73.3227 96.9082 70.9773 95.2188 69.5936 92.2389C68.2802 89.4232 67.6938 86.5606 67.5765 82.1259C67.4593 78.3248 67.6 76.4242 68.2333 72.7403L68.4912 71.2856L69.359 71.5906C69.8515 71.7548 70.8132 72.1772 71.5168 72.5292Z"
-      fill="currentColor"
-    ></path>
-  </svg>
-  <span id="instruction-text">Drag me!</span>
-</div>
+// Project titles
+const items = [
+  "Chromatic Loopscape","Solar Bloom","Neon Handscape","Echo Discs","Void Gaze",
+  "Gravity Sync","Heat Core","Fractal Mirage","Nova Pulse","Sonic Horizon",
+  "Dream Circuit","Lunar Mesh","Radiant Dusk","Pixel Drift","Vortex Bloom",
+  "Shadow Static","Crimson Phase","Retro Cascade","Photon Fold","Zenith Flow"
+];
 
-        <!-- Glassy Button Container for the single button
-        <div class="work-glassy-button-container">
-          <div class="glassy-button-wrap">
-            <div class="glassy-button-shadow"></div>
-            <button
-              class="glassy-button"
-              type="button"
-              onclick="window.location.href='https://reasonably.cc/resume'">
-              <span>View Resume</span>
-            </button>
-          </div>
-        </div>
- -->
+// Image URLs
+const imageUrls = [
+  "https://i.ibb.co/HLbthyBP/603985613b870e6cd6c49a29-IMG-3457.jpg",
+  "https://i.ibb.co/TzBw2tf/603d6216612acc7c7e54bef2-IMG-1158.jpg",
+  "https://i.ibb.co/Q3g94Qvm/603d10120fba838e599b6b5e-IMG-1563.jpg",
+  "https://i.ibb.co/FLqq86nk/603d6207dcd0225713fe1549-IMG-4484.jpg",
+  "https://i.ibb.co/jkbWhf7c/603d1185cafcb2591f42b1ad-IMG-3932.jpg",
+  "https://i.ibb.co/kVLJncPv/603d1185b8ec32082f451ba9-IMG-3882.jpg",
+  "https://i.ibb.co/g0gQP0D/603d138e1d5ed053b509992a-IMG-5199.jpg",
+  "https://i.ibb.co/DD6wrNzS/603d102dae26b192aef6ab4a-IMG-3023.jpg",
+  "https://i.ibb.co/mC5TTsXX/603d100d889053cc334ee5fc-IMG-2083.jpg",
+  "https://i.ibb.co/HTR23qbc/603d61b96ca6f0c336165b6e-DSC09310.jpg",
+  "https://i.ibb.co/mVVMY8HQ/603d8d7a3a6df470a4a661a1-DSC00726.jpg",
+  "https://i.ibb.co/pjh1ftD4/603d0bb2331da47ee88db089-DSC02085.jpg",
+  "https://i.ibb.co/q32VwbxG/603d0b5635e8053bc120bec7-DSC09034.jpg",
+  "https://i.ibb.co/WWktTDQ5/603d0b8b038105ae6904872a-DSC08334.jpg",
+  "https://i.ibb.co/B57brGpH/603d0b8abf1990616037cc35-ZAX03810.jpg",
+  "https://i.ibb.co/KkHpvXt/603b3890dcd3ab104d67d405-ZAX01233-2.jpg",
+  "https://i.ibb.co/HfVqtzzn/603afe37ba16f8f9174cf501-IMG-1878.jpg",
+  "https://i.ibb.co/DHp56d4c/603a967ad03490104c2aaefe-ZAX01042-2.jpg",
+  "https://i.ibb.co/Qvnn64Kb/603a967ac64cec73069e2454-ZAX09877.jpg",
+  "https://i.ibb.co/vxkSqfr5/603a967a5dc3e982f571b744-ZAX00968.jpg",
+  "https://i.ibb.co/xt9M8KB9/603a95ee83ba30ff4ac9bc6a-DSC00423-1.jpg",
+  "https://i.ibb.co/Ldw6P2Lb/603a95edd03490eb412aaedc-DSC08676.jpg",
+  "https://i.ibb.co/Vc7dTGcw/603a93f06a41f45766a3361a-DSC09212.jpg",
+  "https://i.ibb.co/d4QzChqk/603a95ed29478f4bc91875b5-DSC08933.jpg",
+  "https://i.ibb.co/ch9YMGNW/603a93f0e815e830d1783e07-IMG-2033.jpg",
+  "https://i.ibb.co/JWb6r4zD/603a93efdfd184c21ef2d238-IMG-3352.jpg",
+  "https://i.ibb.co/HmmhS33/603a93eef8754819192222f7-DSC09720.jpg",
+  "https://i.ibb.co/mrWgT1QH/603a93eedce047078935438a-IMG-5686.jpg",
+  "https://i.ibb.co/Dgm1cLry/603a93eedcd3ab4b2e64fcbc-IMG-4204.jpg",
+  "https://i.ibb.co/tpvRzKWF/603a93eea83b1aab7a98c35b-DSC08228.jpg",
+  "https://i.ibb.co/S4DSwGfN/603a93eddcd3ab104d64fcbb-ZAX09767.jpg"
+];
 
-<!-- Vignette overlays (global, always rendered) -->
-<div class="page-vignette-container">
-  <div class="page-vignette"></div>
-  <div class="page-vignette-strong"></div>
-  <div class="page-vignette-extreme"></div>
-</div>
+// (Optional) If counts differ, generate fallback titles to match image count:
+const displayTitles = imageUrls.map((_, i) => items[i] ?? `Project ${i + 1}`);
 
-<!-- Vignette overlays (global, always rendered, fixed and high z-index) -->
-<div class="page-vignette-container">
-  <div class="page-vignette"></div>
-  <div class="page-vignette-strong"></div>
-  <div class="page-vignette-extreme"></div>
-</div>
-<!-- Global Blur overlay (always rendered) -->
-<div class="global-blur"></div>
 
-<!-- Add your audio element (ensure the sound file exists in your project) -->
-<audio id="hoverSound" preload="auto">
-  <source src="https://github.com/ZACKGORT/reasonably/raw/refs/heads/main/mixkit-light-button-2580.mp3" type="audio/mpeg">
-</audio>
+    const container = document.querySelector(".container");
+    const canvas = document.getElementById("canvas");
+    const overlay = document.getElementById("overlay");
+    const projectTitleElement = document.querySelector(".project-title p");
 
-<footer class="zackgort-footer">
-  <p class="zackgort-paragraph">Reason inspires. Resolution ships.</p>
-</footer>
+    // Settings for Tweakpane
+    const settings = {
+      baseWidth: 400,
+      smallHeight: 330,
+      largeHeight: 500,
+      itemGap: 65,
+      hoverScale: 1.05,
+      expandedScale: 0.4,
+      dragEase: 0.075,
+      momentumFactor: 200,
+      bufferZone: 3,
+      borderRadius: 0,
+      vignetteSize: 0,
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="main.js"></script>
+      // Page vignette settings (simplified)
+      vignetteStrength: 0.7,
+      vignetteSize: 200,
 
-<!-- Main JS file (Remove this if using CodePen/JSFiddle JS panel) -->
+      // Overlay
+      overlayOpacity: 0.9,
+      overlayEaseDuration: 0.8,
 
+      // Durations
+      zoomDuration: 0.6
+    };
+
+    // Derived layout
+    let itemSizes = [
+      { width: settings.baseWidth, height: settings.smallHeight },
+      { width: settings.baseWidth, height: settings.largeHeight }
+    ];
+    let itemGap = settings.itemGap;
+    let columns = 4;
+    const itemCount = items.length;
+
+    let cellWidth = settings.baseWidth + settings.itemGap;
+    let cellHeight = Math.max(settings.smallHeight, settings.largeHeight) + settings.itemGap;
+
+    // State
+    let isDragging = false;
+    let startX, startY;
+    let targetX = 0, targetY = 0;
+    let currentX = 0, currentY = 0;
+    let dragVelocityX = 0, dragVelocityY = 0;
+    let lastDragTime = 0;
+    let mouseHasMoved = false;
+    let visibleItems = new Set();
+    let lastUpdateTime = 0;
+    let lastX = 0, lastY = 0;
+    let isExpanded = false;
+    let activeItem = null;
+    let activeItemId = null;
+    let canDrag = true;
+    let originalPosition = null;
+    let expandedItem = null;
+    let overlayAnimation = null;
+    let titleSplit = null;
+    let paneInstance = null;
+
+// --------- Defaults (replaces the Tweakpane UI) ----------
+function initTweakpane() {
+  // no UI; just lock in the desired defaults at startup
+  paneInstance = null;
+
+  const d = {
+    // Item Sizes
+    baseWidth: 300,
+    smallHeight: 200,
+    largeHeight: 200,
+
+    // Layout
+    itemGap: 5,
+    bufferZone: 1.0,
+
+    // Style
+    borderRadius: 16,
+
+    // Vignettes
+    itemVignetteSize: 200,
+    pageVignetteStrength: 1.0,
+    pageVignetteSize: 500,
+
+    // Overlay Animation
+    overlayOpacity: 0.90,
+    overlayEaseDuration: 0.8,
+
+    // (Optional) Animation — keep if your code uses these
+    hoverScale: 1.05,
+    expandedScale: 0.40,
+    dragEase: 0.07,
+    momentumFactor: 0.20,
+    zoomDuration: 0.6,
+  };
+
+  // ---- Apply to your settings object (back-compat with your helpers) ----
+  settings.baseWidth   = d.baseWidth;
+  settings.smallHeight = d.smallHeight;
+  settings.largeHeight = d.largeHeight;
+
+  settings.itemGap     = d.itemGap;
+  settings.bufferZone  = d.bufferZone;
+
+  settings.borderRadius = d.borderRadius;
+
+  // If your code previously used a single "vignetteSize" for items,
+  // keep it in sync with the item vignette helper:
+  settings.itemVignetteSize = d.itemVignetteSize;
+  settings.vignetteSize     = d.itemVignetteSize; // back-compat for updateVignetteSize()
+
+  // Page vignette values (used by updatePageVignette)
+  settings.vignetteStrength = d.pageVignetteStrength;
+  settings.pageVignetteSize = d.pageVignetteSize;
+
+  // Overlay
+  settings.overlayOpacity      = d.overlayOpacity;
+  settings.overlayEaseDuration = d.overlayEaseDuration;
+
+  // Animation (only if your code uses them)
+  settings.hoverScale     = d.hoverScale;
+  settings.expandedScale  = d.expandedScale;
+  settings.dragEase       = d.dragEase;
+  settings.momentumFactor = d.momentumFactor;
+  settings.zoomDuration   = d.zoomDuration;
+
+  // ---- Apply CSS custom properties (if your styles read from :root) ----
+  const root = document.documentElement.style;
+  root.setProperty('--baseWidth', d.baseWidth + 'px');
+  root.setProperty('--smallHeight', d.smallHeight + 'px');
+  root.setProperty('--largeHeight', d.largeHeight + 'px');
+
+  root.setProperty('--itemGap', d.itemGap + 'px');
+  root.setProperty('--bufferZone', String(d.bufferZone));
+
+  root.setProperty('--borderRadius', d.borderRadius + 'px');
+
+  root.setProperty('--itemVignetteSize', d.itemVignetteSize + 'px');
+  root.setProperty('--pageVignetteStrength', String(d.pageVignetteStrength));
+  root.setProperty('--pageVignetteSize', d.pageVignetteSize + 'px');
+
+  root.setProperty('--overlayOpacity', String(d.overlayOpacity));
+  root.setProperty('--overlayEaseDuration', d.overlayEaseDuration + 's');
+
+  // Optional animation vars if you use them in CSS
+  root.setProperty('--hoverScale', String(d.hoverScale));
+  root.setProperty('--expandedScale', String(d.expandedScale));
+  root.setProperty('--dragEase', d.dragEase + 's');
+  root.setProperty('--momentumFactor', String(d.momentumFactor));
+  root.setProperty('--zoomDuration', d.zoomDuration + 's');
+
+  // ---- Run your existing applicators once on load ----
+  if (typeof updateSettings === 'function')        updateSettings();
+  if (typeof updateBorderRadius === 'function')    updateBorderRadius();
+  if (typeof updateVignetteSize === 'function')    updateVignetteSize();   // item vignette
+  if (typeof updatePageVignette === 'function')    updatePageVignette();   // page vignette
+  if (typeof updateHoverScale === 'function')      updateHoverScale();
+
+  // Reset view like the old "Reset View" button
+  if (typeof targetX !== 'undefined') targetX = 0;
+  if (typeof targetY !== 'undefined') targetY = 0;
+
+  // NOTE: We intentionally do not attach any keydown handlers
+  // and we do not create window.Pane() — the panel is fully removed.
+}
+
+    function togglePaneVisibility() {
+      if (!paneInstance) return;
+      const el = paneInstance.element;
+      el.style.display = (el.style.display === "none") ? "" : "none";
+    }
+
+    // --------- Style updaters ----------
+    function updateBorderRadius() {
+      document.documentElement.style.setProperty("--border-radius", `${settings.borderRadius}px`);
+    }
+    function updateVignetteSize() {
+      document.documentElement.style.setProperty("--vignette-size", `${settings.vignetteSize}px`);
+    }
+    function updatePageVignette() {
+      const strength = settings.vignetteStrength;
+      const size = settings.vignetteSize;
+
+      const regularOpacity = strength * 0.7;
+      const regularSize = size * 1.5;
+      document.documentElement.style.setProperty("--page-vignette-size", `${regularSize}px`);
+      document.documentElement.style.setProperty("--page-vignette-color", `rgba(0,0,0,${regularOpacity})`);
+
+      const strongOpacity = strength * 0.85;
+      const strongSize = size * 0.75;
+      document.documentElement.style.setProperty("--page-vignette-strong-size", `${strongSize}px`);
+      document.documentElement.style.setProperty("--page-vignette-strong-color", `rgba(0,0,0,${strongOpacity})`);
+
+      const extremeOpacity = strength;
+      const extremeSize = size * 0.4;
+      document.documentElement.style.setProperty("--page-vignette-extreme-size", `${extremeSize}px`);
+      document.documentElement.style.setProperty("--page-vignette-extreme-color", `rgba(0,0,0,${extremeOpacity})`);
+    }
+    function updateHoverScale() {
+      document.documentElement.style.setProperty("--hover-scale", settings.hoverScale);
+      document.querySelectorAll(".item img").forEach((img) => { img.style.transition = "transform 0.3s ease"; });
+    }
+
+    // Rebuild on settings change
+    function updateSettings() {
+      itemSizes = [
+        { width: settings.baseWidth, height: settings.smallHeight },
+        { width: settings.baseWidth, height: settings.largeHeight }
+      ];
+      itemGap = settings.itemGap;
+      columns = 4;
+      cellWidth = settings.baseWidth + settings.itemGap;
+      cellHeight = Math.max(settings.smallHeight, settings.largeHeight) + settings.itemGap;
+
+      visibleItems.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el.parentNode === canvas) canvas.removeChild(el);
+      });
+      visibleItems.clear();
+      updateVisibleItems();
+
+      updateBorderRadius();
+      updateVignetteSize();
+      updateHoverScale();
+      updatePageVignette();
+    }
+
+    // --------- Title anims ----------
+    function setAndAnimateTitle(title) {
+      if (titleSplit) titleSplit.revert();
+      projectTitleElement.textContent = title;
+      titleSplit = new SplitType(projectTitleElement, { types: "words" });
+      gsap.set(titleSplit.words, { y: "100%" });
+    }
+    function animateTitleIn() {
+      gsap.fromTo(titleSplit.words, { y: "100%", opacity: 0 }, { y: "0%", opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out" });
+    }
+    function animateTitleOut() {
+      gsap.to(titleSplit.words, { y: "-100%", opacity: 0, duration: 1, stagger: 0.1, ease: "power3.out" });
+    }
+
+    // --------- Overlay anims ----------
+    function animateOverlayIn() {
+      if (overlayAnimation) overlayAnimation.kill();
+      overlayAnimation = gsap.to(overlay, {
+        opacity: settings.overlayOpacity,
+        duration: settings.overlayEaseDuration,
+        ease: "power2.inOut",
+        overwrite: true
+      });
+    }
+    function animateOverlayOut() {
+      if (overlayAnimation) overlayAnimation.kill();
+      overlayAnimation = gsap.to(overlay, {
+        opacity: 0,
+        duration: settings.overlayEaseDuration,
+        ease: "power2.inOut"
+      });
+    }
+
+    // --------- Grid helpers ----------
+    function getItemSize(row, col) {
+      const idx = Math.abs((row * columns + col) % itemSizes.length);
+      return itemSizes[idx];
+    }
+    function getItemId(col, row) { return `${col},${row}`; }
+    function getItemPosition(col, row) {
+      return { x: col * cellWidth, y: row * cellHeight };
+    }
+
+    function updateVisibleItems() {
+      const buffer = settings.bufferZone;
+      const viewWidth = window.innerWidth * (1 + buffer);
+      const viewHeight = window.innerHeight * (1 + buffer);
+
+      const startCol = Math.floor((-currentX - viewWidth / 2) / cellWidth);
+      const endCol = Math.ceil((-currentX + viewWidth * 1.5) / cellWidth);
+      const startRow = Math.floor((-currentY - viewHeight / 2) / cellHeight);
+      const endRow = Math.ceil((-currentY + viewHeight * 1.5) / cellHeight);
+
+      const currentItems = new Set();
+
+      for (let row = startRow; row <= endRow; row++) {
+        for (let col = startCol; col <= endCol; col++) {
+          const itemId = getItemId(col, row);
+          currentItems.add(itemId);
+          if (visibleItems.has(itemId)) continue;
+          if (activeItemId === itemId && isExpanded) continue;
+
+          const size = getItemSize(row, col);
+          const pos = getItemPosition(col, row);
+
+          const item = document.createElement("div");
+          item.className = "item";
+          item.id = itemId;
+          item.style.width = `${size.width}px`;
+          item.style.height = `${size.height}px`;
+          item.style.left = `${pos.x}px`;
+          item.style.top = `${pos.y}px`;
+          item.dataset.col = col;
+          item.dataset.row = row;
+          item.dataset.width = size.width;
+          item.dataset.height = size.height;
+
+          const itemNum = Math.abs((row * columns + col) % itemCount);
+
+          const imageContainer = document.createElement("div");
+          imageContainer.className = "item-image-container";
+
+          const img = document.createElement("img");
+          img.src = imageUrls[itemNum % imageUrls.length];
+          img.alt = `Image ${itemNum + 1}`;
+          imageContainer.appendChild(img);
+          item.appendChild(imageContainer);
+
+          const caption = document.createElement("div");
+          caption.className = "item-caption";
+
+          const name = document.createElement("div");
+          name.className = "item-name";
+          name.textContent = items[itemNum];
+          caption.appendChild(name);
+
+          const number = document.createElement("div");
+          number.className = "item-number";
+          number.textContent = `#${(itemNum + 1).toString().padStart(5, "0")}`;
+          caption.appendChild(number);
+
+          item.appendChild(caption);
+
+          item.addEventListener("click", (e) => {
+            if (mouseHasMoved || isDragging) return;
+            handleItemClick(item, itemNum);
+          });
+
+          canvas.appendChild(item);
+          visibleItems.add(itemId);
+        }
+      }
+
+      // Remove outside items
+      visibleItems.forEach((id) => {
+        if (!currentItems.has(id) || (activeItemId === id && isExpanded)) {
+          const el = document.getElementById(id);
+          if (el && el.parentNode === canvas) canvas.removeChild(el);
+          visibleItems.delete(id);
+        }
+      });
+    }
+
+    function handleItemClick(item, itemIndex) {
+      if (isExpanded) {
+        if (expandedItem) closeExpandedItem();
+      } else {
+        expandItem(item, itemIndex);
+      }
+    }
+
+    function expandItem(item, itemIndex) {
+      isExpanded = true;
+      activeItem = item;
+      activeItemId = item.id;
+      canDrag = false;
+      container.style.cursor = "auto";
+
+      const imgSrc = item.querySelector("img").src;
+      const titleIndex = itemIndex % items.length;
+      const itemWidth = parseInt(item.dataset.width);
+      const itemHeight = parseInt(item.dataset.height);
+
+      setAndAnimateTitle(items[titleIndex]);
+
+      // Caption clone to animate out
+      const nameEl = item.querySelector(".item-name");
+      const numberEl = item.querySelector(".item-number");
+      const nameText = nameEl.textContent;
+      const numberText = numberEl.textContent;
+
+      const captionClone = item.querySelector(".item-caption").cloneNode(true);
+      captionClone.classList.add("caption-clone");
+      const nameClone = captionClone.querySelector(".item-name");
+      const numberClone = captionClone.querySelector(".item-number");
+
+      const nameCloneSplit = new SplitType(nameClone, { types: "words" });
+      const numberCloneSplit = new SplitType(numberClone, { types: "words" });
+
+      const captionRect = item.querySelector(".item-caption").getBoundingClientRect();
+      captionClone.style.left = `${captionRect.left}px`;
+      captionClone.style.bottom = `${window.innerHeight - captionRect.bottom}px`;
+      captionClone.style.width = `${captionRect.width}px`;
+      captionClone.style.zIndex = "10002";
+      document.body.appendChild(captionClone);
+      item.querySelector(".item-caption").style.opacity = "0";
+
+      gsap.to(nameCloneSplit.words, { y: "100%", opacity: 0, duration: 0.6, stagger: 0.03, ease: "power3.in" });
+      gsap.to(numberCloneSplit.words, {
+        y: "100%", opacity: 0, duration: 0.6, stagger: 0.02, delay: 0.05, ease: "power3.in",
+        onComplete: () => { if (captionClone.parentNode) document.body.removeChild(captionClone); }
+      });
+
+      const rect = item.getBoundingClientRect();
+      originalPosition = { id: item.id, rect, imgSrc, width: itemWidth, height: itemHeight, nameText, numberText };
+
+      overlay.classList.add("active");
+      animateOverlayIn();
+
+      expandedItem = document.createElement("div");
+      expandedItem.className = "expanded-item";
+      expandedItem.style.width = `${itemWidth}px`;
+      expandedItem.style.height = `${itemHeight}px`;
+      expandedItem.style.zIndex = "10000";
+      expandedItem.style.borderRadius = `var(--border-radius, 0px)`;
+
+      const bigImg = document.createElement("img");
+      bigImg.src = imgSrc;
+      expandedItem.appendChild(bigImg);
+      expandedItem.addEventListener("click", closeExpandedItem);
+      document.body.appendChild(expandedItem);
+
+      document.querySelectorAll(".item").forEach((el) => {
+        if (el !== activeItem) {
+          gsap.to(el, { opacity: 0, duration: settings.overlayEaseDuration, ease: "power2.inOut" });
+        }
+      });
+
+      const viewportWidth = window.innerWidth;
+      const targetWidth = viewportWidth * settings.expandedScale;
+      const aspect = itemHeight / itemWidth;
+      const targetHeight = targetWidth * aspect;
+
+      gsap.delayedCall(0.5, animateTitleIn);
+      gsap.fromTo(
+        expandedItem,
+        { width: itemWidth, height: itemHeight, x: rect.left + itemWidth/2 - window.innerWidth/2, y: rect.top + itemHeight/2 - window.innerHeight/2 },
+        { width: targetWidth, height: targetHeight, x: 0, y: 0, duration: settings.zoomDuration, ease: "hop" }
+      );
+    }
+
+    function closeExpandedItem() {
+      if (!expandedItem || !originalPosition) return;
+
+      animateTitleOut();
+      animateOverlayOut();
+
+      document.querySelectorAll(".item").forEach((el) => {
+        if (el.id !== activeItemId) {
+          gsap.to(el, { opacity: 1, duration: settings.overlayEaseDuration, delay: 0.3, ease: "power2.inOut" });
+        }
+      });
+
+      const originalItem = document.getElementById(activeItemId);
+      if (originalItem) {
+        const nameEl = originalItem.querySelector(".item-name");
+        const numberEl = originalItem.querySelector(".item-number");
+        nameEl.textContent = originalPosition.nameText;
+        numberEl.textContent = originalPosition.numberText;
+        originalItem.querySelector(".item-caption").style.opacity = "0";
+      }
+
+      const originalRect = originalPosition.rect;
+      const originalWidth = originalPosition.width;
+      const originalHeight = originalPosition.height;
+
+      gsap.to(expandedItem, {
+        width: originalWidth, height: originalHeight,
+        x: originalRect.left + originalWidth/2 - window.innerWidth/2,
+        y: originalRect.top + originalHeight/2 - window.innerHeight/2,
+        duration: settings.zoomDuration, ease: "hop",
+        onComplete: () => {
+          if (originalItem) {
+            const captionEl = originalItem.querySelector(".item-caption");
+            const captionClone = document.createElement("div");
+            captionClone.className = "caption-clone";
+            captionClone.innerHTML = captionEl.innerHTML;
+
+            const cr = captionEl.getBoundingClientRect();
+            captionClone.style.position = "fixed";
+            captionClone.style.left = `${cr.left}px`;
+            captionClone.style.bottom = `${window.innerHeight - cr.bottom}px`;
+            captionClone.style.width = `${cr.width}px`;
+            captionClone.style.padding = "10px";
+            captionClone.style.zIndex = "10002";
+            document.body.appendChild(captionClone);
+
+            const nameClone = captionClone.querySelector(".item-name");
+            const numberClone = captionClone.querySelector(".item-number");
+            nameClone.style.overflow = "hidden";
+            numberClone.style.overflow = "hidden";
+
+            const nameSplit = new SplitType(nameClone, { types: "words" });
+            const numberSplit = new SplitType(numberClone, { types: "words" });
+
+            gsap.set([nameSplit.words, numberSplit.words], { y: "100%", opacity: 0 });
+
+            gsap.to(nameSplit.words, { y: "0%", opacity: 1, duration: 0.7, stagger: 0.03, ease: "power3.out" });
+            gsap.to(numberSplit.words, {
+              y: "0%", opacity: 1, duration: 0.7, stagger: 0.02, delay: 0.05, ease: "power3.out",
+              onComplete: () => {
+                captionEl.style.opacity = "1";
+                if (captionClone.parentNode) document.body.removeChild(captionClone);
+              }
+            });
+          }
+
+          if (expandedItem && expandedItem.parentNode) document.body.removeChild(expandedItem);
+          if (originalItem) originalItem.style.visibility = "visible";
+
+          expandedItem = null;
+          isExpanded = false;
+          activeItem = null;
+          originalPosition = null;
+          activeItemId = null;
+          canDrag = true;
+          container.style.cursor = "grab";
+          dragVelocityX = 0;
+          dragVelocityY = 0;
+          overlay.classList.remove("active");
+        }
+      });
+    }
+
+    // --------- Main loop ----------
+    function animate() {
+      if (canDrag) {
+        const ease = settings.dragEase;
+        currentX += (targetX - currentX) * ease;
+        currentY += (targetY - currentY) * ease;
+        canvas.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
+        const now = Date.now();
+        const distMoved = Math.hypot(currentX - lastX, currentY - lastY);
+        if (distMoved > 100 || now - lastUpdateTime > 120) {
+          updateVisibleItems();
+          lastX = currentX; lastY = currentY; lastUpdateTime = now;
+        }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // --------- Input handlers ----------
+    container.addEventListener("mousedown", (e) => {
+      if (!canDrag) return;
+      isDragging = true; mouseHasMoved = false;
+      startX = e.clientX; startY = e.clientY;
+      container.style.cursor = "grabbing";
+    });
+    window.addEventListener("mousemove", (e) => {
+      if (!isDragging || !canDrag) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) mouseHasMoved = true;
+
+      const now = Date.now();
+      const dt = Math.max(10, now - lastDragTime);
+      lastDragTime = now;
+      dragVelocityX = dx / dt; dragVelocityY = dy / dt;
+
+      targetX += dx; targetY += dy;
+      startX = e.clientX; startY = e.clientY;
+    });
+    window.addEventListener("mouseup", () => {
+      if (!isDragging) return;
+      isDragging = false;
+      if (canDrag) {
+        container.style.cursor = "grab";
+        if (Math.abs(dragVelocityX) > 0.1 || Math.abs(dragVelocityY) > 0.1) {
+          const m = settings.momentumFactor;
+          targetX += dragVelocityX * m;
+          targetY += dragVelocityY * m;
+        }
+      }
+    });
+
+    overlay.addEventListener("click", () => { if (isExpanded) closeExpandedItem(); });
+
+    container.addEventListener("touchstart", (e) => {
+      if (!canDrag) return;
+      isDragging = true; mouseHasMoved = false;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener("touchmove", (e) => {
+      if (!isDragging || !canDrag) return;
+      const dx = e.touches[0].clientX - startX;
+      const dy = e.touches[0].clientY - startY;
+      if (Math.abs(dx) > 5 || Math.abs(dy) > 5) mouseHasMoved = true;
+      targetX += dx; targetY += dy;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener("touchend", () => { isDragging = false; });
+
+    window.addEventListener("resize", () => {
+      if (isExpanded && expandedItem) {
+        const vw = window.innerWidth;
+        const targetWidth = vw * settings.expandedScale;
+        const aspect = originalPosition.height / originalPosition.width;
+        const targetHeight = targetWidth * aspect;
+        gsap.to(expandedItem, { width: targetWidth, height: targetHeight, duration: 0.3, ease: "power2.out" });
+      } else {
+        updateVisibleItems();
+      }
+    });
+
+    // --------- Boot ---------
+    function initializeStyles() {
+      updateBorderRadius();
+      updateVignetteSize();
+      updateHoverScale();
+      updatePageVignette();
+    }
+
+    initializeStyles();
+    updateVisibleItems();
+    animate();
+    setTimeout(initTweakpane, 500);
+  </script>
 </body>
 </html>
