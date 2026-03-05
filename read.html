@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="newspaper">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On the Structure of a Thought — reasonably.cc</title>
+<meta name="description" content="A philosophy of structured thinking. Why declaring the type of a thought before you think it changes everything. reasonably.cc">
+<meta property="og:title" content="On the Structure of a Thought">
+<meta property="og:description" content="A philosophy of structured thinking. Why declaring the type of a thought before you think it changes everything. reasonably.cc">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ═══ WINDOWED (DARK) ═══ */
+[data-theme="windowed"] {
+  --bg: #0f1117;
+  --bg-2: #161820;
+  --bg-3: #1d1f2a;
+  --ink: #e8eaf0;
+  --ink-2: #8b90a8;
+  --ink-3: #4a4f6a;
+  --ink-4: #282c3f;
+  --accent: #4f8ef7;
+  --accent-2: #7b5cf5;
+  --accent-l: rgba(79,142,247,0.14);
+  --accent-ll: rgba(79,142,247,0.06);
+  --border: rgba(255,255,255,0.07);
+  --border-2: rgba(255,255,255,0.12);
+  --disp: 'Syne', sans-serif;
+  --body: 'Instrument Serif', Georgia, serif;
+  --ui: 'JetBrains Mono', monospace;
+  --grain-opacity: 0.025;
+  --bar: linear-gradient(90deg, #4f8ef7 0%, #7b5cf5 55%, transparent 100%);
+  color-scheme: dark;
+}
+
+/* ═══ NEWSPAPER (LIGHT) ═══ */
+[data-theme="newspaper"] {
+  --bg: #f0ebe0;
+  --bg-2: #e6e0d4;
+  --bg-3: #dad3c4;
+  --ink: #1a1510;
+  --ink-2: #4a3e30;
+  --ink-3: #8a7a62;
+  --ink-4: #c2b8a0;
+  --accent: #8b1a1a;
+  --accent-2: #5c3d1e;
+  --accent-l: rgba(139,26,26,0.12);
+  --accent-ll: rgba(139,26,26,0.05);
+  --border: rgba(26,21,16,0.10);
+  --border-2: rgba(26,21,16,0.18);
+  --disp: 'Playfair Display', serif;
+  --body: 'Playfair Display', serif;
+  --ui: 'JetBrains Mono', monospace;
+  --grain-opacity: 0.04;
+  --bar: linear-gradient(90deg, #8b1a1a 0%, #5c3d1e 55%, transparent 100%);
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: clamp(17px, 1.75vw, 20px);
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  transition: background .3s, color .3s;
+}
+
+/* grain overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 999;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* accent bar */
+body::before {
+  content: '';
+  display: block;
+  height: 2px;
+  background: var(--bar);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  transition: background .3s;
+}
+
+.page {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 clamp(22px, 6vw, 60px);
+}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle {
+  display: flex; gap: 2px;
+  background: var(--bg-3); border: 1px solid var(--border-2);
+  border-radius: 20px; padding: 2px;
+  transition: background .3s, border-color .3s;
+}
+.tt-btn {
+  font-family: var(--ui); font-size: 7px; letter-spacing: .1em;
+  text-transform: uppercase; background: none; border: none;
+  color: var(--ink-3); padding: 4px 10px; cursor: pointer;
+  border-radius: 16px; transition: all .15s; white-space: nowrap;
+}
+.tt-btn.active { background: var(--accent); color: #fff; }
+[data-theme="newspaper"] .tt-btn.active { background: var(--ink); color: var(--bg); }
+
+/* ── NEWSPAPER OVERRIDES ── */
+[data-theme="newspaper"] .site-header { border-bottom: 2px double var(--ink-3); }
+[data-theme="newspaper"] h1 { font-style: italic; }
+[data-theme="newspaper"] .m-section h2 { font-style: italic; font-weight: 700; }
+[data-theme="newspaper"] .brand { font-style: italic; font-size: 18px; font-weight: 700; letter-spacing: -.01em; }
+[data-theme="newspaper"] .brand em { font-style: italic; }
+[data-theme="newspaper"] .brand-dot { background: var(--accent); animation: none; }
+[data-theme="newspaper"] .pull { border-left-width: 3px; }
+[data-theme="newspaper"] .hero { border-bottom: 2px double var(--ink-3); }
+
+/* ── HEADER ── */
+.site-header {
+  padding: 26px 0 18px;
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.brand {
+  font-family: var(--disp); font-weight: 800; font-size: 14px;
+  letter-spacing: -.02em; color: var(--ink); text-decoration: none;
+  display: flex; align-items: center; gap: 5px;
+  transition: color .18s;
+}
+.brand em { color: var(--accent); font-style: normal; }
+.brand-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.55)} }
+.header-tag {
+  font-family: var(--ui); font-size: 7px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--border-2); padding: 3px 10px; border-radius: 20px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 60px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-kicker {
+  font-family: var(--ui); font-size: 7px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 12px; opacity: .9;
+}
+.hero-kicker::after { content: ''; flex: 1; height: 1px; background: var(--accent-l); }
+
+h1 {
+  font-family: var(--disp);
+  font-size: clamp(34px, 5.5vw, 58px);
+  font-weight: 800;
+  line-height: .97;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  margin-bottom: 30px;
+}
+h1 em {
+  font-style: italic;
+  color: var(--accent);
+  font-family: var(--body);
+  font-weight: 400;
+  letter-spacing: -.01em;
+}
+
+.hero-byline {
+  font-family: var(--ui); font-size: 8px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-3);
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.hero-byline span { color: var(--ink-4); }
+
+/* ── BODY ── */
+.manifesto-body { padding: 64px 0 80px; }
+
+.m-section {
+  margin-bottom: 72px;
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+.m-section.visible { opacity: 1; transform: translateY(0); }
+
+.m-section h2 {
+  font-family: var(--disp);
+  font-size: clamp(18px, 2.1vw, 23px);
+  font-weight: 800;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin-bottom: 24px;
+  display: flex; align-items: baseline; gap: 14px;
+}
+.m-section h2::before {
+  content: attr(data-n);
+  font-family: var(--ui); font-size: 7px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink-4);
+  flex-shrink: 0; padding-top: 4px;
+}
+
+.m-section p {
+  color: var(--ink-2);
+  margin-bottom: 20px;
+  font-size: clamp(16px, 1.65vw, 19px);
+  line-height: 1.82;
+  font-family: var(--body);
+}
+.m-section p:last-child { margin-bottom: 0; }
+.m-section p strong { color: var(--ink); font-weight: 400; font-family: var(--disp); font-size: .9em; letter-spacing: -.01em; }
+.m-section p em { font-style: italic; }
+
+/* node type labels inline */
+.node-label {
+  font-family: var(--ui); font-size: .72em; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--accent);
+  background: var(--accent-ll); border: 1px solid var(--accent-l);
+  padding: 1px 7px; border-radius: 20px;
+  vertical-align: middle; display: inline-block;
+  margin: 0 2px;
+}
+.node-label.red {
+  color: #e05252;
+  background: rgba(224,82,82,0.08);
+  border-color: rgba(224,82,82,0.2);
+}
+
+/* pull */
+.pull {
+  font-family: var(--body);
+  font-style: italic;
+  font-size: clamp(19px, 2.2vw, 24px);
+  line-height: 1.45;
+  color: var(--ink);
+  padding: 16px 0 16px 22px;
+  border-left: 2px solid var(--accent);
+  margin: 32px 0;
+}
+
+/* aside */
+.aside {
+  font-family: var(--ui);
+  font-size: clamp(10px, 1vw, 12px);
+  color: var(--ink-3);
+  line-height: 1.7;
+  background: var(--bg-3);
+  border: 1px solid var(--border);
+  border-left: 2px solid var(--ink-4);
+  padding: 12px 16px;
+  border-radius: 0 3px 3px 0;
+  margin: 28px 0;
+}
+
+/* ornament */
+.ornament {
+  display: block; text-align: center;
+  font-family: var(--ui); font-size: 8px;
+  letter-spacing: .3em; color: var(--ink-4);
+  margin: 56px 0; user-select: none;
+}
+
+/* closing */
+.closing {
+  padding: 48px 0 0;
+  border-top: 1px solid var(--border);
+}
+.closing-mark {
+  font-family: var(--disp);
+  font-size: clamp(22px, 2.8vw, 32px);
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 28px;
+  letter-spacing: -.03em;
+}
+.closing-mark em {
+  font-style: italic;
+  font-family: var(--body);
+  font-weight: 400;
+  color: var(--accent);
+}
+.closing p {
+  font-family: var(--ui); font-size: 8px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3); line-height: 1.9;
+}
+.closing a {
+  color: var(--accent); text-decoration: none;
+  border-bottom: 1px solid var(--accent-l); padding-bottom: 1px;
+  transition: border-color .15s;
+}
+.closing a:hover { border-color: var(--accent); }
+
+/* ── FOOTER ── */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 30px 0 48px;
+}
+.footer-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.footer-brand {
+  font-family: var(--ui); font-size: 7px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink-4);
+}
+.footer-link {
+  font-family: var(--ui); font-size: 7px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--ink-3); text-decoration: none;
+  border-bottom: 1px solid var(--border); padding-bottom: 1px;
+  transition: color .15s, border-color .15s;
+}
+.footer-link:hover { color: var(--accent); border-color: var(--accent); }
+
+@media (max-width: 560px) {
+  h1 { font-size: 32px; }
+  .pull { font-size: 18px; padding-left: 16px; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="page">
+    <div class="header-inner">
+      <a href="https://reasonably.cc" class="brand">reasonably<em>.</em><div class="brand-dot"></div></a>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="theme-toggle">
+          <button class="tt-btn" data-t="windowed" onclick="setTheme('windowed')">◼ digital</button>
+          <button class="tt-btn active" data-t="newspaper" onclick="setTheme('newspaper')">⊞ broadsheet</button>
+        </div>
+        <span class="header-tag">Philosophy of Use</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <section class="hero">
+    <p class="hero-kicker">reasonably.cc · Manifesto</p>
+    <h1>On the Structure<br>of a <em>Thought</em></h1>
+    <div class="hero-byline">
+      reasonably.cc <span>·</span> structured thinking
+    </div>
+  </section>
+
+  <div class="manifesto-body">
+
+    <div class="m-section" id="s1">
+      <h2 data-n="I">Most Thinking Arrives Undeclared</h2>
+      <p>When we write to a thinking machine — when we compose a prompt, a question, an instruction, a request — we typically do so in the same form we have always used for everything: a block of text. Undifferentiated. A title sitting next to a caveat sitting next to a constraint sitting next to an open question, all of it occupying the same visual register, carrying the same implicit weight, making no distinction between what is certain and what is exploratory, between what is a hard rule and what is a soft preference.</p>
+      <p>This is not a problem with language. Language can carry all of these distinctions beautifully. It is a problem with the container. The single text field does not invite you to declare what kind of thing you are saying. It only invites you to say it. And so most thinking arrives at its destination undeclared — a mass of intent without an architecture, a set of ideas that have not yet been asked to account for their own nature.</p>
+      <div class="pull">The single text field does not invite you to declare what kind of thing you are saying. It only invites you to say it.</div>
+      <p>The consequence is not that machines misunderstand us. The consequence is that we misunderstand ourselves — and only discover it when the response comes back shaped by an intent we did not know we had left implicit.</p>
+    </div>
+
+    <div class="m-section" id="s2">
+      <h2 data-n="II">Declaring the Type Is the First Act of Thinking</h2>
+      <p>There is a practice in formal logic and in the discipline of careful writing that has no common name but which every clear thinker learns to do instinctively: before making a claim, identify what <em>kind</em> of claim it is. Is this an observation or an argument? A preference or a principle? A question or an assumption disguised as one? A description of what is, or a prescription for what should be?</p>
+      <p>The act of typing distinguishes these from each other. Once you have said <em>this is a constraint</em> — not a preference, not a thought, not a specification, but a hard rule that governs everything else — you have done something cognitively significant. You have committed. You have drawn a boundary around one part of your intent and named it inviolable. That act of naming changes your relationship to everything else in the prompt. The constraint is now load-bearing. Everything else must work around it.</p>
+      <p>This is what the node system does. The <span class="node-label">title</span> does not just name a thing — it frames the entire exchange that follows. The <span class="node-label">thought</span> is permission to explore before you conclude. The <span class="node-label">pull</span> is a forcing function: find the one thing, the irreducible center, and make it stand alone. The <span class="node-label">aside</span> is an act of intellectual honesty — the thing that qualifies without dominating. The <span class="node-label red">[constraint]</span> is an act of will.</p>
+      <div class="aside">These distinctions exist in every good piece of thinking. Reasonably does not invent them. It makes them visible, composable, and first-class — before the thinking is sent, not after it is received.</div>
+    </div>
+
+    <div class="m-section" id="s3">
+      <h2 data-n="III">The Prompt Is Already an Argument</h2>
+      <p>There is a widespread assumption that a prompt is an input — a raw material that gets processed into an output. The prompt is what you put in; the response is what you get out. In this model, the quality of the prompt is measured almost entirely by the quality of the response it produces. The prompt is instrumental. It is a means.</p>
+      <p>This is a thin account of what a prompt actually is. A prompt is not a means. A prompt is the first move in a structured act of joint reasoning. It establishes the terms of the engagement — what is known and what is being asked, what is fixed and what is open, what kind of response is being invited and what kind is being excluded. Every prompt makes these determinations, whether its author is aware of making them or not.</p>
+      <p>A prompt that has been composed from typed nodes is a prompt that knows what it is. The <span class="node-label">title</span> has declared the frame. The <span class="node-label">thought</span> has opened the territory. The <span class="node-label">pull</span> has named the irreducible question. The <span class="node-label red">[constraint]</span> has set the walls. Before a word of response has been generated, the shape of the conversation has been established — not by accident, not by inference from unstructured prose, but by explicit authorial decision at each level of the thinking.</p>
+      <div class="pull">The structure of the prompt is the first argument. Everything that follows is a response to it.</div>
+      <p>This changes the relationship between the person thinking and the thinking they produce. The structured prompt is not easier or harder to write than the unstructured one. It is more honest. It forces you to know what you mean before you say it — and in doing so, it reveals the places where you do not yet know.</p>
+    </div>
+
+    <div class="m-section" id="s4">
+      <h2 data-n="IV">Ambiguity Hides Between Types</h2>
+      <p>The most useful thing the node system does is not produce better outputs. It is not a prompting optimization technique. The most useful thing it does is expose the places in your thinking where you were not sure what kind of thing you were saying.</p>
+      <p>When you sit down to compose a thought in structured nodes and find yourself unable to decide whether something is a <span class="node-label">thought</span> or a <span class="node-label red">[constraint]</span>, that uncertainty is not a problem with the interface. It is a signal from your own thinking. The uncertainty was already there, latent, in the unstructured prose. The prose had simply absorbed it without revealing it. The node system refuses to absorb it. It asks you to decide.</p>
+      <p>Is this a soft preference or a hard rule? Is this something you are still working out or something you have concluded? Is this the essential thing, or is it context that qualifies the essential thing? These are not questions the interface asks you. They are questions your own thinking demands once you have committed to declaring the type before you write the content.</p>
+      <div class="pull">Ambiguity often hides in the space between node types. The act of choosing is the act of thinking.</div>
+      <p>The node that resists classification is the node worth pausing on. Not to force it into a category, but to ask: what is it, actually? What am I actually saying here? That question — asked before the prompt is sent, not after the response arrives — is where the real work happens.</p>
+    </div>
+
+    <div class="m-section" id="s5">
+      <h2 data-n="V">Structure Is Not a Constraint on Thought</h2>
+      <p>The objection to structured interfaces for thinking is predictable and not entirely wrong: that structure constrains, that the imposition of categories on a thought in progress interrupts the thought, that creativity and exploration require the freedom of the undifferentiated field. The blank page. The single box. No type, no category, no commitment until the thought has fully arrived.</p>
+      <p>This objection correctly identifies something real about a certain phase of thinking. There is a stage — early, pre-verbal, generative — where typing is hostile. Where the demand to classify kills the germ before it can grow. Reasonably does not propose to colonize that stage. The <span class="node-label">thought</span> node exists precisely because some thinking needs to remain open, exploratory, unresolved. Not everything should be a constraint. Not everything should be a pull. The palette includes genuine openness as a first-class type.</p>
+      <p>But there is a different phase — the phase where you have something, where the territory has been mapped enough that you are ready to say it to another mind — and in that phase, the demand to classify is not a constraint. It is a clarification. It asks you to do the thing that rigorous thinking has always required: to know the difference between what you know and what you are guessing, between what you are proposing and what you are insisting, between the frame and the content of the frame.</p>
+      <div class="aside">Structure is not a cage. It is the form that makes intention legible — to yourself, and to whatever is on the other end of your thinking.</div>
+      <p>The structured prompt is not a tighter prompt. It is a more truthful one. And truth, in thinking, is always a form of freedom — the freedom from the confusion of your own unexamined premises.</p>
+    </div>
+
+    <div class="m-section" id="s6">
+      <h2 data-n="VI">The Interface as a Practice</h2>
+      <p>Reasonably is not a productivity tool. It is not designed to help you produce more thoughts faster, or to optimize the throughput of your interactions with language models, or to gamify the act of prompting. These are legitimate design goals. They are not the design goals here.</p>
+      <p>The goal here is something closer to what a practice is — in the sense that meditation is a practice, or journaling is a practice, or the habit of writing a sentence down before speaking it is a practice. Something you do repeatedly, in a structure, until the structure becomes second nature. Until the questions the structure asks — what kind of thing is this? what is the essential thing? what is the rule? what is the caveat? — become questions you ask yourself before the interface does.</p>
+      <p>A person who has used this interface for a while does not become a better prompter. They become a more deliberate thinker. The nodes internalize. The habit of declaring type before content — of asking, before writing, what <em>kind</em> of thing this sentence is — persists outside the interface, in emails, in conversations, in the private drafts that never get sent but clarify everything that does.</p>
+      <div class="pull">You don't have to get it right. You have to get it structured. The structure will show you where right is.</div>
+      <p>That is the ambition. Not a better tool. A better practice. An interface that changes how you think, not just what you can do with your thinking.</p>
+    </div>
+
+    <div class="m-section" id="s7">
+      <h2 data-n="VII">On What the Response Is Actually For</h2>
+      <p>There is a temptation, in any interface that produces a response, to evaluate the interface by the quality of the response. The response is the output. The output is the product. The product is the point.</p>
+      <p>The responses in reasonably are curated, not generated. This is a deliberate choice, and it is worth explaining why. It is not a technical limitation. It is a philosophical statement: the response is the least important part of this interface.</p>
+      <p>What the response does is close the loop — it acknowledges the structure you built, reflects something back from it, demonstrates that the structure was legible, that the types were recognized, that the thinking you did before sending was worth doing. But the thinking you did before sending is the thing. The response is the mirror. The mirror is useful. The mirror is not the face.</p>
+      <p>If you use this interface and leave with a better response than you would have gotten from an unstructured prompt, that is a fine outcome. If you use this interface and leave with a clearer sense of what you actually thought — before any response arrived — that is the intended outcome. The interface succeeds when it makes your thinking legible to yourself. What happens after that is a separate question.</p>
+      <div class="aside">The response is the least important part of this interface. The most important part is what you discovered while building the prompt.</div>
+    </div>
+
+    <span class="ornament">· · ·</span>
+
+    <div class="m-section closing" id="closing">
+      <div class="closing-mark">
+        Think in structure.<br>
+        Declare the type.<br>
+        <em>The form will show you what you mean.</em>
+      </div>
+      <p>
+        <a href="https://reasonably.cc">reasonably.cc</a><br>
+        structured thinking<br>
+        <span id="pub-year"></span>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="page">
+    <div class="footer-inner">
+      <span class="footer-brand">reasonably.cc · structured thinking</span>
+      <a href="https://reasonably.cc" class="footer-link">← reasonably.cc</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('pub-year').textContent = new Date().getFullYear();
+
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.tt-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07, rootMargin: '0px 0px -32px 0px' });
+
+document.querySelectorAll('.m-section').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
