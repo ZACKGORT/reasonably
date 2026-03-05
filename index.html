@@ -1,1063 +1,721 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="modular">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>wolfie · dialogue</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>reasonably · structured thinking</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,700;0,900;1,300;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   THEME TOKENS
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* ── MODULAR: warm parchment · editorial columns · Space Mono · amber ──── */
-[data-theme="modular"] {
-  --bg:        #f4f1ea;
-  --bg-2:      #ede9e0;
-  --bg-3:      #e6e1d6;
-  --ink:       #1a1714;
-  --ink-2:     #6a6458;
-  --ink-3:     #b0a898;
-  --ink-4:     #d8d0c4;
-  --accent:    #c8902a;
-  --accent-l:  rgba(200,144,42,0.12);
-  --accent-ll: rgba(200,144,42,0.05);
-  --aside-bg:  rgba(26,23,20,0.04);
-  --aside-ink: #5a5448;
-  --border:    rgba(26,23,20,0.08);
-  --border-2:  rgba(26,23,20,0.14);
-  --ui:        'Space Mono', monospace;
-  --disp:      'Barlow Condensed', sans-serif;
-  --col-w:     620px;
-  --header-h:  52px;
-  color-scheme: light;
-}
-
-/* ── STACKED: deep obsidian · single scroll column · serif · gold ───────── */
-[data-theme="stacked"] {
-  --bg:        #0e0d0c;
-  --bg-2:      #161412;
-  --bg-3:      #1e1b18;
-  --ink:       #f0ebe2;
-  --ink-2:     #a09080;
-  --ink-3:     #5a5040;
-  --ink-4:     #302820;
-  --accent:    #d4a044;
-  --accent-l:  rgba(212,160,68,0.15);
-  --accent-ll: rgba(212,160,68,0.06);
-  --aside-bg:  rgba(255,255,255,0.03);
-  --aside-ink: #807060;
-  --border:    rgba(255,255,255,0.07);
-  --border-2:  rgba(255,255,255,0.13);
-  --ui:        'IBM Plex Mono', monospace;
-  --disp:      'DM Serif Display', serif;
-  --col-w:     560px;
-  --header-h:  52px;
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root {
+  --bg:         #0f1117;
+  --bg-2:       #161820;
+  --bg-3:       #1d1f2a;
+  --bg-4:       #242637;
+  --ink:        #e8eaf0;
+  --ink-2:      #8b90a8;
+  --ink-3:      #4a4f6a;
+  --ink-4:      #282c3f;
+  --accent:     #4f8ef7;
+  --accent-2:   #7b5cf5;
+  --accent-l:   rgba(79,142,247,0.14);
+  --accent-ll:  rgba(79,142,247,0.06);
+  --red:        #e05252;
+  --red-l:      rgba(224,82,82,0.12);
+  --border:     rgba(255,255,255,0.07);
+  --border-2:   rgba(255,255,255,0.12);
+  --radius:     6px;
+  --header-h:   52px;
+  --safe-b:     env(safe-area-inset-bottom, 0px);
+  --safe-t:     env(safe-area-inset-top, 0px);
   color-scheme: dark;
 }
 
-/* ── WINDOWED: cool slate · floating panels · system mono · blue ────────── */
-[data-theme="windowed"] {
-  --bg:        #1a1d24;
-  --bg-2:      #20242e;
-  --bg-3:      #272c38;
-  --ink:       #c8d0e0;
-  --ink-2:     #7888a8;
-  --ink-3:     #424e68;
-  --ink-4:     #2a3048;
-  --accent:    #5b8fd4;
-  --accent-l:  rgba(91,143,212,0.15);
-  --accent-ll: rgba(91,143,212,0.06);
-  --aside-bg:  rgba(91,143,212,0.05);
-  --aside-ink: #6878a8;
-  --border:    rgba(255,255,255,0.07);
-  --border-2:  rgba(255,255,255,0.13);
-  --ui:        'IBM Plex Mono', monospace;
-  --disp:      'Barlow Condensed', sans-serif;
-  --col-w:     560px;
-  --header-h:  44px;
-  color-scheme: dark;
-}
-
-/* ── TRIFOLD: sage forest · three-panel broadsheet · serif · green ─────── */
-[data-theme="trifold"] {
-  --bg:        #f1f3ee;
-  --bg-2:      #e8ece3;
-  --bg-3:      #dde3d5;
-  --ink:       #1c2218;
-  --ink-2:     #4e6040;
-  --ink-3:     #8aa070;
-  --ink-4:     #c0ccb0;
-  --accent:    #3d7032;
-  --accent-l:  rgba(61,112,50,0.12);
-  --accent-ll: rgba(61,112,50,0.05);
-  --aside-bg:  rgba(28,34,24,0.04);
-  --aside-ink: #445538;
-  --border:    rgba(28,34,24,0.09);
-  --border-2:  rgba(28,34,24,0.16);
-  --ui:        'Space Mono', monospace;
-  --disp:      'DM Serif Display', serif;
-  --col-w:     560px;
-  --header-h:  52px;
-  color-scheme: light;
-}
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   RESET + BASE
-   ═══════════════════════════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { color-scheme: light dark; }
-
+/* ═══════════════════════════════════════
+   RESET
+═══════════════════════════════════════ */
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { color-scheme: dark; height: 100%; }
 body {
   background: var(--bg);
   color: var(--ink);
-  font-family: var(--ui);
-  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background 0.25s, color 0.25s;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
-/* grain */
+/* subtle noise */
 body::before {
   content: '';
-  position: fixed; inset: 0;
-  pointer-events: none; z-index: 9000;
-  opacity: 0.022;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0/180px;
+  position: fixed; inset: 0; pointer-events: none; z-index: 9999;
+  opacity: 0.025;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0/200px;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   HEADER
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   LAYOUT — two-panel windowed
+═══════════════════════════════════════ */
+#app {
+  display: grid;
+  grid-template-rows: var(--header-h) 1fr;
+  grid-template-columns: 1fr 1fr;
+  height: 100dvh;
+  height: calc(100vh - var(--safe-t));
+}
+
 header {
   grid-column: 1 / -1;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 20px;
-  height: var(--header-h);
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-  position: sticky; top: 0; z-index: 500;
-  transition: background 0.25s, border-color 0.25s;
-}
-.h-mark {
-  font-family: var(--disp); font-weight: 900; font-size: 16px;
-  letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink);
-  flex-shrink: 0;
-}
-[data-theme="stacked"] .h-mark,
-[data-theme="trifold"] .h-mark { font-size: 18px; letter-spacing: 0; font-weight: 400; font-style: italic; }
-.h-mark span { color: var(--accent); }
-.h-sub {
-  font-size: 7px; letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--ink-3);
-  position: absolute; left: 50%; transform: translateX(-50%);
-  white-space: nowrap;
-}
-@media (max-width: 700px) { .h-sub { display: none; } }
-
-.h-actions { display: flex; gap: 6px; align-items: center; }
-.h-btn {
-  font-family: var(--ui); font-size: 7px; letter-spacing: 0.12em;
-  text-transform: uppercase; background: none;
-  border: 1px solid var(--border-2); color: var(--ink-2);
-  padding: 5px 10px; cursor: pointer; transition: all .15s;
-  white-space: nowrap;
-}
-.h-btn:hover  { border-color: var(--accent); color: var(--accent); }
-.h-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-l); }
-
-/* ── THEME SWITCHER ──────────────────────────────────────────────────────── */
-.theme-switcher {
-  display: flex; align-items: center; gap: 3px;
-  background: var(--bg-2); border: 1px solid var(--border-2);
-  padding: 3px 4px; border-radius: 3px;
-}
-.t-btn {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 2px; padding: 4px 6px; cursor: pointer;
-  border: 1px solid transparent; border-radius: 2px;
-  transition: all 0.15s; background: none;
-  position: relative;
-}
-.t-btn:hover { background: var(--bg-3); border-color: var(--border-2); }
-.t-btn.active { background: var(--accent-l); border-color: var(--accent); }
-
-/* mini layout preview icons */
-.t-icon {
-  width: 22px; height: 16px; position: relative; flex-shrink: 0;
-}
-/* modular: two columns side by side */
-.t-icon-modular { display: flex; gap: 2px; }
-.t-icon-modular::before {
-  content: ''; flex: 1; background: var(--ink-3); border-radius: 1px;
-}
-.t-icon-modular::after {
-  content: ''; width: 7px; background: var(--ink-4); border-radius: 1px;
-}
-/* stacked: single tall column */
-.t-icon-stacked {
-  display: flex; justify-content: center;
-}
-.t-icon-stacked::before {
-  content: ''; width: 12px; height: 100%; background: var(--ink-3); border-radius: 1px;
-}
-/* windowed: overlapping box layout */
-.t-icon-windowed {
-  position: relative;
-}
-.t-icon-windowed::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; width: 14px; height: 10px;
-  background: var(--ink-4); border: 1px solid var(--ink-3); border-radius: 1px;
-}
-.t-icon-windowed::after {
-  content: ''; position: absolute;
-  bottom: 0; right: 0; width: 14px; height: 10px;
-  background: var(--ink-3); border: 1px solid var(--ink-2); border-radius: 1px;
-}
-/* trifold: three equal columns */
-.t-icon-trifold { display: flex; gap: 2px; }
-.t-icon-trifold::before {
-  content: ''; flex: 1; background: var(--ink-3); border-radius: 1px;
-}
-.t-icon-trifold span {
-  flex: 1; background: var(--ink-4); border-radius: 1px; display: block;
-}
-.t-icon-trifold::after {
-  content: ''; flex: 1; background: var(--ink-3); border-radius: 1px;
-}
-
-.t-label {
-  font-family: var(--ui); font-size: 6px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--ink-3);
-  white-space: nowrap;
-}
-.t-btn.active .t-label { color: var(--accent); }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   LAYOUT SYSTEM — four distinct shell configurations
-   ═══════════════════════════════════════════════════════════════════════════ */
-#shell {
-  display: grid;
-  min-height: 100vh;
-}
-
-/* ── MODULAR: classic editorial columns ─────────────────────────────────── */
-[data-theme="modular"] #shell {
-  grid-template-columns: 1fr var(--col-w) 210px 1fr;
-  grid-template-rows: var(--header-h) 1fr;
-}
-[data-theme="modular"] header        { grid-column: 1 / -1; }
-[data-theme="modular"] #stream-col   { grid-column: 2; grid-row: 2; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-[data-theme="modular"] #node-rail    { grid-column: 3; grid-row: 2; border-left: 1px solid var(--border); }
-
-/* ── STACKED: single centered column ────────────────────────────────────── */
-[data-theme="stacked"] #shell {
-  grid-template-columns: 1fr min(var(--col-w), 100%) 1fr;
-  grid-template-rows: var(--header-h) 1fr;
-}
-[data-theme="stacked"] header        { grid-column: 1 / -1; }
-[data-theme="stacked"] #stream-col   { grid-column: 2; grid-row: 2; }
-[data-theme="stacked"] #node-rail    {
-  /* in stacked mode the rail becomes a floating bottom drawer on desktop */
-  position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: min(var(--col-w), 100vw);
-  max-height: 50vh;
-  border: 1px solid var(--border-2); border-bottom: none;
-  border-radius: 8px 8px 0 0;
   background: var(--bg-2);
-  z-index: 400;
-  box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
-  display: flex; flex-direction: row; flex-wrap: wrap;
-  padding: 14px 16px 8px;
-  gap: 6px;
-  overflow-y: auto;
-  grid-column: unset; grid-row: unset;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  border-bottom: 1px solid var(--border);
+  padding-top: var(--safe-t);
+  height: calc(var(--header-h) + var(--safe-t));
+  position: relative; z-index: 100;
 }
-[data-theme="stacked"] #node-rail.hidden {
-  transform: translateX(-50%) translateY(100%);
-  opacity: 0;
-  pointer-events: none;
-}
-[data-theme="stacked"] #node-rail .rail-head,
-[data-theme="stacked"] #node-rail .rail-divider,
-[data-theme="stacked"] #node-rail .rail-sec { display: none; }
-[data-theme="stacked"] .pal-btn { flex: 0 0 calc(50% - 3px); margin-bottom: 0; }
-[data-theme="stacked"] #stream-scroll { padding: 48px 40px 32px; }
 
-/* ── WINDOWED: floating panel approach ───────────────────────────────────── */
-[data-theme="windowed"] #shell {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: var(--header-h) 1fr;
-  gap: 0;
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 15px;
+  letter-spacing: -0.02em; color: var(--ink);
 }
-[data-theme="windowed"] header { grid-column: 1 / -1; }
-[data-theme="windowed"] #stream-col {
+.logo em { color: var(--accent); font-style: normal; }
+.logo-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; margin-left: 1px; vertical-align: middle; margin-top: -2px; animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+.h-right { display: flex; align-items: center; gap: 8px; }
+.h-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-3); padding: 3px 10px;
+  border: 1px solid var(--ink-4); border-radius: 20px;
+}
+.h-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
+  background: none; border: 1px solid var(--border-2);
+  color: var(--ink-2); padding: 5px 12px; cursor: pointer;
+  border-radius: var(--radius); transition: all .15s;
+}
+.h-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-ll); }
+
+/* ─── LEFT: Stream panel ─── */
+#stream-panel {
   grid-column: 1; grid-row: 2;
+  display: flex; flex-direction: column;
   border-right: 1px solid var(--border);
   background: var(--bg);
-}
-[data-theme="windowed"] #node-rail {
-  grid-column: 2; grid-row: 2;
-  background: var(--bg-2);
-  border-left: none;
-}
-[data-theme="windowed"] #stream-scroll { padding: 32px 36px 24px; }
-/* window title bars */
-[data-theme="windowed"] #stream-col::before {
-  content: '● dialogue stream';
-  display: block; padding: 7px 14px;
-  font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-3); background: var(--bg-3);
-  border-bottom: 1px solid var(--border);
-  font-family: var(--ui);
-}
-[data-theme="windowed"] #node-rail::before {
-  content: '● node palette';
-  display: block; padding: 7px 14px;
-  font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--ink-3); background: var(--bg-3);
-  border-bottom: 1px solid var(--border);
-  font-family: var(--ui);
-  position: sticky; top: 0; z-index: 10;
+  min-height: 0;
 }
 
-/* ── TRIFOLD: three-column broadsheet ───────────────────────────────────── */
-[data-theme="trifold"] #shell {
-  grid-template-columns: 220px 1fr 220px;
-  grid-template-rows: var(--header-h) 1fr;
+#stream-titlebar {
+  padding: 8px 14px 7px;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--border);
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
 }
-[data-theme="trifold"] header        { grid-column: 1 / -1; }
-[data-theme="trifold"] #stream-col   { grid-column: 2; grid-row: 2; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
-[data-theme="trifold"] #node-rail    { grid-column: 3; grid-row: 2; }
-/* trifold gets a chapter sidebar in the leftmost column */
-[data-theme="trifold"] #trifold-left { display: flex; flex-direction: column; grid-column: 1; grid-row: 2; border-right: 1px solid var(--border); padding: 28px 18px; }
-[data-theme="trifold"] #trifold-left .rail-head {
-  font-size: 7px; letter-spacing: 0.22em; text-transform: uppercase;
-  color: var(--ink-3); margin-bottom: 16px;
-  padding-bottom: 8px; border-bottom: 1px solid var(--border);
-}
-[data-theme="trifold"] #trifold-chapters { display: block; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   STREAM COLUMN
-   ═══════════════════════════════════════════════════════════════════════════ */
-#stream-col {
-  display: flex; flex-direction: column;
-  min-height: calc(100vh - var(--header-h));
-  overflow: hidden;
-}
-[data-theme="modular"] #stream-col,
-[data-theme="stacked"] #stream-col { min-height: calc(100vh - var(--header-h)); }
+.tb-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-4); flex-shrink: 0; }
+.tb-dot.live { background: #3cba6e; animation: pulse 2s ease-in-out infinite; }
 
 #stream-scroll {
   flex: 1; overflow-y: auto;
-  padding: 48px 48px 32px;
-  scroll-behavior: smooth;
+  padding: 28px 24px 20px;
+  overscroll-behavior: contain;
 }
-#stream-scroll::-webkit-scrollbar { width: 4px; }
+#stream-scroll::-webkit-scrollbar { width: 3px; }
 #stream-scroll::-webkit-scrollbar-thumb { background: var(--ink-4); border-radius: 2px; }
 
-/* stacked uses serif drop-cap styling */
-[data-theme="stacked"] .sn-title { font-size: clamp(32px,5vw,56px); letter-spacing: -0.03em; }
-[data-theme="trifold"] #stream-scroll { padding: 36px 32px 24px; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   EXCHANGE + RENDERING
-   ═══════════════════════════════════════════════════════════════════════════ */
-.exchange {
-  margin-bottom: 56px;
-  opacity: 0; animation: exchIn 0.35s ease forwards;
-}
-@keyframes exchIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.who {
-  font-size: 7px; letter-spacing: 0.22em; text-transform: uppercase;
-  margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
-}
-.who-name { color: var(--ink-3); }
-.who-tag {
-  color: var(--accent); font-size: 7px; letter-spacing: 0.14em;
-  padding: 1px 6px; border: 1px solid var(--accent-l);
-  border-radius: 10px; background: var(--accent-ll);
-}
-.who::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* user nodes in stream */
-.sn-title {
-  font-family: var(--disp); font-weight: 900;
-  font-size: clamp(26px, 4vw, 44px);
-  line-height: 0.93; letter-spacing: -0.02em; text-transform: uppercase;
-  color: var(--ink); border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 6px;
-}
-[data-theme="stacked"] .sn-title { font-weight: 400; text-transform: none; letter-spacing: -0.02em; }
-[data-theme="trifold"] .sn-title { font-weight: 400; text-transform: none; letter-spacing: 0; }
-
-.sn-thought { font-family: var(--disp); font-weight: 400; font-size: 20px; color: var(--ink); line-height: 1.35; margin-bottom: 4px; }
-.sn-pull { font-family: var(--disp); font-style: italic; font-weight: 300; font-size: 19px; line-height: 1.3; color: var(--ink-2); border-left: 1px solid var(--ink-3); padding: 6px 0 6px 14px; margin-bottom: 4px; }
-.sn-aside { font-family: var(--ui); font-size: 11px; line-height: 1.55; color: var(--aside-ink); background: var(--aside-bg); border-left: 2px solid var(--ink-4); padding: 5px 12px; border-radius: 0 3px 3px 0; margin-bottom: 4px; font-style: italic; }
-.sn-spec { font-family: var(--ui); font-size: 10px; letter-spacing: 0.04em; display: flex; align-items: baseline; gap: 12px; padding: 3px 0; border-bottom: 1px solid var(--border); }
-.sn-spec:last-child { border-bottom: none; }
-.sn-constraint { font-family: var(--ui); font-size: 10px; letter-spacing: 0.04em; display: flex; align-items: baseline; gap: 12px; padding: 3px 0; border-bottom: 1px solid rgba(180,60,40,0.15); }
-.sn-constraint:last-child { border-bottom: none; }
-.sn-break { font-size: 7px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); padding: 6px 0; margin: 2px 0; border-top: 1px solid var(--border); }
-.spec-k { font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); min-width: 80px; flex-shrink: 0; }
-.spec-v { color: var(--ink); }
-.constraint-k { font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: #b43c28; min-width: 80px; flex-shrink: 0; }
-.constraint-v { color: var(--ink); }
-
-/* response renders */
-.r-body { font-family: var(--disp); font-weight: 300; font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: 500px; margin-bottom: 6px; }
-.r-poster { font-family: var(--disp); font-weight: 900; font-size: clamp(26px, 4vw, 46px); line-height: 0.93; letter-spacing: -0.02em; text-transform: uppercase; color: var(--ink); margin-bottom: 8px; }
-[data-theme="stacked"] .r-poster,
-[data-theme="trifold"] .r-poster { font-weight: 400; text-transform: none; letter-spacing: -0.02em; }
-.r-pull { font-family: var(--disp); font-style: italic; font-weight: 300; font-size: 20px; line-height: 1.3; color: var(--ink-2); max-width: 460px; padding: 8px 0 8px 16px; border-left: 1px solid var(--ink-3); margin: 6px 0; }
-.r-aside { font-family: var(--ui); font-size: 11px; line-height: 1.55; color: var(--aside-ink); background: var(--aside-bg); border-left: 2px solid var(--ink-4); padding: 6px 12px; border-radius: 0 3px 3px 0; margin: 4px 0; font-style: italic; }
-.r-spec { font-family: var(--ui); font-size: 10px; letter-spacing: 0.04em; display: flex; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-.r-spec:last-of-type { border-bottom: none; }
-.r-spec::after { content: ''; position: absolute; bottom: 0; left: 0; height: 1px; background: var(--accent); width: 0; animation: specScan 0.6s ease forwards 0.15s; }
-@keyframes specScan { to { width: 100%; } }
-.r-constraint { font-family: var(--ui); font-size: 10px; letter-spacing: 0.04em; display: flex; align-items: baseline; gap: 12px; padding: 4px 0; border-bottom: 1px solid rgba(180,60,40,0.15); position: relative; overflow: hidden; }
-.r-constraint:last-of-type { border-bottom: none; }
-.r-constraint::after { content: ''; position: absolute; bottom: 0; left: 0; height: 1px; background: #b43c28; width: 0; animation: specScan 0.6s ease forwards 0.15s; }
-.r-list { margin: 4px 0 8px; padding: 0; list-style: none; }
-.r-list li { font-family: var(--disp); font-weight: 300; font-size: 18px; line-height: 1.4; color: var(--ink-2); padding: 3px 0 3px 18px; position: relative; }
-.r-list li::before { content: '◇'; position: absolute; left: 0; color: var(--accent); font-size: 8px; top: 6px; }
-
-/* typing indicator */
-.typing { display: flex; align-items: center; gap: 5px; padding: 10px 0; }
-.typing-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3); animation: tdot 1.1s ease-in-out infinite; }
-.typing-dot:nth-child(2) { animation-delay: 0.18s; }
-.typing-dot:nth-child(3) { animation-delay: 0.36s; }
-@keyframes tdot { 0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; } 40% { transform: scale(1); opacity: 1; } }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   CANVAS AREA
-   ═══════════════════════════════════════════════════════════════════════════ */
-#canvas-area {
-  border-top: 1px solid var(--border);
-  background: var(--bg);
-  flex-shrink: 0;
+/* ─── RIGHT: Canvas / Palette panel ─── */
+#canvas-panel {
+  grid-column: 2; grid-row: 2;
   display: flex; flex-direction: column;
-  max-height: 52vh; min-height: 180px;
+  background: var(--bg-2);
+  min-height: 0;
 }
-[data-theme="windowed"] #canvas-area { max-height: 44vh; }
-[data-theme="stacked"]  #canvas-area { max-height: 48vh; }
 
-#canvas-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 16px 7px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+#palette-titlebar {
+  padding: 8px 14px 7px;
+  background: var(--bg-3);
+  border-bottom: 1px solid var(--border);
+  font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); flex-shrink: 0;
+  display: flex; align-items: center; gap: 8px;
 }
-.ct-left { display: flex; align-items: center; gap: 10px; }
-.ct-label { font-size: 7px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
-#node-count { font-size: 7px; letter-spacing: 0.10em; color: var(--accent); background: var(--accent-ll); border: 1px solid var(--accent-l); padding: 1px 7px; border-radius: 10px; }
-.ct-right { display: flex; align-items: center; gap: 6px; }
 
-#canvas-nodes { flex: 1; overflow-y: auto; padding: 8px 12px; display: flex; flex-direction: column; gap: 4px; }
+#canvas-nodes {
+  flex: 1; overflow-y: auto; padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 5px;
+  overscroll-behavior: contain;
+}
 #canvas-nodes::-webkit-scrollbar { width: 3px; }
 #canvas-nodes::-webkit-scrollbar-thumb { background: var(--ink-4); border-radius: 2px; }
 
-#canvas-hint { display: flex; align-items: center; justify-content: center; height: 52px; pointer-events: none; }
-.hint-text { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); }
+#canvas-hint {
+  height: 100%; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 8px; pointer-events: none;
+}
+.hint-icon { font-size: 22px; opacity: 0.3; }
+.hint-text { font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); text-align: center; }
 
-/* node blocks */
-.node { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1px solid var(--border); background: var(--bg); border-radius: 2px; transition: border-color 0.12s, background 0.12s, opacity 0.2s; position: relative; user-select: none; }
-.node:hover { border-color: var(--border-2); background: var(--bg-2); }
-.node.committed { opacity: 0.52; }
-.node.committed:hover { opacity: 0.72; }
-.node.drag-over { border-color: var(--accent) !important; border-style: dashed; }
-.node.dragging  { opacity: 0.25; }
-
-.node-arrows { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
-.arr { background: none; border: none; cursor: pointer; color: var(--ink-4); font-size: 7px; padding: 1px 3px; line-height: 1; transition: color 0.1s; display: block; }
-.arr:hover { color: var(--accent); }
-.arr:disabled { opacity: 0.18; pointer-events: none; }
-.node-grip { color: var(--ink-4); font-size: 10px; cursor: grab; flex-shrink: 0; letter-spacing: -2px; line-height: 1; }
-.node-grip:active { cursor: grabbing; }
-
-.node-badge { font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); background: var(--accent-ll); border: 1px solid var(--accent-l); padding: 2px 7px; border-radius: 10px; flex-shrink: 0; min-width: 56px; text-align: center; }
-.node-badge.badge-constraint { color: #b43c28; background: rgba(180,60,40,0.06); border-color: rgba(180,60,40,0.2); }
-.node-content { flex: 1; min-width: 0; }
-.node-sent { font-size: 6px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); opacity: 0; transition: opacity 0.3s; flex-shrink: 0; }
-.node.committed .node-sent { opacity: 0.5; }
-.node-del { background: none; border: none; cursor: pointer; color: var(--ink-4); font-size: 13px; padding: 0 4px; flex-shrink: 0; line-height: 1; transition: color 0.1s; }
-.node-del:hover { color: var(--ink); }
-
-/* node inputs */
-.ni { background: none; border: none; outline: none; width: 100%; caret-color: var(--accent); font-family: inherit; }
-.ni-title  { font-family: var(--disp); font-weight: 900; font-size: 20px; letter-spacing: -0.01em; text-transform: uppercase; color: var(--ink); line-height: 1.1; }
-[data-theme="stacked"] .ni-title,
-[data-theme="trifold"] .ni-title { text-transform: none; font-weight: 400; }
-.ni-thought { font-family: var(--disp); font-weight: 400; font-size: 17px; color: var(--ink); line-height: 1.3; }
-.ni-pull    { font-family: var(--disp); font-style: italic; font-weight: 300; font-size: 16px; color: var(--ink-2); line-height: 1.3; border-left: 2px solid var(--ink-4); padding-left: 10px; }
-.ni-aside   { font-family: var(--ui); font-size: 11px; color: var(--aside-ink); line-height: 1.5; font-style: italic; }
-.ni-spec-row { display: flex; align-items: baseline; gap: 0; width: 100%; }
-.ni-spec-key { font-family: var(--ui); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); background: none; border: none; outline: none; width: 76px; flex-shrink: 0; caret-color: var(--accent); }
-.ni-spec-sep { color: var(--ink-4); font-size: 9px; padding: 0 6px; flex-shrink: 0; }
-.ni-spec-val { font-family: var(--ui); font-size: 10px; color: var(--ink); background: none; border: none; outline: none; flex: 1; caret-color: var(--accent); }
-.ni-constraint-row { display: flex; align-items: baseline; gap: 0; width: 100%; }
-.ni-constraint-key { font-family: var(--ui); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: #b43c28; background: none; border: none; outline: none; width: 76px; flex-shrink: 0; caret-color: #b43c28; }
-.ni-constraint-sep { color: rgba(180,60,40,0.4); font-size: 9px; padding: 0 6px; flex-shrink: 0; }
-.ni-constraint-val { font-family: var(--ui); font-size: 10px; color: var(--ink); background: none; border: none; outline: none; flex: 1; caret-color: #b43c28; }
-.ni-break { font-size: 7px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); display: flex; align-items: center; gap: 8px; width: 100%; }
-.ni-break::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-/* commit bar */
-#preview-bar { border-top: 1px solid var(--border); padding: 8px 16px 10px; display: flex; align-items: flex-start; gap: 14px; flex-shrink: 0; }
-#preview-text { flex: 1; font-size: 8px; letter-spacing: 0.03em; color: var(--ink-3); line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-#preview-text .pb { color: var(--accent); }
-.commit-btn { font-family: var(--ui); font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; background: var(--ink); border: none; color: var(--bg); padding: 8px 18px; cursor: pointer; flex-shrink: 0; transition: background 0.15s, opacity 0.15s; }
-.commit-btn:hover { background: var(--accent); }
-.commit-btn:disabled { opacity: 0.3; pointer-events: none; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   NODE PALETTE RAIL
-   ═══════════════════════════════════════════════════════════════════════════ */
-#node-rail {
-  border-left: 1px solid var(--border);
-  padding: 24px 16px 24px 20px;
-  overflow-y: auto;
-  position: sticky; top: var(--header-h);
-  height: calc(100vh - var(--header-h));
-  transition: opacity 0.2s, transform 0.2s;
+/* ─── PALETTE GRID inside canvas panel ─── */
+#palette-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5px; padding: 10px 12px;
+  flex-shrink: 0; border-top: 1px solid var(--border);
   background: var(--bg);
 }
-#node-rail.hidden { opacity: 0; pointer-events: none; transform: translateX(8px); }
-#node-rail::-webkit-scrollbar { width: 0; }
 
-.rail-head { font-size: 7px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-.rail-sec  { font-size: 7px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin: 14px 0 8px; }
-.rail-sec:first-of-type { margin-top: 0; }
-.rail-divider { height: 1px; background: var(--border); margin: 12px 0; }
-
-/* ── PALETTE BUTTONS WITH VISUAL PREVIEWS ────────────────────────────────── */
 .pal-btn {
-  width: 100%; text-align: left; background: none;
-  border: 1px solid var(--border); cursor: pointer;
-  padding: 0; margin-bottom: 5px;
-  transition: border-color 0.12s, background 0.12s;
-  border-radius: 2px; display: block; overflow: hidden;
+  position: relative;
+  background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 9px 10px 8px;
+  cursor: pointer; text-align: left;
+  transition: border-color 0.14s, background 0.14s;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 56px; display: flex; flex-direction: column; justify-content: space-between;
 }
-.pal-btn:hover  { border-color: var(--accent); }
-.pal-btn:active { background: var(--accent-l); }
+.pal-btn:hover, .pal-btn:active { border-color: var(--accent); background: var(--accent-ll); }
+.pal-btn.constraint-type { border-color: rgba(224,82,82,0.2); }
+.pal-btn.constraint-type:hover { border-color: var(--red); background: var(--red-l); }
+.pal-btn.wide { grid-column: 1 / -1; }
 
-/* preview strip — visual render at top of each palette button */
-.pal-preview-strip {
+.pal-type {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.04em; margin-bottom: 2px;
+}
+.constraint-type .pal-type { color: var(--red); }
+.pal-hint { font-size: 8px; color: var(--ink-3); font-style: italic; }
+
+/* ghost overlay on hover */
+.ghost-overlay {
+  position: absolute; inset: 0; border-radius: calc(var(--radius) - 1px);
+  background: var(--bg-3); border: 1px solid var(--accent);
+  padding: 8px 10px;
+  display: flex; flex-direction: column; gap: 4px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.18s;
+  z-index: 10; overflow: hidden;
+}
+.constraint-type .ghost-overlay { border-color: var(--red); }
+.pal-btn:hover .ghost-overlay { opacity: 1; }
+.ghost-overlay:has(*) { pointer-events: none; }
+.go-label {
+  font-size: 7px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 3px; font-family: 'Syne', sans-serif; font-weight: 700;
+}
+.constraint-type .go-label { color: var(--red); }
+.go-example {
+  font-family: 'Instrument Serif', serif; font-size: 13px; color: var(--ink);
+  line-height: 1.3; font-style: italic;
+}
+.go-example.mono {
+  font-family: 'JetBrains Mono', monospace; font-style: normal; font-size: 9px; color: var(--ink-2);
+}
+.go-usage {
+  font-size: 7px; color: var(--ink-3); line-height: 1.4; margin-top: 2px;
+}
+
+/* ─── COMMIT BAR ─── */
+#commit-bar {
+  border-top: 1px solid var(--border);
+  padding: 10px 12px calc(10px + var(--safe-b));
   background: var(--bg-2);
-  padding: 7px 10px 6px;
-  border-bottom: 1px solid var(--border);
-  min-height: 32px;
-  display: flex; align-items: center;
-}
-.pal-btn:hover .pal-preview-strip { background: var(--accent-ll); }
-
-/* preview renderings per type */
-.prev-title {
-  font-family: var(--disp); font-weight: 900; font-size: 15px;
-  letter-spacing: -0.01em; text-transform: uppercase; color: var(--ink);
-  border-left: 2px solid var(--accent); padding-left: 7px;
-  line-height: 1; white-space: nowrap; overflow: hidden;
-}
-[data-theme="stacked"] .prev-title,
-[data-theme="trifold"] .prev-title { font-weight: 400; text-transform: none; }
-
-.prev-thought {
-  font-family: var(--disp); font-weight: 400; font-size: 13px;
-  color: var(--ink); line-height: 1.2;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.prev-pull {
-  font-family: var(--disp); font-style: italic; font-weight: 300;
-  font-size: 13px; color: var(--ink-2); line-height: 1.2;
-  border-left: 1px solid var(--ink-3); padding-left: 7px;
-  white-space: nowrap; overflow: hidden;
-}
-.prev-aside {
-  font-family: var(--ui); font-size: 9px; color: var(--aside-ink);
-  font-style: italic; border-left: 2px solid var(--ink-4); padding-left: 7px;
-  white-space: nowrap; overflow: hidden;
-}
-.prev-spec {
-  font-family: var(--ui); font-size: 9px; color: var(--ink-2); letter-spacing: 0.04em;
-  display: flex; align-items: center; gap: 6px;
-}
-.prev-spec-k { color: var(--ink-3); font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; }
-.prev-constraint {
-  font-family: var(--ui); font-size: 9px; letter-spacing: 0.04em;
-  display: flex; align-items: center; gap: 6px;
-}
-.prev-constraint-k { color: #b43c28; font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; }
-.prev-constraint-v { color: var(--ink); font-size: 9px; }
-.prev-break {
-  font-family: var(--ui); font-size: 7px; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--ink-3);
-  display: flex; align-items: center; gap: 8px; width: 100%;
-}
-.prev-break::after { content: ''; flex: 1; height: 1px; background: var(--ink-4); }
-
-/* label + description below the strip */
-.pal-meta { padding: 6px 10px 8px; }
-.pal-type { font-family: var(--ui); font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 2px; }
-.pal-effect { font-family: var(--ui); font-size: 7px; letter-spacing: 0.06em; color: var(--ink-3); font-style: italic; }
-
-/* chapters */
-.ch-item { padding: 8px 10px; border: 1px solid var(--border); margin-bottom: 5px; cursor: pointer; transition: all 0.12s; border-radius: 2px; }
-.ch-item:hover { border-color: var(--border-2); background: var(--bg-2); }
-.ch-item.active { border-color: var(--accent); background: var(--accent-ll); }
-.ch-name { font-size: 9px; letter-spacing: 0.10em; color: var(--ink-2); margin-bottom: 2px; }
-.ch-meta { font-size: 7px; letter-spacing: 0.08em; color: var(--ink-3); }
-.ch-add { width: 100%; background: none; border: 1px dashed var(--border-2); color: var(--ink-3); font-family: var(--ui); font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; padding: 7px; cursor: pointer; transition: all 0.12s; border-radius: 2px; margin-top: 4px; }
-.ch-add:hover { border-color: var(--accent); color: var(--accent); }
-
-/* ── STACKED DRAWER TOGGLE ───────────────────────────────────────────────── */
-#stacked-drawer-btn {
-  display: none;
-  position: fixed; bottom: 20px; right: 20px;
-  z-index: 450;
-  background: var(--ink); color: var(--bg);
-  border: none; border-radius: 50%;
-  width: 46px; height: 46px;
-  font-size: 18px; cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-  align-items: center; justify-content: center;
-  transition: background 0.15s, transform 0.2s;
-  font-family: var(--ui);
-}
-#stacked-drawer-btn:hover { background: var(--accent); transform: scale(1.08); }
-[data-theme="stacked"] #stacked-drawer-btn { display: flex; }
-[data-theme="stacked"] #rail-btn { display: none; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   EMPTY STATE
-   ═══════════════════════════════════════════════════════════════════════════ */
-#empty-state { padding: 64px 0 32px; }
-.es-title { font-family: var(--disp); font-weight: 900; font-size: 48px; line-height: 0.9; letter-spacing: -0.02em; text-transform: uppercase; color: var(--ink); margin-bottom: 16px; }
-[data-theme="stacked"] .es-title,
-[data-theme="trifold"] .es-title { font-weight: 400; text-transform: none; letter-spacing: -0.02em; font-size: 42px; }
-.es-title span { color: var(--accent); }
-.es-body { font-family: var(--disp); font-weight: 300; font-size: 17px; color: var(--ink-2); line-height: 1.5; max-width: 380px; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   TRIFOLD SIDE PANEL (chapters on left)
-   ═══════════════════════════════════════════════════════════════════════════ */
-#trifold-left { display: none; }
-
-/* ═══════════════════════════════════════════════════════════════════════════
-   MOBILE PALETTE — bottom sheet with large tap targets
-   ═══════════════════════════════════════════════════════════════════════════ */
-#mobile-palette {
-  display: none;
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--bg-2); border-top: 1px solid var(--border-2);
-  z-index: 600;
-  transform: translateY(100%);
-  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 14px 14px 0 0;
-  max-height: 75vh;
-  flex-direction: column;
-}
-#mobile-palette.open { transform: translateY(0); }
-
-.mp-handle {
-  display: flex; justify-content: center; padding: 10px 0 4px;
+  display: flex; align-items: flex-start; gap: 10px;
   flex-shrink: 0;
 }
-.mp-handle::after { content: ''; width: 36px; height: 4px; background: var(--ink-4); border-radius: 2px; }
-
-.mp-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px 10px; flex-shrink: 0;
+#preview-text {
+  flex: 1; font-size: 8px; color: var(--ink-3); line-height: 1.6;
+  overflow: hidden; display: -webkit-box;
+  -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
-.mp-title { font-family: var(--ui); font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
-.mp-close { background: none; border: none; color: var(--ink-3); font-size: 18px; cursor: pointer; padding: 0; line-height: 1; }
+.pb-accent { color: var(--accent); }
+.pb-red    { color: var(--red); }
 
-.mp-grid {
-  overflow-y: auto; padding: 4px 12px 32px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.commit-btn {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--accent); color: white; border: none;
+  padding: 9px 16px; border-radius: var(--radius); cursor: pointer;
+  flex-shrink: 0; transition: background 0.15s, transform 0.1s, opacity 0.15s;
+  white-space: nowrap;
 }
-.mp-grid::-webkit-scrollbar { display: none; }
+.commit-btn:hover  { background: #6ba3fa; }
+.commit-btn:active { transform: scale(0.96); }
+.commit-btn:disabled { opacity: 0.3; pointer-events: none; }
 
-.mp-btn {
-  background: var(--bg); border: 1px solid var(--border);
-  border-radius: 6px; padding: 0; cursor: pointer;
-  text-align: left; overflow: hidden;
-  transition: border-color 0.12s, background 0.12s;
-  -webkit-tap-highlight-color: transparent;
-  min-height: 80px;
+/* ─── NODE BLOCKS ─── */
+.node {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 8px; background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius); cursor: default;
+  transition: border-color .12s, background .12s;
+  position: relative;
 }
-.mp-btn:active { background: var(--accent-ll); border-color: var(--accent); }
+.node:hover { border-color: var(--border-2); background: var(--bg-3); }
+.node.committed { opacity: 0.45; }
+.node.dragging { opacity: 0.2; }
+.node.drag-over { border-color: var(--accent); border-style: dashed; }
 
-.mp-preview {
-  background: var(--bg-2); padding: 10px 12px 8px;
-  border-bottom: 1px solid var(--border);
-  min-height: 42px; display: flex; align-items: center;
+.node-grip {
+  color: var(--ink-4); font-size: 10px; cursor: grab; flex-shrink: 0;
+  letter-spacing: -2px; line-height: 1; user-select: none;
 }
-.mp-meta { padding: 8px 12px 10px; }
-.mp-type { font-family: var(--ui); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 2px; }
-.mp-btn.constraint-btn .mp-type { color: #b43c28; }
-.mp-effect { font-family: var(--ui); font-size: 8px; color: var(--ink-3); line-height: 1.4; }
+.node-grip:active { cursor: grabbing; }
 
-/* FAB — mobile palette trigger */
-#palette-fab {
-  display: none;
-  position: fixed; bottom: 24px; right: 20px;
-  z-index: 550;
-  background: var(--accent); color: white;
-  border: none; border-radius: 50%;
-  width: 52px; height: 52px;
-  font-size: 22px; cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-  align-items: center; justify-content: center;
-  transition: transform 0.2s, background 0.15s;
+.node-badge {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 7px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-ll);
+  border: 1px solid var(--accent-l);
+  padding: 2px 7px; border-radius: 20px; flex-shrink: 0;
+  min-width: 52px; text-align: center;
 }
-#palette-fab:active { transform: scale(0.92); }
-#palette-fab.open { transform: rotate(45deg); }
+.node-badge.red { color: var(--red); background: var(--red-l); border-color: rgba(224,82,82,0.25); }
 
-/* backdrop */
-#palette-backdrop {
-  display: none;
-  position: fixed; inset: 0; z-index: 590;
-  background: rgba(0,0,0,0.4);
-  opacity: 0; transition: opacity 0.25s;
+.node-content { flex: 1; min-width: 0; }
+.ni {
+  background: none; border: none; outline: none; width: 100%;
+  caret-color: var(--accent); font-family: 'JetBrains Mono', monospace;
+  color: var(--ink); font-size: 11px;
 }
-#palette-backdrop.visible { opacity: 1; }
+.ni-title   { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--ink); }
+.ni-thought { font-family: 'Instrument Serif', serif; font-size: 14px; font-style: italic; }
+.ni-pull    { font-family: 'Instrument Serif', serif; font-size: 13px; color: var(--ink-2); }
+.ni-aside   { font-size: 10px; color: var(--ink-2); font-style: italic; }
+.ni-spec-row, .ni-cst-row { display: flex; align-items: center; gap: 0; width: 100%; }
+.ni-k { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); background: none; border: none; outline: none; width: 64px; flex-shrink: 0; caret-color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.ni-cst-k { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); background: none; border: none; outline: none; width: 64px; flex-shrink: 0; caret-color: var(--red); font-family: 'JetBrains Mono', monospace; }
+.ni-sep { color: var(--ink-4); font-size: 9px; padding: 0 5px; flex-shrink: 0; }
+.ni-v { background: none; border: none; outline: none; flex: 1; color: var(--ink); font-size: 10px; caret-color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+.ni-break { font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); display: flex; align-items: center; gap: 8px; width: 100%; }
+.ni-break::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   PROGRESS BAR
-   ═══════════════════════════════════════════════════════════════════════════ */
-#progress { position: fixed; bottom: 0; left: 0; height: 2px; background: var(--accent); z-index: 600; width: 0%; transition: width 0.4s ease; }
+.node-arrows { display: flex; flex-direction: column; gap: 1px; flex-shrink: 0; }
+.arr { background: none; border: none; cursor: pointer; color: var(--ink-4); font-size: 6px; padding: 1px 3px; line-height: 1; transition: color .1s; display: block; }
+.arr:hover { color: var(--accent); }
+.arr:disabled { opacity: 0.15; pointer-events: none; }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════════════════════════════════ */
-@media (max-width: 860px) {
-  /* hide desktop rail on all themes at mobile sizes */
-  #node-rail { display: none !important; }
-  #stacked-drawer-btn { display: none !important; }
-  [data-theme="stacked"] #node-rail { display: none !important; }
+.node-del { background: none; border: none; cursor: pointer; color: var(--ink-4); font-size: 14px; padding: 0 3px; flex-shrink: 0; line-height: 1; transition: color .1s; }
+.node-del:hover { color: var(--red); }
 
-  /* force single column layout */
-  #shell { grid-template-columns: 1fr !important; }
-  #stream-col { grid-column: 1 !important; border: none !important; }
-  #trifold-left { display: none !important; }
-  [data-theme="windowed"] #stream-col::before { display: none; }
+/* ─── STREAM CONTENT ─── */
+.exchange { margin-bottom: 40px; animation: fadeUp .3s ease forwards; opacity: 0; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
 
-  /* show mobile palette */
-  #mobile-palette { display: flex; }
-  #palette-fab    { display: flex; }
-  #palette-backdrop { display: block; }
+.who {
+  font-size: 7px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-3); display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.who-name { color: var(--ink-3); }
+.who-tag {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  color: var(--accent); font-size: 7px; letter-spacing: 0.1em;
+  padding: 1px 6px; border: 1px solid var(--accent-l);
+  border-radius: 20px; background: var(--accent-ll);
+}
+.who::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* adjust stream padding */
-  #stream-scroll { padding: 28px 20px 16px !important; }
-  #canvas-area { max-height: 46vh; padding-bottom: 80px; }
+/* user stream nodes */
+.sn-title {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(22px, 3.5vw, 38px); line-height: 1;
+  letter-spacing: -0.03em; color: var(--ink);
+  border-left: 3px solid var(--accent); padding-left: 12px; margin-bottom: 6px;
+}
+.sn-thought { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 19px; color: var(--ink); line-height: 1.4; margin-bottom: 4px; }
+.sn-pull { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 18px; color: var(--ink-2); padding: 5px 0 5px 12px; border-left: 1px solid var(--ink-3); margin-bottom: 4px; line-height: 1.3; }
+.sn-aside { font-size: 10px; color: var(--ink-2); background: var(--bg-3); border-left: 2px solid var(--ink-4); padding: 4px 10px; font-style: italic; margin-bottom: 4px; border-radius: 0 3px 3px 0; }
+.sn-spec { font-size: 10px; display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px solid var(--border); }
+.sn-spec:last-child { border-bottom: none; }
+.sn-cst { font-size: 10px; display: flex; gap: 10px; padding: 3px 0; border-bottom: 1px solid rgba(224,82,82,0.15); }
+.sn-cst:last-child { border-bottom: none; }
+.spec-k { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); min-width: 70px; flex-shrink: 0; }
+.cst-k { font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); min-width: 70px; flex-shrink: 0; }
+.sn-break { font-size: 7px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); padding: 4px 0; margin: 2px 0; border-top: 1px solid var(--border); }
 
-  /* header */
-  .h-sub { display: none; }
-  .theme-switcher { display: none; }
-  #rail-btn { display: none; }
+/* response nodes */
+.r-poster { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(20px, 3vw, 34px); line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 8px; }
+.r-body { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 18px; line-height: 1.5; color: var(--ink-2); max-width: 480px; margin-bottom: 5px; }
+.r-pull { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 18px; color: var(--ink-2); padding: 6px 0 6px 14px; border-left: 1px solid var(--ink-3); margin: 5px 0; max-width: 440px; line-height: 1.35; }
+.r-aside { font-size: 10px; color: var(--ink-2); background: var(--bg-3); border-left: 2px solid var(--ink-4); padding: 5px 10px; font-style: italic; margin: 4px 0; border-radius: 0 3px 3px 0; }
+.r-spec { font-size: 10px; display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+.r-spec:last-of-type { border-bottom: none; }
+.r-cst { font-size: 10px; display: flex; gap: 10px; padding: 4px 0; border-bottom: 1px solid rgba(224,82,82,0.15); }
+.r-cst:last-of-type { border-bottom: none; }
+.r-list { margin: 4px 0 8px; padding: 0; list-style: none; }
+.r-list li { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink-2); padding: 2px 0 2px 16px; position: relative; }
+.r-list li::before { content: '◇'; position: absolute; left: 0; color: var(--accent); font-size: 7px; top: 8px; }
+
+/* typing */
+.typing { display: flex; align-items: center; gap: 5px; padding: 8px 0; }
+.tdot { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-3); animation: tdot 1.1s ease-in-out infinite; }
+.tdot:nth-child(2) { animation-delay: .18s; }
+.tdot:nth-child(3) { animation-delay: .36s; }
+@keyframes tdot { 0%,80%,100%{transform:scale(.5);opacity:.3} 40%{transform:scale(1);opacity:1} }
+
+/* empty state */
+#empty-state { padding: 20px 0; }
+.es-eyebrow {
+  font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px; font-family: 'JetBrains Mono', monospace;
+}
+.es-title {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(28px, 4vw, 48px); line-height: 0.95;
+  letter-spacing: -0.04em; color: var(--ink); margin-bottom: 14px;
+}
+.es-title em { color: var(--accent); font-style: normal; }
+.es-body { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 16px; color: var(--ink-2); line-height: 1.5; max-width: 360px; margin-bottom: 22px; }
+.es-steps { display: flex; flex-direction: column; gap: 8px; }
+.es-step { display: flex; align-items: flex-start; gap: 10px; }
+.step-n {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 8px; color: var(--accent); background: var(--accent-ll);
+  border: 1px solid var(--accent-l); width: 20px; height: 20px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-txt { font-size: 10px; color: var(--ink-3); line-height: 1.5; padding-top: 2px; }
+
+/* ═══════════════════════════════════════
+   MOBILE — single column
+═══════════════════════════════════════ */
+@media (max-width: 720px) {
+  body { overflow: hidden; }
+
+  #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--header-h) 1fr auto;
+  }
+
+  #stream-panel {
+    grid-column: 1; grid-row: 2;
+    border-right: none;
+  }
+
+  #canvas-panel {
+    grid-column: 1; grid-row: 3;
+    /* mobile canvas slides up from bottom */
+    display: flex; flex-direction: column;
+    border-top: 1px solid var(--border-2);
+    max-height: 48vh;
+    min-height: 0;
+  }
+
+  /* on mobile, hide desktop titlebar */
+  #palette-titlebar { display: none; }
+
+  #palette-grid {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 8px 10px;
+    gap: 5px;
+    background: var(--bg-2);
+  }
+  .pal-btn { min-height: 64px; }
+  .pal-btn.wide { grid-column: auto; }
+
+  /* ghost overlays on mobile: shown on touch hold via .touch-active */
+  .pal-btn.touch-active .ghost-overlay { opacity: 1; }
+  /* Disable hover on mobile for cleaner tap */
+  @media (hover: none) {
+    .pal-btn:hover .ghost-overlay { opacity: 0; }
+  }
+
+  #canvas-nodes { max-height: 120px; }
+
+  #stream-scroll { padding: 20px 16px 12px; }
+
+  .es-title { font-size: 28px; }
+  .sn-title { font-size: 22px; }
+  .r-poster { font-size: 20px; }
+
+  #commit-bar { padding: 8px 10px calc(8px + var(--safe-b)); }
+
+  .h-tag { display: none; }
 }
 
-/* trifold hides left panel below 1100px */
-@media (max-width: 1100px) {
-  [data-theme="trifold"] #trifold-left { display: none; }
-  [data-theme="trifold"] #shell { grid-template-columns: 1fr 200px !important; }
-  [data-theme="trifold"] #stream-col { grid-column: 1 !important; }
-  [data-theme="trifold"] #node-rail  { grid-column: 2 !important; }
+/* Landscape mobile tweak */
+@media (max-height: 500px) and (max-width: 900px) {
+  #canvas-panel { max-height: 52vh; }
+  #canvas-nodes { display: none; }
+  #palette-grid { padding: 6px 8px; }
+  .pal-btn { min-height: 50px; }
 }
 
-/* windowed goes single column below 900px */
-@media (max-width: 900px) {
-  [data-theme="windowed"] #shell { grid-template-columns: 1fr !important; }
+/* ═══════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════ */
+#progress {
+  position: fixed; top: calc(var(--header-h) + var(--safe-t)); left: 0;
+  height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: 0%; transition: width 0.5s ease; z-index: 200; pointer-events: none;
 }
+
+/* ═══════════════════════════════════════
+   SCROLLBAR HIDE UTIL
+═══════════════════════════════════════ */
+.no-scroll::-webkit-scrollbar { display: none; }
+.no-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
 </style>
 </head>
 <body>
 <div id="progress"></div>
+<div id="app">
 
-<div id="shell">
-
+  <!-- ── HEADER ── -->
   <header>
-    <div class="h-mark">wolfie<span>.</span>dialogue</div>
-    <div class="h-sub">visual prompt editor · intent-first</div>
-    <div class="h-actions">
-
-      <!-- Layout / Theme switcher -->
-      <div class="theme-switcher">
-        <button class="t-btn active" data-t="modular" onclick="setTheme('modular')" title="Modular — editorial columns">
-          <div class="t-icon t-icon-modular"></div>
-          <span class="t-label">modular</span>
-        </button>
-        <button class="t-btn" data-t="stacked" onclick="setTheme('stacked')" title="Stacked — single focused column">
-          <div class="t-icon t-icon-stacked"></div>
-          <span class="t-label">stacked</span>
-        </button>
-        <button class="t-btn" data-t="windowed" onclick="setTheme('windowed')" title="Windowed — split panels">
-          <div class="t-icon t-icon-windowed"></div>
-          <span class="t-label">windowed</span>
-        </button>
-        <button class="t-btn" data-t="trifold" onclick="setTheme('trifold')" title="Trifold — broadsheet">
-          <div class="t-icon t-icon-trifold"><span></span></div>
-          <span class="t-label">trifold</span>
-        </button>
-      </div>
-
-      <button class="h-btn active" id="rail-btn" onclick="toggleRail()">[ ] Palette</button>
-      <button class="h-btn" onclick="clearAll()">↺ Clear</button>
+    <div class="logo">reasonably<em>.</em><div class="logo-dot"></div></div>
+    <div class="h-right">
+      <div class="h-tag">structured thinking</div>
+      <button class="h-btn" onclick="clearAll()">↺ Reset</button>
     </div>
   </header>
 
-  <!-- ── TRIFOLD: LEFT CHAPTER PANEL ── -->
-  <div id="trifold-left">
-    <div class="rail-head">Chapters</div>
-    <div id="trifold-chapters"></div>
-    <button class="ch-add" style="margin-top:8px" onclick="addChapter()">+ New Chapter</button>
-  </div>
-
-  <!-- ── STREAM ── -->
-  <main id="stream-col">
-
+  <!-- ── LEFT / STREAM ── -->
+  <div id="stream-panel">
+    <div id="stream-titlebar">
+      <div class="tb-dot live"></div>
+      dialogue stream
+    </div>
     <div id="stream-scroll">
       <div id="narrative-root">
         <div id="empty-state">
-          <div class="es-title">Build a<br>prompt<br><span>visually.</span></div>
-          <div class="es-body">Add typed nodes from the palette. Each block renders as what it is — a title looks like a title, a pull looks like a pull. Commit sends the whole structure as one prompt.</div>
+          <div class="es-eyebrow">reasonably.cc</div>
+          <div class="es-title">Think in<br><em>structure.</em></div>
+          <div class="es-body">Compose your thought from typed nodes. Each node declares its intent — a title frames, a pull distills, a constraint binds.</div>
+          <div class="es-steps">
+            <div class="es-step"><div class="step-n">1</div><div class="step-txt">Pick node types from the palette →</div></div>
+            <div class="es-step"><div class="step-n">2</div><div class="step-txt">Fill in your content for each</div></div>
+            <div class="es-step"><div class="step-n">3</div><div class="step-txt">Commit to send and see the response</div></div>
+          </div>
         </div>
       </div>
       <div id="typing-wrap" style="display:none">
-        <div class="who"><span class="who-name">wolfie</span></div>
+        <div class="who"><span class="who-name">reasonably</span></div>
         <div class="typing">
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
-          <div class="typing-dot"></div>
+          <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
         </div>
       </div>
     </div>
-
-    <!-- ── CANVAS ── -->
-    <div id="canvas-area">
-      <div id="canvas-toolbar">
-        <div class="ct-left">
-          <span class="ct-label">Canvas</span>
-          <span id="node-count">0 nodes</span>
-        </div>
-        <div class="ct-right">
-          <button class="h-btn" onclick="clearCanvas()">Clear</button>
-        </div>
-      </div>
-      <div id="canvas-nodes">
-        <div id="canvas-hint"><span class="hint-text">← add nodes from the palette to begin</span></div>
-      </div>
-      <div id="preview-bar">
-        <div id="preview-text"><span style="color:var(--ink-4);font-style:italic">Prompt preview will appear as you build…</span></div>
-        <button class="commit-btn" id="commit-btn" onclick="commit()" disabled>Commit ↗</button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ── DESKTOP NODE PALETTE RAIL ── -->
-  <aside id="node-rail">
-
-    <div class="rail-head">Node Palette</div>
-    <div class="rail-sec" style="margin-top:0">Add Node</div>
-
-    <button class="pal-btn" onclick="addNode('title')">
-      <div class="pal-preview-strip"><div class="prev-title">HEADLINE</div></div>
-      <div class="pal-meta"><div class="pal-type">Title</div><div class="pal-effect">Sets the frame.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('thought')">
-      <div class="pal-preview-strip"><div class="prev-thought">Think out loud…</div></div>
-      <div class="pal-meta"><div class="pal-type">Thought</div><div class="pal-effect">Main body prose.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('pull')">
-      <div class="pal-preview-strip"><div class="prev-pull">The one true question</div></div>
-      <div class="pal-meta"><div class="pal-type">[pull]</div><div class="pal-effect">Distill the essential.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('aside')">
-      <div class="pal-preview-strip"><div class="prev-aside">a quiet parenthetical</div></div>
-      <div class="pal-meta"><div class="pal-type">[aside]</div><div class="pal-effect">Footnote. Scrutinized.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('spec')">
-      <div class="pal-preview-strip">
-        <div class="prev-spec"><span class="prev-spec-k">format</span><span>::</span><span>value</span></div>
-      </div>
-      <div class="pal-meta"><div class="pal-type">[spec]</div><div class="pal-effect">Format &amp; style params.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('constraint')" style="border-color:rgba(180,60,40,0.25)">
-      <div class="pal-preview-strip" style="background:rgba(180,60,40,0.05)">
-        <div class="prev-constraint"><span class="prev-constraint-k">rule</span><span style="color:rgba(180,60,40,0.4);">::</span><span class="prev-constraint-v">must not…</span></div>
-      </div>
-      <div class="pal-meta"><div class="pal-type" style="color:#b43c28">[constraint]</div><div class="pal-effect">Hard logical rule.</div></div>
-    </button>
-    <button class="pal-btn" onclick="addNode('break')">
-      <div class="pal-preview-strip"><div class="prev-break">break</div></div>
-      <div class="pal-meta"><div class="pal-type">Break —</div><div class="pal-effect">Thread separator.</div></div>
-    </button>
-
-    <div class="rail-divider"></div>
-    <div class="rail-sec">Chapters</div>
-    <div id="chapters-list"></div>
-    <button class="ch-add" onclick="addChapter()">+ New Chapter</button>
-
-    <div class="rail-divider"></div>
-    <div class="rail-sec">Legend</div>
-    <div style="font-family:var(--disp);font-weight:300;font-size:13px;color:var(--ink-2);line-height:1.5">
-      Each node is a typed intention. Drag or ↑↓ to reorder.<br><br>
-      <strong style="font-weight:700;color:var(--ink)">spec</strong> = style params &nbsp;·&nbsp;
-      <strong style="font-weight:700;color:#b43c28">constraint</strong> = hard rules
-    </div>
-
-  </aside>
-
-</div><!-- /shell -->
-
-<!-- ── STACKED DRAWER TOGGLE FAB ── -->
-<button id="stacked-drawer-btn" onclick="toggleStackedDrawer()" title="Open palette">+</button>
-
-<!-- ── MOBILE PALETTE BOTTOM SHEET ── -->
-<div id="palette-backdrop" onclick="closeMobilePalette()"></div>
-
-<div id="mobile-palette">
-  <div class="mp-handle"></div>
-  <div class="mp-header">
-    <span class="mp-title">Add Node</span>
-    <button class="mp-close" onclick="closeMobilePalette()">×</button>
   </div>
-  <div class="mp-grid">
 
-    <button class="mp-btn" onclick="mobileAdd('title')">
-      <div class="mp-preview"><div class="prev-title" style="font-size:13px">HEADLINE</div></div>
-      <div class="mp-meta"><div class="mp-type">Title</div><div class="mp-effect">Bold frame declaration</div></div>
-    </button>
-    <button class="mp-btn" onclick="mobileAdd('thought')">
-      <div class="mp-preview"><div class="prev-thought">Think out loud…</div></div>
-      <div class="mp-meta"><div class="mp-type">Thought</div><div class="mp-effect">Main body prose</div></div>
-    </button>
-    <button class="mp-btn" onclick="mobileAdd('pull')">
-      <div class="mp-preview"><div class="prev-pull">The one question</div></div>
-      <div class="mp-meta"><div class="mp-type">[pull]</div><div class="mp-effect">Distill the essential</div></div>
-    </button>
-    <button class="mp-btn" onclick="mobileAdd('aside')">
-      <div class="mp-preview"><div class="prev-aside">a quiet detail</div></div>
-      <div class="mp-meta"><div class="mp-type">[aside]</div><div class="mp-effect">Footnote nuance</div></div>
-    </button>
-    <button class="mp-btn" onclick="mobileAdd('spec')">
-      <div class="mp-preview"><div class="prev-spec"><span class="prev-spec-k">key</span><span>::</span><span>value</span></div></div>
-      <div class="mp-meta"><div class="mp-type">[spec]</div><div class="mp-effect">Style parameters</div></div>
-    </button>
-    <button class="mp-btn constraint-btn" onclick="mobileAdd('constraint')">
-      <div class="mp-preview" style="background:rgba(180,60,40,0.05)">
-        <div class="prev-constraint"><span class="prev-constraint-k">rule</span><span style="color:rgba(180,60,40,0.4)">::</span><span class="prev-constraint-v">must not</span></div>
+  <!-- ── RIGHT / CANVAS + PALETTE ── -->
+  <div id="canvas-panel">
+    <div id="palette-titlebar">
+      <div class="tb-dot"></div>
+      node palette &amp; canvas
+    </div>
+
+    <!-- Active nodes -->
+    <div id="canvas-nodes">
+      <div id="canvas-hint">
+        <div class="hint-icon">◈</div>
+        <div class="hint-text">add nodes below</div>
       </div>
-      <div class="mp-meta"><div class="mp-type">[constraint]</div><div class="mp-effect">Hard logical rule</div></div>
-    </button>
-    <button class="mp-btn" onclick="mobileAdd('break')" style="grid-column: 1 / -1">
-      <div class="mp-preview"><div class="prev-break" style="font-size:8px">— thread break</div></div>
-      <div class="mp-meta"><div class="mp-type">Break</div><div class="mp-effect">New thread within prompt</div></div>
-    </button>
+    </div>
 
+    <!-- Palette buttons -->
+    <div id="palette-grid">
+
+      <button class="pal-btn" onclick="addNode('title')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">Title</div>
+        <div class="pal-hint">Sets frame</div>
+        <div class="ghost-overlay">
+          <div class="go-label">Title</div>
+          <div class="go-example">THE CORE CLAIM</div>
+          <div class="go-usage">Bold frame declaration. Opens or anchors a thread. Renders large.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn" onclick="addNode('thought')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">Thought</div>
+        <div class="pal-hint">Body prose</div>
+        <div class="ghost-overlay">
+          <div class="go-label">Thought</div>
+          <div class="go-example go-example mono">Think out loud, explore the problem space openly…</div>
+          <div class="go-usage">Main narrative. Exploratory, conversational. Any length.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn" onclick="addNode('pull')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">[pull]</div>
+        <div class="pal-hint">Distill it</div>
+        <div class="ghost-overlay">
+          <div class="go-label">[pull]</div>
+          <div class="go-example">What is the single truest thing?</div>
+          <div class="go-usage">Forces the essential question or insight. Quoted-style render.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn" onclick="addNode('aside')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">[aside]</div>
+        <div class="pal-hint">Footnote</div>
+        <div class="ghost-overlay">
+          <div class="go-label">[aside]</div>
+          <div class="go-example go-example mono">a caveat worth noting quietly</div>
+          <div class="go-usage">Nuance, hedges, parentheticals. Subdued render. No elaboration.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn" onclick="addNode('spec')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">[spec]</div>
+        <div class="pal-hint">Parameters</div>
+        <div class="ghost-overlay">
+          <div class="go-label">[spec]</div>
+          <div class="go-example go-example mono">format :: bullet list<br>tone :: direct</div>
+          <div class="go-usage">Style &amp; format params. Key :: value. Structured, not narrative.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn constraint-type" onclick="addNode('constraint')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">[constraint]</div>
+        <div class="pal-hint">Hard rule</div>
+        <div class="ghost-overlay">
+          <div class="go-label">[constraint]</div>
+          <div class="go-example go-example mono">length :: max 3 sentences<br>tone :: no metaphors</div>
+          <div class="go-usage">Inviolable logical rule. Acknowledged explicitly in response.</div>
+        </div>
+      </button>
+
+      <button class="pal-btn wide" onclick="addNode('break')" ontouchstart="touchHold(this)" ontouchend="touchRelease(this)" ontouchcancel="touchRelease(this)">
+        <div class="pal-type">— Break</div>
+        <div class="pal-hint">Thread separator</div>
+        <div class="ghost-overlay">
+          <div class="go-label">— Break</div>
+          <div class="go-example go-example mono">— — — — —</div>
+          <div class="go-usage">Signals a new thread or phase within the same prompt. Pause and redirect.</div>
+        </div>
+      </button>
+
+    </div>
+
+    <!-- Commit bar -->
+    <div id="commit-bar">
+      <div id="preview-text"><span style="color:var(--ink-4);font-style:italic">Prompt preview will appear here…</span></div>
+      <button class="commit-btn" id="commit-btn" onclick="commit()" disabled>Send ↗</button>
+    </div>
   </div>
-</div>
 
-<!-- ── MOBILE FAB ── -->
-<button id="palette-fab" onclick="toggleMobilePalette()">+</button>
+</div><!-- /app -->
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-// SYSTEM PROMPT
+// PRESET DEMO RESPONSES
 // ─────────────────────────────────────────────────────────────────────────────
-const SYSTEM = `You are Wolfie — a direct, precise thinking partner inside a visual prompt editor called wolfie.dialogue.
+const PRESETS = [
+  // 0 — title only
+  `[poster] Structure Is the Message
+[body] The way you frame a problem determines every answer you'll receive. A vague prompt invites a vague response. A titled, constrained, spec'd prompt produces something you can actually use.
+[aside] this is not about rigidity — it's about intentionality`,
 
-Users compose prompts from typed nodes. Each node has a type that declares intent. Respond accordingly:
+  // 1 — thought
+  `[body] That's worth sitting with. The instinct to think out loud is correct — the problem is most tools flatten that thinking into a single text field.
+[pull] What if the form of your input shaped the form of the output?
+[body] Structured input creates structured thinking. Not a cage — a scaffold.`,
 
-title → respond with a [poster] bold declarative headline, then 1-2 [body] sentences
-thought → respond with [body] conversational, exploratory prose  
-[pull] → respond with a [pull] — the single truest answer — optionally 1-2 [body] sentences
-[aside] → respond with a brief [aside] — footnote-level only, no elaboration
-[spec] key :: value → respond with [spec] Key :: Value rows — format/style parameters, structured, no narrative
-[constraint] rule :: condition → respond with [constraint] Rule :: Condition rows — acknowledge each hard logical rule explicitly; treat them as inviolable
-break — → acknowledge briefly, await next direction
+  // 2 — pull question
+  `[pull] The one true answer is that clarity of intent is clarity of result.
+[body] Most ambiguity in AI responses traces directly back to ambiguity in what was asked. Typed nodes remove that ambiguity at the source.`,
 
-Multi-node prompts: honor each node's declared type. Weave a coherent response. Let the dominant node lead.
-When both [spec] and [constraint] nodes are present, list [constraint] rows before [spec] rows to signal their priority.
+  // 3 — spec + thought
+  `[constraint] Format :: Acknowledged — responses will follow the declared structure
+[constraint] Length :: Enforcing concision as specified
+[spec] Mode :: Structured output active
+[body] Parameters received. The spec and constraint nodes function as a pre-negotiated contract — they shift the response before it begins.`,
 
-FORMATTING RULES:
-- Prefix every response sentence with its type: [body], [pull], [poster], [spec], [constraint], [aside], [list]
-- [spec] format exactly: [spec] Key :: Value
-- [constraint] format exactly: [constraint] Rule :: Condition
-- [list] items on separate lines as: — item
-- Keep responses tight. This is a thinking tool, not a chat interface.
-- No markdown headers or bullets outside the defined syntax.
-- Never open with filler ("Certainly", "Of course", "Great question").
-- Voice: direct, considered, precise. Not casual, not corporate.`;
+  // 4 — mixed multi-node
+  `[poster] The Architecture of Thought
+[body] You've composed something with real structure here. Title declares the frame. Thought explores the terrain. Pull extracts the essential. Constraint draws the walls.
+[pull] What becomes possible when the shape of your thinking is legible?
+[aside] every great brief, essay, and brief has always worked this way — reasonably just makes it explicit`,
+
+  // 5 — constraint heavy
+  `[constraint] Rule 1 :: Acknowledged — treating as inviolable
+[constraint] Rule 2 :: Acknowledged — this shapes every sentence that follows
+[body] Constraints received before any other consideration. This is intentional — hard rules define the solution space before exploration begins. Working within them now.`,
+
+  // 6 — aside
+  `[aside] noted quietly, as requested
+[body] The aside node is underrated. It holds the things that matter but shouldn't dominate — the hedge, the caveat, the thing you know but don't want to foreground. A prompt that includes its own doubts is a more honest prompt.`,
+
+  // 7 — break
+  `[body] Break acknowledged. New thread starts clean.
+[pull] What changes when you give yourself permission to start over mid-thought?`,
+
+  // 8 — generic fallback
+  `[body] Prompt structure received and processed.
+[pull] Intention, clearly stated, is the only prerequisite.
+[aside] the rest is just execution`,
+];
+
+let presetIdx = 0;
+function getPresetResponse(nodeTypes) {
+  // Route by dominant node type
+  if (nodeTypes.includes('title') && nodeTypes.length > 2) return PRESETS[4];
+  if (nodeTypes.includes('title')) return PRESETS[0];
+  if (nodeTypes.includes('pull')) return PRESETS[2];
+  if (nodeTypes.includes('constraint') && nodeTypes.includes('spec')) return PRESETS[3];
+  if (nodeTypes.includes('constraint')) return PRESETS[5];
+  if (nodeTypes.includes('aside')) return PRESETS[6];
+  if (nodeTypes.includes('thought')) return PRESETS[1];
+  if (nodeTypes.includes('break')) return PRESETS[7];
+  return PRESETS[presetIdx++ % PRESETS.length];
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────────────────────────────────────────
 let nodes = [];
 let nodeId = 0;
-let history = [];
 let thinking = false;
-let chapters = [{ name: 'Chapter 1', prompts: 0 }];
-let activeChapter = 0;
-let railVisible = true;
+let totalCommits = 0;
 let dragSrcId = null;
-let currentTheme = 'modular';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// THEME
+// TOUCH HOLD (ghost overlay on mobile)
 // ─────────────────────────────────────────────────────────────────────────────
-function setTheme(t) {
-  currentTheme = t;
-  document.documentElement.setAttribute('data-theme', t);
-  document.querySelectorAll('.t-btn').forEach(b => b.classList.toggle('active', b.dataset.t === t));
-  // stacked hides normal rail hint
-  const hint = document.getElementById('canvas-hint');
-  if (hint) hint.querySelector('.hint-text').textContent =
-    t === 'stacked' ? '↓ tap + to add nodes' : '← add nodes from the palette to begin';
-  // ensure rail state is clean
-  const rail = document.getElementById('node-rail');
-  if (t === 'stacked') {
-    rail.classList.add('hidden');
-  } else {
-    rail.classList.toggle('hidden', !railVisible);
-  }
+let touchTimer = null;
+function touchHold(btn) {
+  touchTimer = setTimeout(() => btn.classList.add('touch-active'), 350);
+}
+function touchRelease(btn) {
+  clearTimeout(touchTimer);
+  btn.classList.remove('touch-active');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NODE OPERATIONS
+// NODE OPS
 // ─────────────────────────────────────────────────────────────────────────────
 function addNode(type) {
   const id = ++nodeId;
-  nodes.push({ id, type, content: '', key: '', val: '', committed: false });
+  nodes.push({ id, type, content:'', key:'', val:'', committed:false });
   renderCanvas();
   updatePreview();
   setTimeout(() => {
     const el = document.querySelector(`[data-nid="${id}"] input`);
     if (el) el.focus();
+    document.getElementById('canvas-nodes').scrollTo({ top: 9999, behavior: 'smooth' });
   }, 40);
-}
-
-function mobileAdd(type) {
-  closeMobilePalette();
-  setTimeout(() => addNode(type), 120);
 }
 
 function removeNode(id) {
   nodes = nodes.filter(n => n.id !== id);
-  renderCanvas();
-  updatePreview();
+  renderCanvas(); updatePreview();
 }
 
 function moveNode(id, dir) {
@@ -1065,12 +723,7 @@ function moveNode(id, dir) {
   const j = i + dir;
   if (j < 0 || j >= nodes.length) return;
   [nodes[i], nodes[j]] = [nodes[j], nodes[i]];
-  renderCanvas();
-  updatePreview();
-  setTimeout(() => {
-    const el = document.querySelector(`[data-nid="${id}"] input`);
-    if (el) el.focus();
-  }, 30);
+  renderCanvas(); updatePreview();
 }
 
 function updateNodeField(id, field, val) {
@@ -1079,9 +732,7 @@ function updateNodeField(id, field, val) {
 }
 
 function clearCanvas() {
-  nodes = [];
-  renderCanvas();
-  updatePreview();
+  nodes = []; renderCanvas(); updatePreview();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1090,32 +741,18 @@ function clearCanvas() {
 function renderCanvas() {
   const wrap = document.getElementById('canvas-nodes');
   wrap.innerHTML = '';
-  const pill = document.getElementById('node-count');
-  pill.textContent = nodes.length + (nodes.length === 1 ? ' node' : ' nodes');
-
   if (!nodes.length) {
-    const hint = document.createElement('div');
-    hint.id = 'canvas-hint';
-    const isStacked = currentTheme === 'stacked';
-    hint.innerHTML = `<span class="hint-text">${isStacked ? '↓ tap + to add nodes' : '← add nodes from the palette to begin'}</span>`;
-    wrap.appendChild(hint);
+    wrap.innerHTML = `<div id="canvas-hint"><div class="hint-icon">◈</div><div class="hint-text">add nodes below</div></div>`;
     document.getElementById('commit-btn').disabled = true;
     return;
   }
-
   document.getElementById('commit-btn').disabled = thinking;
-
   nodes.forEach((node, idx) => {
     const d = document.createElement('div');
     d.className = 'node' + (node.committed ? ' committed' : '');
     d.setAttribute('data-nid', node.id);
     d.setAttribute('draggable', 'true');
-
-    d.addEventListener('dragstart', e => {
-      dragSrcId = node.id;
-      setTimeout(() => d.classList.add('dragging'), 0);
-      e.dataTransfer.effectAllowed = 'move';
-    });
+    d.addEventListener('dragstart', e => { dragSrcId = node.id; setTimeout(() => d.classList.add('dragging'), 0); e.dataTransfer.effectAllowed = 'move'; });
     d.addEventListener('dragend', () => d.classList.remove('dragging', 'drag-over'));
     d.addEventListener('dragover', e => { e.preventDefault(); d.classList.add('drag-over'); });
     d.addEventListener('dragleave', () => d.classList.remove('drag-over'));
@@ -1125,48 +762,28 @@ function renderCanvas() {
       const si = nodes.findIndex(n => n.id === dragSrcId);
       const di = nodes.findIndex(n => n.id === node.id);
       if (si === -1 || di === -1) return;
-      const [moved] = nodes.splice(si, 1);
-      nodes.splice(di, 0, moved);
+      const [m] = nodes.splice(si, 1); nodes.splice(di, 0, m);
       renderCanvas(); updatePreview();
     });
 
-    const arrows = document.createElement('div');
-    arrows.className = 'node-arrows';
-    const up = document.createElement('button');
-    up.className = 'arr'; up.textContent = '▲'; up.title = 'Move up';
-    if (idx === 0) up.disabled = true;
-    up.onclick = e => { e.stopPropagation(); moveNode(node.id, -1); };
-    const dn = document.createElement('button');
-    dn.className = 'arr'; dn.textContent = '▼'; dn.title = 'Move down';
-    if (idx === nodes.length - 1) dn.disabled = true;
-    dn.onclick = e => { e.stopPropagation(); moveNode(node.id, 1); };
-    arrows.append(up, dn);
-    d.appendChild(arrows);
+    const arrows = document.createElement('div'); arrows.className = 'node-arrows';
+    const up = document.createElement('button'); up.className = 'arr'; up.textContent = '▲'; if(idx===0) up.disabled = true; up.onclick = e => { e.stopPropagation(); moveNode(node.id, -1); };
+    const dn = document.createElement('button'); dn.className = 'arr'; dn.textContent = '▼'; if(idx===nodes.length-1) dn.disabled = true; dn.onclick = e => { e.stopPropagation(); moveNode(node.id, 1); };
+    arrows.append(up, dn); d.appendChild(arrows);
 
-    const grip = document.createElement('div');
-    grip.className = 'node-grip'; grip.textContent = '⠿';
-    d.appendChild(grip);
+    const grip = document.createElement('div'); grip.className = 'node-grip'; grip.textContent = '⠿'; d.appendChild(grip);
 
-    const badge = document.createElement('div');
-    badge.className = 'node-badge';
-    const LABELS = { title: 'title', thought: 'thought', pull: '[pull]', aside: '[aside]', spec: '[spec]', constraint: '[constraint]', break: 'break —' };
+    const badge = document.createElement('div'); badge.className = 'node-badge';
+    const LABELS = {title:'title',thought:'thought',pull:'[pull]',aside:'[aside]',spec:'[spec]',constraint:'[cst]',break:'break'};
     badge.textContent = LABELS[node.type] || node.type;
-    if (node.type === 'constraint') badge.classList.add('badge-constraint');
+    if (node.type === 'constraint') badge.classList.add('red');
     d.appendChild(badge);
 
-    const cont = document.createElement('div');
-    cont.className = 'node-content';
-    buildNodeContent(node, cont);
-    d.appendChild(cont);
+    const cont = document.createElement('div'); cont.className = 'node-content';
+    buildNodeContent(node, cont); d.appendChild(cont);
 
-    const sent = document.createElement('div');
-    sent.className = 'node-sent'; sent.textContent = 'sent';
-    d.appendChild(sent);
-
-    const del = document.createElement('button');
-    del.className = 'node-del'; del.textContent = '×';
-    del.onclick = e => { e.stopPropagation(); removeNode(node.id); };
-    d.appendChild(del);
+    const del = document.createElement('button'); del.className = 'node-del'; del.textContent = '×';
+    del.onclick = e => { e.stopPropagation(); removeNode(node.id); }; d.appendChild(del);
 
     wrap.appendChild(d);
   });
@@ -1174,49 +791,44 @@ function renderCanvas() {
 
 function buildNodeContent(node, cont) {
   if (node.type === 'break') {
-    const lbl = document.createElement('div');
-    lbl.className = 'ni-break'; lbl.textContent = '— thread break';
+    const lbl = document.createElement('div'); lbl.className = 'ni-break'; lbl.textContent = '— thread break';
     cont.appendChild(lbl); return;
   }
   if (node.type === 'spec') {
     const row = document.createElement('div'); row.className = 'ni-spec-row';
-    const k = document.createElement('input'); k.className = 'ni ni-spec-key'; k.placeholder = 'key'; k.value = node.key || '';
-    k.addEventListener('input', () => updateNodeField(node.id, 'key', k.value));
-    k.addEventListener('keydown', commitOnEnter);
-    const sep = document.createElement('span'); sep.className = 'ni-spec-sep'; sep.textContent = '::';
-    const v = document.createElement('input'); v.className = 'ni ni-spec-val'; v.placeholder = 'value or context'; v.value = node.val || '';
-    v.addEventListener('input', () => updateNodeField(node.id, 'val', v.value));
-    v.addEventListener('keydown', commitOnEnter);
+    const k = document.createElement('input'); k.className = 'ni ni-k'; k.placeholder = 'key'; k.value = node.key||'';
+    k.addEventListener('input', () => updateNodeField(node.id, 'key', k.value)); k.addEventListener('keydown', enterCommit);
+    const sep = document.createElement('span'); sep.className = 'ni-sep'; sep.textContent = '::';
+    const v = document.createElement('input'); v.className = 'ni ni-v'; v.placeholder = 'value'; v.value = node.val||'';
+    v.addEventListener('input', () => updateNodeField(node.id, 'val', v.value)); v.addEventListener('keydown', enterCommit);
     row.append(k, sep, v); cont.appendChild(row); return;
   }
   if (node.type === 'constraint') {
-    const row = document.createElement('div'); row.className = 'ni-constraint-row';
-    const k = document.createElement('input'); k.className = 'ni ni-constraint-key'; k.placeholder = 'rule'; k.value = node.key || '';
-    k.addEventListener('input', () => updateNodeField(node.id, 'key', k.value));
-    k.addEventListener('keydown', commitOnEnter);
-    const sep = document.createElement('span'); sep.className = 'ni-constraint-sep'; sep.textContent = '::';
-    const v = document.createElement('input'); v.className = 'ni ni-constraint-val'; v.placeholder = 'must / must not…'; v.value = node.val || '';
-    v.addEventListener('input', () => updateNodeField(node.id, 'val', v.value));
-    v.addEventListener('keydown', commitOnEnter);
+    const row = document.createElement('div'); row.className = 'ni-cst-row';
+    const k = document.createElement('input'); k.className = 'ni ni-cst-k'; k.placeholder = 'rule'; k.value = node.key||'';
+    k.addEventListener('input', () => updateNodeField(node.id, 'key', k.value)); k.addEventListener('keydown', enterCommit);
+    const sep = document.createElement('span'); sep.className = 'ni-sep'; sep.textContent = '::';
+    const v = document.createElement('input'); v.className = 'ni ni-v'; v.placeholder = 'must / must not…'; v.value = node.val||'';
+    v.addEventListener('input', () => updateNodeField(node.id, 'val', v.value)); v.addEventListener('keydown', enterCommit);
     row.append(k, sep, v); cont.appendChild(row); return;
   }
-  const CLASS_MAP    = { title: 'ni ni-title', thought: 'ni ni-thought', pull: 'ni ni-pull', aside: 'ni ni-aside' };
-  const PLACEHOLDER  = { title: 'THE BIG HEADLINE', thought: 'Think out loud…', pull: 'The one question that matters…', aside: 'a quiet detail or concern…' };
+  const CLASS_MAP   = { title:'ni ni-title', thought:'ni ni-thought', pull:'ni ni-pull', aside:'ni ni-aside' };
+  const PLACEHOLDER = { title:'THE BIG CLAIM', thought:'Think out loud…', pull:'The one question…', aside:'a quiet caveat…' };
   const inp = document.createElement('input');
   inp.className = CLASS_MAP[node.type] || 'ni ni-thought';
   inp.placeholder = PLACEHOLDER[node.type] || '';
-  inp.value = node.content || '';
+  inp.value = node.content||'';
   inp.addEventListener('input', () => updateNodeField(node.id, 'content', inp.value));
-  inp.addEventListener('keydown', commitOnEnter);
+  inp.addEventListener('keydown', enterCommit);
   cont.appendChild(inp);
 }
 
-function commitOnEnter(e) {
+function enterCommit(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commit(); }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// PROMPT PREVIEW
+// PREVIEW
 // ─────────────────────────────────────────────────────────────────────────────
 function buildPromptString() {
   return nodes.flatMap(n => {
@@ -1225,8 +837,8 @@ function buildPromptString() {
     if (n.type === 'thought'    && n.content.trim()) return [n.content.trim()];
     if (n.type === 'pull'       && n.content.trim()) return [`[pull] ${n.content.trim()}`];
     if (n.type === 'aside'      && n.content.trim()) return [`[aside] ${n.content.trim()}`];
-    if (n.type === 'spec'       && n.key.trim())     return [`[spec] ${n.key.trim()} :: ${n.val.trim() || '—'}`];
-    if (n.type === 'constraint' && n.key.trim())     return [`[constraint] ${n.key.trim()} :: ${n.val.trim() || '—'}`];
+    if (n.type === 'spec'       && n.key.trim())     return [`[spec] ${n.key.trim()} :: ${n.val.trim()||'—'}`];
+    if (n.type === 'constraint' && n.key.trim())     return [`[constraint] ${n.key.trim()} :: ${n.val.trim()||'—'}`];
     return [];
   }).join('\n');
 }
@@ -1234,14 +846,11 @@ function buildPromptString() {
 function updatePreview() {
   const prompt = buildPromptString();
   const el = document.getElementById('preview-text');
-  if (!prompt) {
-    el.innerHTML = '<span style="color:var(--ink-4);font-style:italic">Prompt preview will appear as you build…</span>';
-    return;
-  }
+  if (!prompt) { el.innerHTML = '<span style="color:var(--ink-4);font-style:italic">Prompt preview will appear here…</span>'; return; }
   el.innerHTML = prompt
     .replace(/\n/g, ' <span style="color:var(--ink-4)">·</span> ')
-    .replace(/\[(poster|pull|aside|spec|list)\]/g, '<span class="pb">[$1]</span>')
-    .replace(/\[constraint\]/g, '<span style="color:#b43c28">[constraint]</span>');
+    .replace(/\[(poster|pull|aside|spec|list)\]/g, '<span class="pb-accent">[$1]</span>')
+    .replace(/\[constraint\]/g, '<span class="pb-red">[constraint]</span>');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1256,194 +865,102 @@ function commit() {
   if (es) es.remove();
 
   const root = document.getElementById('narrative-root');
-  const wrap = document.createElement('div');
-  wrap.className = 'exchange';
+  const wrap = document.createElement('div'); wrap.className = 'exchange';
 
-  const who = document.createElement('div');
-  who.className = 'who';
-  who.innerHTML = `<span class="who-name">You</span><span class="who-tag">${nodes.length} node${nodes.length !== 1 ? 's' : ''}</span>`;
+  const who = document.createElement('div'); who.className = 'who';
+  who.innerHTML = `<span class="who-name">You</span><span class="who-tag">${nodes.length} node${nodes.length!==1?'s':''}</span>`;
   wrap.appendChild(who);
 
-  nodes.forEach(n => {
-    const el = renderNodeInStream(n);
-    if (el) wrap.appendChild(el);
-  });
-
+  nodes.forEach(n => { const el = renderNodeInStream(n); if(el) wrap.appendChild(el); });
   root.appendChild(wrap);
-  wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
 
+  const nodeTypes = nodes.map(n => n.type);
   nodes.forEach(n => n.committed = true);
   renderCanvas();
-  chapters[activeChapter].prompts++;
-  renderChapters();
+  totalCommits++;
+  updateProgress();
 
   thinking = true;
   document.getElementById('commit-btn').disabled = true;
   document.getElementById('typing-wrap').style.display = 'block';
-  document.getElementById('typing-wrap').scrollIntoView({ behavior: 'smooth', block: 'end' });
 
-  history.push({ role: 'user', content: prompt });
+  setTimeout(() => {
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, 50);
 
-  callClaude(history)
-    .then(responseText => {
-      document.getElementById('typing-wrap').style.display = 'none';
-      thinking = false;
-      document.getElementById('commit-btn').disabled = false;
+  // Simulate thinking delay
+  const delay = 800 + Math.random() * 900;
+  setTimeout(() => {
+    document.getElementById('typing-wrap').style.display = 'none';
+    thinking = false;
+    document.getElementById('commit-btn').disabled = false;
 
-      const aiWho = document.createElement('div');
-      aiWho.className = 'who'; aiWho.style.marginTop = '20px';
-      aiWho.innerHTML = '<span class="who-name">wolfie</span>';
-      wrap.appendChild(aiWho);
+    const aiWho = document.createElement('div'); aiWho.className = 'who'; aiWho.style.marginTop = '20px';
+    aiWho.innerHTML = '<span class="who-name">reasonably</span>';
+    wrap.appendChild(aiWho);
 
-      parseSentences(responseText).forEach((s, i) => {
-        const el = renderResponseSentence(s);
-        if (!el) return;
-        el.style.animationDelay = `${i * 55}ms`;
-        wrap.appendChild(el);
-      });
-
-      history.push({ role: 'assistant', content: responseText });
-      wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      updateProgress();
-    })
-    .catch(err => {
-      document.getElementById('typing-wrap').style.display = 'none';
-      thinking = false;
-      document.getElementById('commit-btn').disabled = false;
-      const errEl = document.createElement('div');
-      errEl.className = 'r-aside';
-      errEl.textContent = 'Connection failed. ' + (err.message || '');
-      wrap.appendChild(errEl);
+    const responseText = getPresetResponse(nodeTypes);
+    parseSentences(responseText).forEach((s, i) => {
+      const el = renderResponseSentence(s);
+      if (!el) return;
+      el.style.animationDelay = `${i * 60}ms`;
+      el.style.opacity = '0';
+      el.style.animation = `fadeUp .3s ease forwards`;
+      wrap.appendChild(el);
     });
+
+    setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'end' }), 80);
+  }, delay);
 }
 
 function renderNodeInStream(n) {
   let el;
-  if (n.type === 'title'      && n.content.trim()) { el = document.createElement('div'); el.className = 'sn-title';      el.textContent = n.content; }
-  else if (n.type === 'thought'    && n.content.trim()) { el = document.createElement('div'); el.className = 'sn-thought';    el.textContent = n.content; }
-  else if (n.type === 'pull'       && n.content.trim()) { el = document.createElement('div'); el.className = 'sn-pull';       el.textContent = n.content; }
-  else if (n.type === 'aside'      && n.content.trim()) { el = document.createElement('div'); el.className = 'sn-aside';      el.textContent = n.content; }
-  else if (n.type === 'spec'       && n.key.trim())     { el = document.createElement('div'); el.className = 'sn-spec';       el.innerHTML = `<span class="spec-k">${n.key}</span><span class="spec-v">${n.val || '—'}</span>`; }
-  else if (n.type === 'constraint' && n.key.trim())     { el = document.createElement('div'); el.className = 'sn-constraint'; el.innerHTML = `<span class="constraint-k">${n.key}</span><span class="constraint-v">${n.val || '—'}</span>`; }
-  else if (n.type === 'break')                          { el = document.createElement('div'); el.className = 'sn-break';      el.textContent = '— break'; }
-  return el || null;
+  if      (n.type==='title'      && n.content.trim()) { el=document.createElement('div'); el.className='sn-title';  el.textContent=n.content; }
+  else if (n.type==='thought'    && n.content.trim()) { el=document.createElement('div'); el.className='sn-thought';el.textContent=n.content; }
+  else if (n.type==='pull'       && n.content.trim()) { el=document.createElement('div'); el.className='sn-pull';   el.textContent=n.content; }
+  else if (n.type==='aside'      && n.content.trim()) { el=document.createElement('div'); el.className='sn-aside';  el.textContent=n.content; }
+  else if (n.type==='spec'       && n.key.trim())     { el=document.createElement('div'); el.className='sn-spec';   el.innerHTML=`<span class="spec-k">${n.key}</span><span>${n.val||'—'}</span>`; }
+  else if (n.type==='constraint' && n.key.trim())     { el=document.createElement('div'); el.className='sn-cst';    el.innerHTML=`<span class="cst-k">${n.key}</span><span>${n.val||'—'}</span>`; }
+  else if (n.type==='break')                          { el=document.createElement('div'); el.className='sn-break';  el.textContent='— break'; }
+  return el||null;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// RESPONSE PARSING + RENDERING
+// RESPONSE PARSING
 // ─────────────────────────────────────────────────────────────────────────────
 function parseSentences(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-  const out = [];
-  let listItems = [], inList = false;
+  const out = []; let listItems = [], inList = false;
   for (const line of lines) {
     const isBullet = line.startsWith('— ') || line.startsWith('- ');
-    if (isBullet) { listItems.push(line.replace(/^[—\-]\s*/, '')); inList = true; continue; }
-    if (inList) { out.push({ type: 'list', items: [...listItems] }); listItems = []; inList = false; }
+    if (isBullet) { listItems.push(line.replace(/^[—\-]\s*/,'')); inList=true; continue; }
+    if (inList) { out.push({type:'list',items:[...listItems]}); listItems=[]; inList=false; }
     const m = line.match(/^\[([a-z]+)\]\s*(.*)/s);
-    if (!m) { out.push({ type: 'body', text: line }); continue; }
-    const [, type, content] = m;
-    if (type === 'spec') {
-      const sep = content.indexOf('::');
-      if (sep !== -1) out.push({ type: 'spec', key: content.slice(0, sep).trim(), val: content.slice(sep + 2).trim() });
-      else out.push({ type: 'spec', key: content, val: '' });
-    } else if (type === 'constraint') {
-      const sep = content.indexOf('::');
-      if (sep !== -1) out.push({ type: 'constraint', key: content.slice(0, sep).trim(), val: content.slice(sep + 2).trim() });
-      else out.push({ type: 'constraint', key: content, val: '' });
-    } else {
-      out.push({ type, text: content.trim() });
-    }
+    if (!m) { out.push({type:'body',text:line}); continue; }
+    const [,type,content] = m;
+    if (type==='spec')       { const sep=content.indexOf('::'); out.push(sep!==-1?{type:'spec',key:content.slice(0,sep).trim(),val:content.slice(sep+2).trim()}:{type:'spec',key:content,val:''}); }
+    else if (type==='constraint') { const sep=content.indexOf('::'); out.push(sep!==-1?{type:'constraint',key:content.slice(0,sep).trim(),val:content.slice(sep+2).trim()}:{type:'constraint',key:content,val:''}); }
+    else out.push({type,text:content.trim()});
   }
-  if (inList && listItems.length) out.push({ type: 'list', items: listItems });
+  if (inList&&listItems.length) out.push({type:'list',items:listItems});
   return out;
 }
 
 function renderResponseSentence(s) {
   let el;
-  switch (s.type) {
-    case 'body':       el = document.createElement('div'); el.className = 'r-body';       el.innerHTML  = s.text; break;
-    case 'pull':       el = document.createElement('div'); el.className = 'r-pull';       el.innerHTML  = s.text; break;
-    case 'poster':     el = document.createElement('div'); el.className = 'r-poster';     el.innerHTML  = s.text; break;
-    case 'aside':      el = document.createElement('div'); el.className = 'r-aside';      el.textContent = s.text; break;
-    case 'spec':       el = document.createElement('div'); el.className = 'r-spec';       el.innerHTML = `<span class="spec-k">${s.key||''}</span><span class="spec-v">${s.val||''}</span>`; break;
-    case 'constraint': el = document.createElement('div'); el.className = 'r-constraint'; el.innerHTML = `<span class="constraint-k">${s.key||''}</span><span class="constraint-v">${s.val||''}</span>`; break;
+  switch(s.type) {
+    case 'body':       el=document.createElement('div'); el.className='r-body';   el.innerHTML=s.text; break;
+    case 'pull':       el=document.createElement('div'); el.className='r-pull';   el.innerHTML=s.text; break;
+    case 'poster':     el=document.createElement('div'); el.className='r-poster'; el.innerHTML=s.text; break;
+    case 'aside':      el=document.createElement('div'); el.className='r-aside';  el.textContent=s.text; break;
+    case 'spec':       el=document.createElement('div'); el.className='r-spec';   el.innerHTML=`<span class="spec-k">${s.key||''}</span><span>${s.val||''}</span>`; break;
+    case 'constraint': el=document.createElement('div'); el.className='r-cst';    el.innerHTML=`<span class="cst-k">${s.key||''}</span><span>${s.val||''}</span>`; break;
     case 'list':
-      el = document.createElement('ul'); el.className = 'r-list';
-      (s.items||[]).forEach(item => { const li = document.createElement('li'); li.textContent = item; el.appendChild(li); }); break;
-    default: el = document.createElement('div'); el.className = 'r-body'; el.innerHTML = s.text||'';
+      el=document.createElement('ul'); el.className='r-list';
+      (s.items||[]).forEach(item=>{const li=document.createElement('li');li.textContent=item;el.appendChild(li);}); break;
+    default: el=document.createElement('div'); el.className='r-body'; el.innerHTML=s.text||'';
   }
   return el;
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CLAUDE API
-// ─────────────────────────────────────────────────────────────────────────────
-async function callClaude(hist) {
-  const res = await fetch('https://wolfie.zack-gort.workers.dev', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Token': 'wolfie-2024' },
-    body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1024, system: SYSTEM, messages: hist }),
-  });
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message || 'API error');
-  return data.content.map(b => b.type === 'text' ? b.text : '').join('\n');
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CHAPTERS
-// ─────────────────────────────────────────────────────────────────────────────
-function addChapter() {
-  chapters.push({ name: `Chapter ${chapters.length + 1}`, prompts: 0 });
-  activeChapter = chapters.length - 1;
-  renderChapters();
-}
-
-function renderChapters() {
-  ['chapters-list', 'trifold-chapters'].forEach(id => {
-    const list = document.getElementById(id);
-    if (!list) return;
-    list.innerHTML = '';
-    chapters.forEach((ch, i) => {
-      const d = document.createElement('div');
-      d.className = 'ch-item' + (i === activeChapter ? ' active' : '');
-      d.innerHTML = `<div class="ch-name">${ch.name}</div><div class="ch-meta">${ch.prompts} prompt${ch.prompts !== 1 ? 's' : ''}</div>`;
-      d.onclick = () => { activeChapter = i; renderChapters(); };
-      list.appendChild(d);
-    });
-  });
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PALETTE CONTROLS
-// ─────────────────────────────────────────────────────────────────────────────
-function toggleRail() {
-  railVisible = !railVisible;
-  document.getElementById('node-rail').classList.toggle('hidden', !railVisible);
-  document.getElementById('rail-btn').classList.toggle('active', railVisible);
-}
-
-function toggleStackedDrawer() {
-  const rail = document.getElementById('node-rail');
-  const btn  = document.getElementById('stacked-drawer-btn');
-  const open = rail.classList.toggle('hidden');
-  btn.textContent = open ? '+' : '×';
-}
-
-function toggleMobilePalette() {
-  const pal = document.getElementById('mobile-palette');
-  const fab = document.getElementById('palette-fab');
-  const bd  = document.getElementById('palette-backdrop');
-  const opening = !pal.classList.contains('open');
-  pal.classList.toggle('open', opening);
-  fab.classList.toggle('open', opening);
-  bd.classList.toggle('visible', opening);
-}
-
-function closeMobilePalette() {
-  document.getElementById('mobile-palette').classList.remove('open');
-  document.getElementById('palette-fab').classList.remove('open');
-  document.getElementById('palette-backdrop').classList.remove('visible');
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1452,22 +969,28 @@ function closeMobilePalette() {
 function clearAll() {
   document.getElementById('narrative-root').innerHTML = `
     <div id="empty-state">
-      <div class="es-title">Build a<br>prompt<br><span style="color:var(--accent)">visually.</span></div>
-      <div class="es-body">Add typed nodes from the palette. Each block renders as what it is. Commit sends the whole structure as one prompt.</div>
+      <div class="es-eyebrow">reasonably.cc</div>
+      <div class="es-title">Think in<br><em>structure.</em></div>
+      <div class="es-body">Compose your thought from typed nodes. Each node declares its intent — a title frames, a pull distills, a constraint binds.</div>
+      <div class="es-steps">
+        <div class="es-step"><div class="step-n">1</div><div class="step-txt">Pick node types from the palette →</div></div>
+        <div class="es-step"><div class="step-n">2</div><div class="step-txt">Fill in your content for each</div></div>
+        <div class="es-step"><div class="step-n">3</div><div class="step-txt">Commit to send and see the response</div></div>
+      </div>
     </div>`;
-  history = [];
-  clearCanvas();
-  updateProgress();
+  totalCommits = 0; clearCanvas(); updateProgress();
 }
 
 function updateProgress() {
-  const total = chapters.reduce((s, c) => s + c.prompts, 0);
-  document.getElementById('progress').style.width = Math.min(total * 8, 100) + '%';
+  document.getElementById('progress').style.width = Math.min(totalCommits * 12, 100) + '%';
 }
 
-// ── INIT
+// Init
 renderCanvas();
-renderChapters();
+
+// Prevent default touchmove scroll capture on canvas-nodes for iOS
+document.getElementById('canvas-nodes').addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
+document.getElementById('stream-scroll').addEventListener('touchmove', e => e.stopPropagation(), { passive: true });
 </script>
 </body>
 </html>
