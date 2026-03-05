@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="windowed">
+<html lang="en" data-theme="newspaper">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -362,8 +362,8 @@ header{
   <div class="h-center" id="hctxt">structured thinking · reasonably.cc</div>
   <div class="h-right">
     <div class="theme-toggle">
-      <button class="tt-btn active" data-t="windowed" onclick="setTheme('windowed')">◼ digital</button>
-      <button class="tt-btn" data-t="newspaper" onclick="setTheme('newspaper')">⊞ broadsheet</button>
+      <button class="tt-btn" data-t="windowed" onclick="setTheme('windowed')">◼ digital</button>
+      <button class="tt-btn active" data-t="newspaper" onclick="setTheme('newspaper')">⊞ broadsheet</button>
     </div>
     <button class="h-btn" id="rail-btn" onclick="cycleRail()">[ ] Rail</button>
     <button class="h-btn" onclick="clearAll()">↺ Reset</button>
@@ -624,7 +624,7 @@ function getResponse(nodeTypes, isFirst) {
 // STATE
 // ══════════════════════════════════════════════════
 let nodes=[], nodeId=0, thinking=false, totalCommits=0, dragSrcId=null;
-let currentTheme='windowed', railState='visible', isFirstCommit=true;
+let currentTheme='newspaper', railState='visible', isFirstCommit=true;
 
 // ══════════════════════════════════════════════════
 // THEME
