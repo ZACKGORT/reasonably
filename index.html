@@ -117,7 +117,6 @@ header{
 .rail-section{margin-bottom:22px}
 .rs-head{font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);font-family:var(--ui-f)}
 
-/* size rack */
 .size-rack{display:flex;flex-direction:column;gap:3px}
 .sz-btn{display:flex;align-items:center;gap:10px;padding:7px 9px;border:1px solid var(--border);background:none;cursor:pointer;border-radius:4px;transition:all .15s;text-align:left;width:100%}
 .sz-btn:hover{border-color:var(--border-2);background:var(--bg-3)}
@@ -131,7 +130,6 @@ header{
 .sz-label{font-size:7px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);flex-shrink:0;min-width:18px;font-family:var(--ui-f)}
 .sz-btn.active .sz-label{color:var(--accent)}
 
-/* legend */
 .legend-list{display:flex;flex-direction:column;gap:5px}
 .leg-item{display:flex;align-items:flex-start;gap:7px}
 .leg-badge{font-family:var(--ui-f);font-size:7px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-ll);border:1px solid var(--accent-l);padding:2px 6px;border-radius:20px;flex-shrink:0;min-width:46px;text-align:center;margin-top:1px}
@@ -167,7 +165,6 @@ header{
 .hint-icon{font-size:20px;opacity:.25}
 .hint-text{font-size:7px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-4);text-align:center;font-family:var(--ui-f)}
 
-/* palette grid (desktop) */
 #palette-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:8px 10px;flex-shrink:0;border-top:1px solid var(--border);background:var(--bg);transition:background .3s;position:relative}
 [data-theme="newspaper"] #palette-grid{background:var(--bg-2);border-top-color:var(--border-2)}
 
@@ -181,7 +178,6 @@ header{
 .constraint-type .pal-type{color:var(--red)}
 .pal-hint{font-size:7px;color:var(--ink-3);font-family:var(--ui-f)}
 
-/* ghost overlays */
 .ghost-overlay{
   position:absolute;bottom:calc(100% + 7px);left:0;min-width:200px;
   background:var(--bg-4);border:1px solid var(--accent);border-radius:var(--radius);
@@ -200,7 +196,6 @@ header{
 .go-example.mono{font-family:var(--ui-f);font-style:normal;font-size:9px;color:var(--ink-2);line-height:1.5}
 .go-usage{font-size:8px;color:var(--ink-3);line-height:1.4;font-family:var(--ui-f)}
 
-/* commit bar */
 #commit-bar{border-top:1px solid var(--border);padding:8px 10px 10px;background:var(--bg-2);display:flex;align-items:flex-start;gap:8px;flex-shrink:0;transition:background .3s}
 [data-theme="newspaper"] #commit-bar{border-top-color:var(--border-2)}
 #preview-text{flex:1;font-size:8px;color:var(--ink-3);line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-family:var(--ui-f)}
@@ -300,14 +295,112 @@ header{
 #progress{position:fixed;top:calc(var(--header-h) + var(--safe-t));left:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .5s ease;z-index:500;pointer-events:none}
 [data-theme="newspaper"] #progress{background:var(--accent)}
 
+/* ═══ INTRO MODAL ═══ */
+#intro-backdrop{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(15,10,5,0.72);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  animation:bdin .35s ease forwards;
+}
+@keyframes bdin{from{opacity:0}to{opacity:1}}
+[data-theme="windowed"] #intro-backdrop{background:rgba(8,10,18,0.82)}
+
+#intro-modal{
+  background:var(--bg);
+  border:1px solid var(--border-2);
+  border-radius:8px;
+  max-width:480px;width:100%;
+  padding:36px 36px 28px;
+  position:relative;
+  animation:min .4s cubic-bezier(.16,1,.3,1) forwards;
+  box-shadow:0 32px 80px rgba(0,0,0,.35);
+}
+[data-theme="newspaper"] #intro-modal{
+  border-top:3px double var(--ink-3);
+  border-radius:2px;
+  box-shadow:0 8px 40px rgba(0,0,0,.18);
+}
+[data-theme="windowed"] #intro-modal{background:var(--bg-2)}
+@keyframes min{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.im-overline{
+  font-family:var(--ui-f);font-size:7px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:14px;display:flex;align-items:center;gap:10px;
+}
+.im-overline::after{content:'';flex:1;height:1px;background:var(--border)}
+[data-theme="newspaper"] .im-overline::after{background:var(--border-2)}
+
+.im-title{
+  font-family:var(--disp);font-weight:800;
+  font-size:clamp(26px,4vw,38px);
+  line-height:.95;letter-spacing:-.04em;
+  color:var(--ink);margin-bottom:16px;
+}
+[data-theme="newspaper"] .im-title{font-style:italic;font-weight:900;letter-spacing:-.02em}
+.im-title em{color:var(--accent);font-style:normal}
+[data-theme="newspaper"] .im-title em{font-style:italic}
+
+.im-body{
+  font-family:var(--body-f);font-style:italic;
+  font-size:16px;color:var(--ink-2);line-height:1.6;
+  margin-bottom:20px;
+}
+
+.im-facts{
+  display:flex;flex-direction:column;gap:6px;
+  margin-bottom:26px;
+  padding:14px 16px;
+  background:var(--bg-3);
+  border-radius:4px;
+  border-left:2px solid var(--accent-l);
+}
+[data-theme="newspaper"] .im-facts{background:var(--bg-2);border-left-color:var(--border-2)}
+.im-fact{
+  display:flex;align-items:baseline;gap:10px;
+  font-size:9px;font-family:var(--ui-f);color:var(--ink-3);line-height:1.5;
+}
+.im-fact-k{
+  font-size:7px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent);flex-shrink:0;min-width:72px;
+}
+[data-theme="newspaper"] .im-fact-k{color:var(--ink-3)}
+
+.im-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.im-aside{font-size:9px;color:var(--ink-4);font-family:var(--ui-f);font-style:italic;flex:1;min-width:0}
+.im-enter{
+  font-family:var(--ui-f);font-weight:700;font-size:8px;letter-spacing:.14em;text-transform:uppercase;
+  background:var(--accent);color:white;border:none;
+  padding:10px 20px;border-radius:var(--radius);
+  cursor:pointer;flex-shrink:0;
+  transition:background .15s,transform .1s;
+}
+[data-theme="newspaper"] .im-enter{background:var(--ink);color:var(--bg)}
+[data-theme="newspaper"] .im-enter:hover{background:var(--accent);color:white}
+.im-enter:hover{background:#6ba3fa}
+.im-enter:active{transform:scale(.96)}
+
+/* ═══ DEMO BADGE ═══ */
+#demo-badge{
+  position:fixed;bottom:calc(14px + var(--safe-b));left:14px;
+  font-family:var(--ui-f);font-size:7px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);background:var(--bg-2);
+  border:1px solid var(--border-2);
+  border-radius:20px;padding:4px 10px;
+  z-index:100;opacity:0;
+  transition:opacity .4s;
+  pointer-events:none;
+}
+[data-theme="newspaper"] #demo-badge{background:var(--bg);color:var(--ink-4);border-color:var(--border)}
+#demo-badge.visible{opacity:1}
+
 /* ═══ MOBILE ≤720px ═══ */
 @media(max-width:720px){
   #app{grid-template-columns:1fr !important;grid-template-rows:calc(var(--header-h) + var(--safe-t)) 1fr auto}
   #left-rail{display:none !important}
   #stream-panel{grid-column:1;grid-row:2;border-right:none}
   #canvas-panel{grid-column:1;grid-row:3;display:flex;flex-direction:column;border-top:1px solid var(--border-2)}
-
-  /* ── swipeable palette strip ── */
   #palette-grid{
     display:flex !important;flex-direction:row;flex-wrap:nowrap;
     overflow-x:auto;-webkit-overflow-scrolling:touch;
@@ -320,14 +413,11 @@ header{
   [data-theme="newspaper"] #palette-grid{background:var(--bg-2)}
   .pal-btn{scroll-snap-align:start;flex:0 0 80px;min-width:80px;min-height:58px;padding:7px 8px}
   .pal-btn.wide{flex:0 0 96px;min-width:96px}
-
-  /* ghost overlays above strip on mobile */
   .ghost-overlay{bottom:calc(100% + 8px);left:0;min-width:190px;z-index:500}
   @media(hover:none){
     .pal-btn:hover .ghost-overlay{opacity:0;transform:translateY(4px)}
     .pal-btn.touch-active .ghost-overlay{opacity:1;transform:translateY(0)}
   }
-
   #palette-titlebar{display:none}
   #canvas-nodes{max-height:88px;flex-shrink:0}
   #stream-scroll{padding:18px 16px 10px !important}
@@ -336,14 +426,15 @@ header{
   .h-center,.h-tag{display:none}
   .es-title{font-size:28px}
   .theme-toggle .tt-btn{padding:4px 7px;font-size:6px}
+  #intro-modal{padding:28px 22px 22px}
+  .im-title{font-size:26px}
+  #demo-badge{display:none}
 }
 
-/* strip scroll fade */
 #palette-strip-fade{display:none;position:absolute;right:0;top:0;bottom:0;width:36px;background:linear-gradient(to right,transparent,var(--bg-3));pointer-events:none;z-index:10;transition:opacity .2s}
 @media(max-width:720px){#palette-strip-fade{display:block}}
 [data-theme="newspaper"] #palette-strip-fade{background:linear-gradient(to right,transparent,var(--bg-2))}
 
-/* tablet: hide rail by default */
 @media(max-width:1100px) and (min-width:721px){
   #app{grid-template-columns:0px 1fr 1fr !important}
   #left-rail .rail-inner{opacity:0;pointer-events:none}
@@ -353,13 +444,34 @@ header{
 </style>
 </head>
 <body>
+
+<!-- INTRO MODAL -->
+<div id="intro-backdrop">
+  <div id="intro-modal">
+    <div class="im-overline">concept demo · reasonably.cc</div>
+    <div class="im-title">Think in<br><em>structure.</em></div>
+    <div class="im-body">A prompt composition interface. You build thoughts from typed nodes — each one declaring its intent before it speaks. Frame with a title. Distill with a pull. Bind with a constraint.</div>
+    <div class="im-facts">
+      <div class="im-fact"><span class="im-fact-k">no login</span><span>drop in and use it. nothing is saved.</span></div>
+      <div class="im-fact"><span class="im-fact-k">no live api</span><span>responses are curated, not generated. the point is the structure.</span></div>
+      <div class="im-fact"><span class="im-fact-k">no agenda</span><span>this is a design exploration. what prompt UX could look like.</span></div>
+    </div>
+    <div class="im-footer">
+      <div class="im-aside">the response is the least important part of this interface.</div>
+      <button class="im-enter" onclick="dismissIntro()">Enter ↗</button>
+    </div>
+  </div>
+</div>
+
+<div id="demo-badge">◈ concept demo · no api · no login</div>
+
 <div id="progress"></div>
 <div id="app">
 
 <!-- HEADER -->
 <header>
   <div class="logo">reasonably<em>.</em><div class="logo-dot"></div></div>
-  <div class="h-center" id="hctxt">structured thinking · reasonably.cc</div>
+  <div class="h-center" id="hctxt">The Structured Thinking Review · reasonably.cc</div>
   <div class="h-right">
     <div class="theme-toggle">
       <button class="tt-btn" data-t="windowed" onclick="setTheme('windowed')">◼ digital</button>
@@ -432,34 +544,33 @@ header{
   </div>
   <div id="palette-grid">
     <div id="palette-strip-fade"></div>
-
     <button class="pal-btn" onclick="addNode('title')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">Title</div><div class="pal-hint">Sets frame</div>
-      <div class="ghost-overlay"><div class="go-label">Title</div><div class="go-example">THE CORE CLAIM</div><div class="go-usage">Bold frame declaration. Opens or anchors a thread. Renders large at top of exchange.</div></div>
+      <div class="ghost-overlay"><div class="go-label">Title</div><div class="go-example">THE CORE CLAIM</div><div class="go-usage">Bold frame declaration. Opens or anchors a thread.</div></div>
     </button>
     <button class="pal-btn" onclick="addNode('thought')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">Thought</div><div class="pal-hint">Body prose</div>
-      <div class="ghost-overlay"><div class="go-label">Thought</div><div class="go-example">I keep returning to this…</div><div class="go-usage">Main narrative. Exploratory, open. The territory before the map.</div></div>
+      <div class="ghost-overlay"><div class="go-label">Thought</div><div class="go-example">I keep returning to this…</div><div class="go-usage">Main narrative. Exploratory, open.</div></div>
     </button>
     <button class="pal-btn" onclick="addNode('pull')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">[pull]</div><div class="pal-hint">Distill it</div>
-      <div class="ghost-overlay"><div class="go-label">[pull]</div><div class="go-example">What if the question is the answer?</div><div class="go-usage">Forces the single truest thing. Rendered with emphasis and restraint.</div></div>
+      <div class="ghost-overlay"><div class="go-label">[pull]</div><div class="go-example">What if the question is the answer?</div><div class="go-usage">Forces the single truest thing.</div></div>
     </button>
     <button class="pal-btn" onclick="addNode('aside')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">[aside]</div><div class="pal-hint">Footnote</div>
-      <div class="ghost-overlay"><div class="go-label">[aside]</div><div class="go-example go-example mono">worth noting quietly…</div><div class="go-usage">The hedge, the caveat. Matters but shouldn't dominate.</div></div>
+      <div class="ghost-overlay"><div class="go-label">[aside]</div><div class="go-example go-example mono">worth noting quietly…</div><div class="go-usage">The hedge, the caveat.</div></div>
     </button>
     <button class="pal-btn" onclick="addNode('spec')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">[spec]</div><div class="pal-hint">Params</div>
-      <div class="ghost-overlay"><div class="go-label">[spec]</div><div class="go-example go-example mono">format :: bullets<br>tone :: direct</div><div class="go-usage">Style &amp; format params. key :: value. Structured, not narrative.</div></div>
+      <div class="ghost-overlay"><div class="go-label">[spec]</div><div class="go-example go-example mono">format :: bullets<br>tone :: direct</div><div class="go-usage">Style &amp; format params. key :: value.</div></div>
     </button>
     <button class="pal-btn constraint-type" onclick="addNode('constraint')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">[constraint]</div><div class="pal-hint">Hard rule</div>
-      <div class="ghost-overlay"><div class="go-label">[constraint]</div><div class="go-example go-example mono">length :: 3 sentences<br>voice :: no jargon</div><div class="go-usage">Inviolable logical rule. Acknowledged explicitly. Shapes everything that follows.</div></div>
+      <div class="ghost-overlay"><div class="go-label">[constraint]</div><div class="go-example go-example mono">length :: 3 sentences</div><div class="go-usage">Inviolable logical rule.</div></div>
     </button>
     <button class="pal-btn wide" onclick="addNode('break')" ontouchstart="thold(this)" ontouchend="trel(this)" ontouchcancel="trel(this)">
       <div class="pal-type">— Break</div><div class="pal-hint">Thread separator</div>
-      <div class="ghost-overlay"><div class="go-label">— Break</div><div class="go-example go-example mono">— — — — — —</div><div class="go-usage">Signals a new phase within the same prompt. Pause and redirect.</div></div>
+      <div class="ghost-overlay"><div class="go-label">— Break</div><div class="go-example go-example mono">— — — — — —</div><div class="go-usage">New phase within the same prompt.</div></div>
     </button>
   </div>
   <div id="commit-bar">
@@ -471,16 +582,29 @@ header{
 </div><!-- /app -->
 <script>
 // ══════════════════════════════════════════════════
+// INTRO MODAL
+// ══════════════════════════════════════════════════
+function dismissIntro(){
+  const bd=document.getElementById('intro-backdrop');
+  bd.style.transition='opacity .25s ease';
+  bd.style.opacity='0';
+  setTimeout(()=>bd.remove(),260);
+  const badge=document.getElementById('demo-badge');
+  setTimeout(()=>badge.classList.add('visible'),400);
+}
+// also dismiss on backdrop click
+document.getElementById('intro-backdrop').addEventListener('click',function(e){
+  if(e.target===this)dismissIntro();
+});
+
+// ══════════════════════════════════════════════════
 // RESPONSE LIBRARY
 // ══════════════════════════════════════════════════
 const R = [
-  // FIRST COMMIT
   {t:['__first'],x:`[poster] Welcome to the Thinking Interface
 [body] You've just used your first node. That's the whole move — declaring the type of thing you're saying before you say it. From here, the palette is yours: frame with a title, explore with a thought, distill with a pull, govern with a constraint.
 [pull] The structure of the prompt is the first argument.
 [aside] everything here is intentional. including the fonts.`},
-
-  // TITLE
   {t:['title'],x:`[poster] The Frame Precedes the Fact
 [body] Whatever headline you put at the top of a prompt shapes every sentence underneath it. Title nodes don't just name a thing — they determine what kind of thing it is. Change the title and you change the answer.
 [aside] this is not about branding. it's about epistemology.`},
@@ -490,8 +614,6 @@ const R = [
   {t:['title'],x:`[poster] The Headline You Choose
 [body] People agonize over conclusions but commit to titles carelessly. That's backwards. The title is the commitment. Everything else is evidence you chose to gather around it.
 [aside] reasonably surfaces that commitment early, deliberately.`},
-
-  // THOUGHT
   {t:['thought'],x:`[body] The instinct to think out loud before narrowing down is correct. Thought nodes are the territory before the map — they hold the texture of a problem before you've decided what kind of problem it is.
 [pull] What keeps coming back when you try to look away from it?
 [aside] most tools erase this stage. reasonably preserves it.`},
@@ -502,8 +624,6 @@ const R = [
 [aside] the thought node is a permission slip to think before you perform thinking.`},
   {t:['thought'],x:`[body] You're working something out. That's the right posture. Thought nodes carry the productive ambiguity that most interfaces train you to resolve too early.
 [body] Stay in it a little longer. The shape will emerge — but only if you don't force the outline before the substance arrives.`},
-
-  // PULL
   {t:['pull'],x:`[pull] The truest answer is usually the one you almost didn't write down.
 [body] Pull nodes do a specific thing: they demand compression. Not simplification — compression. The difference is that compression keeps all the weight in a smaller space, while simplification drops weight to make it easier to carry.`},
   {t:['pull'],x:`[pull] Clarity is a discipline, not a gift.
@@ -512,130 +632,105 @@ const R = [
   {t:['pull'],x:`[pull] What you can't reduce, you don't yet understand.
 [body] Not a critique — a diagnostic. The pull that won't compress usually means the thought hasn't finished yet. That's fine. Let it finish. Then distill.`},
   {t:['pull'],x:`[pull] The question you keep circling is the one worth answering.
-[body] Iteration around a pull quote is not indecision — it's triangulation. You're finding the angle from which the thing reveals itself. Keep going until the words feel inevitable rather than chosen.`},
-
-  // ASIDE
+[body] Iteration around a pull quote is not indecision — it's triangulation. You're finding the angle from which the thing reveals itself.`},
   {t:['aside'],x:`[aside] noted, and kept at the right volume
-[body] The aside node is the most underrated node type in this palette. It holds the things that matter but shouldn't dominate — the hedge, the caveat, the thing you know but don't want to foreground. Most interfaces treat all content as equal weight. Reasonably doesn't.`},
+[body] The aside node is the most underrated node type in this palette. It holds the things that matter but shouldn't dominate — the hedge, the caveat, the thing you know but don't want to foreground.`},
   {t:['aside'],x:`[aside] caught quietly, as intended
-[body] A prompt that includes its own doubts is a more honest prompt — and a more useful one. The aside signals that you're aware of your own uncertainty, which changes the shape of the response. It's not weakness. It's calibration.`},
-
-  // SPEC
+[body] A prompt that includes its own doubts is a more honest prompt — and a more useful one. The aside signals that you're aware of your own uncertainty, which changes the shape of the response.`},
   {t:['spec'],x:`[spec] Format :: Acknowledged — structured output aligned
 [spec] Tone :: Calibrated to declared parameters
-[body] Spec nodes are pre-negotiation. They shift the output before a single word of response is written. That's different from asking for a format mid-stream — it changes the initial conditions, not the trajectory after launch.`},
+[body] Spec nodes are pre-negotiation. They shift the output before a single word of response is written.`},
   {t:['spec'],x:`[spec] Parameters :: Received and applied
-[body] There's a meaningful difference between style as an afterthought and style as a declared intention. The spec node makes it the latter. Everything downstream of a spec node is shaped by it — even things you didn't know to specify.
+[body] There's a meaningful difference between style as an afterthought and style as a declared intention. The spec node makes it the latter.
 [aside] constraints liberate. parameters focus.`},
-
-  // CONSTRAINT
   {t:['constraint'],x:`[constraint] Rule :: Acknowledged as inviolable — applied before any other consideration
-[body] Constraints are not limitations on thinking — they are the shape of the solution space. A constraint received before exploration begins is fundamentally different from one applied as an afterthought.
+[body] Constraints are not limitations on thinking — they are the shape of the solution space.
 [pull] What becomes possible when you define what's off the table first?`},
   {t:['constraint'],x:`[constraint] Constraint :: Registered — preceding all other response logic
 [body] The constraint node is an act of design, not restriction. You're not closing off possibilities — you're building a room with walls, which is the only kind of room where anything actually happens.
 [aside] a constraint acknowledged is a constraint respected.`},
   {t:['constraint'],x:`[constraint] Rule :: Treated as load-bearing — everything else works around it
-[body] Most people add constraints at the end of a prompt, as if they were footnotes. Reasonably puts them in their own node type, declared up front, because that's how constraints actually function: they precede the thing they govern.`},
-
-  // CONSTRAINT + SPEC
+[body] Most people add constraints at the end of a prompt, as if they were footnotes. Reasonably puts them in their own node type, declared up front, because that's how constraints actually function.`},
   {t:['constraint','spec'],x:`[constraint] Rules :: Acknowledged and applied first — no exceptions
-[constraint] Constraints :: Define the solution space before exploration begins
-[spec] Format :: Aligned to declared parameters
 [spec] Priority :: Constraints before style, always
-[body] When constraint and spec nodes appear together, a hierarchy applies: hard rules before format preferences. The walls before the furniture. The rules before the aesthetics.`},
-
-  // BREAK
+[body] When constraint and spec nodes appear together, a hierarchy applies: hard rules before format preferences. The walls before the furniture.`},
   {t:['break'],x:`[body] Break acknowledged. New thread begins clean.
 [pull] What changes when you give yourself permission to start over mid-thought?
 [aside] not every break is an ending. some are the only honest way forward.`},
-
-  // TITLE + THOUGHT
   {t:['title','thought'],x:`[poster] Named and Explored
-[body] The combination of title and thought is the most generative pairing in the palette. One declares the frame; the other tests it. Often the thought reveals that the title was wrong — which is exactly the right discovery to make early.
+[body] The combination of title and thought is the most generative pairing in the palette. One declares the frame; the other tests it.
 [pull] Does the thought survive the title you gave it?`},
-
-  // TITLE + PULL
   {t:['title','pull'],x:`[poster] Frame and Essence
 [body] You've given the thing a name and then distilled it to its irreducible core. That's a complete act of thinking — not just a prompt.
 [aside] most writing is just the long path between those two things.`},
-
-  // THOUGHT + PULL
-  {t:['thought','pull'],x:`[body] You explored and then distilled. That's the right order. Distillation without exploration is just assertion. Exploration without distillation is just noise. The combination is genuinely rare.
+  {t:['thought','pull'],x:`[body] You explored and then distilled. That's the right order. Distillation without exploration is just assertion. Exploration without distillation is just noise.
 [pull] The distance between what you think and what you can say clearly is the whole work.`},
-
-  // THOUGHT + CONSTRAINT
   {t:['thought','constraint'],x:`[constraint] Constraint :: Registered — thinking proceeds within declared boundaries
-[body] There's a specific kind of clarity that comes from constrained exploration. The thought node holds the open territory; the constraint defines the fence. The interesting work happens right at the edge of both.
+[body] There's a specific kind of clarity that comes from constrained exploration. The thought node holds the open territory; the constraint defines the fence.
 [aside] the fence is not the enemy of the thought.`},
-
-  // TITLE + THOUGHT + PULL
   {t:['title','thought','pull'],x:`[poster] The Complete Arc
-[body] Frame, territory, distillation — this is the full movement of structured thought. You named it, explored it, and extracted the one thing that matters. Everything else is execution from here.
+[body] Frame, territory, distillation — this is the full movement of structured thought. You named it, explored it, and extracted the one thing that matters.
 [pull] The structure of a good prompt is the structure of a good argument.
 [aside] reasonably makes that structure visible and composable.`},
-
-  // WILDCARDS — ethos rotation
   {t:[],x:`[poster] The Architecture of Thought
 [body] You've composed something with genuine structure. Each node type declares its role before it speaks — which changes not just what gets said, but how it lands.
 [pull] What becomes possible when the shape of your thinking is legible to the thing you're thinking with?
 [aside] this is what reasonably is for.`},
-  {t:[],x:`[body] Structure is not about control — it's about honesty. When you declare a thought as a thought and a constraint as a constraint, you're being more accurate about what you actually mean than a single undifferentiated text block could ever be.
+  {t:[],x:`[body] Structure is not about control — it's about honesty. When you declare a thought as a thought and a constraint as a constraint, you're being more accurate about what you actually mean.
 [pull] The typed node is a more truthful unit of thought than the paragraph.
 [aside] most tools optimize for fluency. reasonably optimizes for precision.`},
   {t:[],x:`[poster] Intention, Made Visible
-[body] The most useful thing reasonably does is not produce better outputs — it's making the structure of your thinking visible before you send it. You can see where the frame is, where the doubt is, where the rule is. That visibility is the practice.
+[body] The most useful thing reasonably does is not produce better outputs — it's making the structure of your thinking visible before you send it.
 [aside] the response is the least important part of this interface.`},
-  {t:[],x:`[body] Most interfaces flatten everything into a single field. That's a design choice carrying a hidden assumption: that all parts of a thought are the same kind of thing. They aren't. A constraint is not a thought. A pull is not a spec. Reasonably knows the difference.
+  {t:[],x:`[body] Most interfaces flatten everything into a single field. That's a design choice carrying a hidden assumption: that all parts of a thought are the same kind of thing. They aren't.
 [pull] How you frame a question determines every answer you'll receive.`},
   {t:[],x:`[body] The node palette is not about prompting technique — it's about thinking hygiene. When you're forced to declare what kind of thing each sentence is, you discover which sentences you weren't sure about.
 [pull] Ambiguity often hides in the space between node types.
 [aside] use it.`},
   {t:[],x:`[poster] Clarity Is a Practice
 [body] Not a product of intelligence. Not a result of having the right answer already. A practice — something you do repeatedly, in structure, until the structure becomes second nature.
-[body] Reasonably is a space for that practice. Each commit is a small act of clarity-seeking.
 [aside] you don't have to get it right. you have to get it structured.`},
   {t:[],x:`[body] Good thinking has always had structure — we just usually hide it. The argument, the caveat, the headline, the rule: these were always there. Reasonably just makes them first-class, visible, composable.
 [pull] What if you built the scaffold first and the thought second?`},
   {t:[],x:`[body] Precision and openness are not opposites. The thought node is open; the constraint node is precise. Used together, they produce the rarest thing: thinking that knows what it wants to say and knows what it refuses to say.
 [pull] The discipline of the node is the discipline of the mind.`},
   {t:[],x:`[poster] The Prompt Is the Essay
-[body] Every great piece of writing has a title, a thesis, supporting arguments, a qualifying aside, and a hard constraint on what it will not claim. You've just been building that structure all along. Reasonably makes the scaffold explicit.
+[body] Every great piece of writing has a title, a thesis, supporting arguments, a qualifying aside, and a hard constraint on what it will not claim. You've just been building that structure all along.
 [aside] the interface is not the thinking. but the interface shapes it.`},
   {t:[],x:`[body] There's a version of this that never gets written — the thought that stays in pre-verbal fog because no structure invited it out. That's the failure mode reasonably is designed against.
 [pull] Structure is an invitation, not a cage.
 [aside] named nodes are named intentions.`},
 ];
 
-function getResponse(nodeTypes, isFirst) {
-  if (isFirst) { const f = R.find(r => r.t.includes('__first')); if(f) return f.x; }
-  const score = (rt, nt) => rt.length === 0 ? -1 : rt.filter(t => nt.includes(t)).length;
-  const cands = R.filter(r => r.t.length > 0 && !r.t.includes('__first') && score(r.t, nodeTypes) > 0);
-  if (cands.length) {
-    const best = Math.max(...cands.map(r => score(r.t, nodeTypes)));
-    const top = cands.filter(r => score(r.t, nodeTypes) === best);
-    return top[Math.floor(Math.random() * top.length)].x;
+function getResponse(nodeTypes,isFirst){
+  if(isFirst){const f=R.find(r=>r.t.includes('__first'));if(f)return f.x;}
+  const score=(rt,nt)=>rt.length===0?-1:rt.filter(t=>nt.includes(t)).length;
+  const cands=R.filter(r=>r.t.length>0&&!r.t.includes('__first')&&score(r.t,nodeTypes)>0);
+  if(cands.length){
+    const best=Math.max(...cands.map(r=>score(r.t,nodeTypes)));
+    const top=cands.filter(r=>score(r.t,nodeTypes)===best);
+    return top[Math.floor(Math.random()*top.length)].x;
   }
-  const wc = R.filter(r => r.t.length === 0);
-  return wc[Math.floor(Math.random() * wc.length)].x;
+  const wc=R.filter(r=>r.t.length===0);
+  return wc[Math.floor(Math.random()*wc.length)].x;
 }
 
 // ══════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════
-let nodes=[], nodeId=0, thinking=false, totalCommits=0, dragSrcId=null;
-let currentTheme='newspaper', railState='visible', isFirstCommit=true;
+let nodes=[],nodeId=0,thinking=false,totalCommits=0,dragSrcId=null;
+let currentTheme='newspaper',railState='visible',isFirstCommit=true;
 
 // ══════════════════════════════════════════════════
 // THEME
 // ══════════════════════════════════════════════════
-function setTheme(t) {
+function setTheme(t){
   currentTheme=t;
   document.documentElement.setAttribute('data-theme',t);
   document.querySelectorAll('.tt-btn').forEach(b=>b.classList.toggle('active',b.dataset.t===t));
-  document.getElementById('hctxt').textContent = t==='newspaper'
-    ? 'The Structured Thinking Review · reasonably.cc'
-    : 'structured thinking · reasonably.cc';
+  document.getElementById('hctxt').textContent=t==='newspaper'
+    ?'The Structured Thinking Review · reasonably.cc'
+    :'structured thinking · reasonably.cc';
 }
 
 // ══════════════════════════════════════════════════
@@ -647,9 +742,9 @@ function cycleRail(){
   railState=RS[(RS.indexOf(railState)+1)%RS.length];
   const app=document.getElementById('app');
   app.classList.remove('rail-hidden','rail-wide','rail-full');
-  if(railState==='hidden') app.classList.add('rail-hidden');
-  else if(railState==='wide') app.classList.add('rail-wide');
-  else if(railState==='full') app.classList.add('rail-full');
+  if(railState==='hidden')app.classList.add('rail-hidden');
+  else if(railState==='wide')app.classList.add('rail-wide');
+  else if(railState==='full')app.classList.add('rail-full');
   document.getElementById('rail-btn').textContent=RL[railState];
 }
 
@@ -772,11 +867,11 @@ function ec(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();commit()}}
 function buildPrompt(){
   return nodes.flatMap(n=>{
     if(n.type==='break')return['—'];
-    if(n.type==='title'     &&n.content.trim())return[`[poster] ${n.content.trim()}`];
-    if(n.type==='thought'   &&n.content.trim())return[n.content.trim()];
-    if(n.type==='pull'      &&n.content.trim())return[`[pull] ${n.content.trim()}`];
-    if(n.type==='aside'     &&n.content.trim())return[`[aside] ${n.content.trim()}`];
-    if(n.type==='spec'      &&n.key.trim())return[`[spec] ${n.key.trim()} :: ${n.val.trim()||'—'}`];
+    if(n.type==='title'&&n.content.trim())return[`[poster] ${n.content.trim()}`];
+    if(n.type==='thought'&&n.content.trim())return[n.content.trim()];
+    if(n.type==='pull'&&n.content.trim())return[`[pull] ${n.content.trim()}`];
+    if(n.type==='aside'&&n.content.trim())return[`[aside] ${n.content.trim()}`];
+    if(n.type==='spec'&&n.key.trim())return[`[spec] ${n.key.trim()} :: ${n.val.trim()||'—'}`];
     if(n.type==='constraint'&&n.key.trim())return[`[constraint] ${n.key.trim()} :: ${n.val.trim()||'—'}`];
     return[];
   }).join('\n');
@@ -827,13 +922,13 @@ function commit(){
 
 function renderNodeStream(n){
   let el;
-  if     (n.type==='title'     &&n.content.trim()){el=document.createElement('div');el.className='sn-title'; el.textContent=n.content}
-  else if(n.type==='thought'   &&n.content.trim()){el=document.createElement('div');el.className='sn-thought';el.textContent=n.content}
-  else if(n.type==='pull'      &&n.content.trim()){el=document.createElement('div');el.className='sn-pull';  el.textContent=n.content}
-  else if(n.type==='aside'     &&n.content.trim()){el=document.createElement('div');el.className='sn-aside'; el.textContent=n.content}
-  else if(n.type==='spec'      &&n.key.trim())    {el=document.createElement('div');el.className='sn-spec';  el.innerHTML=`<span class="spec-k">${n.key}</span><span>${n.val||'—'}</span>`}
-  else if(n.type==='constraint'&&n.key.trim())    {el=document.createElement('div');el.className='sn-cst';   el.innerHTML=`<span class="cst-k">${n.key}</span><span>${n.val||'—'}</span>`}
-  else if(n.type==='break')                       {el=document.createElement('div');el.className='sn-break'; el.textContent='— break'}
+  if(n.type==='title'&&n.content.trim()){el=document.createElement('div');el.className='sn-title';el.textContent=n.content}
+  else if(n.type==='thought'&&n.content.trim()){el=document.createElement('div');el.className='sn-thought';el.textContent=n.content}
+  else if(n.type==='pull'&&n.content.trim()){el=document.createElement('div');el.className='sn-pull';el.textContent=n.content}
+  else if(n.type==='aside'&&n.content.trim()){el=document.createElement('div');el.className='sn-aside';el.textContent=n.content}
+  else if(n.type==='spec'&&n.key.trim()){el=document.createElement('div');el.className='sn-spec';el.innerHTML=`<span class="spec-k">${n.key}</span><span>${n.val||'—'}</span>`}
+  else if(n.type==='constraint'&&n.key.trim()){el=document.createElement('div');el.className='sn-cst';el.innerHTML=`<span class="cst-k">${n.key}</span><span>${n.val||'—'}</span>`}
+  else if(n.type==='break'){el=document.createElement('div');el.className='sn-break';el.textContent='— break'}
   return el||null;
 }
 
@@ -895,7 +990,6 @@ function updateProgress(){document.getElementById('progress').style.width=Math.m
 renderCanvas();
 document.getElementById('canvas-nodes').addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
 document.getElementById('stream-scroll').addEventListener('touchmove',e=>e.stopPropagation(),{passive:true});
-// strip fade
 const pg=document.getElementById('palette-grid'),pf=document.getElementById('palette-strip-fade');
 if(pg&&pf)pg.addEventListener('scroll',()=>{pf.style.opacity=(pg.scrollLeft+pg.clientWidth>=pg.scrollWidth-8)?'0':'1'},{passive:true});
 </script>
