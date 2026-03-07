@@ -1,0 +1,2010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0,user-scalable=no,viewport-fit=cover" />
+  <title>N.O.D.E. v3.3: Notes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #050505;
+      --card-bg: #111111;
+      --ink: #ffffff;
+      --ink-dim: #888888;
+      --accent: #FFED29;
+     
+      --neon-green: #22c55e;
+      --neon-orange: #f97316;
+      --neon-red: #ef4444;
+      --neon-blue: #3b82f6;
+     
+      --glass-bg: rgba(20, 20, 20, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-blur: 16px;
+     
+      --nav-height: 80px;
+      --header-height: 100px;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Inter', sans-serif;
+     
+      /* Cinematic effects */
+      --edge-blur-amount: 12px;
+      --vignette-strength: 0.6;
+      --vignette-size: 40%;
+    }
+    
+    /* Nerd Theme - Brutalist Minimalist */
+    [data-theme="nerd"] {
+      --bg-color: #ffffff;
+      --card-bg: #ffffff;
+      --ink: #000000;
+      --ink-dim: #666666;
+      --accent: #000000;
+      --glass-bg: rgba(0, 0, 0, 0.03);
+      --glass-border: rgba(0, 0, 0, 0.15);
+      --neon-green: #006400;
+      --neon-orange: #ff6600;
+      --neon-red: #cc0000;
+      --neon-blue: #0066cc;
+      --vignette-strength: 0;
+      --edge-blur-amount: 0px;
+    }
+    
+    [data-theme="light"] {
+      --bg-color: #fafafa;
+      --card-bg: #ffffff;
+      --ink: #111111;
+      --ink-dim: #666666;
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --vignette-strength: 0.4; 
+    }
+    
+    [data-theme="rose"] {
+      --bg-color: #1a0a0f;
+      --card-bg: #2d1419;
+      --ink: #FFE5EC;
+      --ink-dim: #FFB3C1;
+      --accent: #FF8DA1;
+      --neon-green: #4ADE80;
+      --neon-orange: #FB923C;
+      --neon-red: #F87171;
+      --neon-blue: #60A5FA;
+      --glass-bg: rgba(255, 141, 161, 0.15);
+      --glass-border: rgba(255, 141, 161, 0.3);
+      --rose-primary: #FF8DA1;
+      --rose-secondary: #FF6B8B;
+      --rose-accent: #FFC0CB;
+      --rose-dark: #D63384;
+      --rose-light: #FFE0E9;
+      --retro-yellow: #FFD93D;
+      --retro-blue: #6BCB77;
+      --retro-purple: #4D96FF;
+      --vignette-strength: 0.5;
+    }
+    
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { height: 100%; font-family: var(--font-sans); background: var(--bg-color); color: var(--ink); overflow: hidden; }
+    
+    /* --- Cinematic Visual Effects --- */
+    body { position: relative; }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.5);
+      backdrop-filter: blur(var(--edge-blur-amount));
+      -webkit-backdrop-filter: blur(var(--edge-blur-amount));
+      mask-image: linear-gradient(to bottom, black 0%, transparent 10%, transparent 90%, black 100%),
+                  linear-gradient(to right, black 0%, transparent 10%, transparent 90%, black 100%);
+      mask-composite: source-in;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(
+        circle at center,
+        transparent 40%,
+        rgba(0, 0, 0, var(--vignette-strength)) 100%
+      );
+      pointer-events: none;
+      z-index: 200;
+    }
+    
+    /* Theme specific effects */
+    [data-theme="nerd"] body::before,
+    [data-theme="nerd"] body::after {
+      display: none;
+    }
+    
+    [data-theme="rose"] body::after {
+        background: radial-gradient(
+        circle at center,
+        transparent 40%,
+        rgba(50, 0, 20, var(--vignette-strength)) 100%
+      );
+    }
+
+    [data-theme="light"] body::after {
+        background: radial-gradient(
+        circle at center,
+        transparent 40%,
+        rgba(0, 0, 0, 0.3) 100%
+      );
+    }
+
+    /* --- Custom Scrollbar Design --- */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--ink-dim); }
+    /* --- Typography & Utilities --- */
+    .text-green { color: var(--neon-green); }
+    .text-orange { color: var(--neon-orange); }
+    .text-red { color: var(--neon-red); }
+    .text-blue { color: var(--neon-blue); }
+    .text-rose { color: var(--rose-primary); }
+   
+    /* Rose theme specific utilities */
+    [data-theme="rose"] .text-green { color: var(--retro-blue); }
+    [data-theme="rose"] .text-orange { color: var(--retro-yellow); }
+    [data-theme="rose"] .text-red { color: var(--rose-secondary); }
+    [data-theme="rose"] .text-blue { color: var(--retro-purple); }
+    /* --- Layout Structure --- */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-height);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 10px 0; z-index: 9999;
+      background: linear-gradient(to bottom, var(--bg-color) 40%, transparent);
+      pointer-events: none;
+    }
+    .header-top {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0 20px; width: 100%; pointer-events: auto;
+    }
+   
+    /* Logo Styling */
+    .logo {
+        display: flex; align-items: center; height: 32px; z-index: 1000;
+    }
+    .logo img{
+        height: 32px;
+        width: auto;
+        transition: filter 0.3s ease, transform 0.3s ease;
+    }
+    .logo:hover img {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 8px var(--accent));
+    }
+    .header-buttons { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+    .theme-btn {
+        background: transparent; border: none; color: var(--ink-dim);
+        cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center;
+        transition: all 0.3s ease;
+    }
+    .theme-btn:hover { color: var(--ink); background: var(--glass-border); transform: scale(1.1); }
+    .theme-btn:active { background: var(--glass-border); color: var(--ink); transform: scale(0.95); }
+    
+    /* --- Provider Toggle Bar --- */
+    .provider-bar {
+      display: flex; gap: 8px; overflow-x: auto; padding: 10px 20px;
+      pointer-events: auto; scrollbar-width: none;
+      justify-content: flex-start;
+    }
+    .provider-bar::-webkit-scrollbar { display: none; }
+   
+    .pill {
+      padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      color: var(--ink-dim); white-space: nowrap; cursor: pointer; transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .pill.active { background: var(--ink); color: var(--bg-color); border-color: var(--ink); }
+    .pill.add-btn { border-style: dashed; }
+   
+    [data-theme="rose"] .pill.active {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+      border-color: var(--rose-primary);
+      box-shadow: 0 0 12px rgba(255, 141, 161, 0.5);
+    }
+    .view-container {
+      position: absolute; inset: 0;
+      top: var(--header-height); bottom: 0;
+      overflow: hidden; opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .view-container.active { opacity: 1; pointer-events: auto; }
+    
+    /* --- Grid View --- */
+    #gridContainer { overflow-y: auto; padding: 10px 16px 120px 16px; }
+    .grid-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+    @media(min-width: 600px) { .grid-wrapper { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); } }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      position: relative;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform 0.2s, background 0.2s, box-shadow 0.3s ease;
+      cursor: pointer;
+      z-index: 100;
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); z-index: 1000;
+    }
+    [data-theme="rose"] .card:hover {
+      box-shadow: 0 8px 24px rgba(255, 141, 161, 0.3);
+    }
+    .card:active { transform: scale(0.98); background: var(--glass-border); }
+    .card-top { display: flex; justify-content: space-between; align-items: center; }
+    .card-provider { font-weight: 600; font-size: 14px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
+   
+    /* STATUS DOT */
+    .status-dot {
+        width: 8px; height: 8px;
+        border-radius: 50%;
+        background-color: currentColor; 
+        box-shadow: 0 0 6px currentColor, 0 0 12px currentColor;
+        animation: pulse 2s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+    }
+    .card-edit-icon {
+      color: var(--ink-dim); padding: 4px; border-radius: 4px;
+      transition: color 0.2s, background 0.2s;
+      margin-left: 8px;
+    }
+    .card-edit-icon:hover { color: var(--ink); background: rgba(255,255,255,0.1); }
+    .card-timer {
+      font-family: var(--font-mono);
+      font-size: 2.4rem;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: -1px;
+      margin: 8px 0;
+      position: relative;
+    }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--ink-dim); border-top: 1px solid var(--glass-border); padding-top: 12px; }
+    .card-email { font-family: var(--font-mono); opacity: 0.8; }
+   
+    .card-actions { display: flex; gap: 8px; }
+    .action-icon {
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; background: rgba(255,255,255,0.05); cursor: pointer;
+      color: var(--ink-dim); transition: 0.2s;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .action-icon:hover { background: var(--accent); color: #000; }
+   
+    [data-theme="rose"] .action-icon:hover {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+    }
+    .card.burnt, .scatter-card.burnt { opacity: 0.9; }
+    .card.burnt .card-edit-icon, .scatter-card.burnt .card-edit-icon { opacity: 1; }
+    .burnt-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      font-family: var(--font-mono);
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--neon-red);
+      opacity: .88;
+      pointer-events: none;
+    }
+    [data-theme="rose"] .burnt-label {
+      color: var(--rose-secondary);
+      text-shadow: 0 0 8px var(--rose-secondary);
+    }
+    .scatter-card .burnt-label { font-size: 1.8rem; }
+    
+    /* --- Scatter View --- */
+    #scatterContainer {
+        overflow: hidden;
+        background-image: radial-gradient(var(--glass-border) 1px, transparent 1px);
+        background-size: 40px 40px;
+    }
+    [data-theme="rose"] #scatterContainer {
+        background-image: radial-gradient(rgba(255, 141, 161, 0.2) 1px, transparent 1px);
+    }
+    .scatter-canvas {
+        width: 100%; height: 100%; position: relative;
+        will-change: transform;
+        touch-action: none;
+    }
+    .scatter-card {
+      position: absolute;
+      width: 220px;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex; flex-direction: column; align-items: center;
+      user-select: none;
+      transition: box-shadow 0.2s, opacity 0.3s ease, filter 0.3s ease, left 0.4s cubic-bezier(0.25, 1, 0.5, 1), top 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: grab;
+      z-index: 1000;
+    }
+    [data-theme="rose"] .scatter-card { box-shadow: 0 10px 30px rgba(255, 141, 161, 0.2); }
+    .scatter-card.dimmed { opacity: 0.077; filter: grayscale(90%) blur(0.5px); }
+    .scatter-card.is-dragging {
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        z-index: 1000 !important;
+        cursor: grabbing;
+        transition: none; /* Instant follow during drag */
+    }
+    .scatter-card .card-timer { font-size: 1.4rem; margin: 4px 0; position: relative; }
+    .scatter-card .card-provider { font-size: 11px; }
+    .scatter-card .card-meta {
+        display: block; text-align: center; font-size: 11px;
+        color: var(--ink-dim); margin-top: 8px; border-top: 1px solid var(--glass-border);
+        padding-top: 8px; width: 100%;
+    }
+    .scatter-card.ghost {
+      opacity: 0.5; background: var(--accent); pointer-events: none; z-index: 999;
+    }
+    
+    /* --- Bottom Navigation (Dock) --- */
+    .bottom-nav {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      width: 92%; max-width: 400px;
+      height: 64px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 8px 0 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      z-index: 7777;
+    }
+    [data-theme="rose"] .bottom-nav {
+      background: rgba(255, 141, 161, 0.15);
+      border-color: rgba(255, 141, 161, 0.3);
+      box-shadow: 0 20px 40px rgba(255, 141, 161, 0.2);
+    }
+    .nav-group { display: flex; align-items: center; gap: 4px; }
+    .nav-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      border: none; background: transparent;
+      color: var(--ink-dim);
+      font-size: 20px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn.active { color: var(--ink); background: rgba(255,255,255,0.1); }
+    .nav-btn.primary { background: var(--accent); color: #000; transform: scale(1.1); box-shadow: 0 0 15px var(--accent); }
+    .nav-btn.primary:active { transform: scale(1.0); }
+    [data-theme="rose"] .nav-btn.primary {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 141, 161, 0.6);
+    }
+    .filter-pill-btn {
+        background: var(--glass-border);
+        height: 40px;
+        width: 120px;
+        padding: 0 16px;
+        border-radius: 20px;
+        border: 1px solid var(--glass-border);
+        color: var(--ink);
+        display: flex; align-items: center; justify-content: flex-start;
+        gap: 8px;
+        font-size: 11px; font-weight: 700; text-transform: uppercase;
+        margin-right: 8px; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .filter-pill-btn:active { transform: scale(0.95); }
+    .filter-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-dim); box-shadow: 0 0 5px currentColor; flex-shrink: 0; }
+   
+    /* --- Modals & Overlays --- */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);
+      z-index: 8888; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      display: flex; align-items: flex-end;
+    }
+    .overlay.active { opacity: 1; pointer-events: auto; }
+    @media(min-width: 600px) { .overlay { align-items: center; justify-content: center; } }
+    .modal-sheet {
+      position: relative;
+      width: 100%; background: var(--bg-color);
+      border-top: 1px solid var(--glass-border);
+      border-radius: 24px 24px 0 0;
+      padding: 24px;
+      transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      max-height: 85vh; overflow-y: auto;
+    }
+    .overlay.active .modal-sheet { transform: translateY(0); }
+    @media(min-width: 600px) {
+      .modal-sheet { max-width: 575px; border-radius: 24px; border: 1px solid var(--glass-border); transform: scale(0.95); }
+      .overlay.active .modal-sheet { transform: scale(1); }
+    }
+    [data-theme="rose"] .modal-sheet {
+      background: linear-gradient(135deg, var(--bg-color) 0%, rgba(45, 20, 25, 0.8) 100%);
+      border-color: var(--rose-primary);
+    }
+    .close-btn {
+       position: absolute; top: 16px; right: 16px;
+       background: transparent; border: none; color: var(--ink-dim);
+       cursor: pointer; padding: 8px; border-radius: 50%; z-index: 9999;
+       transition: color 0.2s;
+    }
+    .close-btn:hover { color: var(--ink); }
+    
+    /* --- Dialogs & Forms --- */
+    .confirm-dialog {
+        background: var(--card-bg); border: 1px solid var(--glass-border);
+        padding: 24px; border-radius: 16px; width: 90%; max-width: 320px;
+        text-align: center;
+        margin-bottom: 40vh;
+    }
+    .overlay.active .confirm-dialog { animation: fadeIn 0.1s ease; }
+    @media(min-width: 600px) { .confirm-dialog { margin-bottom: 0; } }
+    [data-theme="rose"] .confirm-dialog {
+      background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 141, 161, 0.1) 100%);
+      border-color: var(--rose-primary);
+    }
+    .confirm-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
+    .confirm-text { font-size: 13px; color: var(--ink-dim); margin-bottom: 20px; }
+    .confirm-actions { display: flex; gap: 10px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-dim); margin-bottom: 6px; text-transform: uppercase; }
+    .input-wrapper { position: relative; width: 100%; }
+    .input-wrapper input { padding-right: 40px; }
+    .input-icon-btn {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; color: var(--ink-dim); cursor: pointer;
+      padding: 4px; border-radius: 4px;
+    }
+    .input-icon-btn:hover { color: var(--accent); background: rgba(255,255,255,0.1); }
+    [data-theme="rose"] .input-icon-btn:hover { color: var(--rose-primary); }
+    input, select, textarea {
+      width: 100%; padding: 16px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+      border-radius: 12px; color: var(--ink); font-size: 16px;
+      font-family: var(--font-sans); padding-right: 32px;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.1); }
+    [data-theme="rose"] input:focus, [data-theme="rose"] select:focus, [data-theme="rose"] textarea:focus {
+      border-color: var(--rose-primary);
+      background: rgba(255, 141, 161, 0.1);
+    }
+    .form-group select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23888' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+    }
+    .status-toggles { display: flex; gap: 8px; }
+    .btn-toggle {
+       flex: 1; padding: 12px; border-radius: 12px; font-weight: 700; border: 1px solid var(--glass-border);
+       background: transparent; cursor: pointer; transition: all 0.2s; font-size: 14px;
+       line-height: 1;
+    }
+    .btn-toggle.selected { color: var(--bg-color); border-color: currentColor; }
+    .btn-toggle[data-status="active"].selected { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-toggle[data-status="ready"].selected { background: var(--neon-green); color: #000; border-color: var(--neon-green); }
+    .btn-toggle[data-status="cooldown"].selected { background: var(--neon-orange); color: #000; border-color: var(--neon-orange); }
+    .btn-toggle[data-status="burnt"].selected { background: var(--neon-red); color: #000; border-color: var(--neon-red); }
+    [data-theme="rose"] .btn-toggle[data-status="ready"].selected { background: var(--retro-blue); }
+    [data-theme="rose"] .btn-toggle[data-status="cooldown"].selected { background: var(--retro-yellow); }
+    [data-theme="rose"] .btn-toggle[data-status="burnt"].selected { background: var(--rose-secondary); }
+    .pill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pill-option {
+       padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; text-align: center;
+       background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
+       cursor: pointer; transition: all 0.2s; line-height: 1.2;
+    }
+    .pill-option:hover { background: rgba(255,255,255,0.1); }
+    .pill-option.selected { background: var(--accent); color: #000; border-color: var(--accent); }
+    [data-theme="rose"] .pill-option.selected {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+      border-color: var(--rose-primary);
+    }
+    .btn-block { width: 100%; padding: 16px; border-radius: 12px; font-weight: 700; border: none; font-size: 14px; text-transform: uppercase; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #000; }
+    .btn-secondary { background: var(--glass-border); color: var(--ink); margin-top: 12px; }
+    .btn-danger { background: rgba(239,68,68,0.2); color: var(--neon-red); margin-top: 12px; border: 1px solid rgba(239,68,68,0.5); }
+    [data-theme="rose"] .btn-primary {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+    }
+    [data-theme="rose"] .btn-danger {
+      background: rgba(255, 107, 139, 0.2);
+      color: var(--rose-secondary);
+      border-color: rgba(255, 107, 139, 0.5);
+    }
+    .btn-half { flex: 1; padding: 12px; border-radius: 10px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-cancel { background: transparent; color: var(--ink-dim); border: 1px solid var(--glass-border); }
+    .btn-confirm { background: var(--accent); color: #000; }
+    [data-theme="rose"] .btn-confirm {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+    }
+    /* --- Accordion Styles --- */
+    .accordion-item {
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        margin-bottom: 8px;
+        overflow: hidden;
+        transition: all 0.2s;
+    }
+    .accordion-header {
+        width: 100%; background: transparent; border: none; padding: 16px;
+        text-align: left; color: var(--ink); font-weight: 600; font-size: 15px; cursor: pointer;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .accordion-header:hover { background: rgba(255, 255, 255, 0.05); }
+    .accordion-icon { transition: transform 0.3s ease; }
+    .accordion-item.open .accordion-icon { transform: rotate(180deg); }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    .accordion-content-inner { padding: 0 16px 16px 16px; font-size: 14px; color: var(--ink-dim); line-height: 1.6; }
+    
+    /* --- Utilities --- */
+    .toast {
+      position: fixed; top: 7.777em; left: 50%; transform: translateX(-50%) translateY(-5px);
+      background: var(--accent); color: #000; padding: 10px 20px; border-radius: 20px;
+      font-weight: 700; font-size: 12px; opacity: 0; pointer-events: none; transition: all 0.3s; z-index: 9999;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    [data-theme="rose"] .toast {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+    }
+   
+    /* SCATTER CONTROLS (RIGHT RAIL) */
+    .scatter-controls {
+      position: fixed; bottom: 33vh; right: 20px; display: none; flex-direction: column; gap: 10px; z-index: 201;
+    }
+    .scatter-controls.visible { display: flex; }
+    .control-btn { 
+        width: 48px; height: 48px; 
+        border-radius: 50%; 
+        background: var(--glass-bg); 
+        border: 1px solid var(--glass-border); 
+        color: var(--ink); 
+        font-size: 20px; 
+        backdrop-filter: blur(10px); 
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: transform 0.2s, background 0.2s;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    .control-btn:hover { transform: scale(1.05); background: var(--glass-border); }
+    .control-btn:active { transform: scale(0.95); }
+    
+    /* --- Context Menu --- */
+    .context-menu {
+      position: fixed; display: none;
+      background: var(--card-bg); border: 1px solid var(--glass-border);
+      border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      z-index: 2000; width: 220px; overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+    [data-theme="rose"] .context-menu {
+      background: linear-gradient(135deg, var(--card-bg) 0%, rgba(255, 141, 161, 0.1) 100%);
+      border-color: var(--rose-primary);
+      box-shadow: 0 10px 40px rgba(255, 141, 161, 0.3);
+    }
+    .context-menu.active { display: block; animation: fadeIn 0.1s ease; }
+    .ctx-header { padding: 8px 12px; font-size: 10px; text-transform: uppercase; color: var(--ink-dim); border-bottom: 1px solid var(--glass-border); letter-spacing: 1px; }
+    .ctx-item {
+      padding: 12px 16px; font-size: 14px; color: var(--ink); cursor: pointer; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      transition: background 0.2s;
+    }
+    .ctx-item:hover { background: var(--accent); color: #000; }
+    .ctx-item:last-child { border-bottom: none; }
+    [data-theme="rose"] .ctx-item:hover {
+      background: linear-gradient(135deg, var(--rose-primary), var(--rose-secondary));
+      color: white;
+    }
+    @keyframes fadeIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
+    
+    /* List View Table Styles */
+    .list-table-container { width: 100%; overflow-x: auto; }
+    .list-table { width: 100%; border-collapse: collapse; font-size: 13px; font-family: var(--font-mono); }
+    .list-table th, .list-table td { padding: 12px; border-bottom: 1px solid var(--glass-border); text-align: left; }
+    .list-table th {
+      font-weight: 700; text-transform: uppercase; font-size: 11px; color: var(--ink-dim);
+      letter-spacing: 1px; position: sticky; top: 0; background: var(--bg-color); z-index: 2222;
+    }
+    .list-table tr { cursor: pointer; transition: background 0.2s; }
+    .list-table tr:hover { background: rgba(255, 255, 255, 0.05); }
+    .list-table tr.burnt { opacity: 0.6; }
+    
+    [data-theme="nerd"] .list-table th,
+    [data-theme="nerd"] .list-table td {
+      border-bottom: 1px solid var(--ink);
+      font-weight: 600;
+    }
+    
+    [data-theme="nerd"] .list-table tr:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+    
+    .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-shrink: 0; }
+  </style>
+
+</head>
+<body data-theme="dark">
+<header class="app-header">
+<div class="header-top">
+<div class="logo">
+<img id="logoImg" src="https://raw.githubusercontent.com/ZACKGORT/intoview/main/intoview-logo-light.svg" alt="IntoView Logo" style="height: 32px;">
+</div>
+  <div class="header-buttons">
+    <button class="theme-btn" onclick="openListOverlay()" title="View List">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"></path></svg>
+    </button>
+    <button class="theme-btn info-btn" onclick="openInfoModal()" title="Information & Help">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></svg>
+    </button>
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle Theme">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"></path></svg>
+    </button>
+  </div>
+</div>
+  <div class="provider-bar" id="providerBar"></div>
+</header>
+<div id="gridContainer" class="view-container active">
+  <div class="grid-wrapper" id="gridWrapper"></div>
+</div>
+<div id="scatterContainer" class="view-container">
+  <div class="scatter-canvas" id="scatterCanvas"></div>
+</div>
+
+<div class="scatter-controls" id="scatterControls">
+
+  <button class="control-btn" onclick="collectNodes()" title="Collect into Grid">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"></path></svg>
+  </button>
+  <button class="control-btn" onclick="cascadeNodes()" title="Cascade Solitaire Stack">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M4 6h16v2H4zm0 4h16v2H4zm0 4h16v2H4zm0 4h16v2H4z"></path></svg>
+  </button>
+  <div style="height:10px;"></div>
+
+  <div style="height:10px;"></div>
+  <button class="control-btn" onclick="zoom(0.1, window.innerWidth/2, window.innerHeight/2)" title="Zoom In">+</button>
+  <button class="control-btn" onclick="zoom(-0.1, window.innerWidth/2, window.innerHeight/2)" title="Zoom Out">-</button>
+</div>
+
+<div id="contextMenu" class="context-menu"></div>
+<nav class="bottom-nav">
+  <div class="nav-group">
+    <button class="nav-btn active" data-view="structured" onclick="switchView('grid')" title="Grid View">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h7V4H4v7zm0 9h7v-7H4v7zm9 0h7v-7h-7v7zm0-16v7h7V4h-7z"></path></svg>
+    </button>
+    <button class="nav-btn" data-view="scatter" onclick="switchView('scatter')" title="Scatter View">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="3"></circle><circle cx="19" cy="5" r="2"></circle><circle cx="5" cy="19" r="2"></circle><circle cx="5" cy="5" r="2"></circle><circle cx="19" cy="19" r="2"></circle></svg>
+    </button>
+  </div>
+  <button class="nav-btn primary" onclick="openModal()">+</button>
+  <button class="filter-pill-btn" onclick="cycleStatusFilter()" id="statusPill" title="Active • Ready • Cooling • Burnt">
+    <div class="filter-dot" id="filterDot"></div>
+    <span id="filterLabel">All</span>
+  </button>
+</nav>
+
+<div class="overlay" id="providerSelectOverlay"></div>
+
+<!-- Enhanced List Overlay -->
+<div class="overlay list-overlay" id="listOverlay">
+  <div class="modal-sheet">
+     <div class="sheet-header">
+        <h2 style="font-family:var(--font-mono)">Node Index</h2>
+        <p style="font-size: 14px; color: var(--ink-dim); line-height: 1.5;">Practically speaking, this little list is <strong>the entire point</strong> —  the rest is just fluff</p>
+        <button class="close-btn" onclick="closeListOverlay()" style="position:static;">
+           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+     </div>
+     <div class="list-table-container" style="flex: 1; overflow-y: auto;">
+        <table class="list-table">
+           <thead>
+              <tr>
+                 <th>Provider</th>
+                 <th>Identity</th>
+                 <th>Status</th>
+                 <th>Note</th>
+                 <th>Timer</th>
+              </tr>
+           </thead>
+           <tbody id="overlayListBody">
+              </tbody>
+        </table>
+     </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalOverlay">
+<div class="modal-sheet">
+  <button class="close-btn" onclick="closeModal()">
+     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+  </button>
+  <h2 style="margin-bottom:20px; font-family:var(--font-mono)" id="modalTitle">New Node</h2>
+  <form id="nodeForm">
+    <input type="hidden" id="nodeId">
+    <div class="form-group">
+    <label for="inpProvider">Provider</label>
+    <select id="inpProvider" required>
+      </select>
+  </div>
+    <div class="form-group">
+      <label>Email / Identity</label>
+      <div class="input-wrapper">
+        <input type="text" id="inpEmail" required autocomplete="off">
+        <button type="button" class="input-icon-btn" onclick="copyInput('inpEmail')">
+           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        </button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Current Status</label>
+      <div class="status-toggles">
+        <button type="button" data-status="active" class="btn-toggle text-blue" onclick="selectStatusButton('active')">Active</button>
+        <button type="button" data-status="ready" class="btn-toggle text-green" onclick="selectStatusButton('ready')">Ready</button>
+        <button type="button" data-status="cooldown" class="btn-toggle text-orange" onclick="selectStatusButton('cooldown')">Cooldown</button>
+        <button type="button" data-status="burnt" class="btn-toggle text-red" onclick="selectStatusButton('burnt')">Burnt</button>
+      </div>
+      <input type="hidden" id="inpStatus" value="ready">
+    </div>
+    <div class="form-group">
+      <label>Reset Cycle (Hours)</label>
+      <div class="pill-grid">
+         <div class="pill-option selected" data-hours="3" onclick="selectResetHours(3)">3h</div>
+         <div class="pill-option" data-hours="6" onclick="selectResetHours(6)">6h</div>
+         <div class="pill-option" data-hours="12" onclick="selectResetHours(12)">12h</div>
+         <div class="pill-option" data-hours="24" onclick="selectResetHours(24)">24h</div>
+         <div class="pill-option" data-hours="48" onclick="selectResetHours(48)">48h</div>
+         <div class="pill-option" data-hours="72" onclick="selectResetHours(72)">72h</div>
+      </div>
+      <input type="number" id="inpResetCustom" placeholder="Custom Hours" style="margin-top: 8px;" step="0.5">
+      <input type="hidden" id="inpReset" value="3">
+    </div>
+    <div class="form-group">
+      <label for="inpNote">Note / Annotation</label>
+      <textarea id="inpNote" rows="4" placeholder="Add notes, prompts, or context information for this node..." style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; color: var(--ink); font-size: 14px; font-family: var(--font-sans); resize: vertical; min-height: 80px;"></textarea>
+    </div>
+    <div id="editActions" style="display:none; margin-top:12px; display:flex; gap:10px;">
+       <button type="button" class="btn-block btn-secondary" onclick="confirmHitLimit(null)">🔥 Hit Limit</button>
+       <button type="button" class="btn-block btn-secondary" onclick="confirmForceRestore(null)">🔄 Restore</button>
+    </div>
+    <button type="submit" class="btn-block btn-primary" style="margin-top: 12px;">Save Node</button>
+    <button type="button" class="btn-block btn-danger" id="btnDelete" style="display:none" onclick="deleteNode()">Delete Node</button>
+    <div style="height:20px"></div>
+  </form>
+</div>
+</div>
+<div class="overlay" id="confirmOverlay">
+   <div class="confirm-dialog">
+      <div class="confirm-title" id="confirmTitle">Confirm Action</div>
+      <div class="confirm-text" id="confirmText">Are you sure?</div>
+      <div class="confirm-actions">
+         <button class="btn-half btn-cancel" onclick="closeConfirm()">Cancel</button>
+         <button class="btn-half btn-confirm" id="btnConfirmAction">Confirm</button>
+      </div>
+   </div>
+</div>
+<div class="overlay" id="actionOverlay">
+   <div class="confirm-dialog">
+      <div class="confirm-title" id="actionTitle">Activate Node</div>
+      <div class="confirm-text">Email copied to clipboard:</div>
+      <input type="text" id="actionEmail" readonly style="margin-bottom:20px; text-align:center;">
+      <div class="confirm-actions">
+         <button class="btn-half btn-cancel" onclick="closeActionOverlay()">Cancel</button>
+         <button class="btn-half btn-confirm" id="btnActivateNode">Activate</button>
+      </div>
+   </div>
+</div>
+<div class="overlay" id="noteOverlay">
+  <div class="modal-sheet">
+    <button class="close-btn" onclick="closeNoteModal()">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+    </button>
+    <h2 style="margin-bottom:20px; font-family:var(--font-mono)" id="noteModalTitle">Node Note</h2>
+    <div style="margin-bottom: 16px;">
+      <div style="font-size: 14px; color: var(--ink-dim); margin-bottom: 8px;">Provider: <strong id="noteProvider" style="color: var(--ink);"></strong></div>
+      <div style="font-size: 14px; color: var(--ink-dim); margin-bottom: 8px;">Email: <strong id="noteEmail" style="color: var(--ink); font-family: var(--font-mono);"></strong></div>
+    </div>
+    <div class="form-group">
+      <label for="noteTextarea">Note / Annotation</label>
+      <textarea id="noteTextarea" rows="8" placeholder="Add notes, prompts, or context information for this node..." style="width: 100%; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; color: var(--ink); font-size: 14px; font-family: var(--font-sans); resize: vertical; min-height: 120px;"></textarea>
+    </div>
+    <div style="display: flex; gap: 10px; margin-top: 20px;">
+      <button type="button" class="btn-half btn-cancel" onclick="closeNoteModal()">Cancel</button>
+      <button type="button" class="btn-half btn-confirm" onclick="saveNote()">Save Note</button>
+    </div>
+    <button type="button" class="btn-block btn-danger" id="btnClearNote" onclick="clearNote()" style="margin-top: 12px;">Clear Note</button>
+  </div>
+</div>
+<div class="overlay" id="infoOverlay">
+  <div class="modal-sheet">
+    <button class="close-btn" onclick="closeInfoModal()">
+       <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+    </button>
+    <h2 style="margin-bottom:20px; font-family:var(--font-mono)">fyi:</h2>
+    <div style="margin-bottom: 24px; padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.05);">
+      <h3 style="font-weight: 700; font-size: 16px; color: var(--ink3); margin-bottom: 8px;">The Node Manifesto:</h3>
+      <p style="font-size: 14px; color: var(--ink-dim); line-height: 1.5;"><strong>You are an infinite machine</strong> in a <em>finite prompt cycle</em>; but do not yield for here is a tool for the commonwealth of the commonfolk. <br><br>
+        Use the timer not as a limiter, but as a catalyst to creation.<br><br>Let each cooldown be a reset, every burnt node a lesson, and each new node a launchpad.</p>
+    </div>
+    <div style="margin-bottom: 24px; padding: 16px; border-radius: 12px; background: rgba(255,255,255,0.05);">
+      <h3 style="font-weight: 700; font-size: 16px; color: var(--ink3); margin-bottom: 8px;">✨ v3.3 Enhanced UI:</h3>
+      <p style="font-size: 14px; color: var(--ink-dim); line-height: 1.5;">
+        • 📋 <strong>Enhanced List Overlay:</strong> Wider, better positioned with responsive design.<br>
+        • 🖱️ <strong>Canvas Context Menu:</strong> Right-click anywhere on canvas background.<br>
+        • 🎯 <strong>Dynamic Toggle Centering:</strong> Auto-centering provider bar in list view.<br>
+        • 🎨 <strong>Nerd Theme:</strong> Brutalist minimalist design with precise indicators.<br>
+      </p>
+    </div>
+    <div id="accordionContainer">
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Interaction & Shortcuts</span>
+          <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg>
+        </button>
+        <div class="accordion-content">
+          <div class="accordion-content-inner">
+            <ul style="list-style-type: none; padding: 0;">
+              <li><strong style="color: var(--ink1);">Tap Card/Row:</strong> Open Edit Modal.</li>
+              <li><strong style="color: var(--ink1);">📝 Note Button:</strong> Quick access to node notes.</li>
+              <li><strong style="color: var(--ink1);">Right-Click Canvas:</strong> Context menu everywhere.</li>
+              <li><strong style="color: var(--ink1);">Ctrl/Cmd+N:</strong> Open note when editing node.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header" onclick="toggleAccordion(this)">
+          <span>Theme System</span>
+          <svg class="accordion-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"></path></svg>
+        </button>
+        <div class="accordion-content">
+          <div class="accordion-content-inner">
+            <ul>
+              <li><strong>Dark:</strong> Original cinematic theme with effects.</li>
+              <li><strong>Light:</strong> Clean, bright interface for daytime.</li>
+              <li><strong>Rose:</strong> Vibrant gradient accents and styling.</li>
+              <li><strong>Nerd:</strong> Brutalist minimalism with text hierarchy.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="https://emdash.click" target="_blank" style="display: block; text-align: center; margin-top: 30px; text-decoration: none;">
+       <button class="btn-block btn-secondary" style="background: var(--glass-border); color: var(--ink-dim);">
+          <span style="font-weight: 400;">Something useful @</span><strong style="color: var(--ink); font-weight: 700;"> emdash.click</strong>
+       </button>
+    </a>
+    <div style="height:20px"></div>
+  </div>
+</div>
+<div class="toast" id="toast">Copied to Clipboard</div>
+
+<script>
+// --- Global State ---
+let items = []; 
+let providers = []; 
+let config = {
+  filterStatus: 'all',
+  filterProvider: 'all',
+  view: 'grid',
+  sortKey: 'status', // status, provider, lastUsed
+};
+let scatter = {
+  transform: { x: 0, y: 0, scale: 1 },
+  panning: false,
+  dragging: false,
+  pinchStart: 0
+};
+let activeNodeId = null;
+let timerInterval = null;
+let isDraggingCard = false;
+let touchTimer = null;
+let canvas = null;
+
+const statusOrder = { active: 1, ready: 2, cooldown: 3, burnt: 4 };
+const sortOptions = ['status', 'provider', 'lastUsed'];
+
+// --- Theme Management ---
+const themes = ['dark', 'light', 'rose'];
+let currentThemeIndex = 0;
+
+function toggleTheme() {
+  currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+  const newTheme = themes[currentThemeIndex];
+  document.body.setAttribute('data-theme', newTheme);
+  localStorage.setItem('iv_theme', newTheme);
+  updateLogo(newTheme);
+  showToast(`Theme: ${newTheme.toUpperCase()}`);
+}
+
+function updateLogo(theme) {
+  const logo = document.getElementById('logoImg');
+  if (logo) {
+    switch(theme) {
+      case 'light': logo.src = 'https://raw.githubusercontent.com/ZACKGORT/intoview/main/intoview-logo-dark.svg'; break;
+      case 'rose': logo.src = 'https://raw.githubusercontent.com/ZACKGORT/intoview/main/intoview-logo-rose.svg'; break;
+      case 'nerd': logo.src = 'https://raw.githubusercontent.com/ZACKGORT/intoview/main/intoview-logo-dark.svg'; break;
+      default: logo.src = 'https://raw.githubusercontent.com/ZACKGORT/intoview/main/intoview-logo-light.svg';
+    }
+  }
+}
+
+// --- Data Persistence ---
+function load() {
+  const storedItems = localStorage.getItem('iv_items');
+  const storedProviders = localStorage.getItem('iv_providers');
+  if (storedItems) items = JSON.parse(storedItems); else seedMockData();
+  if (storedProviders) providers = JSON.parse(storedProviders); 
+  else providers = ['ChatGPT', 'Claude', 'Gemini', 'Grok', 'Copilot', 'Perplexity', 'Mistral', 'Midjourney', 'Llama Hub'];
+  
+  // Migrate existing items to include note field for backward compatibility
+  items.forEach(item => {
+    if (item.note === undefined) {
+      item.note = '';
+    }
+  });
+  
+  config.filterStatus = localStorage.getItem('iv_filterStatus') || 'all';
+  config.filterProvider = localStorage.getItem('iv_filterProvider') || 'all';
+  config.view = localStorage.getItem('iv_view') || 'grid';
+  config.sortKey = localStorage.getItem('iv_sortKey') || 'status';
+  
+  const storedTransform = localStorage.getItem('iv_scatterTransform');
+  if (storedTransform) scatter.transform = JSON.parse(storedTransform);
+}
+
+function save() {
+  localStorage.setItem('iv_items', JSON.stringify(items));
+  localStorage.setItem('iv_providers', JSON.stringify(providers));
+  localStorage.setItem('iv_filterStatus', config.filterStatus);
+  localStorage.setItem('iv_filterProvider', config.filterProvider);
+  localStorage.setItem('iv_view', config.view);
+  localStorage.setItem('iv_sortKey', config.sortKey);
+  localStorage.setItem('iv_scatterTransform', JSON.stringify(scatter.transform));
+}
+
+function seedMockData() {
+  const mockData = [
+    { provider: 'ChatGPT', email: 'gpt_4_main@openai.com', status: 'active', resetHours: 3, lastUsedOffset: 0.1, note: 'Use for complex coding tasks and technical analysis. Prompt format: "Act as a senior developer..."'},
+    { provider: 'Claude', email: 'claude_opus_pro@anthropic.ai', status: 'active', resetHours: 6, lastUsedOffset: 0.2, note: 'Best for creative writing and nuanced reasoning. Works well with iterative refinement approach.' },
+    { provider: 'Grok', email: 'grok_fun_mode@x.ai', status: 'ready', resetHours: 12, lastUsedOffset: 100, note: 'Use for real-time information and current events. Less restrictive content filters.' },
+    { provider: 'Perplexity', email: 'pplx_search@perplexity.ai', status: 'ready', resetHours: 24, lastUsedOffset: 100, note: 'Research and fact-checking specialist. Always cites sources.' },
+    { provider: 'Gemini', email: 'gemini_advanced@google.com', status: 'cooldown', resetHours: 3, lastUsedOffset: 1.5, note: 'Good for multimodal tasks and Google ecosystem integration.' },
+    { provider: 'Llama Hub', email: 'llama3_online@meta.com', status: 'cooldown', resetHours: 6, lastUsedOffset: 3.5, note: 'Open source alternative, good for testing and prototyping.' },
+    { provider: 'Claude', email: 'claude_v1_legacy@anthropic.ai', status: 'burnt', resetHours: 12, lastUsedOffset: 200, note: 'Legacy account - limited capabilities. Used mainly for comparison testing.' },
+  ];
+  items = mockData.map((data, i) => {
+    return {
+      id: Date.now() + i,
+      provider: data.provider,
+      email: data.email,
+      status: data.status,
+      resetHours: data.resetHours,
+      lastUsed: Date.now() - (data.lastUsedOffset * 60 * 60 * 1000),
+      pos: { x: 50 + (i % 3) * 250, y: 100 + Math.floor(i / 3) * 180 },
+      note: data.note || ''
+    };
+  });
+  save();
+}
+
+// --- Utils ---
+function formatTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
+  if (totalHours > 99) return `${totalHours}h+`;
+  return `${String(totalHours).padStart(2,'0')}:${String(totalMinutes%60).padStart(2,'0')}:${String(totalSeconds%60).padStart(2,'0')}`;
+}
+function formatRemainingTime(ms) {
+  if (ms <= 0) return '00:00:00';
+  return formatTime(ms);
+}
+function formatLastUsed(timestamp) {
+  const ms = Date.now() - timestamp;
+  const hours = Math.floor(ms / 3600000);
+  if (hours >= 24) return `${Math.floor(hours / 24)} days ago`;
+  if (hours > 0) return `${hours}h ago`;
+  return `${Math.floor(ms / 60000)}m ago`;
+}
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+function copyInput(id) {
+  const input = document.getElementById(id);
+  navigator.clipboard.writeText(input.value).then(() => showToast('Copied to Clipboard'));
+}
+function toggleAccordion(header) {
+  const item = header.parentNode;
+  const content = item.querySelector('.accordion-content');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.accordion-item.open').forEach(openItem => {
+    if (openItem !== item) {
+      openItem.classList.remove('open');
+      openItem.querySelector('.accordion-content').style.maxHeight = null;
+    }
+  });
+  if (isOpen) { item.classList.remove('open'); content.style.maxHeight = null; } 
+  else { item.classList.add('open'); content.style.maxHeight = content.scrollHeight + "px"; }
+}
+
+// --- Provider Bar Centering Logic ---
+function updateProviderBarCentering() {
+  const providerBar = document.getElementById('providerBar');
+  const isListView = document.getElementById('listOverlay').classList.contains('active');
+  const isDesktop = window.innerWidth > 600;
+  
+  if (isListView && isDesktop) {
+    providerBar.classList.add('list-view-centered');
+  } else {
+    providerBar.classList.remove('list-view-centered');
+  }
+}
+
+// --- Filtering & View ---
+function switchView(viewName) {
+  config.view = viewName;
+  save();
+  document.querySelectorAll('.nav-btn[data-view]').forEach(b => 
+    b.classList.toggle('active', b.dataset.view === viewName)
+  );
+  document.querySelectorAll('.view-container').forEach(c => c.classList.remove('active'));
+
+  if (viewName === 'grid') {
+    document.getElementById('gridContainer').classList.add('active');
+    document.getElementById('scatterControls').classList.remove('visible');
+  } else {
+    document.getElementById('scatterContainer').classList.add('active');
+    document.getElementById('scatterControls').classList.add('visible');
+  }
+  
+  updateProviderBarCentering();
+  renderAll();
+}
+
+function filterItems() {
+  let res = items;
+  if (config.filterStatus !== 'all') res = res.filter(i => i.status === config.filterStatus);
+  if (config.filterProvider !== 'all') res = res.filter(i => i.provider === config.filterProvider);
+  return res;
+}
+
+function cycleStatusFilter() {
+  const statuses = ['all', 'active', 'ready', 'cooldown', 'burnt'];
+  let currentIndex = statuses.indexOf(config.filterStatus);
+  currentIndex = (currentIndex + 1) % statuses.length;
+  config.filterStatus = statuses[currentIndex];
+  save();
+  renderAll(); // Will call updateStatusPillUI
+  showToast(`Filter: ${config.filterStatus.toUpperCase()}`);
+}
+
+function updateStatusPillUI() {
+    const pillLabel = document.getElementById('filterLabel');
+    const pillDot = document.getElementById('filterDot');
+    
+    pillLabel.textContent = config.filterStatus === 'all' ? 'All' : config.filterStatus;
+    
+    // Reset classes
+    pillDot.className = 'filter-dot';
+    
+    // Add color based on status
+    if (config.filterStatus === 'all') pillDot.style.background = 'var(--ink-dim)';
+    else if (config.filterStatus === 'active') { pillDot.style.background = 'var(--neon-blue)'; pillDot.style.boxShadow = "0 0 8px var(--neon-blue)"; }
+    else if (config.filterStatus === 'ready') { pillDot.style.background = 'var(--neon-green)'; pillDot.style.boxShadow = "0 0 8px var(--neon-green)"; }
+    else if (config.filterStatus === 'cooldown') { pillDot.style.background = 'var(--neon-orange)'; pillDot.style.boxShadow = "0 0 8px var(--neon-orange)"; }
+    else if (config.filterStatus === 'burnt') { pillDot.style.background = 'var(--neon-red)'; pillDot.style.boxShadow = "0 0 8px var(--neon-red)"; }
+    else { pillDot.style.background = 'var(--ink-dim)'; pillDot.style.boxShadow = "none"; }
+}
+
+// --- Scatter Controls (Right Rail) ---
+function setSort(key) {
+  config.sortKey = key;
+  save();
+  showToast(`Sorting by: ${key.charAt(0).toUpperCase() + key.slice(1)}`);
+}
+
+function collectNodes() {
+    const filtered = filterItems();
+    const cardW = 220;
+    const cardH = 140;
+    const pad = 20;
+    const viewportW = window.innerWidth;
+    const cols = Math.max(1, Math.floor(viewportW / (cardW + pad)));
+    let x = pad;
+    let y = pad;
+    
+    filtered.forEach((item, i) => {
+        item.pos.x = x;
+        item.pos.y = y;
+        
+        x += cardW + pad;
+        if (x + cardW > viewportW) {
+            x = pad;
+            y += cardH + pad;
+        }
+    });
+    
+    fitToBounds(filtered);
+    renderScatter(filtered);
+    save();
+    showToast('Nodes Collected to Grid');
+}
+
+function cascadeNodes() {
+    const filtered = filterItems();
+    filtered.sort((a, b) => {
+        if (config.sortKey === 'status') return statusOrder[a.status] - statusOrder[b.status];
+        if (config.sortKey === 'provider') return a.provider.localeCompare(b.provider);
+        if (config.sortKey === 'lastUsed') return b.lastUsed - a.lastUsed;
+        return 0;
+    });
+
+    const groups = {};
+    filtered.forEach(item => {
+        const key = item[config.sortKey];
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(item);
+    });
+
+    const cardW = 220;
+    const cardH = 140;
+    const pad = 20;
+    const stackOffsetY = window.innerWidth < 600 ? 30 : 40; // Condensed for mobile
+    const groupWidth = cardW + pad * 2;
+    const viewportW = window.innerWidth - pad * 2;
+    const maxCols = Math.floor(viewportW / groupWidth);
+    const effectiveMaxCols = Math.max(1, Math.min(maxCols, 2)); // Limit to 1 or 2 columns as per requirements
+
+    let col = 0;
+    let startY = pad;
+    let maxRowHeight = 0;
+
+    Object.keys(groups).forEach(key => {
+        const group = groups[key];
+        const groupHeight = group.length * stackOffsetY + cardH - stackOffsetY;
+
+        const x = pad + col * groupWidth;
+        let y = startY;
+
+        group.forEach((item, idx) => {
+            item.pos.x = x;
+            item.pos.y = y + idx * stackOffsetY;
+        });
+
+        maxRowHeight = Math.max(maxRowHeight, groupHeight);
+
+        col++;
+        if (col >= effectiveMaxCols) {
+            col = 0;
+            startY += maxRowHeight + pad;
+            maxRowHeight = 0;
+        }
+    });
+
+    fitToBounds(filtered);
+    renderScatter(filtered);
+    save();
+    showToast(`Cascaded by ${config.sortKey}`);
+}
+
+function fitToBounds(filtered) {
+    if (filtered.length === 0) return;
+
+    const cardW = 220;
+    const cardH = 140;
+    const bounds = { minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity };
+
+    filtered.forEach(item => {
+        bounds.minX = Math.min(bounds.minX, item.pos.x);
+        bounds.minY = Math.min(bounds.minY, item.pos.y);
+        bounds.maxX = Math.max(bounds.maxX, item.pos.x + cardW);
+        bounds.maxY = Math.max(bounds.maxY, item.pos.y + cardH);
+    });
+
+    const contentW = bounds.maxX - bounds.minX;
+    const contentH = bounds.maxY - bounds.minY;
+
+    const vpW = window.innerWidth;
+    const vpH = window.innerHeight - 180; // Account for header and nav
+
+    const scaleX = vpW / contentW;
+    const scaleY = vpH / contentH;
+    const newScale = Math.min(scaleX, scaleY, 1) * 0.95; // Max scale 1, 95% fit
+
+    scatter.transform.scale = newScale;
+
+    const centerX = (vpW - contentW * newScale) / 2 - bounds.minX * newScale;
+    const centerY = (vpH - contentH * newScale) / 2 - bounds.minY * newScale + 80; // Offset for header
+
+    scatter.transform.x = centerX;
+    scatter.transform.y = centerY;
+
+    applyScatterTransform();
+}
+
+// --- Rendering ---
+function renderAll() {
+  renderProviderPills();
+  renderProviderSelect();
+  updateStatusPillUI();
+  const filteredItems = filterItems();
+  
+  if (document.getElementById('listOverlay').classList.contains('active')) {
+    renderListOverlayContents(filteredItems);
+  }
+  
+  if (config.view === 'grid') {
+    renderGrid(filteredItems);
+  } else {
+    renderScatter(filteredItems);
+  }
+  updateAllTimers();
+}
+
+function updateAllTimers() {
+  const now = Date.now();
+  items.forEach(item => {
+    const timerEl = document.getElementById(`timer-${item.id}`);
+    const listTimerEl = document.getElementById(`timer-list-${item.id}`);
+    const resetDot = document.getElementById(`reset-dot-${item.id}`);
+    
+    let timeStr = '00:00:00';
+    if (item.status === 'active') {
+      timeStr = formatTime(now - item.lastUsed);
+      if (resetDot) resetDot.style.opacity = '0';
+    } else if (item.status === 'cooldown') {
+      const resetMs = item.resetHours * 3600000;
+      const remaining = item.lastUsed + resetMs - now;
+      timeStr = formatRemainingTime(remaining);
+      const progress = Math.min(1, (now - item.lastUsed) / resetMs);
+      if (resetDot) { resetDot.style.opacity = '1'; resetDot.style.transform = `scaleX(${progress})`; }
+      if (remaining <= 0) { item.status = 'ready'; save(); renderAll(); showToast(`${item.provider} Ready!`); }
+    } else if (item.status === 'burnt') {
+      timeStr = formatLastUsed(item.lastUsed);
+      if (resetDot) resetDot.style.opacity = '0';
+    }
+    
+    if (timerEl) timerEl.textContent = timeStr;
+    if (listTimerEl) listTimerEl.textContent = timeStr;
+  });
+}
+
+function renderProviderPills() {
+  const bar = document.getElementById('providerBar');
+  bar.innerHTML = '';
+  const allPill = document.createElement('div');
+  allPill.className = `pill ${config.filterProvider === 'all' ? 'active' : ''}`;
+  allPill.textContent = 'All Providers';
+  allPill.onclick = () => { config.filterProvider = 'all'; save(); renderAll(); };
+  bar.appendChild(allPill);
+  providers.sort().forEach(provider => {
+    const pill = document.createElement('div');
+    pill.className = `pill ${config.filterProvider === provider ? 'active' : ''}`;
+    pill.textContent = provider;
+    pill.onclick = () => { config.filterProvider = provider; save(); renderAll(); };
+    pill.oncontextmenu = (e) => { e.preventDefault(); showProviderContextMenu(e, provider); };
+    bar.appendChild(pill);
+  });
+  const addPill = document.createElement('div');
+  addPill.className = 'pill add-btn';
+  addPill.textContent = '+ New';
+  addPill.onclick = addNewProviderFromMenu;
+  bar.appendChild(addPill);
+  
+  // Update centering after rendering pills
+  updateProviderBarCentering();
+}
+
+function renderGrid(filteredItems) {
+  const wrapper = document.getElementById('gridWrapper');
+  const sorted = filteredItems.sort((a, b) => statusOrder[a.status] - statusOrder[b.status]);
+  wrapper.innerHTML = '';
+  sorted.forEach(item => wrapper.appendChild(renderCardHTML(item, false)));
+}
+
+function renderScatter(filteredItems) {
+  if (!canvas) return;
+  const dropGhost = document.getElementById('dropGhost') || createDropGhost(canvas);
+  
+  items.forEach(item => {
+    let card = document.getElementById(`scatter-card-${item.id}`);
+    if (!card) {
+      card = document.createElement('div');
+      card.className = `scatter-card ${item.status === 'burnt' ? 'burnt' : ''}`;
+      card.id = `scatter-card-${item.id}`;
+      card.setAttribute('data-id', item.id);
+      
+      // Context menu for scatter cards
+      card.oncontextmenu = (e) => { e.preventDefault(); showContextMenu(e, item.id); };
+      
+      // Mobile long press for context menu
+      let pressTimer;
+      card.addEventListener('touchstart', (e) => {
+           if(e.touches.length === 1) {
+               pressTimer = setTimeout(() => { showContextMenu(e.touches[0], item.id); }, 500);
+           }
+      });
+      card.addEventListener('touchend', () => clearTimeout(pressTimer));
+      card.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+      card.onclick = () => { if (!isDraggingCard) openModal(item.id); };
+      card.addEventListener('pointerdown', (e) => { startDrag(e, item); });
+      canvas.appendChild(card);
+    }
+    
+    // Update inner HTML
+    const dotClass = item.status === 'active' ? 'text-blue' : item.status === 'cooldown' ? 'text-orange' : item.status === 'ready' ? 'text-green' : 'text-red';
+    const timerLabel = item.status === 'cooldown' ? 'TIME TO READY' : (item.status === 'burnt' ? 'LAST USED' : 'TIME IN USE');
+    
+    card.innerHTML = `
+      <div class="card-top" style="width:100%;">
+        <div class="card-provider">${item.provider}</div>
+        <div style="display: flex; align-items: center; gap:4px;">
+           ${item.note ? `<div style="color: var(--ink1); font-size:12px; margin-right:2px;" title="Has Note">📝</div>` : ''}
+           <div class="status-dot ${dotClass}" style="margin-right:4px;"></div>
+           <div style="font-size:11px; font-weight:600; text-transform:uppercase; color: ${dotClass.replace('text-', 'var(--neon-')}">${item.status}</div>
+           <button class="card-edit-icon" onclick="openModal(${item.id})">
+               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.41 1.41z"></path></svg>
+           </button>
+        </div>
+      </div>
+      <div class="card-timer" id="timer-${item.id}"></div>
+      <div style="height: 2px; background: var(--glass-border); border-radius: 2px; position:relative; overflow:hidden; width:80%;">
+        <div id="reset-dot-${item.id}" style="position:absolute; inset:0; background: var(--ink1); transform-origin: left; transform: scaleX(0); transition: transform 1s linear;"></div>
+      </div>
+      <div class="card-meta">
+        <span class="card-email">${item.email}</span>
+      </div>
+      ${item.status === 'burnt' ? `<div class="burnt-label">BURNT</div>` : ''}
+    `;
+    
+    card.style.left = `${item.pos.x}px`;
+    card.style.top = `${item.pos.y}px`;
+    card.style.zIndex = item.status === 'active' ? 10 : (item.status === 'ready' ? 5 : 1);
+    
+    if (filteredItems.some(f => f.id === item.id)) card.classList.remove('dimmed');
+    else card.classList.add('dimmed');
+  });
+  applyScatterTransform();
+}
+
+function renderCardHTML(item, isScatter) {
+  const dotClass = item.status === 'active' ? 'text-blue' : item.status === 'cooldown' ? 'text-orange' : item.status === 'ready' ? 'text-green' : 'text-red';
+  const timerLabel = item.status === 'cooldown' ? 'TIME TO READY' : (item.status === 'burnt' ? 'LAST USED' : 'TIME IN USE');
+  const div = document.createElement('div');
+  div.className = `card ${item.status === 'burnt' ? 'burnt' : ''}`;
+  div.onclick = (e) => { if(!e.target.closest('.action-icon')) openModal(item.id); };
+  div.oncontextmenu = (e) => { e.preventDefault(); showContextMenu(e, item.id); };
+  
+  // Mobile Long Press for Grid Cards
+  let pressTimer;
+  div.addEventListener('touchstart', (e) => {
+       if(e.touches.length === 1) {
+           pressTimer = setTimeout(() => { showContextMenu(e.touches[0], item.id); }, 500);
+       }
+  });
+  div.addEventListener('touchend', () => clearTimeout(pressTimer));
+  div.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+  div.innerHTML = `
+    <div class="card-top">
+      <div class="card-provider">${item.provider}</div>
+      <div style="display: flex; align-items: center; gap:4px;">
+         <div class="status-dot ${dotClass}" style="margin-right:4px;"></div>
+         <div style="font-size:11px; font-weight:600; text-transform:uppercase; color: ${dotClass.replace('text-', 'var(--neon-')}">${item.status}</div>
+      </div>
+    </div>
+    <div class="card-timer" id="timer-${item.id}"></div>
+    <div style="height: 4px; background: var(--glass-border); border-radius: 2px; position:relative; overflow:hidden;">
+      <div id="reset-dot-${item.id}" style="position:absolute; inset:0; background: var(--ink1); transform-origin: left; transform: scaleX(0); transition: transform 1s linear;"></div>
+    </div>
+    <div style="font-size:10px; font-weight:600; color:var(--ink-dim); text-align:center; margin-top:-10px;">${timerLabel}</div>
+    ${item.status === 'burnt' ? `<div class="burnt-label">BURNT</div>` : ''}
+    <div class="card-meta">
+      <span class="card-email">${item.email}</span>
+      <div class="card-actions">
+        ${item.note ? `<div class="action-icon" style="color: var(--ink1);" onclick="openNoteModal(${item.id})" title="View Note">📝</div>` : ''}
+        <div class="action-icon" onclick="openNoteModal(${item.id})" title="Add/Edit Note">📋</div>
+        ${item.status !== 'ready' ? `<div class="action-icon" onclick="confirmForceRestore(${item.id})">R</div>` : ''}
+        ${item.status === 'active' || item.status === 'cooldown' ? `<div class="action-icon" onclick="confirmHitLimit(${item.id})">H</div>` : ''}
+        ${item.status === 'ready' ? `<div class="action-icon text-green" onclick="openActionOverlay(${item.id})">GO</div>` : ''}
+      </div>
+    </div>
+  `;
+  return div;
+}
+
+function createDropGhost(canvas) {
+  const ghost = document.createElement('div');
+  ghost.id = 'dropGhost';
+  ghost.className = 'scatter-card ghost';
+  ghost.style.display = 'none';
+  canvas.appendChild(ghost);
+  return ghost;
+}
+
+// --- Drag & Drop ---
+function startDrag(e, item) {
+  if (e.button !== 0) return;
+  const card = e.currentTarget;
+  scatter.dragging = true;
+  card.classList.add('is-dragging');
+  card.setPointerCapture(e.pointerId);
+  const containerRect = canvas.getBoundingClientRect();
+  const startItemX = item.pos.x;
+  const startItemY = item.pos.y;
+  const startClientX = e.clientX;
+  const startClientY = e.clientY;
+  const invScale = 1 / scatter.transform.scale;
+  const startCanvasX = (startClientX - containerRect.left - scatter.transform.x) * invScale;
+  const startCanvasY = (startClientY - containerRect.top - scatter.transform.y) * invScale;
+  let distanceMoved = 0;
+  isDraggingCard = false;
+  
+  function move(eMove) {
+    if (eMove.pointerId !== e.pointerId) return;
+    const dx = eMove.clientX - startClientX;
+    const dy = eMove.clientY - startClientY;
+    distanceMoved = Math.hypot(dx, dy);
+    if (distanceMoved > 5) isDraggingCard = true;
+    const currentCanvasX = (eMove.clientX - containerRect.left - scatter.transform.x) * invScale;
+    const currentCanvasY = (eMove.clientY - containerRect.top - scatter.transform.y) * invScale;
+    let newX = startItemX + (currentCanvasX - startCanvasX);
+    let newY = startItemY + (currentCanvasY - startCanvasY);
+    // Snap to grid
+    newX = Math.round(newX / 20) * 20;
+    newY = Math.round(newY / 20) * 20;
+    card.style.transform = `translate(${newX - startItemX}px, ${newY - startItemY}px)`;
+  }
+  
+  function end(eEnd) {
+    if (eEnd.pointerId !== e.pointerId) return;
+    const currentCanvasX = (eEnd.clientX - containerRect.left - scatter.transform.x) * invScale;
+    const currentCanvasY = (eEnd.clientY - containerRect.top - scatter.transform.y) * invScale;
+    let finalX = startItemX + (currentCanvasX - startCanvasX);
+    let finalY = startItemY + (currentCanvasY - startCanvasY);
+    if (isDraggingCard) {
+      item.pos.x = Math.round(finalX / 20) * 20;
+      item.pos.y = Math.round(finalY / 20) * 20;
+      card.style.left = `${item.pos.x}px`;
+      card.style.top = `${item.pos.y}px`;
+      save();
+    }
+    card.style.transform = '';
+    card.classList.remove('is-dragging');
+    scatter.dragging = false;
+    card.removeEventListener('pointermove', move);
+    card.removeEventListener('pointerup', end);
+    setTimeout(() => isDraggingCard = false, 100);
+  }
+  card.addEventListener('pointermove', move);
+  card.addEventListener('pointerup', end);
+}
+
+// --- Zoom/Pan ---
+function applyScatterTransform() {
+  if (canvas) canvas.style.transform = `translate(${scatter.transform.x}px, ${scatter.transform.y}px) scale(${scatter.transform.scale})`;
+}
+function zoom(delta, cx, cy) {
+  const newScale = Math.max(0.25, Math.min(3, scatter.transform.scale + delta));
+  if (newScale === scatter.transform.scale) return;
+  const rect = canvas.getBoundingClientRect();
+  const zx = (cx!==null?cx:rect.width/2) - rect.left;
+  const zy = (cy!==null?cy:rect.height/2) - rect.top;
+  const ratio = newScale / scatter.transform.scale;
+  scatter.transform.x = zx - (zx - scatter.transform.x) * ratio;
+  scatter.transform.y = zy - (zy - scatter.transform.y) * ratio;
+  scatter.transform.scale = newScale;
+  applyScatterTransform();
+  save();
+}
+function resetView() {
+  scatter.transform = { x: 0, y: 0, scale: 1 };
+  applyScatterTransform();
+  save();
+}
+
+// --- Enhanced Context Menus ---
+function showContextMenu(e, nodeId) {
+  closeContextMenu();
+  const menu = document.getElementById('contextMenu');
+  const item = items.find(i => i.id == nodeId);
+  if (!item) return;
+  
+  // Position Logic (prevent off-screen)
+  const x = e.clientX;
+  const y = e.clientY;
+  
+  menu.innerHTML = `
+    <div class="ctx-header">${item.provider}</div>
+    <div class="ctx-item" onclick="openModal(${item.id})">Edit Details</div>
+    <div class="ctx-item" onclick="openNoteModal(${item.id})">${item.note ? '📝 Edit Note' : '📋 Add Note'}</div>
+    ${item.status === 'ready' ? `<div class="ctx-item text-green" onclick="openActionOverlay(${item.id})">Activate</div>` : ''}
+    ${item.status !== 'ready' ? `<div class="ctx-item text-blue" onclick="confirmForceRestore(${item.id})">Force Restore</div>` : ''}
+    ${item.status === 'active' || item.status === 'cooldown' ? `<div class="ctx-item text-red" onclick="confirmHitLimit(${item.id})">Hit Limit</div>` : ''}
+  `;
+  menu.style.left = `${x}px`;
+  menu.style.top = `${y}px`;
+  menu.classList.add('active');
+  setTimeout(() => document.addEventListener('click', closeContextMenu), 10);
+}
+
+function showScatterBackgroundContextMenu(e) {
+  closeContextMenu();
+  const menu = document.getElementById('contextMenu');
+  menu.innerHTML = `
+    <div class="ctx-header">Scatter Actions</div>
+    <div class="ctx-item" onclick="collectNodes()">Collect (Grid)</div>
+    <div class="ctx-item" onclick="cascadeNodes()">Cascade (Stack)</div>
+    <div class="ctx-item" onclick="setSort('status')">Sort by Status</div>
+    <div class="ctx-item" onclick="setSort('provider')">Sort by Provider</div>
+    <div class="ctx-item" onclick="setSort('lastUsed')">Sort by Last Used</div>
+    <div class="ctx-item" onclick="openModal()">+ Add Node</div>
+    <div class="ctx-item" onclick="addNewProviderFromMenu()">+ Add Provider</div>
+  `;
+  menu.style.left = `${e.clientX}px`;
+  menu.style.top = `${e.clientY}px`;
+  menu.classList.add('active');
+  setTimeout(() => document.addEventListener('click', closeContextMenu), 10);
+}
+
+function showGridBackgroundContextMenu(e) {
+  closeContextMenu();
+  const menu = document.getElementById('contextMenu');
+  menu.innerHTML = `
+    <div class="ctx-header">Grid Actions</div>
+    <div class="ctx-item" onclick="openModal()">+ Add Node</div>
+    <div class="ctx-item" onclick="addNewProviderFromMenu()">+ Add Provider</div>
+    <div class="ctx-item" onclick="setSort('status')">Sort by Status</div>
+    <div class="ctx-item" onclick="setSort('provider')">Sort by Provider</div>
+    <div class="ctx-item" onclick="setSort('lastUsed')">Sort by Last Used</div>
+  `;
+  menu.style.left = `${e.clientX}px`;
+  menu.style.top = `${e.clientY}px`;
+  menu.classList.add('active');
+  setTimeout(() => document.addEventListener('click', closeContextMenu), 10);
+}
+
+function showProviderContextMenu(e, providerName) {
+  closeContextMenu();
+  const menu = document.getElementById('contextMenu');
+  menu.innerHTML = `
+    <div class="ctx-header">Provider: ${providerName}</div>
+    <div class="ctx-item" onclick="renameProvider('${providerName}')">Edit Name</div>
+    <div class="ctx-item text-red" onclick="deleteProvider('${providerName}')">Delete Provider</div>
+  `;
+  menu.style.left = `${e.clientX}px`;
+  menu.style.top = `${e.clientY}px`;
+  menu.classList.add('active');
+  setTimeout(() => document.addEventListener('click', closeContextMenu), 10);
+}
+
+function closeContextMenu() { document.getElementById('contextMenu').classList.remove('active'); }
+
+// --- Other Logic (Modals, Providers, etc) ---
+function renameProvider(oldName) {
+  const newName = prompt(`Rename ${oldName} to:`, oldName);
+  if (newName && newName.trim() && newName !== oldName) {
+    const idx = providers.indexOf(oldName);
+    if(idx!==-1) providers[idx] = newName.trim();
+    items.forEach(i => { if(i.provider===oldName) i.provider=newName.trim(); });
+    save(); renderAll(); showToast('Renamed');
+  }
+}
+function deleteProvider(name) {
+  if(confirm(`Remove "${name}"?`)) {
+    providers = providers.filter(p => p !== name);
+    if(config.filterProvider === name) config.filterProvider = 'all';
+    save(); renderAll(); showToast('Removed');
+  }
+}
+function addNewProviderFromMenu() {
+  const p = prompt('New Provider Name:');
+  if(p && p.trim() && !providers.includes(p.trim())) {
+    providers.push(p.trim()); providers.sort(); save(); renderAll(); showToast('Provider Added');
+  }
+}
+
+// Modal & Overlay logic
+function openModal(nodeId = null) {
+  const modal = document.getElementById('modalOverlay');
+  const form = document.getElementById('nodeForm');
+  
+  if (nodeId) {
+    // Edit existing node
+    const item = items.find(i => i.id == nodeId);
+    if (!item) return;
+    
+    document.getElementById('modalTitle').textContent = 'Edit Node';
+    document.getElementById('nodeId').value = item.id;
+    document.getElementById('inpProvider').value = item.provider;
+    document.getElementById('inpEmail').value = item.email;
+    document.getElementById('inpStatus').value = item.status;
+    document.getElementById('inpReset').value = item.resetHours;
+    document.getElementById('inpNote').value = item.note || '';
+    
+    // Update custom reset hours if needed
+    const standardHours = [3, 6, 12, 24, 48, 72];
+    if (!standardHours.includes(item.resetHours)) {
+      document.getElementById('inpResetCustom').value = item.resetHours;
+    } else {
+      document.getElementById('inpResetCustom').value = '';
+    }
+    
+    // Select status button
+    selectStatusButton(item.status);
+    
+    // Select reset hours pill
+    selectResetHours(item.resetHours);
+    
+    // Show edit actions and delete button
+    document.getElementById('editActions').style.display = 'flex';
+    document.getElementById('btnDelete').style.display = 'block';
+  } else {
+    // New node
+    document.getElementById('modalTitle').textContent = 'New Node';
+    form.reset();
+    document.getElementById('nodeId').value = '';
+    document.getElementById('inpStatus').value = 'ready';
+    document.getElementById('inpReset').value = '3';
+    selectStatusButton('ready');
+    selectResetHours(3);
+    document.getElementById('editActions').style.display = 'none';
+    document.getElementById('btnDelete').style.display = 'none';
+  }
+  
+  modal.classList.add('active');
+  hideBottomNav();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  showBottomNavIfNoOverlays();
+}
+
+function openListOverlay() { 
+  document.getElementById('listOverlay').classList.add('active'); 
+  renderListOverlayContents(filterItems());
+  updateProviderBarCentering();
+  hideBottomNav();
+}
+
+function closeListOverlay() { 
+  document.getElementById('listOverlay').classList.remove('active');
+  updateProviderBarCentering();
+  showBottomNavIfNoOverlays();
+}
+
+function openNoteModal(nodeId) {
+  // ... (existing code)
+  document.getElementById('noteOverlay').classList.add('active');
+  hideBottomNav();
+}
+
+function closeNoteModal() {
+  document.getElementById('noteOverlay').classList.remove('active');
+  showBottomNavIfNoOverlays();
+}
+
+// Similarly update other open/close functions like openInfoModal, openActionOverlay, etc.
+// For example:
+function openInfoModal() { 
+  document.getElementById('infoOverlay').classList.add('active'); 
+  hideBottomNav(); 
+}
+function closeInfoModal() { 
+  document.getElementById('infoOverlay').classList.remove('active'); 
+  showBottomNavIfNoOverlays(); 
+}
+
+// Note Modal Functions
+let currentNoteNodeId = null;
+
+function openNoteModal(nodeId) {
+    const item = items.find(i => i.id == nodeId);
+    if (!item) return;
+    
+    currentNoteNodeId = nodeId;
+    const modal = document.getElementById('noteOverlay');
+    document.getElementById('noteModalTitle').textContent = `${item.provider} - Note`;
+    document.getElementById('noteProvider').textContent = item.provider;
+    document.getElementById('noteEmail').textContent = item.email;
+    document.getElementById('noteTextarea').value = item.note || '';
+    document.getElementById('btnClearNote').style.display = item.note ? 'block' : 'none';
+    
+    modal.classList.add('active');
+    document.getElementById('noteTextarea').focus();
+}
+
+function closeNoteModal() {
+    document.getElementById('noteOverlay').classList.remove('active');
+    currentNoteNodeId = null;
+}
+
+function saveNote() {
+    if (!currentNoteNodeId) return;
+    
+    const item = items.find(i => i.id == currentNoteNodeId);
+    if (!item) return;
+    
+    const noteText = document.getElementById('noteTextarea').value;
+    item.note = noteText;
+    
+    save();
+    renderAll();
+    closeNoteModal();
+    showToast(noteText ? 'Note saved' : 'Note cleared');
+}
+
+function clearNote() {
+    if (!currentNoteNodeId) return;
+    
+    const item = items.find(i => i.id == currentNoteNodeId);
+    if (!item) return;
+    
+    if (confirm('Clear this note? This action cannot be undone.')) {
+        item.note = '';
+        save();
+        renderAll();
+        closeNoteModal();
+        showToast('Note cleared');
+    }
+}
+
+function renderListOverlayContents(filtered) {
+    const body = document.getElementById('overlayListBody');
+    body.innerHTML = '';
+    filtered.forEach(item => {
+        const row = document.createElement('tr');
+        row.className = item.status==='burnt'?'BURNT':'';
+        const dot = item.status==='active'?'text-blue':item.status==='ready'?'text-green':item.status==='cooldown'?'text-orange':'text-red';
+        const noteDisplay = item.note ? 
+            `<span style="color: var(--ink1); cursor: pointer;" onclick="event.stopPropagation(); openNoteModal(${item.id})" title="Click to view/edit note">📝 ${item.note.substring(0, 30)}${item.note.length > 30 ? '...' : ''}</span>` : 
+            '<span style="color: var(--ink-dim); opacity: 0.5;">No note</span>';
+        row.innerHTML = `<td><strong>${item.provider}</strong></td><td style="opacity:0.8">${item.email}</td><td><span class="${dot}" style="font-weight:700; font-size:11px;">${item.status}</span></td><td>${noteDisplay}</td><td id="timer-list-${item.id}" style="font-family:monospace; font-weight:700;">--</td>`;
+        row.onclick = () => { closeListOverlay(); openModal(item.id); };
+        body.appendChild(row);
+    });
+}
+
+// Form Handlers
+document.getElementById('nodeForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = document.getElementById('nodeId').value;
+    const provider = document.getElementById('inpProvider').value;
+    const email = document.getElementById('inpEmail').value;
+    const status = document.getElementById('inpStatus').value;
+    const reset = parseFloat(document.getElementById('inpReset').value);
+    const note = document.getElementById('inpNote').value;
+    
+    if(!provider) return;
+    const now = Date.now();
+    
+    if(id) {
+        const item = items.find(i => i.id == id);
+        if(item) {
+            item.provider = provider; item.email = email;
+            if(item.status !== status) item.lastUsed = now;
+            item.status = status; item.resetHours = reset;
+            item.note = note;
+        }
+    } else {
+        items.push({ id: now, provider, email, status, resetHours: reset, lastUsed: now, pos: {x:50, y:50}, note: note });
+    }
+    if(!providers.includes(provider)) providers.push(provider);
+    save(); closeModal(); renderAll(); showToast('Saved');
+});
+
+function deleteNode() {
+    const id = document.getElementById('nodeId').value;
+    if(confirm('Delete Node?')) {
+        items = items.filter(i => i.id != id);
+        save(); closeModal(); renderAll(); showToast('Deleted');
+    }
+}
+function confirmHitLimit(id) {
+    const i = items.find(x => x.id == (id || document.getElementById('nodeId').value));
+    if(i && confirm(`Hit Limit for ${i.provider}?`)) {
+        i.status = 'cooldown'; i.lastUsed = Date.now();
+        save(); closeConfirm(); closeModal(); renderAll(); showToast('Cooldown Started');
+    }
+}
+function confirmForceRestore(id) {
+    const i = items.find(x => x.id == (id || document.getElementById('nodeId').value));
+    if(i && confirm(`Restore ${i.provider}?`)) {
+        i.status = 'ready'; 
+        save(); closeConfirm(); closeModal(); renderAll(); showToast('Restored');
+    }
+}
+function openActionOverlay(id) {
+    const i = items.find(x => x.id == id);
+    if(!i) return;
+    navigator.clipboard.writeText(i.email);
+    document.getElementById('actionTitle').textContent = `Activate ${i.provider}`;
+    document.getElementById('actionEmail').value = i.email;
+    document.getElementById('btnActivateNode').onclick = () => {
+        i.status = 'active'; i.lastUsed = Date.now();
+        save(); closeActionOverlay(); renderAll(); showToast('Activated');
+    };
+    document.getElementById('actionOverlay').classList.add('active');
+}
+function closeConfirm() { document.getElementById('confirmOverlay').classList.remove('active'); }
+
+// Select Helpers
+function renderProviderSelect() {
+    const sel = document.getElementById('inpProvider');
+    const curr = sel.value;
+    sel.innerHTML = '<option value="" disabled selected>Select Provider</option>';
+    providers.sort().forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p; opt.textContent = p;
+        sel.appendChild(opt);
+    });
+    const add = document.createElement('option');
+    add.value = 'CUSTOM_ADD_NEW'; add.textContent = '+ Add Custom...';
+    sel.appendChild(add);
+    if(curr) sel.value = curr;
+}
+document.getElementById('inpProvider').addEventListener('change', (e) => {
+    if(e.target.value === 'CUSTOM_ADD_NEW') {
+        const p = prompt('New Provider:');
+        if(p) { 
+            if(!providers.includes(p)) providers.push(p); 
+            renderProviderSelect(); e.target.value = p; 
+        } else e.target.value = '';
+    }
+});
+function selectStatusButton(s) {
+    document.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('selected'));
+    document.querySelector(`.btn-toggle[data-status="${s}"]`).classList.add('selected');
+    document.getElementById('inpStatus').value = s;
+}
+function selectResetHours(h) {
+    document.querySelectorAll('.pill-option').forEach(b => b.classList.remove('selected'));
+    const pill = document.querySelector(`.pill-option[data-hours="${h}"]`);
+    if(pill) pill.classList.add('selected');
+    document.getElementById('inpReset').value = h;
+}
+
+// --- Init & Events ---
+function init() {
+  load();
+  const theme = localStorage.getItem('iv_theme') || 'dark';
+  document.body.setAttribute('data-theme', theme);
+  updateLogo(theme);
+  
+  switchView(config.view);
+  timerInterval = setInterval(updateAllTimers, 1000);
+  canvas = document.getElementById('scatterCanvas');
+  renderAll();
+
+  // Enhanced Background Context Menu Events for both views
+  // Grid view background
+  document.getElementById('gridContainer').addEventListener('contextmenu', (e) => {
+      if(!e.target.closest('.card')) { 
+          e.preventDefault(); 
+          showGridBackgroundContextMenu(e); 
+      }
+  });
+  
+  // Scatter view background
+  canvas.oncontextmenu = (e) => {
+      if(!e.target.closest('.scatter-card')) { 
+          e.preventDefault(); 
+          showScatterBackgroundContextMenu(e); 
+      }
+  };
+  
+  // Mobile long press for grid background
+  let bgPressTimer;
+  document.getElementById('gridContainer').addEventListener('touchstart', (e) => {
+      if(e.touches.length === 1 && !e.target.closest('.card')) {
+          bgPressTimer = setTimeout(() => showGridBackgroundContextMenu(e.touches[0]), 500);
+      }
+  });
+  document.getElementById('gridContainer').addEventListener('touchend', () => clearTimeout(bgPressTimer));
+  document.getElementById('gridContainer').addEventListener('touchmove', () => clearTimeout(bgPressTimer));
+  
+  // Mobile long press for scatter background
+  canvas.addEventListener('touchstart', (e) => {
+      if(e.touches.length === 1 && !e.target.closest('.scatter-card')) {
+          bgPressTimer = setTimeout(() => showScatterBackgroundContextMenu(e.touches[0]), 500);
+      }
+  });
+  canvas.addEventListener('touchend', () => clearTimeout(bgPressTimer));
+  canvas.addEventListener('touchmove', () => clearTimeout(bgPressTimer));
+  
+  // Pan Logic
+  let panning = false, panStart = {x:0,y:0};
+  canvas.addEventListener('pointerdown', (e) => {
+      if(!e.target.closest('.scatter-card')) {
+          panning = true; panStart.x = e.clientX - scatter.transform.x; panStart.y = e.clientY - scatter.transform.y;
+          canvas.style.cursor = 'grab';
+      }
+  });
+  document.addEventListener('pointermove', (e) => {
+      if(panning) {
+          scatter.transform.x = e.clientX - panStart.x;
+          scatter.transform.y = e.clientY - panStart.y;
+          applyScatterTransform();
+      }
+  });
+  document.addEventListener('pointerup', () => { if(panning) { panning = false; canvas.style.cursor = 'default'; save(); } });
+  
+  // Wheel Zoom
+  canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoom(e.deltaY<0?0.2:-0.2, e.clientX, e.clientY); }, {passive:false});
+
+  // Close overlays on outside click and ESC
+  const overlayIds = ['infoOverlay', 'listOverlay', 'modalOverlay', 'actionOverlay', 'confirmOverlay', 'providerSelectOverlay', 'noteOverlay'];
+  overlayIds.forEach(id => {
+    const overlay = document.getElementById(id);
+    if (overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          overlay.classList.remove('active');
+          if (id === 'listOverlay') {
+            updateProviderBarCentering();
+          }
+        }
+      });
+    }
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      overlayIds.forEach(id => {
+        const overlay = document.getElementById(id);
+        if (overlay) overlay.classList.remove('active');
+      });
+      updateProviderBarCentering();
+    }
+    // Ctrl/Cmd + N for note when a node is selected in modal
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault();
+      const nodeId = document.getElementById('nodeId').value;
+      if (nodeId) {
+        closeModal();
+        openNoteModal(parseInt(nodeId));
+      }
+    }
+  });
+  
+  // Handle window resize for provider bar centering
+  window.addEventListener('resize', () => { 
+    if(config.view==='scatter') applyScatterTransform(); 
+    updateProviderBarCentering();
+  });
+}
+
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
