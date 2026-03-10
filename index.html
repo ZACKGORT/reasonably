@@ -3530,7 +3530,22 @@ function renderSpine() {
     const ghost = document.createElement('div'); ghost.className = 'spine-ghost';
     ghost.innerHTML = `<div class="sg-mood-bar" style="background:${mc.bar}"></div><div class="sg-ch-num">Chapter · ${String(d.ch.num||ci+1).padStart(2,'0')}</div><div class="sg-ch-title">${d.ch.title||'Untitled'}</div><div class="sg-stats"><div class="sg-stat"><span class="sg-stat-val">${d.sentCount}</span><span class="sg-stat-key">sentences</span></div><div class="sg-stat"><span class="sg-stat-val">${ci+1}</span><span class="sg-stat-key">of ${chapterData.length}</span></div></div>${d.snip?`<div class="sg-snip">${d.snip}${d.snip.length>=80?'…':''}</div>`:''}<span class="sg-mood-tag" style="background:${mc.bar}20;color:${mc.bar};border:1px solid ${mc.bar}40">${mc.tag}</span>`;
     seg.append(bar, num, title, ghost);
-    seg.addEventListener('click', () => { const si = pageIdxOfNode(d.chIdx+1); if(si>=0)goTo(si); spineOpen=false; document.body.classList.remove('spine-open'); updateSpineBeckon(false); });
+    seg.addEventListener('click', () => {
+      // Close spine first
+      spineOpen = false;
+      document.body.classList.remove('spine-open');
+      updateSpineBeckon(false);
+      // Scroll to the chapter block directly
+      const chBlock = document.querySelector(`.ch-block[data-ch="${d.ch.num||String(ci+1).padStart(2,'0')}"]`);
+      if (chBlock) scrollPageTo(chBlock, 'center');
+      // Also advance reveal state to first sentence in this chapter
+      const si = pageIdxOfNode(d.chIdx + 1);
+      if (si >= 0) goTo(si, true);
+      else if (chBlock) {
+        // chapter exists but has no sentences yet — still reveal/scroll to it
+        requestAnimationFrame(() => scrollPageTo(chBlock, 'center'));
+      }
+    });
     tl.appendChild(seg);
   });
 }
