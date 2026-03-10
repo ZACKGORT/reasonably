@@ -1762,9 +1762,18 @@ body.panel-compose-open #panel-backdrop {
 @media (max-width: 720px) {
   #mobile-hud { display: block; }
 
+  /* Pin header so keyboard / outer scroll can never push it off-screen */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 9000;
+    height: 52px;
+  }
+
   #app {
     grid-template-columns: 1fr !important;
     grid-template-rows: 52px 1fr !important;
+    padding-top: 52px; /* compensate for fixed header */
   }
   #toc { display: none !important; }
   #page-wrap { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; }
