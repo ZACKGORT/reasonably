@@ -3461,24 +3461,18 @@ function exportRaw() {
 }
 
 function toggleToc() {
-  // Use overlay panel instead of grid column collapse
-  if (document.getElementById('toc').classList.contains('panel-open')) {
-    closePanelOverlay('toc');
-    document.getElementById('btn-toc').classList.remove('active');
-  } else {
-    openPanelOverlay('toc');
-    document.getElementById('btn-toc').classList.add('active');
-  }
+  const app = document.getElementById('app');
+  const btn = document.getElementById('btn-toc');
+  const isHidden = app.classList.contains('no-toc');
+  app.classList.toggle('no-toc', !isHidden);
+  if (btn) btn.classList.toggle('active', isHidden);
 }
 function toggleCompose() {
-  const cp = document.getElementById('compose-panel');
-  if (cp.classList.contains('panel-open')) {
-    closePanelOverlay('compose');
-    const b = document.getElementById('btn-compose'); if (b) b.classList.remove('active');
-  } else {
-    openPanelOverlay('compose');
-    const b = document.getElementById('btn-compose'); if (b) b.classList.add('active');
-  }
+  const app = document.getElementById('app');
+  const btn = document.getElementById('btn-compose');
+  const isHidden = app.classList.contains('no-comp');
+  app.classList.toggle('no-comp', !isHidden);
+  if (btn) btn.classList.toggle('active', isHidden);
 }
 function toggleReading() {
   readMode = !readMode;
