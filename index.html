@@ -2980,6 +2980,11 @@ function submitCapture() {
   const fmtHint = document.getElementById('cp-fmt-hint');
   if (fmtHint) fmtHint.textContent = '';
   commitChange();
+  const lastIdx = pvEls.length - 1;
+  if (lastIdx >= 0) {
+    goTo(lastIdx);
+    pvEls[lastIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   _showOrganizer(raw.slice(0, 80));
 }
 
