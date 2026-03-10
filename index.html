@@ -1033,6 +1033,29 @@ header::after {
 }
 .line-num.active { color: var(--gold); }
 
+/* ─── NODE EDIT PENCIL ────────────────────────────────────────────────── */
+.node-edit-btn {
+  position: absolute; left: 36px; top: 50%; transform: translateY(-50%);
+  width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper-2); border: 1px solid var(--rule-2);
+  border-radius: 3px; cursor: pointer;
+  font-size: 10px; line-height: 1;
+  color: var(--ink-3);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.15s, color 0.15s, border-color 0.15s;
+  z-index: 10;
+}
+.node-wrap {
+  margin-left: 0; padding-left: 0;
+}
+.node-wrap:hover .node-edit-btn {
+  opacity: 1; pointer-events: auto;
+}
+.node-edit-btn:hover {
+  color: var(--gold); border-color: var(--gold);
+}
+
 /* ─── SENTENCE TYPES ──────────────────────────────────────────────────── */
 .sentence {
   position: relative;
@@ -2678,7 +2701,7 @@ function renderPage() {
       root.appendChild(hdr); return;
     }
 
-    const wrap = document.createElement('div'); wrap.style.position = 'relative';
+    const wrap = document.createElement('div'); wrap.style.position = 'relative'; wrap.className = 'node-wrap';
     const lineEl = document.createElement('div'); lineEl.className = 'line-num'; lineEl.textContent = lineN++; lineEl.style.top = '8px';
     wrap.appendChild(lineEl);
 
@@ -2714,9 +2737,20 @@ function renderPage() {
         c.classList.toggle('active-card', active);
         if (active) c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
-      const nIdx = parseInt(el.dataset.nidx);
-      if (!isNaN(nIdx) && nodes[nIdx] && nodes[nIdx].type !== 'break') openSyntaxWidget(nIdx, el);
     });
+
+    if (n.type !== 'break') {
+      const pencil = document.createElement('button');
+      pencil.className = 'node-edit-btn';
+      pencil.title = 'Change node type';
+      pencil.textContent = '✎';
+      pencil.addEventListener('click', e => {
+        e.stopPropagation();
+        const nIdx = parseInt(el.dataset.nidx);
+        if (!isNaN(nIdx)) openSyntaxWidget(nIdx, el);
+      });
+      wrap.appendChild(pencil);
+    }
 
     wrap.appendChild(el); root.appendChild(wrap); pvEls.push(el); sidx++;
   });
