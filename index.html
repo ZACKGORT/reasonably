@@ -961,7 +961,7 @@ header::after {
 
 .toc-head {
   font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.22em;
-  text-transform: uppercase; color: var(--ink-4);
+  text-transform: uppercase; color: var(--ink); opacity: 0.5;
   margin-bottom: 16px; padding-bottom: 8px;
   border-bottom: 1px solid var(--rule);
   display: flex; align-items: center; justify-content: space-between;
@@ -974,22 +974,23 @@ header::after {
 }
 .toc-ch-name {
   font-family: var(--f-disp); font-size: 15px; font-weight: 600;
-  font-style: italic; color: var(--ink-2); line-height: 1.2;
-  cursor: pointer; transition: color 0.14s; display: block;
+  font-style: italic; color: var(--ink); opacity: 0.75; line-height: 1.2;
+  cursor: pointer; transition: opacity 0.14s, color 0.14s; display: block;
 }
-.toc-ch-name:hover { color: var(--red); }
-.toc-ch.active .toc-ch-name { color: var(--ink); }
+.toc-ch-name:hover { opacity: 1; color: var(--red); }
+.toc-ch.active .toc-ch-name { opacity: 1; color: var(--ink); }
 .toc-ch.active .toc-ch-num { color: var(--red); }
 .toc-ch-nodes { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
 .toc-node-item {
-  font-family: var(--f-ui); font-size: 8px; letter-spacing: 0.04em;
-  color: var(--ink-4); padding: 2px 0 2px 10px;
+  font-family: var(--f-ui); font-size: 10px; letter-spacing: 0.04em;
+  color: var(--ink); opacity: 0.6;
+  padding: 3px 0 3px 10px;
   border-left: 1px solid var(--rule);
-  cursor: pointer; transition: color 0.12s, border-color 0.12s;
+  cursor: pointer; transition: opacity 0.12s, border-color 0.12s;
   overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
-.toc-node-item:hover { color: var(--ink-2); border-left-color: var(--gold); }
-.toc-node-item.active { color: var(--red); border-left-color: var(--red); }
+.toc-node-item:hover { opacity: 1; border-left-color: var(--gold); }
+.toc-node-item.active { opacity: 1; color: var(--red); border-left-color: var(--red); }
 
 .toc-footer {
   flex-shrink: 0; padding: 12px 16px;
@@ -1932,6 +1933,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 
 /* ─── FULL-VIEWPORT PANEL OVERLAY SYSTEM ─────────────────────────────── */
 /* Panels become full-screen overlays when toggled */
+@media (max-width: 720px) {
 .panel-overlay {
   position: fixed !important;
   inset: 0 !important;
@@ -1957,6 +1959,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .panel-overlay.panel-open {
   transform: translateX(0) !important;
   pointer-events: auto;
+}
 }
 
 /* Close button for overlays */
