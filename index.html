@@ -411,7 +411,7 @@ header::after {
 }
 @media (max-width: 720px) {
   #capture-panel {
-    bottom: 56px;
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
     width: 100vw;
     border-radius: 3px 3px 0 0;
     border-left: none; border-right: none;
@@ -715,6 +715,18 @@ header::after {
 }
 #page-scroll::-webkit-scrollbar { width: 4px; }
 #page-scroll::-webkit-scrollbar-thumb { background: var(--ink-5); border-radius: 2px; }
+
+/* Prevent scrollIntoView from hiding sentences behind the beckon/header zone */
+.sentence, .ch-block {
+  scroll-margin-top: 80px;
+  scroll-margin-bottom: 40px;
+}
+@media (max-width: 720px) {
+  .sentence, .ch-block {
+    scroll-margin-top: 96px;
+    scroll-margin-bottom: 80px;
+  }
+}
 
 .line-num {
   position: absolute; left: 20px;
@@ -1275,7 +1287,8 @@ header::after {
 
 /* ─── FREE SCROLL FLOAT ───────────────────────────────────────────────── */
 #float-scroll-btn {
-  position: absolute; top: 14px; right: 16px; z-index: 50;
+  position: absolute; top: 39px; right: 16px; z-index: 50;
+  transform: translateY(-50%);
   background: var(--paper-2); border: 1px solid var(--rule-2);
   border-radius: 2px; padding: 5px 10px;
   font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.14em;
@@ -2643,6 +2656,30 @@ function renderPage() {
   updateNav(); updateToc(); updateChapterLabel();
 }
 
+
+/* ── scrollPageTo: header-aware scroll for #page-scroll content ── */
+function scrollPageTo(el, block) {
+  if (!el) return;
+  const scroller = document.getElementById('page-scroll');
+  if (!scroller) { el.scrollIntoView({ behavior: 'smooth', block: block || 'center' }); return; }
+  const HEADER_CLEARANCE = 80;   // beckon zone height
+  const FOOTER_CLEARANCE = 60;   // nav zone height
+  const scrollerRect = scroller.getBoundingClientRect();
+  const elRect       = el.getBoundingClientRect();
+  const elTop        = elRect.top  - scrollerRect.top  + scroller.scrollTop;
+  const elBot        = elRect.bottom - scrollerRect.top + scroller.scrollTop;
+  const viewH        = scroller.clientHeight;
+  const target = (block === 'nearest')
+    ? (() => {
+        const visTop = scroller.scrollTop + HEADER_CLEARANCE;
+        const visBot = scroller.scrollTop + viewH - FOOTER_CLEARANCE;
+        if (elTop < visTop) return elTop - HEADER_CLEARANCE - 8;
+        if (elBot > visBot) return elBot - viewH + FOOTER_CLEARANCE + 8;
+        return null; // already visible
+      })()
+    : elTop - HEADER_CLEARANCE - (viewH - HEADER_CLEARANCE - FOOTER_CLEARANCE - elRect.height) / 2;
+  if (target !== null) scroller.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+}
 function applyReveal(upTo, forceScroll) {
   pvReveal = upTo;
   pvEls.forEach((el, s) => {
@@ -2672,7 +2709,7 @@ function applyReveal(upTo, forceScroll) {
   document.querySelectorAll('.line-num').forEach((ln, idx) => ln.classList.toggle('active', idx === upTo));
   const total = pvEls.length;
   document.getElementById('reading-progress-bar').style.width = Math.min(total ? ((upTo+1)/total)*100 : 0, 100) + '%';
-  if (pvEls[upTo] && (!freeScroll || forceScroll)) pvEls[upTo].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (pvEls[upTo] && (!freeScroll || forceScroll)) scrollPageTo(pvEls[upTo], 'center');
   // ambient image
   const activeImgEl = pvEls[upTo];
   if (typeof setImage === 'function') {
@@ -2755,6 +2792,7 @@ const capOrganizer  = document.getElementById('capture-organizer');
 
 let _pendingNodeIdx = -1;
 let _selectedChIdx  = -1;
+let _vpResizeHandler = null;
 
 function openCapture() {
   if (readMode) return;
@@ -2766,15 +2804,30 @@ function openCapture() {
   _pendingNodeIdx = -1; _selectedChIdx = -1;
   document.dispatchEvent(new Event('captureOpened'));
   setTimeout(() => ceTextarea.focus(), 60);
+  if (window.visualViewport && window.innerWidth <= 720) {
+    _vpResizeHandler = () => {
+      const vv = window.visualViewport;
+      const keyboardH = window.innerHeight - vv.height - vv.offsetTop;
+      capturePanel.style.bottom = Math.max(0, keyboardH) + 'px';
+    };
+    window.visualViewport.addEventListener('resize', _vpResizeHandler);
+    window.visualViewport.addEventListener('scroll', _vpResizeHandler);
+  }
 }
 
 function closeCapture() {
   captureOpen = false;
   capturePanel.classList.remove('open');
+  capturePanel.style.bottom = '';
   captureFab.classList.remove('active');
   if (captureBeckon) captureBeckon.classList.remove('active');
   capOrganizer.classList.remove('open');
   _pendingNodeIdx = -1; _selectedChIdx = -1;
+  if (_vpResizeHandler && window.visualViewport) {
+    window.visualViewport.removeEventListener('resize', _vpResizeHandler);
+    window.visualViewport.removeEventListener('scroll', _vpResizeHandler);
+    _vpResizeHandler = null;
+  }
 }
 
 function toggleCapture() { captureOpen ? closeCapture() : openCapture(); }
@@ -2875,7 +2928,7 @@ function submitCapture() {
   const lastIdx = pvEls.length - 1;
   if (lastIdx >= 0) {
     goTo(lastIdx);
-    pvEls[lastIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    scrollPageTo(pvEls[lastIdx], 'center');
   }
   _showOrganizer(raw.slice(0, 80));
 }
@@ -2954,7 +3007,7 @@ function organizeInjectIntoChapter(chNodeIdx) {
   closeCapture(); commitChange();
   setTimeout(() => {
     const el = document.querySelector(`[data-nidx="${insertAt}"]`);
-    if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(insertAt, el), 380); }
+    if (el) { scrollPageTo(el, 'center'); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(insertAt, el), 380); }
   }, 80);
 }
 
@@ -2977,7 +3030,7 @@ function organizeAppend() {
   closeCapture();
   setTimeout(() => {
     const el = document.querySelector(`[data-nidx="${idx}"]`);
-    if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(idx, el), 380); }
+    if (el) { scrollPageTo(el, 'center'); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(idx, el), 380); }
   }, 80);
 }
 
@@ -3114,7 +3167,7 @@ function addNode(type) {
   if (type === 'chapter') {
     requestAnimationFrame(() => {
       const hdr = document.querySelector(`.ch-block[data-ch="${n.num}"]`);
-      if (hdr) hdr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (hdr) scrollPageTo(hdr, 'center');
     });
   } else {
     goTo(pvEls.length - 1);
@@ -4106,7 +4159,7 @@ function saveSentenceEdit() {
   closeSentenceEditor(); commitChange();
   setTimeout(() => {
     const target = document.querySelector(`[data-nidx="${idx + 1}"]`) || [...document.querySelectorAll('[data-nidx]')].find(e => parseInt(e.dataset.nidx) >= idx);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (target) scrollPageTo(target, 'center');
   }, 80);
 }
 
