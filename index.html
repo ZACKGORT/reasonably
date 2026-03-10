@@ -2755,7 +2755,7 @@ function applyReveal(upTo) {
   document.querySelectorAll('.line-num').forEach((ln, idx) => ln.classList.toggle('active', idx === upTo));
   const total = pvEls.length;
   document.getElementById('reading-progress-bar').style.width = Math.min(total ? ((upTo+1)/total)*100 : 0, 100) + '%';
-  if (pvEls[upTo]) pvEls[upTo].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (pvEls[upTo] && !freeScroll) pvEls[upTo].scrollIntoView({ behavior: 'smooth', block: 'center' });
   updateNav(); updateChapterLabel();
   document.querySelectorAll('.toc-node-item').forEach(el => { el.classList.toggle('active', parseInt(el.dataset.sidx) === upTo); });
 }
