@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIj4KICA8IS0tIGluayBiYWNrZ3JvdW5kIC0tPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjUiIGZpbGw9IiMxMTBkMDgiLz4KCiAgPCEtLSBnaG9zdCBsaW5lcyBhYm92ZSDigJQgcGFzdCBzZW50ZW5jZXMsIGZhZGVkIC0tPgogIDxsaW5lIHgxPSI5IiB5MT0iMTEiIHgyPSIyNiIgeTI9IjExIiBzdHJva2U9IiMyYTIwMTgiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iOSIgeTE9IjE1IiB4Mj0iMjMiIHkyPSIxNSIgc3Ryb2tlPSIjMmEyMDE4IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0gYWN0aXZlIHNlbnRlbmNlIGxpbmUg4oCUIHBhcnRpYWwsIGZvcm1pbmcgLS0+CiAgPGxpbmUgeDE9IjEyIiB5MT0iMjEiIHgyPSIyNSIgeTI9IjIxIiBzdHJva2U9IiM2YjVjNDIiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIGJyaWdodGVyIHBvcnRpb24g4oCUIHRob3VnaHQgc28gZmFyIC0tPgogIDxsaW5lIHgxPSIxMiIgeTE9IjIxIiB4Mj0iMjAiIHkyPSIyMSIgc3Ryb2tlPSIjYzhiYWE2IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0gaGFsbyByaW5nIOKAlCB0aGUgZmllbGQgb2YgcHJlc2VuY2UgLS0+CiAgPGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2ZTIyMTQiIHN0cm9rZS13aWR0aD0iMC42IiBvcGFjaXR5PSIwLjQiLz4KCiAgPCEtLSBjYXB0dXJlIGRvdCDigJQgdGhlIHJlZCBoZWFydGJlYXQgLS0+CiAgPGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIyLjYiIGZpbGw9IiM2ZTIyMTQiLz4KICA8IS0tIGlubmVyIGhpZ2hsaWdodCAtLT4KICA8Y2lyY2xlIGN4PSI3LjIiIGN5PSIyMC4yIiByPSIwLjgiIGZpbGw9IiNjODQwMmEiIG9wYWNpdHk9IjAuNiIvPgo8L3N2Zz4K">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&family=JetBrains+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&family=JetBrains+Mono:ital,wght@0,300;0,400;1,300&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400;1,700&family=Barlow:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 /* ─── TOKENS ──────────────────────────────────────────────────────────── */
 :root {
@@ -105,6 +105,276 @@ body.theme-reasonably-light.mood-poignant  { --paper:#f5f2ec; --paper-2:#ede8dc;
 body.theme-reasonably-light.mood-perplexed { --paper:#f0f2f8; --paper-2:#e4e8f4; --paper-3:#d8dff0; --gold:#1a6ef5; --red:#1a50d0; }
 body.theme-reasonably-light.mood-empowered { --paper:#f0f5f0; --paper-2:#e4ede4; --paper-3:#d8e4d8; --gold:#2a8a2a; --red:#1a6a1a; }
 body.theme-reasonably-light.mood-dark      { --paper:#eeece8; --paper-2:#e4e2dc; --paper-3:#d8d6d0; --gold:#555; --red:#c0392b; }
+
+/* ── Compose panel contrast boost — broadcast themes ─────────────────── */
+body.theme-broadcast .compose-titlebar,
+body.theme-broadcast-light .compose-titlebar,
+body.theme-broadcast.theme-broadcast-light .compose-titlebar { color: var(--ink-2); }
+
+body.theme-broadcast .n-grip,
+body.theme-broadcast-light .n-grip,
+body.theme-broadcast.theme-broadcast-light .n-grip { color: var(--ink-3); }
+
+body.theme-broadcast .n-arr,
+body.theme-broadcast-light .n-arr,
+body.theme-broadcast.theme-broadcast-light .n-arr { color: var(--ink-3); }
+
+body.theme-broadcast .n-badge,
+body.theme-broadcast-light .n-badge,
+body.theme-broadcast.theme-broadcast-light .n-badge { color: var(--ink-2); border-color: var(--rule-2); }
+
+body.theme-broadcast .n-input,
+body.theme-broadcast-light .n-input,
+body.theme-broadcast.theme-broadcast-light .n-input { color: var(--ink); }
+
+body.theme-broadcast .n-spec-k,
+body.theme-broadcast-light .n-spec-k,
+body.theme-broadcast.theme-broadcast-light .n-spec-k { color: var(--ink-2); }
+
+body.theme-broadcast .n-spec-sep,
+body.theme-broadcast-light .n-spec-sep,
+body.theme-broadcast.theme-broadcast-light .n-spec-sep { color: var(--ink-3); }
+
+body.theme-broadcast .n-del,
+body.theme-broadcast-light .n-del,
+body.theme-broadcast.theme-broadcast-light .n-del { color: var(--ink-3); }
+
+body.theme-broadcast .pal-type,
+body.theme-broadcast-light .pal-type,
+body.theme-broadcast.theme-broadcast-light .pal-type { color: var(--ink); }
+
+body.theme-broadcast .pal-hint,
+body.theme-broadcast-light .pal-hint,
+body.theme-broadcast.theme-broadcast-light .pal-hint { color: var(--ink-3); }
+
+body.theme-broadcast .pal-btn,
+body.theme-broadcast-light .pal-btn,
+body.theme-broadcast.theme-broadcast-light .pal-btn { border-color: var(--rule-2); }
+
+body.theme-broadcast .ar-ch-num,
+body.theme-broadcast-light .ar-ch-num,
+body.theme-broadcast.theme-broadcast-light .ar-ch-num { color: var(--ink-2); }
+
+body.theme-broadcast .ar-ch-title,
+body.theme-broadcast-light .ar-ch-title,
+body.theme-broadcast.theme-broadcast-light .ar-ch-title { color: var(--ink); }
+
+body.theme-broadcast .ar-ch-count,
+body.theme-broadcast-light .ar-ch-count,
+body.theme-broadcast.theme-broadcast-light .ar-ch-count { color: var(--ink-3); }
+
+body.theme-broadcast .ar-chip-type,
+body.theme-broadcast-light .ar-chip-type,
+body.theme-broadcast.theme-broadcast-light .ar-chip-type { color: var(--ink-3); }
+
+body.theme-broadcast .ar-chip-text,
+body.theme-broadcast-light .ar-chip-text,
+body.theme-broadcast.theme-broadcast-light .ar-chip-text { color: var(--ink-2); }
+
+body.theme-broadcast .ar-orphans-label,
+body.theme-broadcast-light .ar-orphans-label,
+body.theme-broadcast.theme-broadcast-light .ar-orphans-label { color: var(--ink-3); }
+
+body.theme-broadcast .compile-btn,
+body.theme-broadcast-light .compile-btn,
+body.theme-broadcast.theme-broadcast-light .compile-btn { background: var(--ink); color: var(--paper); }
+
+body.theme-broadcast #compile-preview,
+body.theme-broadcast-light #compile-preview,
+body.theme-broadcast.theme-broadcast-light #compile-preview { color: var(--ink-3); }
+
+body.theme-broadcast .pmt-btn,
+body.theme-broadcast-light .pmt-btn,
+body.theme-broadcast.theme-broadcast-light .pmt-btn { color: var(--ink-3); }
+
+body.theme-broadcast .pmt-btn.active,
+body.theme-broadcast-light .pmt-btn.active,
+body.theme-broadcast.theme-broadcast-light .pmt-btn.active { color: var(--ink); }
+
+body.theme-broadcast .n-card,
+body.theme-broadcast-light .n-card,
+body.theme-broadcast.theme-broadcast-light .n-card { border-color: var(--rule-2); background: var(--paper-2); }
+
+body.theme-broadcast .ar-ch-header,
+body.theme-broadcast-light .ar-ch-header,
+body.theme-broadcast.theme-broadcast-light .ar-ch-header { background: var(--paper-3); border-color: var(--rule-2); }
+
+body.theme-broadcast .ar-nodes,
+body.theme-broadcast-light .ar-nodes,
+body.theme-broadcast.theme-broadcast-light .ar-nodes { border-color: var(--rule-2); }
+
+/* ── reasonably dark compose contrast boost ─────────────────────────── */
+body.theme-reasonably .n-badge,
+body.theme-reasonably .pal-type { color: var(--ink-2); }
+body.theme-reasonably .pal-hint,
+body.theme-reasonably .ar-chip-type { color: var(--ink-3); }
+body.theme-reasonably .ar-chip-text,
+body.theme-reasonably .n-input { color: var(--ink); }
+body.theme-broadcast {
+  --paper:    #0d1117;
+  --paper-2:  #131920;
+  --paper-3:  #1a2230;
+  --shadow:   rgba(0,0,0,0.7);
+  --ink:      #f0f4f8;
+  --ink-2:    #a8b8c8;
+  --ink-3:    #4a5a6a;
+  --ink-4:    #2a3540;
+  --ink-5:    #1a2530;
+  --red:      #e8420a;
+  --red-l:    rgba(232,66,10,0.12);
+  --red-m:    rgba(232,66,10,0.35);
+  --gold:     #f5a623;
+  --gold-l:   rgba(245,166,35,0.12);
+  --rule:     rgba(160,200,240,0.07);
+  --rule-2:   rgba(160,200,240,0.13);
+  --f-disp:   'Barlow Condensed', sans-serif;
+  --f-body:   'Barlow', sans-serif;
+  --f-ui:     'Barlow Condensed', sans-serif;
+  --noise-opacity: 0;
+  --noise-blend: normal;
+  --edge-gradient: rgba(0,0,0,0);
+}
+body.theme-broadcast::before { opacity: 0; }
+body.theme-broadcast::after  { background: none; }
+
+/* Broadcast: condensed display numbers, warm body */
+body.theme-broadcast .ch-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(56px, 11vw, 100px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: var(--gold);
+  -webkit-text-stroke: none;
+  opacity: 1;
+}
+body.theme-broadcast .ch-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(22px, 3.8vw, 44px);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+body.theme-broadcast .sentence.poster {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(28px, 4.5vw, 54px);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+body.theme-broadcast .sentence.body {
+  font-family: 'Barlow', sans-serif;
+  font-size: clamp(15px, 1.6vw, 18px);
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.7;
+}
+body.theme-broadcast .sentence.pull {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 600;
+  font-style: italic;
+  border-left: 3px solid var(--gold);
+  border-left-color: var(--gold);
+  color: var(--gold);
+}
+body.theme-broadcast .sentence.label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  font-size: 10px;
+}
+body.theme-broadcast .wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+body.theme-broadcast .ob-wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+body.theme-broadcast .ob-tagline {
+  font-family: 'Barlow', sans-serif;
+  font-style: normal;
+  font-size: 15px;
+  line-height: 1.6;
+}
+body.theme-broadcast .ob-edition {
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.28em;
+  font-weight: 600;
+}
+
+/* Active sentence — lower-third treatment */
+body.theme-broadcast .sentence.active {
+  border-left: 3px solid var(--gold) !important;
+  padding-left: 16px;
+  background: linear-gradient(to right, rgba(245,166,35,0.06), transparent 60%);
+}
+body.theme-broadcast .sentence.poster.active {
+  border-left: 4px solid var(--red) !important;
+  background: linear-gradient(to right, rgba(232,66,10,0.08), transparent 60%);
+}
+
+/* Header bar — broadcast lower-third strip */
+body.theme-broadcast #app-header {
+  background: #0a0e14;
+  border-bottom: 2px solid var(--gold);
+}
+body.theme-broadcast #app-header:hover {
+  background: #0a0e14;
+}
+
+/* Chapter divider rule — amber broadcast stripe */
+body.theme-broadcast .ch-rule {
+  background: linear-gradient(to right, var(--gold), transparent);
+  height: 2px;
+  opacity: 0.6;
+}
+
+/* Mood spine segments — broadcast ticker energy */
+body.theme-broadcast .spine-seg.active-seg {
+  background: rgba(245,166,35,0.12);
+}
+
+/* Mood themes in broadcast — stadium atmospheres */
+body.theme-broadcast.mood-poignant  { --paper:#0f0c08; --paper-2:#161108; --paper-3:#1e1708; --gold:#f5a623; --red:#e8420a; }
+body.theme-broadcast.mood-perplexed { --paper:#080d14; --paper-2:#0c1220; --paper-3:#10182a; --gold:#4a9eff; --red:#2060d0; }
+body.theme-broadcast.mood-empowered { --paper:#070f08; --paper-2:#0b160c; --paper-3:#0f1e10; --gold:#40c060; --red:#208030; }
+body.theme-broadcast.mood-dark      { --paper:#080808; --paper-2:#0f0f0f; --paper-3:#161616; --gold:#888; --red:#e8420a; }
+
+/* ── broadcast-light: stadium daylight ───────────────────────────────── */
+body.theme-broadcast-light,
+body.theme-broadcast.theme-broadcast-light {
+  --paper:    #f2f0eb;
+  --paper-2:  #e8e4dc;
+  --paper-3:  #dedad0;
+  --shadow:   rgba(0,0,0,0.10);
+  --ink:      #0d1117;
+  --ink-2:    #2a3540;
+  --ink-3:    #5a6a7a;
+  --ink-4:    #8a9aaa;
+  --ink-5:    #bac4cc;
+  --red:      #c8320a;
+  --red-l:    rgba(200,50,10,0.08);
+  --red-m:    rgba(200,50,10,0.25);
+  --gold:     #c07800;
+  --gold-l:   rgba(192,120,0,0.10);
+  --rule:     rgba(0,0,0,0.08);
+  --rule-2:   rgba(0,0,0,0.15);
+  --noise-opacity: 0;
+  --edge-gradient: rgba(0,0,0,0);
+}
 body.theme-reasonably .sentence.poster {
   font-size: clamp(22px, 3.2vw, 38px);
   font-style: normal;
@@ -1288,6 +1558,24 @@ header::after {
 #reading-progress { position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--rule); z-index: 20; }
 #reading-progress-bar { height: 100%; background: var(--red); width: 0; transition: width 0.3s ease; opacity: 0.6; }
 
+/* ─── THEME TOGGLE ────────────────────────────────────────────────────── */
+#theme-toggle-btn {
+  position: absolute; top: 12px; left: 12px;
+  z-index: 200;
+  background: none; border: 1px solid var(--rule-2);
+  border-radius: 2px;
+  color: var(--ink-4);
+  font-family: var(--f-ui); font-size: 9px; letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: color 0.14s, border-color 0.14s, background 0.14s;
+  opacity: 0.5;
+}
+#theme-toggle-btn:hover { color: var(--ink); border-color: var(--rule-2); opacity: 1; background: var(--paper-2); }
+#theme-toggle-icon { font-size: 11px; line-height: 1; }
+@media (max-width: 720px) { #theme-toggle-btn { top: 8px; left: 8px; } }
+
 /* ─── FREE SCROLL FLOAT ───────────────────────────────────────────────── */
 #float-scroll-btn {
   position: absolute; top: 14px; right: 16px; z-index: 50;
@@ -1891,6 +2179,9 @@ body.panel-compose-open #panel-backdrop {
   </div>
 
   <div id="page-wrap">
+    <button id="theme-toggle-btn" onclick="toggleLightTheme()" title="Toggle light / dark">
+      <span id="theme-toggle-icon">●</span>
+    </button>
     <button id="float-scroll-btn" onclick="toggleFreeScroll()" title="Right-click also toggles">
       <span>⇅</span>
       <span id="fsb-label">Free scroll</span>
@@ -2136,21 +2427,27 @@ body.panel-compose-open #panel-backdrop {
 // 'frank'             → ifimaybefrank.com  (warm paper, serif, introspective)
 // 'reasonably'        → reasonably.cc dark (mono, utility, precise)
 // 'reasonably-light'  → reasonably.cc light (raw daylight, mono, clean)
-const SITE_THEME = 'reasonably-light';
+// 'broadcast'         → sports broadcast (urgent, amber, emotionally live)
+const SITE_THEME = 'broadcast';
 document.body.classList.toggle('theme-reasonably',       SITE_THEME === 'reasonably');
 document.body.classList.toggle('theme-reasonably-light', SITE_THEME === 'reasonably-light');
+document.body.classList.toggle('theme-broadcast',        SITE_THEME === 'broadcast');
 
 (function applyThemeText() {
-  const isR = SITE_THEME === 'reasonably' || SITE_THEME === 'reasonably-light';
+  const isR = SITE_THEME === 'reasonably' || SITE_THEME === 'reasonably-light' || SITE_THEME === 'broadcast';
   document.title = isR ? 'reasonably · A Thinking Notebook' : 'if i may be frank · A Thinking Notebook';
   const wm = document.querySelector('.wordmark');
   if (wm) wm.childNodes[0].textContent = isR ? 'reasonably' : 'if i may be frank';
   const obWm = document.querySelector('.ob-wordmark');
   if (obWm) obWm.textContent = isR ? 'reasonably' : 'if i may be frank';
   const obEd = document.querySelector('.ob-edition');
-  if (obEd) obEd.textContent = isR ? 'A Thinking Notebook · Raw Edition' : 'A Thinking Notebook · Self-Portrait Edition';
+  if (obEd) obEd.textContent = SITE_THEME === 'broadcast'
+    ? 'A Thinking Notebook · Broadcast Edition'
+    : isR ? 'A Thinking Notebook · Raw Edition'
+    : 'A Thinking Notebook · Self-Portrait Edition';
   const obTg = document.querySelector('.ob-tagline');
-  if (isR && obTg) obTg.innerHTML = 'The thought arrives.<br>Structure follows.';
+  if (SITE_THEME === 'broadcast' && obTg) obTg.innerHTML = 'Every thought is live.<br>Nothing is rehearsed.';
+  else if (isR && obTg) obTg.innerHTML = 'The thought arrives.<br>Structure follows.';
   const obBtn = document.getElementById('ob-btn');
   if (obBtn) obBtn.textContent = isR ? 'Open the notebook →' : 'Read the self-portrait →';
 })();
@@ -3022,6 +3319,25 @@ function toggleFreeScroll() {
   const btn = document.getElementById('float-scroll-btn');
   btn.classList.toggle('active', freeScroll);
   document.getElementById('fsb-label').textContent = freeScroll ? 'Step mode' : 'Free scroll';
+}
+
+// ── Light / dark theme toggle ──────────────────────────────────────────────
+let _lightMode = true;
+// Apply light mode immediately on load
+if (SITE_THEME === 'broadcast') {
+  document.body.classList.add('theme-broadcast-light');
+}
+function toggleLightTheme() {
+  _lightMode = !_lightMode;
+  const icon = document.getElementById('theme-toggle-icon');
+  if (SITE_THEME === 'broadcast') {
+    document.body.classList.toggle('theme-broadcast-light', _lightMode);
+    if (icon) icon.textContent = _lightMode ? '●' : '◐';
+  } else if (SITE_THEME === 'reasonably') {
+    document.body.classList.toggle('theme-reasonably-light', _lightMode);
+    document.body.classList.toggle('theme-reasonably', !_lightMode);
+    if (icon) icon.textContent = _lightMode ? '●' : '◐';
+  }
 }
 document.getElementById('page-wrap').addEventListener('contextmenu', e => {
   e.preventDefault();
