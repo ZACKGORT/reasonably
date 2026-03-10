@@ -1996,6 +1996,82 @@ body.panel-compose-open #panel-backdrop {
   width: 100%; height: 1px;
   background: linear-gradient(to right, var(--rule-2), transparent);
 }
+
+/* ─── MOOD GHOST WIDGET ──────────────────────────────────────────────── */
+#mood-ghost {
+  position: fixed;
+  top: 52px; left: 0; bottom: 0;
+  right: var(--rail-w, 280px);
+  z-index: 8200;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.16s ease;
+}
+#mood-ghost.mg-open { opacity: 1; pointer-events: auto; }
+#mood-ghost-backdrop {
+  position: absolute; inset: 0;
+  background: var(--paper);
+  opacity: 0.88;
+}
+#mood-ghost-inner {
+  position: relative; z-index: 1;
+  width: min(400px, 86%);
+  display: flex; flex-direction: column; gap: 16px;
+}
+#mood-ghost-eyebrow {
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--ink-4);
+}
+#mood-ghost-swatches {
+  display: flex; gap: 10px; align-items: center;
+}
+.mg-swatch {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer; flex-shrink: 0;
+  transition: transform 0.14s, border-color 0.14s, box-shadow 0.14s;
+  position: relative;
+}
+.mg-swatch:hover { transform: scale(1.12); }
+.mg-swatch.mg-active {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--ink);
+  transform: scale(1.08);
+}
+#mood-ghost-label {
+  font-family: var(--f-ui); font-size: 8px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3);
+  min-height: 14px; transition: color 0.12s;
+}
+#mood-ghost-rule {
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, var(--rule-2), transparent);
+}
+#mood-ghost-hint {
+  display: flex; gap: 16px;
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.07em;
+  color: var(--ink-4);
+}
+#mood-ghost-hint kbd {
+  font-family: var(--f-ui); font-size: 7px;
+  background: var(--paper-3); border: 1px solid var(--rule);
+  padding: 1px 5px; border-radius: 2px; color: var(--ink-3);
+}
+
+/* Mood dot on canvas cards */
+.n-mood-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  flex-shrink: 0; cursor: pointer;
+  transition: transform 0.14s, box-shadow 0.14s;
+  opacity: 0.7;
+  align-self: center;
+}
+.n-mood-dot:hover { transform: scale(1.4); opacity: 1; }
+
+@media (max-width: 720px) {
+  #mood-ghost { right: 0; }
+}
+
 #ngo-hint {
   font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--ink-5);
@@ -2040,6 +2116,25 @@ body.panel-compose-open #panel-backdrop {
 </div>
 
 <!-- ─── ONBOARDING ──────────────────────────────────────────────────── -->
+<div id="mood-ghost">
+  <div id="mood-ghost-backdrop"></div>
+  <div id="mood-ghost-inner">
+    <div id="mood-ghost-eyebrow">mood at writing ·</div>
+    <div id="mood-ghost-swatches">
+      <button class="mg-swatch" data-mood="none"      title="Neutral"   style="background:#c8baa6" onclick="mgSelect('none',this)"></button>
+      <button class="mg-swatch" data-mood="poignant"  title="Poignant"  style="background:#c8902a" onclick="mgSelect('poignant',this)"></button>
+      <button class="mg-swatch" data-mood="perplexed" title="Perplexed" style="background:#4a6a9e" onclick="mgSelect('perplexed',this)"></button>
+      <button class="mg-swatch" data-mood="empowered" title="Empowered" style="background:#3a6e3a" onclick="mgSelect('empowered',this)"></button>
+      <button class="mg-swatch" data-mood="dark"      title="Dark"      style="background:#6a5a40" onclick="mgSelect('dark',this)"></button>
+    </div>
+    <div id="mood-ghost-label">Neutral</div>
+    <div id="mood-ghost-rule"></div>
+    <div id="mood-ghost-hint">
+      <span><kbd>Esc</kbd> dismiss</span>
+    </div>
+  </div>
+</div>
+
 <div id="onboard" role="dialog" aria-modal="true">
   <div id="onboard-inner">
     <div class="ob-cover">
@@ -2566,7 +2661,12 @@ function renderCanvas() {
     const del = document.createElement('button'); del.className = 'n-del'; del.textContent = '×';
     del.onclick = e => { e.stopPropagation(); nodes.splice(i,1); if(activeNode>=nodes.length)activeNode=nodes.length-1; commitChange(); };
 
-    card.append(grip, arrows, badge, content, del);
+    const moodDot = document.createElement('span');
+    moodDot.className = 'n-mood-dot';
+    moodDot.style.background = (MOOD_COLORS[n.mood] || MOOD_COLORS.none).bar;
+    moodDot.title = 'Set mood (' + ((MOOD_COLORS[n.mood] || MOOD_COLORS.none).tag) + ')';
+    moodDot.addEventListener('click', e => { e.stopPropagation(); openMoodGhost(i); });
+    card.append(grip, arrows, badge, content, moodDot, del);
     el.appendChild(card);
   });
 }
@@ -2675,6 +2775,24 @@ function renderPage() {
 }
 
 
+
+/* ── jumpToChapter: find ch-block by chapter node, scroll + reveal ── */
+function jumpToChapter(chNode) {
+  if (!chNode) return;
+  const num = String(chNode.num || '01').padStart(2, '0');
+  const chBlock = document.querySelector(`.ch-block[data-ch="${num}"]`);
+  // find first sentence node index in this chapter
+  const chIdx = nodes.indexOf(chNode);
+  let firstSentSidx = -1;
+  for (let k = chIdx + 1; k < nodes.length; k++) {
+    const el = document.querySelector(`[data-nidx="${k}"]`);
+    if (el) { firstSentSidx = parseInt(el.dataset.sidx); break; }
+    if (nodes[k] && nodes[k].type === 'chapter') break;
+  }
+  if (chBlock) scrollPageTo(chBlock, 'center');
+  if (firstSentSidx >= 0) goTo(firstSentSidx, true);
+  else if (chBlock) requestAnimationFrame(() => scrollPageTo(chBlock, 'center'));
+}
 /* ── scrollPageTo: header-aware scroll for #page-scroll content ── */
 function scrollPageTo(el, block) {
   if (!el) return;
@@ -2780,7 +2898,7 @@ function updateToc() {
       const ch = document.createElement('div'); ch.className = 'toc-ch';
       ch.innerHTML = `<div class="toc-ch-num">Chapter · ${String(n.num||chCount).padStart(2,'0')}</div>`;
       const name = document.createElement('span'); name.className = 'toc-ch-name'; name.textContent = n.title||'Untitled';
-      name.onclick = () => { const si = pageIdxOfNode(nidx+1); if(si>=0)goTo(si,true); else goTo(0,true); };
+      name.onclick = () => { jumpToChapter(n); };
       ch.appendChild(name);
       const nodeList = document.createElement('div'); nodeList.className = 'toc-ch-nodes';
       ch.appendChild(nodeList); body.appendChild(ch); currentChEl = nodeList; return;
@@ -3034,7 +3152,7 @@ function organizeNewChapter() {
   _stampPendingMood();
   const pending = nodes[_pendingNodeIdx];
   const chNum = nodes.filter(n => n.type==='chapter').length + 1;
-  const chNode   = { id: nid(), type:'chapter', num:String(chNum).padStart(2,'0'), title:'New Chapter', mood: _captureMood || currentMood };
+  const chNode   = { id: nid(), type:'chapter', num:String(chNum).padStart(2,'0'), title:'This chapter belongs to your thoughts', mood: _captureMood || currentMood };
   const bodyNode = { id: pending.id, type:'body', content: pending.content, mood: pending.mood };
   nodes.splice(_pendingNodeIdx, 1, chNode, bodyNode);
   _pendingNodeIdx = -1;
@@ -3176,7 +3294,7 @@ document.getElementById('cw-commit-btn').addEventListener('click', commitCompose
 
 function addNode(type) {
   const chNum = nodes.filter(x => x.type === 'chapter').length + 1;
-  const n = { id: nid(), type, mood: currentMood, content: '', key: '', val: '', num: String(chNum).padStart(2,'0'), title: '' };
+  const n = { id: nid(), type, mood: currentMood, content: '', key: '', val: '', num: String(chNum).padStart(2,'0'), title: type === 'chapter' ? 'This chapter belongs to your thoughts' : '' };
   nodes.push(n);
   activeNode = nodes.length - 1;
   pvReveal = Math.max(0, pvEls.length);
@@ -3531,20 +3649,10 @@ function renderSpine() {
     ghost.innerHTML = `<div class="sg-mood-bar" style="background:${mc.bar}"></div><div class="sg-ch-num">Chapter · ${String(d.ch.num||ci+1).padStart(2,'0')}</div><div class="sg-ch-title">${d.ch.title||'Untitled'}</div><div class="sg-stats"><div class="sg-stat"><span class="sg-stat-val">${d.sentCount}</span><span class="sg-stat-key">sentences</span></div><div class="sg-stat"><span class="sg-stat-val">${ci+1}</span><span class="sg-stat-key">of ${chapterData.length}</span></div></div>${d.snip?`<div class="sg-snip">${d.snip}${d.snip.length>=80?'…':''}</div>`:''}<span class="sg-mood-tag" style="background:${mc.bar}20;color:${mc.bar};border:1px solid ${mc.bar}40">${mc.tag}</span>`;
     seg.append(bar, num, title, ghost);
     seg.addEventListener('click', () => {
-      // Close spine first
       spineOpen = false;
       document.body.classList.remove('spine-open');
       updateSpineBeckon(false);
-      // Scroll to the chapter block directly
-      const chBlock = document.querySelector(`.ch-block[data-ch="${d.ch.num||String(ci+1).padStart(2,'0')}"]`);
-      if (chBlock) scrollPageTo(chBlock, 'center');
-      // Also advance reveal state to first sentence in this chapter
-      const si = pageIdxOfNode(d.chIdx + 1);
-      if (si >= 0) goTo(si, true);
-      else if (chBlock) {
-        // chapter exists but has no sentences yet — still reveal/scroll to it
-        requestAnimationFrame(() => scrollPageTo(chBlock, 'center'));
-      }
+      jumpToChapter(d.ch);
     });
     tl.appendChild(seg);
   });
@@ -3586,7 +3694,7 @@ document.addEventListener('keydown', e => {
     if (/^[1-9]$/.test(e.key)) {
       const n = parseInt(e.key);
       const chs = nodes.filter(x => x.type==='chapter');
-      if (chs[n-1]) { const ci = nodes.indexOf(chs[n-1]); const si = pageIdxOfNode(ci+1); if(si>=0) goTo(si); }
+      if (chs[n-1]) { jumpToChapter(chs[n-1]); }
     }
   }
 });
@@ -4726,6 +4834,81 @@ document.addEventListener('keydown', e => {
   }
 
   overlay.addEventListener('focusin', () => clearTimeout(_ngoBlurTimer));
+
+  
+/* ── Mood Ghost Widget ──────────────────────────────────────────────── */
+;(function initMoodGhost() {
+  const mg       = document.getElementById('mood-ghost');
+  const mgLabel  = document.getElementById('mood-ghost-label');
+  let _mgNodeIdx = -1;
+
+  function openMoodGhost(nodeIdx) {
+    _mgNodeIdx = nodeIdx;
+    const n = nodes[nodeIdx];
+    const mood = (n && n.mood) || 'none';
+    // sync active swatch
+    document.querySelectorAll('.mg-swatch').forEach(s => {
+      s.classList.toggle('mg-active', s.dataset.mood === mood);
+    });
+    mgLabel.textContent = (MOOD_COLORS[mood] || MOOD_COLORS.none).tag;
+    mg.classList.add('mg-open');
+    // focus first swatch for keyboard nav
+    const active = mg.querySelector('.mg-swatch.mg-active') || mg.querySelector('.mg-swatch');
+    if (active) active.focus();
+  }
+
+  function closeMoodGhost() {
+    mg.classList.remove('mg-open');
+    _mgNodeIdx = -1;
+  }
+
+  window.openMoodGhost = openMoodGhost;
+  window.closeMoodGhost = closeMoodGhost;
+
+  window.mgSelect = function(mood, el) {
+    if (_mgNodeIdx < 0) return;
+    const n = nodes[_mgNodeIdx];
+    if (!n) return;
+    n.mood = mood;
+    setMood(mood);
+    // update all swatch states
+    document.querySelectorAll('.mg-swatch').forEach(s =>
+      s.classList.toggle('mg-active', s.dataset.mood === mood)
+    );
+    mgLabel.textContent = (MOOD_COLORS[mood] || MOOD_COLORS.none).tag;
+    // update the card's mood dot
+    const card = document.querySelector(`[data-nidx="${_mgNodeIdx}"]`);
+    if (card) {
+      const dot = card.closest('.n-card')?.querySelector('.n-mood-dot');
+      if (dot) {
+        dot.style.background = (MOOD_COLORS[mood] || MOOD_COLORS.none).bar;
+        dot.title = 'Set mood (' + (MOOD_COLORS[mood] || MOOD_COLORS.none).tag + ')';
+      }
+    }
+    commitChange();
+    // brief pause so selection registers visually, then close
+    setTimeout(closeMoodGhost, 260);
+  };
+
+  document.getElementById('mood-ghost-backdrop').addEventListener('mousedown', closeMoodGhost);
+
+  document.addEventListener('keydown', e => {
+    if (!mg.classList.contains('mg-open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeMoodGhost(); }
+    // arrow keys cycle swatches
+    const moods = ['none','poignant','perplexed','empowered','dark'];
+    const cur = nodes[_mgNodeIdx]?.mood || 'none';
+    const idx = moods.indexOf(cur);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      window.mgSelect(moods[(idx+1) % moods.length]);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      window.mgSelect(moods[(idx-1+moods.length) % moods.length]);
+    }
+  });
+})();
 
   window.openNodeGhost  = openNodeGhost;
   window.closeNodeGhost = closeNodeGhost;
