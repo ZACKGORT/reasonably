@@ -613,7 +613,7 @@ header::after {
 }
 
 #page-scroll {
-  flex: 1; overflow-y: auto; overscroll-behavior: contain;
+  flex: 1; overflow-y: scroll; overscroll-behavior: contain;
   padding: 52px 60px 100px 80px;
   position: relative; z-index: 5;
 }
@@ -922,7 +922,169 @@ header::after {
 .pg-ex { font-family: var(--f-body); font-style: italic; font-size: 12px; color: var(--ink-2); line-height: 1.5; margin-top: 1px; }
 .pg-desc { font-family: var(--f-ui); font-size: 8px; color: var(--ink-4); line-height: 1.4; }
 
-/* ─── COMPILE BAR ─────────────────────────────────────────────────────── */
+/* ─── PANEL MODE TOGGLE ───────────────────────────────────────────────── */
+.panel-mode-toggle {
+  display: flex; flex-shrink: 0;
+  border-bottom: 1px solid var(--rule);
+}
+.pmt-btn {
+  flex: 1; background: none; border: none; cursor: pointer;
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink-4);
+  padding: 9px 0; transition: color 0.14s, background 0.14s;
+  border-right: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.pmt-btn:last-child { border-right: none; }
+.pmt-btn:hover { color: var(--ink-2); background: var(--paper-3); }
+.pmt-btn.active { color: var(--ink); background: var(--paper); }
+.pmt-btn.active .pmt-dot { opacity: 1; }
+.pmt-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--red); opacity: 0.3; flex-shrink: 0;
+  transition: opacity 0.14s;
+}
+
+/* ─── ARRANGE VIEW ────────────────────────────────────────────────────── */
+#arrange-view {
+  display: none; flex-direction: column;
+  flex: 1; min-height: 0; overflow: hidden;
+}
+#compose-panel.mode-arrange #arrange-view { display: flex; }
+#compose-panel.mode-arrange #compose-body { display: none; }
+
+#arrange-scroll {
+  flex: 1; overflow-y: auto; padding: 10px 8px 20px;
+  min-height: 0;
+}
+#arrange-scroll::-webkit-scrollbar { width: 2px; }
+#arrange-scroll::-webkit-scrollbar-thumb { background: var(--ink-5); }
+
+/* Chapter group */
+.ar-chapter {
+  margin-bottom: 6px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.ar-chapter.ar-dragging-chapter { opacity: 0.45; }
+.ar-chapter.ar-ch-over { outline: 1px solid var(--gold); outline-offset: -1px; }
+
+.ar-ch-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px 5px;
+  cursor: grab; user-select: none;
+  background: var(--paper-3);
+  border: 1px solid var(--rule-2);
+  border-radius: 2px 2px 0 0;
+  position: relative;
+}
+.ar-ch-header:active { cursor: grabbing; }
+.ar-ch-header.ar-ch-collapsed { border-radius: 2px; }
+
+.ar-ch-mood-bar {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  border-radius: 2px 0 0 0;
+}
+.ar-ch-header.ar-ch-collapsed .ar-ch-mood-bar { border-radius: 2px 0 0 2px; }
+
+.ar-ch-grip {
+  font-size: 8px; color: var(--ink-5); letter-spacing: -2px;
+  flex-shrink: 0; margin-left: 6px;
+}
+.ar-ch-num {
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--gold); flex-shrink: 0;
+}
+.ar-ch-title {
+  font-family: var(--f-disp); font-size: 12px; font-style: italic;
+  font-weight: 600; color: var(--ink-2); flex: 1; min-width: 0;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.ar-ch-count {
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.08em;
+  color: var(--ink-5); flex-shrink: 0;
+}
+.ar-ch-collapse {
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-5); font-size: 9px; padding: 0 2px;
+  flex-shrink: 0; transition: transform 0.18s, color 0.12s;
+  line-height: 1;
+}
+.ar-ch-collapse:hover { color: var(--ink-2); }
+.ar-ch-header.ar-ch-collapsed .ar-ch-collapse { transform: rotate(-90deg); }
+
+/* Node chips inside a chapter */
+.ar-nodes {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 2px 0 3px;
+  border: 1px solid var(--rule-2); border-top: none;
+  border-radius: 0 0 2px 2px;
+  background: var(--paper);
+}
+.ar-chapter.collapsed .ar-nodes { display: none; }
+
+.ar-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 8px;
+  cursor: grab; user-select: none;
+  transition: background 0.1s;
+  position: relative;
+  border-left: 2px solid transparent;
+}
+.ar-chip:active { cursor: grabbing; }
+.ar-chip:hover { background: var(--paper-2); }
+.ar-chip.ar-chip-active { background: var(--red-l); border-left-color: var(--red); }
+.ar-chip.ar-dragging { opacity: 0.35; }
+.ar-chip.ar-drop-above::before {
+  content: ''; position: absolute; top: -1px; left: 6px; right: 6px;
+  height: 2px; background: var(--gold); border-radius: 1px;
+}
+.ar-chip.ar-drop-below::after {
+  content: ''; position: absolute; bottom: -1px; left: 6px; right: 6px;
+  height: 2px; background: var(--gold); border-radius: 1px;
+}
+
+.ar-chip-type {
+  font-family: var(--f-ui); font-size: 6px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--ink-5);
+  min-width: 28px; flex-shrink: 0;
+}
+.ar-chip-mood {
+  width: 5px; height: 5px; border-radius: 50%;
+  flex-shrink: 0; opacity: 0.7;
+}
+.ar-chip-text {
+  font-family: var(--f-body); font-size: 11px; font-style: italic;
+  color: var(--ink-3); flex: 1; min-width: 0;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.ar-chip-grip {
+  font-size: 7px; color: var(--ink-5); letter-spacing: -2px;
+  flex-shrink: 0; opacity: 0.5;
+}
+
+/* Orphan nodes (before any chapter) */
+.ar-orphans {
+  margin-bottom: 6px;
+}
+.ar-orphans-label {
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-5);
+  padding: 4px 8px 3px;
+}
+
+/* Arrange empty state */
+.ar-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; height: 100%; gap: 6px;
+  opacity: 0.4; pointer-events: none;
+}
+.ar-empty-icon { font-size: 20px; }
+.ar-empty-text {
+  font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--ink-4); text-align: center; line-height: 1.8;
+}
+
 #compile-bar {
   border-top: 1px solid var(--rule); padding: 8px 10px 10px;
   background: var(--paper-2);
@@ -1403,8 +1565,53 @@ body.panel-compose-open #panel-backdrop {
 #compose-panel.panel-overlay { left: auto !important; right: 0; transform: translateX(100%) !important; max-width: min(400px, 100vw); }
 #compose-panel.panel-overlay.panel-open { transform: translateX(0) !important; }
 
+/* ─── MOBILE BOTTOM HUD ───────────────────────────────────────────────── */
+#mobile-hud {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 8500;
+  background: var(--paper-2);
+  border-top: 1px solid var(--rule-2);
+  box-shadow: 0 -2px 16px var(--shadow);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.hud-inner {
+  display: flex; align-items: stretch;
+  height: 56px;
+}
+.hud-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  background: none; border: none; cursor: pointer;
+  padding: 8px 4px;
+  border-right: 1px solid var(--rule);
+  transition: background 0.14s, color 0.14s;
+  position: relative;
+}
+.hud-btn:last-child { border-right: none; }
+.hud-btn:active { background: var(--paper-3); }
+.hud-icon {
+  font-size: 16px; line-height: 1;
+  color: var(--ink-4);
+  transition: color 0.14s;
+}
+.hud-label {
+  font-family: var(--f-ui); font-size: 6px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-5);
+  transition: color 0.14s;
+  white-space: nowrap;
+}
+.hud-btn.active .hud-icon  { color: var(--red); }
+.hud-btn.active .hud-label { color: var(--red); }
+.hud-btn.active::after {
+  content: ''; position: absolute; bottom: 0; left: 20%; right: 20%;
+  height: 2px; background: var(--red); border-radius: 1px 1px 0 0;
+}
+
 /* ─── MOBILE ──────────────────────────────────────────────────────────── */
 @media (max-width: 720px) {
+  #mobile-hud { display: block; }
+
   #app {
     grid-template-columns: 1fr !important;
     grid-template-rows: 52px 1fr !important;
@@ -1413,36 +1620,33 @@ body.panel-compose-open #panel-backdrop {
   #page-wrap { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; }
   #compose-panel { display: none !important; }
 
-  /* Header: hide non-essential items, show panel toggles */
+  /* Header: stripped to wordmark only on mobile */
   .h-center { display: none; }
   .h-version { display: none; }
-  #btn-export { display: none; }
-  #btn-keys   { display: none; }
-  #btn-compose { display: none; }
-  #btn-toc { display: none; }
+  .h-actions { display: none; }
   .wordmark-sub { display: none; }
   .wordmark-rule { display: none; }
-  .h-actions { gap: 4px; }
 
-  /* Mobile panel toggle buttons in header */
-  #btn-toc-mobile,
-  #btn-compose-mobile {
-    display: flex;
-  }
-
-  #page-scroll { padding: 72px 20px 120px 28px; }
+  #page-scroll { padding: 72px 20px 80px 28px; }
   #page-wrap::after { left: 16px; }
   #key-help { display: none; }
-  #page-nav { right: 0; }
+  #page-nav { right: 0; bottom: 72px; top: auto; transform: none; }
   #capture-fab { display: none !important; }
   #rail-sizer { display: none; }
+  #float-scroll-btn { display: none; }
 
-  /* Overlay panels on mobile take near-full width */
+  /* Overlay panels slide in full height above HUD */
+  #toc.panel-overlay,
+  #compose-panel.panel-overlay {
+    bottom: 56px !important;
+    height: calc(100dvh - 52px - 56px) !important;
+    top: 52px !important;
+  }
   #toc.panel-overlay { max-width: 88vw; display: flex !important; }
-  #compose-panel.panel-overlay { max-width: 92vw; display: flex !important; }
+  #compose-panel.panel-overlay { max-width: 100vw; display: flex !important; }
 }
 
-/* Mobile-only panel toggle buttons (hidden on desktop) */
+/* Mobile-only panel toggle buttons (hidden on desktop — now replaced by HUD) */
 #btn-toc-mobile,
 #btn-compose-mobile {
   display: none;
@@ -1586,44 +1790,64 @@ body.panel-compose-open #panel-backdrop {
       <button class="rs-btn active" data-w="280" onclick="setRailWidth(280,this)" title="Default">▪</button>
       <button class="rs-btn" data-w="360" onclick="setRailWidth(360,this)" title="Wide">▸</button>
     </div>
-    <div class="compose-titlebar">
-      <div class="ct-dot"></div>
-      Compose · Node Canvas
-    </div>
-    <div id="node-canvas"></div>
-    <div id="palette">
-      <button class="pal-btn" onclick="addNode('chapter')">
-        <div class="pal-type">Chapter</div><div class="pal-hint">###:N · Title</div>
-        <div class="pal-ghost"><div class="pg-type">Chapter Header</div><div class="pg-ex">A new section of thought.</div></div>
+
+    <!-- Mode toggle -->
+    <div class="panel-mode-toggle">
+      <button class="pmt-btn active" id="pmt-compose" onclick="setPanelMode('compose')">
+        <span class="pmt-dot"></span>Compose
       </button>
-      <button class="pal-btn" onclick="addNode('poster')">
-        <div class="pal-type">Poster</div><div class="pal-hint">Hero statement</div>
-        <div class="pal-ghost"><div class="pg-type">Poster</div><div class="pg-ex">The idea stated large.</div></div>
-      </button>
-      <button class="pal-btn" onclick="addNode('body')">
-        <div class="pal-type">Body</div><div class="pal-hint">Narrative prose</div>
-        <div class="pal-ghost"><div class="pg-type">Body</div><div class="pg-ex">The argument forward.</div></div>
-      </button>
-      <button class="pal-btn" onclick="addNode('pull')">
-        <div class="pal-type">Pull</div><div class="pal-hint">Pull quote</div>
-        <div class="pal-ghost"><div class="pg-type">Pull Quote</div><div class="pg-ex">The truest sentence.</div></div>
-      </button>
-      <button class="pal-btn" onclick="addNode('label')">
-        <div class="pal-type">Label</div><div class="pal-hint">Small caps tag</div>
-        <div class="pal-ghost"><div class="pg-type">Label</div><div class="pg-ex">Identity · Date</div></div>
-      </button>
-      <button class="pal-btn" onclick="addNode('spec')">
-        <div class="pal-type">Spec</div><div class="pal-hint">Key :: Value</div>
-        <div class="pal-ghost"><div class="pg-type">Spec Row</div><div class="pg-ex">Subject :: Value</div></div>
-      </button>
-      <button class="pal-btn wide" onclick="addNode('break')">
-        <div class="pal-type">— Break</div>
+      <button class="pmt-btn" id="pmt-arrange" onclick="setPanelMode('arrange')">
+        <span class="pmt-dot"></span>Arrange
       </button>
     </div>
-    <div id="compile-bar">
-      <div id="compile-preview" style="color:var(--ink-5);font-style:italic">Syntax preview…</div>
-      <button class="compile-btn" onclick="copyRaw()">⎘ Copy</button>
+
+    <!-- Compose body (existing) -->
+    <div id="compose-body" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden">
+      <div class="compose-titlebar">
+        <div class="ct-dot"></div>
+        Node Canvas
+      </div>
+      <div id="node-canvas"></div>
+      <div id="palette">
+        <button class="pal-btn" onclick="addNode('chapter')">
+          <div class="pal-type">Chapter</div><div class="pal-hint">###:N · Title</div>
+          <div class="pal-ghost"><div class="pg-type">Chapter Header</div><div class="pg-ex">A new section of thought.</div></div>
+        </button>
+        <button class="pal-btn" onclick="addNode('poster')">
+          <div class="pal-type">Poster</div><div class="pal-hint">Hero statement</div>
+          <div class="pal-ghost"><div class="pg-type">Poster</div><div class="pg-ex">The idea stated large.</div></div>
+        </button>
+        <button class="pal-btn" onclick="addNode('body')">
+          <div class="pal-type">Body</div><div class="pal-hint">Narrative prose</div>
+          <div class="pal-ghost"><div class="pg-type">Body</div><div class="pg-ex">The argument forward.</div></div>
+        </button>
+        <button class="pal-btn" onclick="addNode('pull')">
+          <div class="pal-type">Pull</div><div class="pal-hint">Pull quote</div>
+          <div class="pal-ghost"><div class="pg-type">Pull Quote</div><div class="pg-ex">The truest sentence.</div></div>
+        </button>
+        <button class="pal-btn" onclick="addNode('label')">
+          <div class="pal-type">Label</div><div class="pal-hint">Small caps tag</div>
+          <div class="pal-ghost"><div class="pg-type">Label</div><div class="pg-ex">Identity · Date</div></div>
+        </button>
+        <button class="pal-btn" onclick="addNode('spec')">
+          <div class="pal-type">Spec</div><div class="pal-hint">Key :: Value</div>
+          <div class="pal-ghost"><div class="pg-type">Spec Row</div><div class="pg-ex">Subject :: Value</div></div>
+        </button>
+        <button class="pal-btn wide" onclick="addNode('break')">
+          <div class="pal-type">— Break</div>
+        </button>
+      </div>
+      <div id="compile-bar">
+        <div id="compile-preview" style="color:var(--ink-5);font-style:italic">Syntax preview…</div>
+        <button class="compile-btn" onclick="copyRaw()">⎘ Copy</button>
+      </div>
     </div>
+
+    <!-- Arrange view -->
+    <div id="arrange-view">
+      <div id="arrange-scroll"></div>
+    </div>
+
     <div id="sentence-editor">
       <div class="se-header">
         <span class="se-label">
@@ -2643,6 +2867,39 @@ function toggleFreeScroll() {
 }
 document.getElementById('page-wrap').addEventListener('contextmenu', e => { e.preventDefault(); toggleFreeScroll(); });
 
+// ── Step-lock: intercept wheel + touch scroll when not in free-scroll mode ──
+(function() {
+  const scroll = document.getElementById('page-scroll');
+
+  // Wheel — debounced so one flick = one step
+  let wheelCooldown = false;
+  scroll.addEventListener('wheel', e => {
+    if (freeScroll) return;
+    e.preventDefault();
+    if (wheelCooldown) return;
+    wheelCooldown = true;
+    if (e.deltaY > 0) next(); else if (e.deltaY < 0) prev();
+    setTimeout(() => wheelCooldown = false, 320);
+  }, { passive: false });
+
+  // Touch swipe — vertical drag = step
+  let touchStartY = null;
+  scroll.addEventListener('touchstart', e => {
+    if (freeScroll) return;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  scroll.addEventListener('touchmove', e => {
+    if (freeScroll) return;
+    e.preventDefault(); // block native scroll
+  }, { passive: false });
+  scroll.addEventListener('touchend', e => {
+    if (freeScroll || touchStartY === null) return;
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dy) > 30) { if (dy > 0) next(); else prev(); }
+    touchStartY = null;
+  }, { passive: true });
+})();
+
 const MOOD_COLORS = {
   none:      { bar:'#c8baa6', tag:'Neutral',   bg:'#c8baa6' },
   poignant:  { bar:'#c8902a', tag:'Poignant',  bg:'#c8902a' },
@@ -2929,6 +3186,272 @@ document.addEventListener('keydown', function obKey(e) {
   }, {passive:true});
 })();
 
+// ─── ARRANGE MODE ─────────────────────────────────────────────────────────
+let panelMode = 'compose';
+
+function setPanelMode(mode) {
+  panelMode = mode;
+  const cp = document.getElementById('compose-panel');
+  cp.classList.toggle('mode-arrange', mode === 'arrange');
+  document.getElementById('pmt-compose').classList.toggle('active', mode === 'compose');
+  document.getElementById('pmt-arrange').classList.toggle('active', mode === 'arrange');
+  if (mode === 'arrange') renderArrange();
+}
+
+// ── Arrange render ──────────────────────────────────────────────────────────
+function renderArrange() {
+  const scroll = document.getElementById('arrange-scroll');
+  if (!scroll) return;
+  scroll.innerHTML = '';
+
+  if (!nodes.length) {
+    scroll.innerHTML = `<div class="ar-empty"><div class="ar-empty-icon">✦</div><div class="ar-empty-text">No nodes yet.<br>Add from Compose.</div></div>`;
+    return;
+  }
+
+  // Group nodes into chapters
+  const groups = [];   // [{chIdx, chNode, nodes:[{nodeIdx,node}]}, ...]
+  let current = null;
+  const orphans = [];
+
+  nodes.forEach((n, i) => {
+    if (n.type === 'chapter') {
+      current = { chIdx: i, chNode: n, items: [] };
+      groups.push(current);
+    } else {
+      if (current) current.items.push({ idx: i, node: n });
+      else orphans.push({ idx: i, node: n });
+    }
+  });
+
+  // Render orphans first
+  if (orphans.length) {
+    const wrap = document.createElement('div');
+    wrap.className = 'ar-orphans';
+    const lbl = document.createElement('div');
+    lbl.className = 'ar-orphans-label'; lbl.textContent = 'Before first chapter';
+    wrap.appendChild(lbl);
+    const nodesWrap = document.createElement('div');
+    nodesWrap.className = 'ar-nodes'; nodesWrap.style.borderRadius = '2px'; nodesWrap.style.border = '1px solid var(--rule-2)';
+    orphans.forEach(({ idx, node }) => nodesWrap.appendChild(buildChip(idx, node, null)));
+    wrap.appendChild(nodesWrap);
+    scroll.appendChild(wrap);
+  }
+
+  // Render chapter groups
+  groups.forEach((g, gi) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'ar-chapter';
+    wrap.dataset.chIdx = g.chIdx;
+
+    // Chapter header — draggable for chapter reorder
+    const hdr = document.createElement('div');
+    hdr.className = 'ar-ch-header';
+    hdr.draggable = true;
+
+    const moodColor = (MOOD_COLORS[g.chNode.mood] || MOOD_COLORS.none).bar;
+    const moodBar = document.createElement('div');
+    moodBar.className = 'ar-ch-mood-bar';
+    moodBar.style.background = moodColor;
+    hdr.appendChild(moodBar);
+
+    const grip = document.createElement('span');
+    grip.className = 'ar-ch-grip'; grip.textContent = '⋮⋮';
+    hdr.appendChild(grip);
+
+    const num = document.createElement('span');
+    num.className = 'ar-ch-num'; num.textContent = `ch ${g.chNode.num || gi+1}`;
+    hdr.appendChild(num);
+
+    const title = document.createElement('span');
+    title.className = 'ar-ch-title'; title.textContent = g.chNode.title || 'Untitled';
+    hdr.appendChild(title);
+
+    const count = document.createElement('span');
+    count.className = 'ar-ch-count'; count.textContent = g.items.length;
+    hdr.appendChild(count);
+
+    const collapseBtn = document.createElement('button');
+    collapseBtn.className = 'ar-ch-collapse'; collapseBtn.textContent = '▾';
+    collapseBtn.title = 'Collapse';
+    collapseBtn.onclick = (e) => {
+      e.stopPropagation();
+      wrap.classList.toggle('collapsed');
+      hdr.classList.toggle('ar-ch-collapsed');
+    };
+    hdr.appendChild(collapseBtn);
+
+    // Chapter drag events
+    hdr.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('ar-ch-drag', gi);
+      e.dataTransfer.effectAllowed = 'move';
+      requestAnimationFrame(() => wrap.classList.add('ar-dragging-chapter'));
+    });
+    hdr.addEventListener('dragend', () => wrap.classList.remove('ar-dragging-chapter'));
+
+    wrap.addEventListener('dragover', e => {
+      if (e.dataTransfer.types.includes('ar-ch-drag')) {
+        e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+        scroll.querySelectorAll('.ar-chapter').forEach(c => c.classList.remove('ar-ch-over'));
+        wrap.classList.add('ar-ch-over');
+      }
+    });
+    wrap.addEventListener('dragleave', () => wrap.classList.remove('ar-ch-over'));
+    wrap.addEventListener('drop', e => {
+      wrap.classList.remove('ar-ch-over');
+      if (!e.dataTransfer.types.includes('ar-ch-drag')) return;
+      e.preventDefault();
+      const fromGi = parseInt(e.dataTransfer.getData('ar-ch-drag'));
+      if (isNaN(fromGi) || fromGi === gi) return;
+      arrangeChapters(fromGi, gi);
+    });
+
+    wrap.appendChild(hdr);
+
+    // Node chips
+    const nodesEl = document.createElement('div');
+    nodesEl.className = 'ar-nodes';
+    nodesEl.dataset.chGi = gi;
+
+    g.items.forEach(({ idx, node }) => nodesEl.appendChild(buildChip(idx, node, gi)));
+
+    // Drop zone for receiving chips from other chapters
+    nodesEl.addEventListener('dragover', e => {
+      if (!e.dataTransfer.types.includes('ar-chip-drag')) return;
+      e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+    });
+    nodesEl.addEventListener('drop', e => {
+      if (!e.dataTransfer.types.includes('ar-chip-drag')) return;
+      e.preventDefault();
+      const fromIdx = parseInt(e.dataTransfer.getData('ar-chip-drag'));
+      if (isNaN(fromIdx)) return;
+      // Drop at end of this chapter
+      const lastItem = g.items[g.items.length - 1];
+      const toIdx = lastItem ? lastItem.idx + 1 : g.chIdx + 1;
+      arrangeNode(fromIdx, toIdx);
+    });
+
+    wrap.appendChild(nodesEl);
+    scroll.appendChild(wrap);
+  });
+}
+
+function buildChip(nodeIdx, node, chGi) {
+  const chip = document.createElement('div');
+  chip.className = 'ar-chip' + (nodeIdx === activeNode ? ' ar-chip-active' : '');
+  chip.draggable = true;
+  chip.dataset.nodeIdx = nodeIdx;
+
+  const typeEl = document.createElement('span');
+  typeEl.className = 'ar-chip-type';
+  typeEl.textContent = node.type === 'chapter' ? 'ch' : node.type === 'draft' ? '?' : node.type.slice(0,4);
+  chip.appendChild(typeEl);
+
+  const moodDot = document.createElement('span');
+  moodDot.className = 'ar-chip-mood';
+  moodDot.style.background = (MOOD_COLORS[node.mood] || MOOD_COLORS.none).bar;
+  chip.appendChild(moodDot);
+
+  const text = document.createElement('span');
+  text.className = 'ar-chip-text';
+  if (node.type === 'spec')    text.textContent = `${node.key || ''} :: ${node.val || ''}`;
+  else if (node.type === 'chapter') text.textContent = node.title || '';
+  else if (node.type === 'break')   text.textContent = '— — —';
+  else text.textContent = node.content || '';
+  chip.appendChild(text);
+
+  const gripEl = document.createElement('span');
+  gripEl.className = 'ar-chip-grip'; gripEl.textContent = '⋮⋮';
+  chip.appendChild(gripEl);
+
+  // Chip drag events
+  chip.addEventListener('dragstart', e => {
+    e.dataTransfer.setData('ar-chip-drag', nodeIdx);
+    e.dataTransfer.effectAllowed = 'move';
+    requestAnimationFrame(() => chip.classList.add('ar-dragging'));
+  });
+  chip.addEventListener('dragend', () => {
+    chip.classList.remove('ar-dragging');
+    document.querySelectorAll('.ar-drop-above,.ar-drop-below').forEach(el => {
+      el.classList.remove('ar-drop-above','ar-drop-below');
+    });
+  });
+  chip.addEventListener('dragover', e => {
+    if (!e.dataTransfer.types.includes('ar-chip-drag')) return;
+    e.preventDefault(); e.stopPropagation();
+    document.querySelectorAll('.ar-drop-above,.ar-drop-below').forEach(el => {
+      el.classList.remove('ar-drop-above','ar-drop-below');
+    });
+    const rect = chip.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    chip.classList.toggle('ar-drop-above', e.clientY < mid);
+    chip.classList.toggle('ar-drop-below', e.clientY >= mid);
+  });
+  chip.addEventListener('dragleave', () => {
+    chip.classList.remove('ar-drop-above','ar-drop-below');
+  });
+  chip.addEventListener('drop', e => {
+    if (!e.dataTransfer.types.includes('ar-chip-drag')) return;
+    e.preventDefault(); e.stopPropagation();
+    const fromIdx = parseInt(e.dataTransfer.getData('ar-chip-drag'));
+    if (isNaN(fromIdx) || fromIdx === nodeIdx) return;
+    const rect = chip.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    const insertBefore = e.clientY < mid;
+    const toIdx = insertBefore ? nodeIdx : nodeIdx + 1;
+    chip.classList.remove('ar-drop-above','ar-drop-below');
+    arrangeNode(fromIdx, toIdx);
+  });
+
+  return chip;
+}
+
+// Move a single node from fromIdx to toIdx in the nodes array
+function arrangeNode(fromIdx, toIdx) {
+  if (fromIdx === toIdx || fromIdx === toIdx - 1) return;
+  const [moved] = nodes.splice(fromIdx, 1);
+  const adjustedTo = toIdx > fromIdx ? toIdx - 1 : toIdx;
+  nodes.splice(adjustedTo, 0, moved);
+  if (activeNode === fromIdx) activeNode = adjustedTo;
+  commitChange();
+  renderArrange();
+}
+
+// Move entire chapter group from fromGi to toGi
+function arrangeChapters(fromGi, toGi) {
+  // Rebuild groups to find chapter boundaries
+  const bounds = [];
+  let cur = null;
+  nodes.forEach((n, i) => {
+    if (n.type === 'chapter') {
+      if (cur) { cur.end = i - 1; bounds.push(cur); }
+      cur = { start: i, end: null };
+    }
+  });
+  if (cur) { cur.end = nodes.length - 1; bounds.push(cur); }
+
+  if (fromGi >= bounds.length || toGi >= bounds.length) return;
+  const from = bounds[fromGi];
+  const to   = bounds[toGi];
+
+  // Extract the from-chapter's nodes
+  const moved = nodes.splice(from.start, from.end - from.start + 1);
+
+  // Recalculate to position after splice
+  const adjustedStart = toGi > fromGi ? to.start - moved.length : to.start;
+  nodes.splice(adjustedStart, 0, ...moved);
+
+  commitChange();
+  renderArrange();
+}
+
+// Hook arrange re-render into commitChange
+const _origCommitChange = commitChange;
+commitChange = function() {
+  _origCommitChange();
+  if (panelMode === 'arrange') renderArrange();
+};
+
 // ─── SEED — self-portrait ──────────────────────────────────────────────────
 (function seed() {
   nodes = [
@@ -3207,6 +3730,8 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
     if (!el) return;
     // Close any open panel first
     closeAllPanels();
+    // Clear any inline display that may have been set, so CSS takes over
+    el.style.display = '';
     el.classList.add('panel-overlay');
     if (which === 'compose') el.classList.add('panel-right');
     // Force reflow before adding open class for transition
@@ -3220,15 +3745,10 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
     if (!el) return;
     el.classList.remove('panel-open');
     document.body.classList.remove(which === 'toc' ? 'panel-toc-open' : 'panel-compose-open');
-    // Remove overlay class after transition
+    // Remove overlay class after transition — no inline display needed, CSS handles hiding
     setTimeout(() => {
       if (!el.classList.contains('panel-open')) {
         el.classList.remove('panel-overlay', 'panel-right');
-        // On mobile, panels aren't in the grid flow at all — keep them hidden
-        if (isMobile()) {
-          if (which === 'toc') tocEl.style.display = 'none';
-          if (which === 'compose') composeEl.style.display = 'none';
-        }
       }
     }, 320);
   }
@@ -3243,7 +3763,61 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   window.closePanelOverlay = closePanelOverlay;
   window.closeAllPanels    = closeAllPanels;
 
-  // ESC closes panels
+  // ── Mobile HUD ────────────────────────────────────────────────────────
+  let hudActive = 'read';
+
+  window.hudToggleFreeScroll = function() {
+    toggleFreeScroll();
+    const btn = document.getElementById('hud-freescroll');
+    if (btn) btn.classList.toggle('active', freeScroll);
+  };
+
+  window.hudActivate = function(mode) {
+    // Deactivate all hud buttons
+    document.querySelectorAll('.hud-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById('hud-' + mode);
+    if (btn) btn.classList.add('active');
+    hudActive = mode;
+
+    // Close any open overlays first
+    const toc = document.getElementById('toc');
+    const cp  = document.getElementById('compose-panel');
+    toc.classList.remove('panel-open');
+    cp.classList.remove('panel-open');
+    document.body.classList.remove('panel-toc-open', 'panel-compose-open');
+    setTimeout(() => {
+      if (!toc.classList.contains('panel-open')) toc.classList.remove('panel-overlay','panel-right');
+      if (!cp.classList.contains('panel-open'))  cp.classList.remove('panel-overlay','panel-right');
+    }, 320);
+
+    if (mode === 'read') {
+      // Just the reading view — nothing extra
+    } else if (mode === 'capture') {
+      openCapture();
+      hudActive = 'read'; // snap back after opening
+      if (btn) { setTimeout(() => { btn.classList.remove('active'); document.getElementById('hud-read').classList.add('active'); }, 300); }
+    } else if (mode === 'contents') {
+      openPanelOverlay('toc');
+    } else if (mode === 'compose') {
+      openPanelOverlay('compose');
+      setTimeout(() => setPanelMode('compose'), 50);
+    } else if (mode === 'arrange') {
+      openPanelOverlay('compose');
+      setTimeout(() => setPanelMode('arrange'), 50);
+    }
+  };
+
+  // When panels close via backdrop or ESC, snap HUD back to read
+  const origCloseAll = window.closeAllPanels;
+  window.closeAllPanels = function() {
+    origCloseAll();
+    document.querySelectorAll('.hud-btn').forEach(b => b.classList.remove('active'));
+    const readBtn = document.getElementById('hud-read');
+    if (readBtn) readBtn.classList.add('active');
+    hudActive = 'read';
+  };
+
+
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAllPanels();
   });
@@ -3251,7 +3825,6 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   // On resize: if going desktop, clean up any mobile overlay state
   window.addEventListener('resize', () => {
     if (!isMobile()) {
-      // Remove leftover mobile overlay classes
       tocEl.classList.remove('panel-overlay', 'panel-open', 'panel-right');
       composeEl.classList.remove('panel-overlay', 'panel-open', 'panel-right');
       document.body.classList.remove('panel-toc-open', 'panel-compose-open');
@@ -3261,5 +3834,35 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   });
 })();
 </script>
+<!-- ─── MOBILE BOTTOM HUD ────────────────────────────────────────────── -->
+<div id="mobile-hud">
+  <div class="hud-inner">
+    <button class="hud-btn active" id="hud-read"    onclick="hudActivate('read')">
+      <span class="hud-icon">⊡</span>
+      <span class="hud-label">Read</span>
+    </button>
+    <button class="hud-btn" id="hud-capture" onclick="hudActivate('capture')">
+      <span class="hud-icon">●</span>
+      <span class="hud-label">Capture</span>
+    </button>
+    <button class="hud-btn" id="hud-contents" onclick="hudActivate('contents')">
+      <span class="hud-icon">☰</span>
+      <span class="hud-label">Contents</span>
+    </button>
+    <button class="hud-btn" id="hud-compose" onclick="hudActivate('compose')">
+      <span class="hud-icon">✏</span>
+      <span class="hud-label">Compose</span>
+    </button>
+    <button class="hud-btn" id="hud-arrange" onclick="hudActivate('arrange')">
+      <span class="hud-icon">⠿</span>
+      <span class="hud-label">Arrange</span>
+    </button>
+    <button class="hud-btn" id="hud-freescroll" onclick="hudToggleFreeScroll()">
+      <span class="hud-icon">⇅</span>
+      <span class="hud-label">Free</span>
+    </button>
+  </div>
+</div>
+
 </body>
 </html>
