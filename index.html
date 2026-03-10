@@ -31,7 +31,7 @@
   --f-disp:   'Cormorant Garamond', serif;
   --f-body:   'Crimson Pro', serif;
   --f-ui:     'DM Mono', monospace;
-  --rail-w:   280px; /* stepped: 220 | 280 | 360 */
+  --rail-w:   280px;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,7 +48,6 @@ body {
   overscroll-behavior: none;
 }
 
-/* grain */
 body::before {
   content: '';
   position: fixed; inset: 0; z-index: 9999; pointer-events: none;
@@ -118,7 +117,6 @@ header::after {
 
 .h-actions { display: flex; align-items: center; gap: 6px; }
 
-/* undo/redo cluster — sits left of main actions */
 .h-undo-cluster {
   display: flex; align-items: center; gap: 0;
   border: 1px solid var(--rule-2); border-radius: 2px; overflow: hidden;
@@ -135,7 +133,6 @@ header::after {
 .h-undo-btn:hover:not(:disabled) { color: var(--ink); background: var(--paper-3); }
 .h-undo-btn:disabled { opacity: 0.28; pointer-events: none; }
 
-/* version ghost — implied history, not functional nav */
 .h-version {
   font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--ink-5);
@@ -162,7 +159,7 @@ header::after {
 .h-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-l); }
 .h-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-l); }
 
-/* ─── QUICK CAPTURE — FAB + PANEL ────────────────────────────────────── */
+/* ─── QUICK CAPTURE ───────────────────────────────────────────────────── */
 
 @keyframes heartbeat {
   0%, 100% { opacity: 1; transform: scale(1); }
@@ -170,12 +167,9 @@ header::after {
   60%       { opacity: 0.8; transform: scale(0.88); }
 }
 
-/* ─── DESKTOP MAGNETIC BECKON FIELD ──────────────────────────────────── */
-/* Replaces FAB on desktop — a quiet text invitation that leans toward you */
 #capture-beckon {
   position: absolute;
   top: 20px;
-  /* horizontally centered within page-wrap, respecting left gutter */
   left: 50%; 
   transform: translateX(-50%);
   z-index: 8100;
@@ -219,7 +213,6 @@ header::after {
   color: var(--ink-5);
   letter-spacing: 0.01em;
   transition: color 0.22s ease;
-  /* fake blinking cursor */
   position: relative;
 }
 .beckon-prompt::after {
@@ -246,16 +239,15 @@ header::after {
 }
 #capture-beckon.magnetized .beckon-hint { color: var(--ink-4); }
 
-/* hide beckon on mobile, show FAB */
 @media (max-width: 720px) {
   #capture-beckon { display: none; }
 }
-/* hide FAB on desktop, show beckon */
 @media (min-width: 721px) {
   #capture-fab { display: none; }
-  /* push page-scroll top padding down to clear the beckon field */
   #page-scroll { padding-top: 72px; }
 }
+
+#capture-fab {
   position: absolute;
   bottom: 20px; right: 14px;
   z-index: 8100;
@@ -280,7 +272,6 @@ header::after {
   transform: scale(1.04);
 }
 
-/* FAB dot indicator */
 .fab-dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--red);
@@ -292,7 +283,6 @@ header::after {
   animation: none;
   position: relative;
 }
-/* × when active */
 #capture-fab.active .fab-dot::before,
 #capture-fab.active .fab-dot::after {
   content: '';
@@ -305,7 +295,6 @@ header::after {
 #capture-fab.active .fab-dot::before { transform: translate(-50%,-50%) rotate(45deg); }
 #capture-fab.active .fab-dot::after  { transform: translate(-50%,-50%) rotate(-45deg); }
 
-/* Capture panel — slides up from bottom, theme-matched */
 #capture-panel {
   position: fixed;
   bottom: 0; left: 50%; transform: translateX(-50%) translateY(110%);
@@ -388,7 +377,6 @@ header::after {
 }
 #ce-submit:hover { background: var(--red); }
 
-/* ─── CAPTURE FORMATTING TOOLBAR ─────────────────────────────────────── */
 .cp-toolbar {
   display: flex; align-items: center; gap: 2px;
   padding: 6px 14px 2px;
@@ -408,7 +396,6 @@ header::after {
   width: 1px; height: 14px; background: var(--rule-2);
   margin: 0 3px; flex-shrink: 0;
 }
-/* hint strip below textarea */
 .cp-fmt-hint {
   font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.08em;
   color: var(--ink-5); padding: 2px 20px 4px;
@@ -427,7 +414,6 @@ header::after {
   opacity: 1;
 }
 
-/* ── mood beat ── */
 #co-mood-beat {
   padding: 12px 18px 10px;
   border-bottom: 1px solid var(--rule);
@@ -461,7 +447,6 @@ header::after {
   transform: scale(1.22);
   box-shadow: 0 3px 12px rgba(0,0,0,0.22);
 }
-/* checkmark on selected */
 .co-mood-swatch.selected::after {
   content: '✓';
   position: absolute; inset: 0;
@@ -508,7 +493,6 @@ header::after {
   padding: 4px 0 2px;
 }
 
-/* Chapter inject row */
 .co-chapters {
   display: flex; gap: 4px; flex-wrap: wrap;
 }
@@ -522,7 +506,6 @@ header::after {
 .co-ch-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-l); }
 .co-ch-btn.selected { border-color: var(--ink); color: var(--paper); background: var(--ink); }
 
-/* Action row */
 .co-actions {
   display: flex; gap: 6px; flex-wrap: wrap;
   padding: 6px 18px 14px;
@@ -542,8 +525,6 @@ header::after {
 .co-action-btn.primary:hover { background: var(--red); border-color: var(--red); }
 .co-action-btn:disabled { opacity: 0.35; pointer-events: none; }
 
-/* Page padding */
-/* bottom spacer — pushes active sentence to vertical center */
 #page-bottom-spacer {
   display: block;
   min-height: 45vh;
@@ -723,7 +704,6 @@ header::after {
   color: var(--ink-5); padding: 0 10px; letter-spacing: 0.2em;
 }
 
-/* draft — unresolved capture */
 .sentence.draft {
   font-family: var(--f-body); font-size: clamp(16px,2vw,20px);
   font-weight: 300; line-height: 1.75; color: var(--ink-2);
@@ -837,7 +817,6 @@ header::after {
   text-transform: uppercase; color: var(--ink-4); text-align: center; line-height: 1.8;
 }
 
-/* node card */
 .n-card {
   display: flex; align-items: center; gap: 5px;
   padding: 6px 8px; background: var(--paper);
@@ -955,7 +934,6 @@ header::after {
 .compile-btn:hover { background: var(--red); }
 .compile-btn:active { transform: scale(0.95); }
 
-/* ─── BOTTOM NAV ──────────────────────────────────────────────────────── */
 /* ─── RAIL RESIZE CONTROL ─────────────────────────────────────────────── */
 #rail-sizer {
   position: absolute; top: 14px; left: -1px;
@@ -976,10 +954,9 @@ header::after {
 .rs-btn:hover { background: var(--paper-3); color: var(--ink-2); }
 .rs-btn.active { background: var(--ink); color: var(--paper); }
 
-/* ─── NAV HUD — hugs right rail on desktop, right rail on mobile ─────── */
+/* ─── NAV HUD ─────────────────────────────────────────────────────────── */
 #page-nav {
   position: absolute;
-  /* sits just left of the right-rail border */
   top: 50%; right: 0;
   transform: translateY(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 0;
@@ -1024,7 +1001,7 @@ body.free-scroll .sentence:hover { opacity: 1 !important; }
 body.free-scroll .sentence.active { opacity: 1 !important; }
 body.free-scroll #page-nav { opacity: 0.4; pointer-events: none; }
 
-/* ─── SPINE WAYFINDING ────────────────────────────────────────────────── */
+/* ─── SPINE ───────────────────────────────────────────────────────────── */
 #spine-bar { position: fixed; top: 52px; left: 0; right: 0; z-index: 190; height: 0; overflow: visible; pointer-events: none; }
 #spine-panel {
   position: absolute; top: 0; left: 0; right: 0;
@@ -1122,7 +1099,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .w-close { background: none; border: none; cursor: pointer; color: rgba(255,255,255,0.35); font-size: 17px; line-height: 1; padding: 0; margin-left: 10px; transition: color 0.10s; flex-shrink: 0; }
 .w-close:hover { color: white; }
 
-/* Compose widget */
 .cw-body { padding: 16px 18px 8px; }
 #cw-input { width: 100%; background: none; border: none; outline: none; resize: none; caret-color: var(--red); color: var(--ink); font-family: var(--f-body); font-size: clamp(17px,2.2vw,21px); font-style: italic; font-weight: 300; line-height: 1.6; min-height: 52px; max-height: 160px; overflow-y: auto; display: block; }
 #cw-input::placeholder { color: var(--ink-5); font-style: italic; }
@@ -1157,7 +1133,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .cw-commit { font-family: var(--f-ui); font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--red); color: var(--paper); border: none; padding: 7px 16px; border-radius: 2px; cursor: pointer; transition: background 0.14s; white-space: nowrap; flex-shrink: 0; }
 .cw-commit:hover { background: var(--ink); }
 
-/* Syntax widget */
 .sw-context { padding: 10px 14px 8px; border-bottom: 1px solid var(--rule); background: var(--paper-2); }
 .sw-text-preview { font-family: var(--f-body); font-style: italic; font-size: 12px; color: var(--ink-3); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; }
 .sw-meta-row { display: flex; align-items: center; gap: 6px; }
@@ -1177,7 +1152,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .sw-dismiss { grid-column: 1/-1; background: none; border: 1px solid var(--rule); border-radius: 2px; padding: 5px; cursor: pointer; text-align: center; font-family: var(--f-ui); font-size: 7px; letter-spacing: 0.10em; text-transform: uppercase; color: var(--ink-4); transition: all 0.12s; margin-top: 2px; }
 .sw-dismiss:hover { border-color: var(--ink-4); color: var(--ink-2); }
 
-/* Mobile widgets */
 @media (max-width: 600px) {
   .folio-widget { width: auto !important; left: 8px !important; right: 8px !important; top: auto !important; transform: translateY(14px) scale(1) !important; border-radius: 4px 4px 0 0; }
   .folio-widget.w-open { transform: translateY(0) scale(1) !important; }
@@ -1200,7 +1174,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .ob-edition { font-family: var(--f-ui); font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
 .ob-tagline { font-family: var(--f-body); font-size: 17px; font-style: italic; color: var(--ink-2); line-height: 1.55; font-weight: 300; }
 
-/* Capture CTA in onboarding */
 .ob-capture-hint {
   border: 1px solid var(--ink); border-top: none; border-bottom: none;
   background: var(--ink); padding: 14px 20px;
@@ -1238,8 +1211,8 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 .kh-desc { color: var(--ink-4); text-align: right; }
 
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-/* ─── SENTENCE EDIT MODE ──────────────────────────────────────────────── */
-/* Inline edit overlay that appears inside compose panel */
+
+/* ─── SENTENCE EDITOR ─────────────────────────────────────────────────── */
 #sentence-editor {
   position: absolute; inset: 0;
   background: var(--paper-2);
@@ -1311,28 +1284,134 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 }
 .se-save:hover { background: var(--red); }
 
-/* sentence double-click cursor hint */
 .sentence { cursor: default; }
 .sentence[data-editable]:not(.break) { cursor: text; }
 
-/* page-wrap needs position:relative for FAB to anchor */
+/* ─── FULL-VIEWPORT PANEL OVERLAY SYSTEM ─────────────────────────────── */
+/* Panels become full-screen overlays when toggled */
+.panel-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 3000 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  border: none !important;
+  border-radius: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(-100%) !important;
+  transition: transform 0.30s cubic-bezier(0.25,1,0.5,1) !important;
+  pointer-events: none;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  top: 52px !important;
+  height: calc(100dvh - 52px) !important;
+}
+.panel-overlay.panel-right {
+  transform: translateX(100%) !important;
+}
+.panel-overlay.panel-open {
+  transform: translateX(0) !important;
+  pointer-events: auto;
+}
+
+/* Close button for overlays */
+.panel-close-btn {
+  display: none;
+  position: absolute;
+  top: 10px; right: 12px;
+  z-index: 10;
+  background: none; border: none; cursor: pointer;
+  color: var(--ink-3); font-size: 20px; line-height: 1;
+  padding: 4px 6px;
+  transition: color 0.12s;
+}
+.panel-close-btn:hover { color: var(--red); }
+.panel-overlay .panel-close-btn { display: block; }
+
+/* Dim the main content when a panel overlay is open */
+#page-wrap {
+  transition: filter 0.28s ease, opacity 0.28s ease;
+}
+body.panel-toc-open #page-wrap,
+body.panel-compose-open #page-wrap {
+  filter: brightness(0.88);
+  pointer-events: none;
+}
+
+/* Backdrop */
+#panel-backdrop {
+  display: none;
+  position: fixed; inset: 0; top: 52px;
+  z-index: 2999;
+  background: rgba(17,13,8,0.30);
+  backdrop-filter: blur(1px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.28s ease;
+}
+body.panel-toc-open #panel-backdrop,
+body.panel-compose-open #panel-backdrop {
+  display: block; opacity: 1; pointer-events: auto;
+}
+
+/* Override grid for overlay mode — panels float above, not in grid */
+#app.toc-overlay #toc,
+#app.compose-overlay #compose-panel {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+/* Panel overlay mode: TOC from left, Compose from right */
+#toc.panel-overlay { left: 0; max-width: min(360px, 100vw); }
+#compose-panel.panel-overlay { left: auto !important; right: 0; transform: translateX(100%) !important; max-width: min(400px, 100vw); }
+#compose-panel.panel-overlay.panel-open { transform: translateX(0) !important; }
 
 /* ─── MOBILE ──────────────────────────────────────────────────────────── */
 @media (max-width: 720px) {
-  #app { grid-template-columns: 1fr !important; grid-template-rows: 52px 1fr auto; }
+  #app {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: 52px 1fr !important;
+  }
   #toc { display: none !important; }
-  #page-wrap { grid-column: 1; grid-row: 2; }
-  #compose-panel { grid-column: 1; grid-row: 3; border-left: none; border-top: 1px solid var(--rule); }
-  #node-canvas { max-height: 80px; }
-  #page-scroll { padding: 36px 24px 120px 36px; }
-  #page-wrap::after { left: 28px; }
+  #page-wrap { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; }
+  #compose-panel { display: none !important; }
+
+  /* Header: hide non-essential items, show panel toggles */
   .h-center { display: none; }
+  .h-version { display: none; }
+  #btn-export { display: none; }
+  #btn-keys   { display: none; }
+  #btn-compose { display: none; }
+  #btn-toc { display: none; }
+  .wordmark-sub { display: none; }
+  .wordmark-rule { display: none; }
+  .h-actions { gap: 4px; }
+
+  /* Mobile panel toggle buttons in header */
+  #btn-toc-mobile,
+  #btn-compose-mobile {
+    display: flex;
+  }
+
+  #page-scroll { padding: 36px 20px 120px 28px; }
+  #page-wrap::after { left: 16px; }
   #key-help { display: none; }
-  /* nav stays as right-rail on mobile too, just smaller */
   #page-nav { right: 0; }
   #capture-fab { bottom: 18px; right: 12px; }
   #rail-sizer { display: none; }
+
+  /* Overlay panels on mobile take near-full width */
+  #toc.panel-overlay { max-width: 88vw; display: flex !important; }
+  #compose-panel.panel-overlay { max-width: 92vw; display: flex !important; }
 }
+
+/* Mobile-only panel toggle buttons (hidden on desktop) */
+#btn-toc-mobile,
+#btn-compose-mobile {
+  display: none;
+}
+
 @media (max-width: 1100px) and (min-width: 721px) {
   #app { grid-template-columns: 0px 1fr var(--rail-w) !important; }
   #toc { overflow: hidden; pointer-events: none; }
@@ -1346,35 +1425,37 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
   <div id="onboard-inner">
     <div class="ob-cover">
       <div class="ob-wordmark">reasonably</div>
-      <div class="ob-edition">A Thinking Notebook · First Edition</div>
+      <div class="ob-edition">A Thinking Notebook · Self-Portrait Edition</div>
       <div class="ob-tagline">
         The sentence arrives before everything else.<br>
-        Write first. Name it after.
+        What follows is the tool describing itself.
       </div>
     </div>
     <div class="ob-capture-hint">
       <div class="ob-capture-dot"></div>
-      <span class="ob-capture-text">The ● button bottom-right is always ready.</span>
-      <span class="ob-capture-key">c or click</span>
+      <span class="ob-capture-text">Step through with ↓ or spacebar. Or click any sentence.</span>
+      <span class="ob-capture-key">↓ / space</span>
     </div>
     <div class="ob-keys">
-      <div class="ob-row"><span class="ob-key">● FAB / c key</span><span class="ob-desc">Write the thought as it arrives</span></div>
       <div class="ob-row"><span class="ob-key">↑ ↓  /  j k</span><span class="ob-desc">Navigate sentence by sentence</span></div>
-      <div class="ob-row"><span class="ob-key">Click sentence</span><span class="ob-desc">Retype — apply syntax to any line</span></div>
-      <div class="ob-row"><span class="ob-key">###:Title</span><span class="ob-desc">Begin a new chapter</span></div>
-      <div class="ob-row"><span class="ob-key">? key</span><span class="ob-desc">Shortcut reference</span></div>
+      <div class="ob-row"><span class="ob-key">● / c key</span><span class="ob-desc">Quick capture — write the thought</span></div>
+      <div class="ob-row"><span class="ob-key">Double-click</span><span class="ob-desc">Edit any sentence in place</span></div>
+      <div class="ob-row"><span class="ob-key">Hover header</span><span class="ob-desc">Spine — emotional document map</span></div>
+      <div class="ob-row"><span class="ob-key">?</span><span class="ob-desc">Key reference</span></div>
     </div>
     <div class="ob-begin-row">
-      <button class="ob-begin" id="ob-btn">Open notebook →</button>
+      <button class="ob-begin" id="ob-btn">Read the self-portrait →</button>
       <span class="ob-skip">or press any key</span>
     </div>
   </div>
 </div>
 
+<!-- ─── PANEL BACKDROP ──────────────────────────────────────────────── -->
+<div id="panel-backdrop" onclick="closeAllPanels()"></div>
+
 <!-- ─── APP ─────────────────────────────────────────────────────────── -->
 <div id="app">
 
-  <!-- HEADER -->
   <header id="main-header">
     <div class="wordmark">
       reasonably
@@ -1383,7 +1464,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     </div>
     <div class="h-center" id="h-chapter-label" style="cursor:pointer;pointer-events:auto" onclick="toggleSpine()" title="Book spine wayfinding">Untitled · Begin below ▾</div>
     <div class="h-actions">
-      <span class="h-version" id="h-version" title="Version history (implied)">
+      <span class="h-version" id="h-version" title="Version history">
         <span class="h-version-dot"></span>
         <span id="h-version-label">v1 · saved</span>
       </span>
@@ -1392,13 +1473,15 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
         <button class="h-undo-btn" id="btn-redo" onclick="histRedo()" title="Redo (Ctrl+Y)" disabled>↪</button>
       </div>
       <button class="h-btn" id="btn-toc"  onclick="toggleToc()"     title="Table of contents">☰ Contents</button>
+      <button class="h-btn" id="btn-compose" onclick="toggleCompose()" title="Compose panel">✏ Compose</button>
+      <button class="h-btn" id="btn-toc-mobile"  onclick="openPanelOverlay('toc')"     title="Contents">☰</button>
+      <button class="h-btn" id="btn-compose-mobile" onclick="openPanelOverlay('compose')" title="Compose">✏</button>
       <button class="h-btn" id="btn-read" onclick="toggleReading()" title="Reading mode">⊡ Read</button>
       <button class="h-btn" id="btn-export" onclick="exportRaw()">↗ Export</button>
       <button class="h-btn" id="btn-keys"  onclick="toggleKeys()">? Keys</button>
     </div>
   </header>
 
-  <!-- SPINE -->
   <div id="spine-bar">
     <div id="spine-panel">
       <div class="spine-mood-row">
@@ -1417,8 +1500,8 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     </div>
   </div>
 
-  <!-- TOC -->
   <div id="toc">
+    <button class="panel-close-btn" onclick="closePanelOverlay('toc')" title="Close">×</button>
     <div class="toc-inner" id="toc-inner">
       <div class="toc-head">
         <span>Contents</span>
@@ -1429,17 +1512,14 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     <div class="toc-footer" id="toc-footer">0 chapters · 0 sentences</div>
   </div>
 
-  <!-- PAGE -->
   <div id="page-wrap">
     <button id="float-scroll-btn" onclick="toggleFreeScroll()" title="Right-click also toggles">
       <span>⇅</span>
       <span id="fsb-label">Free scroll</span>
     </button>
-    <!-- FAB: mobile only -->
     <button id="capture-fab" onclick="toggleCapture()" aria-label="Quick capture" title="Quick capture (c)">
       <div class="fab-dot"></div>
     </button>
-    <!-- Magnetic beckon field: desktop only -->
     <div id="capture-beckon" title="Write the thought as it arrives (c)">
       <div class="beckon-inner" onclick="openCapture()">
         <div class="beckon-dot"></div>
@@ -1448,12 +1528,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
       </div>
     </div>
     <div id="page-scroll">
-      <div id="narrative-root">
-        <div id="empty-page" style="padding:40px 0;opacity:0.35">
-          <div style="font-family:var(--f-disp);font-size:36px;font-style:italic;font-weight:300;color:var(--ink-3);line-height:1.2;margin-bottom:16px;">The ● is waiting.</div>
-          <div style="font-family:var(--f-body);font-size:16px;font-style:italic;color:var(--ink-4);line-height:1.7;">Click the button bottom-right.<br>Write the thought. Name it after.</div>
-        </div>
-      </div>
+      <div id="narrative-root"></div>
       <div id="page-bottom-spacer"></div>
     </div>
     <div id="page-nav">
@@ -1464,8 +1539,8 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     <div id="reading-progress"><div id="reading-progress-bar"></div></div>
   </div>
 
-  <!-- COMPOSE PANEL -->
   <div id="compose-panel" style="position:relative">
+    <button class="panel-close-btn" onclick="closePanelOverlay('compose')" title="Close">×</button>
     <div id="rail-sizer">
       <button class="rs-btn" data-w="220" onclick="setRailWidth(220,this)" title="Narrow">◂</button>
       <button class="rs-btn active" data-w="280" onclick="setRailWidth(280,this)" title="Default">▪</button>
@@ -1509,7 +1584,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
       <div id="compile-preview" style="color:var(--ink-5);font-style:italic">Syntax preview…</div>
       <button class="compile-btn" onclick="copyRaw()">⎘ Copy</button>
     </div>
-    <!-- Sentence editor overlay — slides in on double-click -->
     <div id="sentence-editor">
       <div class="se-header">
         <span class="se-label">
@@ -1528,7 +1602,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     </div>
   </div>
 
-</div><!-- #app -->
+</div>
 
 <!-- ─── CAPTURE PANEL ────────────────────────────────────────────────── -->
 <div id="capture-panel" role="dialog" aria-label="Quick capture">
@@ -1557,10 +1631,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     </span>
     <button id="ce-submit">Submit →</button>
   </div>
-
-  <!-- Post-capture organizer — shown after submit -->
   <div id="capture-organizer">
-    <!-- mood beat — appears first, collapses after selection -->
     <div id="co-mood-beat">
       <div class="co-mood-eyebrow">How does it feel?</div>
       <div class="co-mood-swatches">
@@ -1579,9 +1650,7 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
     </div>
     <div class="co-options">
       <div class="co-section-label">Inject into chapter</div>
-      <div class="co-chapters" id="co-chapters">
-        <!-- filled by JS -->
-      </div>
+      <div class="co-chapters" id="co-chapters"></div>
       <div class="co-section-label" id="co-or-label" style="display:none">or</div>
     </div>
     <div class="co-actions">
@@ -1649,7 +1718,6 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
   <div class="sw-grid" id="sw-grid"></div>
 </div>
 
-<!-- Key help -->
 <div id="key-help">
   <div class="kh-row"><span class="kh-key">c / click bar</span><span class="kh-desc">Quick capture</span></div>
   <div class="kh-row"><span class="kh-key">Ctrl+Z / Ctrl+Y</span><span class="kh-desc">Undo / Redo</span></div>
@@ -1657,21 +1725,15 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
   <div class="kh-row"><span class="kh-key">1–9</span><span class="kh-desc">Jump to chapter</span></div>
   <div class="kh-row"><span class="kh-key">r</span><span class="kh-desc">Reading mode</span></div>
   <div class="kh-row"><span class="kh-key">t</span><span class="kh-desc">Toggle contents</span></div>
-  <div class="kh-row"><span class="kh-key">Double-click sentence</span><span class="kh-desc">Edit in compose widget</span></div>
+  <div class="kh-row"><span class="kh-key">Double-click sentence</span><span class="kh-desc">Edit in place</span></div>
   <div class="kh-row"><span class="kh-key">Right-click page</span><span class="kh-desc">Free scroll</span></div>
-  <div class="kh-row"><span class="kh-key">?</span><span class="kh-desc">This help</span></div>
-  <div class="kh-row"><span class="kh-key">1–9</span><span class="kh-desc">Jump to chapter</span></div>
-  <div class="kh-row"><span class="kh-key">s</span><span class="kh-desc">Spine wayfinding</span></div>
-  <div class="kh-row"><span class="kh-key">r</span><span class="kh-desc">Reading mode</span></div>
-  <div class="kh-row"><span class="kh-key">t</span><span class="kh-desc">Toggle contents</span></div>
-  <div class="kh-row"><span class="kh-key">Right-click page</span><span class="kh-desc">Free scroll</span></div>
+  <div class="kh-row"><span class="kh-key">s / hover header</span><span class="kh-desc">Spine wayfinding</span></div>
   <div class="kh-row"><span class="kh-key">?</span><span class="kh-desc">This help</span></div>
 </div>
 
 <script>
 'use strict';
 
-// ─── STATE ─────────────────────────────────────────────────────────────────
 let nodes = [];
 let activeNode = -1;
 let pvReveal = 0;
@@ -1681,7 +1743,6 @@ let readMode = false;
 let uid = 0;
 let currentMood = 'none';
 
-// ─── HISTORY — undo / redo stack ───────────────────────────────────────────
 const HIST_MAX = 60;
 let _hist      = [];
 let _histIdx   = -1;
@@ -1744,7 +1805,6 @@ function _updateHistUI() {
 }
 let _histSaveTimer = null;
 
-// Convenience: push history then re-render
 function commitChange() {
   histPush();
   renderCanvas(); renderPage(); syncRaw(); renderSpine();
@@ -1755,7 +1815,6 @@ let freeScroll = false;
 
 function nid() { return ++uid; }
 
-// ─── MARKDOWN ──────────────────────────────────────────────────────────────
 function applyMd(t) {
   if (!t) return '';
   return t
@@ -1765,7 +1824,6 @@ function applyMd(t) {
     .replace(/\[([^\]]+)\]/g, '<span class="bracket-ann" data-term="$1">[$1]</span>');
 }
 
-// ─── BUILD RAW ─────────────────────────────────────────────────────────────
 function buildRaw() {
   return nodes.map(n => {
     if (n.type === 'chapter') return `###:${String(n.num||'01').padStart(2,'0')} · ${n.title||'Untitled'}`;
@@ -1780,7 +1838,6 @@ function buildRaw() {
   }).filter(Boolean).join('\n');
 }
 
-// ─── CANVAS ────────────────────────────────────────────────────────────────
 function renderCanvas() {
   const el = document.getElementById('node-canvas');
   if (!nodes.length) {
@@ -1873,7 +1930,6 @@ function pageIdxOfNode(nIdx) {
   return el ? parseInt(el.dataset.sidx) : -1;
 }
 
-// ─── RENDER PAGE ───────────────────────────────────────────────────────────
 let pvTimer = null;
 function debounce() { clearTimeout(pvTimer); pvTimer = setTimeout(() => { histPush(); renderPage(); syncRaw(); }, 800); }
 
@@ -1881,10 +1937,6 @@ function renderPage() {
   const root = document.getElementById('narrative-root');
   if (!nodes.length) {
     root.innerHTML = '';
-    const ep = document.createElement('div');
-    ep.id = 'empty-page'; ep.style.cssText = 'padding:40px 0;opacity:0.35';
-    ep.innerHTML = `<div style="font-family:var(--f-disp);font-size:36px;font-style:italic;font-weight:300;color:var(--ink-3);line-height:1.2;margin-bottom:16px;">The ● is waiting.</div><div style="font-family:var(--f-body);font-size:16px;font-style:italic;color:var(--ink-4);line-height:1.7;">Click the button bottom-right.<br>Write the thought. Name it after.</div>`;
-    root.appendChild(ep);
     pvEls = []; updateNav(); updateToc(); return;
   }
 
@@ -2007,7 +2059,6 @@ function updateChapterLabel() {
   el.textContent = 'reasonably ▾';
 }
 
-// ─── TOC ───────────────────────────────────────────────────────────────────
 function updateToc() {
   const body = document.getElementById('toc-body');
   const footer = document.getElementById('toc-footer');
@@ -2042,7 +2093,7 @@ function updateToc() {
   renderSpine();
 }
 
-// ─── SOVEREIGN CAPTURE — FAB + BECKON + ORGANIZER ─────────────────────────
+// ─── CAPTURE ───────────────────────────────────────────────────────────────
 const capturePanel  = document.getElementById('capture-panel');
 const ceTextarea    = document.getElementById('ce-textarea');
 const ceCharcount   = document.getElementById('ce-charcount');
@@ -2076,89 +2127,62 @@ function closeCapture() {
 
 function toggleCapture() { captureOpen ? closeCapture() : openCapture(); }
 
-// ─── MAGNETIC LERP ENGINE ──────────────────────────────────────────────────
-// Desktop only — beckon field drifts toward cursor presence
 ;(function initMagneticBeckon() {
   const beckon = document.getElementById('capture-beckon');
   if (!beckon) return;
-
-  // resting position (offset from CSS top:20px, left:50%)
-  // we drive transform directly for silky perf
   let restX = 0, restY = 0;
-  let curX  = 0, curY  = 0;   // current lerped position
-  let targX = 0, targY = 0;   // target (toward cursor gravity)
+  let curX  = 0, curY  = 0;
+  let targX = 0, targY = 0;
   let rafId = null;
   let isMobile = () => window.innerWidth <= 720;
-
-  // Gravity radius — cursor influence falls off beyond this distance
-  const RADIUS    = 280;  // px from beckon center
-  const MAX_DRIFT = 14;   // max px the field will move
-  const LERP_TO   = 0.10; // approach speed toward cursor
-  const LERP_BACK = 0.055; // retreat speed back to rest — slower = lingers
+  const RADIUS    = 280;
+  const MAX_DRIFT = 14;
+  const LERP_TO   = 0.10;
+  const LERP_BACK = 0.055;
 
   function getBeckonCenter() {
     const r = beckon.getBoundingClientRect();
-    return { x: r.left + r.width  / 2,
-             y: r.top  + r.height / 2 };
+    return { x: r.left + r.width  / 2, y: r.top  + r.height / 2 };
   }
-
   function lerp(a, b, t) { return a + (b - a) * t; }
-
   function tick() {
     curX = lerp(curX, targX, LERP_TO);
     curY = lerp(curY, targY, LERP_TO);
-    // snap to rest when nearly there
     targX = lerp(targX, restX, LERP_BACK);
     targY = lerp(targY, restY, LERP_BACK);
     beckon.style.transform = `translateX(calc(-50% + ${curX.toFixed(2)}px)) translateY(${curY.toFixed(2)}px)`;
     rafId = requestAnimationFrame(tick);
   }
-
   function startLoop() { if (!rafId) rafId = requestAnimationFrame(tick); }
   function stopLoop()  { if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
-
-  // Reset position cleanly
   function resetPos() {
     curX = 0; curY = 0; targX = 0; targY = 0;
     beckon.style.transform = 'translateX(-50%) translateY(0)';
     stopLoop();
   }
-
   document.addEventListener('mousemove', e => {
     if (isMobile()) return;
-    if (captureOpen) return; // don't drift while panel is open
-
+    if (captureOpen) return;
     const c = getBeckonCenter();
     const dx = e.clientX - c.x;
     const dy = e.clientY - c.y;
     const dist = Math.sqrt(dx * dx + dy * dy);
-
     if (dist < RADIUS) {
-      // Magnetic influence — stronger closer in, quadratic falloff
       const strength = Math.pow(1 - dist / RADIUS, 1.6);
       targX = (dx / dist) * MAX_DRIFT * strength;
-      targY = (dy / dist) * MAX_DRIFT * strength * 0.6; // less vertical range
+      targY = (dy / dist) * MAX_DRIFT * strength * 0.6;
       beckon.classList.add('magnetized');
       startLoop();
     } else {
-      // Outside radius — drift back to rest
-      targX = restX;
-      targY = restY;
+      targX = restX; targY = restY;
       beckon.classList.remove('magnetized');
-      // keep loop running until settled
       startLoop();
     }
   });
-
-  // Settle immediately when capture opens
   document.addEventListener('captureOpened', resetPos);
-
-  // Stop loop when tab hidden
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopLoop(); else if (!captureOpen) startLoop();
   });
-
-  // Initial loop
   startLoop();
 })();
 
@@ -2168,17 +2192,14 @@ function submitCapture() {
 
   if (_capFmt === 'bold') {
     const n = { id: nid(), type: 'poster', content: raw, mood: currentMood };
-    nodes.push(n);
-    _pendingNodeIdx = nodes.length - 1;
+    nodes.push(n); _pendingNodeIdx = nodes.length - 1;
   } else if (_capFmt === 'italic') {
     const n = { id: nid(), type: 'pull', content: raw, mood: currentMood };
-    nodes.push(n);
-    _pendingNodeIdx = nodes.length - 1;
+    nodes.push(n); _pendingNodeIdx = nodes.length - 1;
   } else if (_capFmt === 'under') {
     const parts = raw.split('::');
     const n = { id: nid(), type: 'spec', key: parts[0].trim(), val: (parts[1]||'').trim(), mood: currentMood };
-    nodes.push(n);
-    _pendingNodeIdx = nodes.length - 1;
+    nodes.push(n); _pendingNodeIdx = nodes.length - 1;
   } else if (_capFmt === 'bullet' || _capFmt === 'number') {
     const lines = raw.split('\n').map(l => l.replace(/^(·\s*|[\d]+\.\s*)/, '').trim()).filter(Boolean);
     lines.forEach((line, li) => {
@@ -2187,62 +2208,44 @@ function submitCapture() {
       if (li === lines.length - 1) _pendingNodeIdx = nodes.length - 1;
     });
   } else {
-    // plain draft
     const n = { id: nid(), type: 'draft', content: raw, mood: currentMood };
-    nodes.push(n);
-    _pendingNodeIdx = nodes.length - 1;
+    nodes.push(n); _pendingNodeIdx = nodes.length - 1;
   }
 
   activeNode = _pendingNodeIdx;
   pvReveal = Math.max(0, pvEls.length);
-
-  ceTextarea.value = '';
-  ceCharcount.textContent = '0';
-  ceCharcount.classList.remove('warm');
+  ceTextarea.value = ''; ceCharcount.textContent = '0'; ceCharcount.classList.remove('warm');
   _capFmt = null;
   document.querySelectorAll('.cp-fmt-btn').forEach(b => b.classList.remove('active'));
   const fmtHint = document.getElementById('cp-fmt-hint');
   if (fmtHint) fmtHint.textContent = '';
-
   commitChange();
   _showOrganizer(raw.slice(0, 80));
 }
 
-// pending capture mood (separate from global currentMood until confirmed)
-let _captureMood = null; // null = will inherit currentMood at confirm time
+let _captureMood = null;
 
 function _showOrganizer(preview) {
-  // Update preview text
-  document.getElementById('co-preview').textContent =
-    preview.length > 60 ? preview.slice(0,58)+'…' : preview;
-
-  // Reset mood beat — pre-select the current ambient mood
+  document.getElementById('co-preview').textContent = preview.length > 60 ? preview.slice(0,58)+'…' : preview;
   _captureMood = currentMood;
   const moodBeat = document.getElementById('co-mood-beat');
   moodBeat.classList.remove('resolved');
-  // Pre-select current mood swatch
   document.querySelectorAll('.co-mood-swatch').forEach(s => {
     s.classList.toggle('selected', s.dataset.mood === currentMood);
   });
   const mc = MOOD_COLORS[currentMood] || MOOD_COLORS.none;
   document.getElementById('co-mood-label').textContent = mc.tag;
 
-  // Build chapter buttons
   const chaptersEl = document.getElementById('co-chapters');
   chaptersEl.innerHTML = '';
   _selectedChIdx = -1;
-
-  const chapters = nodes
-    .map((n,i) => ({n,i}))
-    .filter(({n}) => n.type === 'chapter');
-
+  const chapters = nodes.map((n,i) => ({n,i})).filter(({n}) => n.type === 'chapter');
   const orLabel = document.getElementById('co-or-label');
   orLabel.style.display = chapters.length ? '' : 'none';
-
-  chapters.forEach(({n, i}, ci) => {
+  chapters.forEach(({n, i}) => {
     const btn = document.createElement('button');
     btn.className = 'co-ch-btn';
-    btn.textContent = `Ch.${String(n.num||ci+1).padStart(2,'0')} · ${(n.title||'Untitled').slice(0,20)}`;
+    btn.textContent = `Ch.${String(n.num||'01').padStart(2,'0')} · ${(n.title||'Untitled').slice(0,20)}`;
     btn.dataset.chNodeIdx = i;
     btn.addEventListener('click', function() {
       if (_selectedChIdx === i) {
@@ -2256,7 +2259,6 @@ function _showOrganizer(preview) {
     });
     chaptersEl.appendChild(btn);
   });
-
   capOrganizer.classList.add('open');
 }
 
@@ -2268,51 +2270,34 @@ function selectCaptureMood(mood, btn) {
 }
 
 function confirmCaptureMood() {
-  // Stamp mood onto the pending node
   if (_pendingNodeIdx >= 0 && _captureMood !== null) {
     nodes[_pendingNodeIdx].mood = _captureMood;
-    // Also shift global mood to match — the capture is the ambient signal
     setMood(_captureMood);
   }
-  // Collapse the mood beat, reveal the organize options
   document.getElementById('co-mood-beat').classList.add('resolved');
   renderSpine();
 }
 
 function _stampPendingMood() {
-  if (_pendingNodeIdx >= 0 && _captureMood !== null) {
-    nodes[_pendingNodeIdx].mood = _captureMood;
-  }
+  if (_pendingNodeIdx >= 0 && _captureMood !== null) nodes[_pendingNodeIdx].mood = _captureMood;
 }
 
 function organizeInjectIntoChapter(chNodeIdx) {
   if (_pendingNodeIdx < 0) return;
   _stampPendingMood();
-  // Find the end of that chapter (before next chapter or end of nodes)
   const pending = nodes.splice(_pendingNodeIdx, 1)[0];
   _pendingNodeIdx = -1;
-
-  // Find insert point: end of chNodeIdx's chapter
   let insertAt = chNodeIdx + 1;
   for (let i = chNodeIdx + 1; i < nodes.length; i++) {
     if (nodes[i].type === 'chapter') { insertAt = i; break; }
     insertAt = i + 1;
   }
   nodes.splice(insertAt, 0, pending);
-  activeNode = insertAt;
-  pvReveal = insertAt;
-
-  closeCapture();
-  commitChange();
-
+  activeNode = insertAt; pvReveal = insertAt;
+  closeCapture(); commitChange();
   setTimeout(() => {
     const el = document.querySelector(`[data-nidx="${insertAt}"]`);
-    if (el) {
-      el.scrollIntoView({ behavior:'smooth', block:'center' });
-      const sidx = parseInt(el.dataset.sidx);
-      if (!isNaN(sidx)) goTo(sidx);
-      setTimeout(() => openSyntaxWidget(insertAt, el), 380);
-    }
+    if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(insertAt, el), 380); }
   }, 80);
 }
 
@@ -2321,22 +2306,11 @@ function organizeNewChapter() {
   _stampPendingMood();
   const pending = nodes[_pendingNodeIdx];
   const chNum = nodes.filter(n => n.type==='chapter').length + 1;
-
-  const chNode  = { id: nid(), type:'chapter', num:String(chNum).padStart(2,'0'), title:'New Chapter', mood: _captureMood || currentMood };
+  const chNode   = { id: nid(), type:'chapter', num:String(chNum).padStart(2,'0'), title:'New Chapter', mood: _captureMood || currentMood };
   const bodyNode = { id: pending.id, type:'body', content: pending.content, mood: pending.mood };
-
   nodes.splice(_pendingNodeIdx, 1, chNode, bodyNode);
   _pendingNodeIdx = -1;
-
-  closeCapture();
-  commitChange();
-
-  setTimeout(() => {
-    const chEl = document.querySelector(`.ch-block[data-ch="${chNode.num}"]`);
-    if (chEl) chEl.scrollIntoView({ behavior:'smooth', block:'start' });
-    const cardInputs = document.querySelectorAll('.n-ch-title');
-    if (cardInputs.length) cardInputs[cardInputs.length - 2]?.focus();
-  }, 120);
+  closeCapture(); commitChange();
 }
 
 function organizeAppend() {
@@ -2344,25 +2318,16 @@ function organizeAppend() {
   _stampPendingMood();
   const idx = _pendingNodeIdx;
   closeCapture();
-
   setTimeout(() => {
     const el = document.querySelector(`[data-nidx="${idx}"]`);
-    if (el) {
-      el.scrollIntoView({ behavior:'smooth', block:'center' });
-      const sidx = parseInt(el.dataset.sidx);
-      if (!isNaN(sidx)) goTo(sidx);
-      setTimeout(() => openSyntaxWidget(idx, el), 380);
-    }
+    if (el) { el.scrollIntoView({ behavior:'smooth', block:'center' }); const sidx = parseInt(el.dataset.sidx); if (!isNaN(sidx)) goTo(sidx); setTimeout(() => openSyntaxWidget(idx, el), 380); }
   }, 80);
 }
 
 function organizeDone() {
   _stampPendingMood();
-  if (_selectedChIdx >= 0) {
-    organizeInjectIntoChapter(_selectedChIdx);
-  } else {
-    organizeAppend();
-  }
+  if (_selectedChIdx >= 0) organizeInjectIntoChapter(_selectedChIdx);
+  else organizeAppend();
 }
 
 ceTextarea.addEventListener('input', e => {
@@ -2370,7 +2335,6 @@ ceTextarea.addEventListener('input', e => {
   ceCharcount.textContent = len;
   ceCharcount.classList.toggle('warm', len > 20);
 });
-
 document.getElementById('ce-submit').addEventListener('click', submitCapture);
 
 // ─── WIDGET SYSTEM ─────────────────────────────────────────────────────────
@@ -2390,9 +2354,7 @@ function positionWidget(widgetEl, anchorEl) {
       const above = a.top - wh - 8;
       top = above >= W_HEADER + W_MARGIN ? above : vh - wh - W_MARGIN;
     }
-  } else {
-    top = vh * 0.28; left = (vw - ww) / 2;
-  }
+  } else { top = vh * 0.28; left = (vw - ww) / 2; }
   left = Math.max(W_MARGIN, Math.min(left, vw - ww - W_MARGIN));
   top  = Math.max(W_HEADER + W_MARGIN, Math.min(top, vh - wh - W_MARGIN));
   const otherId = widgetEl.id === 'compose-widget' ? 'syntax-widget' : 'compose-widget';
@@ -2402,8 +2364,7 @@ function positionWidget(widgetEl, anchorEl) {
     const hOverlap = left < or.right + 4 && left + ww > or.left - 4;
     const vOverlap = top < or.bottom + 4 && top + wh > or.top - 4;
     if (hOverlap && vOverlap) {
-      const above = or.top - wh - 8;
-      const below = or.bottom + 8;
+      const above = or.top - wh - 8; const below = or.bottom + 8;
       top = above >= W_HEADER + W_MARGIN ? above : (below + wh <= vh - W_MARGIN ? below : top);
       top = Math.max(W_HEADER + W_MARGIN, Math.min(top, vh - wh - W_MARGIN));
     }
@@ -2412,7 +2373,6 @@ function positionWidget(widgetEl, anchorEl) {
   widgetEl.style.right = 'auto'; widgetEl.style.bottom = 'auto';
 }
 
-// ─── COMPOSE WIDGET ─────────────────────────────────────────────────────────
 let _cwType = 'body';
 const TYPE_META = {
   chapter: { label:'Chapter',   desc:'New section · numbered title' },
@@ -2452,9 +2412,7 @@ function openComposeWidget(type, anchorEl) {
 function closeComposeWidget() { document.getElementById('compose-widget').classList.remove('w-open'); }
 
 function commitComposeWidget() {
-  // If in edit mode, delegate to saveSentenceEdit
   if (_editingNodeIdx >= 0) { saveSentenceEdit(); return; }
-
   const type = _cwType;
   const inp = document.getElementById('cw-input');
   const n = { id: nid(), type, mood: currentMood };
@@ -2473,8 +2431,7 @@ function commitComposeWidget() {
   nodes.push(n);
   activeNode = nodes.length - 1;
   pvReveal = Math.max(0, pvEls.length);
-  closeComposeWidget();
-  commitChange();
+  closeComposeWidget(); commitChange();
 }
 
 document.getElementById('cw-input').addEventListener('keydown', e => {
@@ -2489,28 +2446,13 @@ document.getElementById('cw-input').addEventListener('keydown', e => {
 });
 document.getElementById('cw-commit-btn').addEventListener('click', commitComposeWidget);
 
-// ─── DIRECT-STACK ADD ──────────────────────────────────────────────────────
-// Palette click → node appends instantly, cursor drops in. No widget interrupt.
-// (Compose widget is preserved below but not wired to palette.)
 function addNode(type) {
   const chNum = nodes.filter(x => x.type === 'chapter').length + 1;
-  const n = {
-    id: nid(), type, mood: currentMood,
-    content: '',
-    key: '', val: '',
-    num: String(chNum).padStart(2,'0'),
-    title: '',
-  };
+  const n = { id: nid(), type, mood: currentMood, content: '', key: '', val: '', num: String(chNum).padStart(2,'0'), title: '' };
   nodes.push(n);
   activeNode = nodes.length - 1;
   pvReveal = Math.max(0, pvEls.length);
-  // Break has no input — push history immediately. Others wait for debounce on first keystroke.
-  if (type === 'break') {
-    commitChange();
-  } else {
-    renderCanvas(); renderPage(); syncRaw(); renderSpine();
-  }
-  // Focus the new card's primary input after render
+  if (type === 'break') { commitChange(); } else { renderCanvas(); renderPage(); syncRaw(); renderSpine(); }
   requestAnimationFrame(() => {
     const card = document.querySelector(`[data-nid="${n.id}"]`);
     if (!card) return;
@@ -2520,7 +2462,6 @@ function addNode(type) {
   });
 }
 
-// ─── SYNTAX WIDGET ─────────────────────────────────────────────────────────
 let _swNodeIdx = -1;
 const TYPE_HINTS = { poster:'Hero statement', body:'Narrative prose', pull:'Pull quote', label:'Small caps tag', spec:'Key :: Value', chapter:'Section header', break:'Thematic divider', draft:'Unclassified' };
 
@@ -2598,14 +2539,12 @@ function applySyntax(nodeIdx, newType) {
   if (newType === 'spec') { const p = raw.split(/\s*::\s*/); n.key = p[0]||raw; n.val = p.slice(1).join(' :: ')||''; }
   else if (newType === 'chapter') { n.title = raw||'Untitled'; n.num = String(nodes.slice(0,nodeIdx).filter(x=>x.type==='chapter').length+1).padStart(2,'0'); }
   else if (newType !== 'break') { n.content = raw; }
-  closeSyntaxWidget();
-  commitChange();
+  closeSyntaxWidget(); commitChange();
   setTimeout(() => { const si = pageIdxOfNode(nodeIdx); if(si>=0) goTo(si); }, 80);
 }
 
-// ─── SYNC RAW ──────────────────────────────────────────────────────────────
 function syncRaw() {
-  window.__folio_nodes = nodes; // expose for bracket ghost spec lookup
+  window.__folio_nodes = nodes;
   const raw = buildRaw();
   const prev = document.getElementById('compile-preview');
   if (!raw.trim()) { prev.style.cssText = 'color:var(--ink-5);font-style:italic'; prev.textContent = 'Syntax preview…'; return; }
@@ -2625,14 +2564,28 @@ function exportRaw() {
   const raw = buildRaw(); if (!raw) return;
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([raw], {type:'text/plain'}));
-  a.download = 'folio-export.txt'; a.click();
+  a.download = 'reasonably-export.txt'; a.click();
 }
 
-// ─── PANELS ────────────────────────────────────────────────────────────────
 function toggleToc() {
-  tocMode = !tocMode;
-  document.getElementById('app').classList.toggle('no-toc', !tocMode);
-  document.getElementById('btn-toc').classList.toggle('active', tocMode);
+  // Use overlay panel instead of grid column collapse
+  if (document.getElementById('toc').classList.contains('panel-open')) {
+    closePanelOverlay('toc');
+    document.getElementById('btn-toc').classList.remove('active');
+  } else {
+    openPanelOverlay('toc');
+    document.getElementById('btn-toc').classList.add('active');
+  }
+}
+function toggleCompose() {
+  const cp = document.getElementById('compose-panel');
+  if (cp.classList.contains('panel-open')) {
+    closePanelOverlay('compose');
+    const b = document.getElementById('btn-compose'); if (b) b.classList.remove('active');
+  } else {
+    openPanelOverlay('compose');
+    const b = document.getElementById('btn-compose'); if (b) b.classList.add('active');
+  }
 }
 function toggleReading() {
   readMode = !readMode;
@@ -2641,7 +2594,6 @@ function toggleReading() {
 }
 function toggleKeys() { document.getElementById('key-help').classList.toggle('show'); }
 
-// ─── FREE SCROLL ───────────────────────────────────────────────────────────
 function toggleFreeScroll() {
   freeScroll = !freeScroll;
   document.body.classList.toggle('free-scroll', freeScroll);
@@ -2651,7 +2603,6 @@ function toggleFreeScroll() {
 }
 document.getElementById('page-wrap').addEventListener('contextmenu', e => { e.preventDefault(); toggleFreeScroll(); });
 
-// ─── MOOD ──────────────────────────────────────────────────────────────────
 const MOOD_COLORS = {
   none:      { bar:'#c8baa6', tag:'Neutral',   bg:'#c8baa6' },
   poignant:  { bar:'#c8902a', tag:'Poignant',  bg:'#c8902a' },
@@ -2668,7 +2619,6 @@ function setMood(mood) {
   renderSpine();
 }
 
-// ─── SPINE ─────────────────────────────────────────────────────────────────
 function toggleSpine() {
   spineOpen = !spineOpen;
   document.body.classList.toggle('spine-open', spineOpen);
@@ -2746,10 +2696,8 @@ document.getElementById('spine-search').addEventListener('blur', () => {
   }, 200);
 });
 
-// ─── KEYBOARD ──────────────────────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   const inInput = e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA';
-  // Undo / Redo — works everywhere
   if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) { e.preventDefault(); histUndo(); return; }
   if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) { e.preventDefault(); histRedo(); return; }
   if (e.key === '?' && !inInput) { e.preventDefault(); toggleKeys(); return; }
@@ -2772,9 +2720,7 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ─── CAPTURE FORMATTING ────────────────────────────────────────────────────
 let _capFmt = null;
-
 const FMT_HINTS = {
   bold:   '→ [poster] node',
   italic: '→ [pull] node',
@@ -2785,9 +2731,7 @@ const FMT_HINTS = {
 
 function capFmt(fmt) {
   _capFmt = _capFmt === fmt ? null : fmt;
-  document.querySelectorAll('.cp-fmt-btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.fmt === _capFmt)
-  );
+  document.querySelectorAll('.cp-fmt-btn').forEach(b => b.classList.toggle('active', b.dataset.fmt === _capFmt));
   const hint = document.getElementById('cp-fmt-hint');
   if (hint) hint.textContent = _capFmt ? FMT_HINTS[_capFmt] : '';
   if ((_capFmt === 'bullet' || _capFmt === 'number') && ceTextarea.value === '') {
@@ -2797,7 +2741,6 @@ function capFmt(fmt) {
   ceTextarea.focus();
 }
 
-// list auto-continue
 ceTextarea.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeCapture(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); submitCapture(); return; }
@@ -2807,25 +2750,17 @@ ceTextarea.addEventListener('keydown', e => {
     const lines = val.split('\n');
     const last = lines[lines.length - 1];
     if (/^(·\s*|[\d]+\.\s*)$/.test(last.trim()) || last.trim() === '') {
-      lines.pop();
-      ceTextarea.value = lines.join('\n');
-      _capFmt = null;
+      lines.pop(); ceTextarea.value = lines.join('\n'); _capFmt = null;
       document.querySelectorAll('.cp-fmt-btn').forEach(b => b.classList.remove('active'));
-      const hint = document.getElementById('cp-fmt-hint');
-      if (hint) hint.textContent = '';
+      const hint = document.getElementById('cp-fmt-hint'); if (hint) hint.textContent = '';
       return;
     }
-    if (_capFmt === 'bullet') {
-      ceTextarea.value = val + '\n· ';
-    } else {
-      const num = lines.filter(l => /^\d+\./.test(l)).length + 1;
-      ceTextarea.value = val + '\n' + num + '. ';
-    }
+    if (_capFmt === 'bullet') { ceTextarea.value = val + '\n· '; }
+    else { const num = lines.filter(l => /^\d+\./.test(l)).length + 1; ceTextarea.value = val + '\n' + num + '. '; }
     ceTextarea.scrollTop = ceTextarea.scrollHeight;
   }
 });
 
-// ─── SWIPE ─────────────────────────────────────────────────────────────────
 let touchY0 = 0, touchMoved = false, swipeLock = false;
 window.addEventListener('touchstart', e => { touchY0 = e.touches[0].clientY; touchMoved = false; }, {passive:true});
 window.addEventListener('touchmove',  e => { touchMoved = true; }, {passive:true});
@@ -2838,7 +2773,6 @@ window.addEventListener('touchend', e => {
 document.getElementById('nav-next').addEventListener('click', next);
 document.getElementById('nav-prev').addEventListener('click', prev);
 
-// ─── ONBOARDING ────────────────────────────────────────────────────────────
 function dismissOnboard() {
   const ob = document.getElementById('onboard'); ob.classList.add('gone');
   setTimeout(() => ob.style.display='none', 420);
@@ -2849,7 +2783,6 @@ document.addEventListener('keydown', function obKey() {
   dismissOnboard(); document.removeEventListener('keydown', obKey);
 }, {once:true});
 
-// ─── MOBILE TOUCH DRAG ─────────────────────────────────────────────────────
 (function initTouchDrag() {
   const canvas = document.getElementById('node-canvas');
   let dragIdx=null, dragEl=null, targetIdx=null;
@@ -2866,10 +2799,8 @@ document.addEventListener('keydown', function obKey() {
     let found = -1;
     cards.forEach((card, ci) => {
       const rect = card.getBoundingClientRect();
-      if(touch.clientY>=rect.top && touch.clientY<=rect.bottom) {
-        found = ci < dragIdx ? ci : ci+1;
-        card.classList.add('touch-drag-target');
-      } else card.classList.remove('touch-drag-target');
+      if(touch.clientY>=rect.top && touch.clientY<=rect.bottom) { found = ci < dragIdx ? ci : ci+1; card.classList.add('touch-drag-target'); }
+      else card.classList.remove('touch-drag-target');
     });
     targetIdx = found>=0 ? found : null;
   }, {passive:false});
@@ -2886,40 +2817,128 @@ document.addEventListener('keydown', function obKey() {
   }, {passive:true});
 })();
 
-// ─── SEED ──────────────────────────────────────────────────────────────────
+// ─── SEED — self-portrait ──────────────────────────────────────────────────
 (function seed() {
   nodes = [
-    { id:nid(), type:'chapter', num:'01', title:'What This Is', mood:'poignant' },
-    { id:nid(), type:'poster',  content:'The sentence arrives before everything else.', mood:'poignant' },
-    { id:nid(), type:'body',    content:'You are reading this in a notebook that knows what it is. Every line here was written in reasonably, about reasonably — which means the tool is demonstrating itself by existing. This sentence is a body node. The one above it is a poster. The distinction is not decoration.', mood:'poignant' },
-    { id:nid(), type:'pull',    content:'The form *is* the thought. Name it and it becomes findable.', mood:'poignant' },
-    { id:nid(), type:'body',    content:'Most notebooks hold things. This one builds arguments. The difference is the sentence — typed, named, mooded, placed. Not captured and forgotten. Captured and committed.', mood:'poignant' },
+    // ── Ch 01 · What Was Built ──────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'01', title:'What Was Built', mood:'poignant' },
+    { id:nid(), type:'poster',  content:'A single file. No framework. No server. No build step. The entire product is the file.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'Approximately 1,600 lines of CSS and 1,200 lines of JavaScript, co-located, self-sufficient. It runs in a browser tab and does not phone home. That is not a technical constraint. It is a **philosophical position stated in code**: the tool should be as atomic as the thought it holds.', mood:'poignant' },
+    { id:nid(), type:'pull',    content:'The form *is* the argument. The file *is* the manifesto.', mood:'poignant' },
 
-    { id:nid(), type:'chapter', num:'02', title:'How to Move Through It', mood:'none' },
-    { id:nid(), type:'label',   content:'Navigation · Presence', mood:'none' },
-    { id:nid(), type:'body',    content:'You are stepping through this one sentence at a time. That is not a limitation. It is the posture. Each sentence earns the next. You cannot skim your own thinking and call it reading.', mood:'none' },
-    { id:nid(), type:'spec',    key:'↑ ↓  /  j k',     val:'Step through sentences' },
-    { id:nid(), type:'spec',    key:'Space',            val:'Advance' },
-    { id:nid(), type:'spec',    key:'Right-click page', val:'Free scroll mode' },
-    { id:nid(), type:'spec',    key:'Spine',            val:'Hover the header chapter label' },
-    { id:nid(), type:'pull',    content:'The spine is not a table of contents. It is an emotional record.', mood:'none' },
-    { id:nid(), type:'body',    content:'Hover the spine above. Each segment is a chapter. Its colour is the mood you were in when you wrote it. You can feel the shape of a document before you read it — that is not a feature, it is a philosophy.', mood:'none' },
+    // ── Ch 02 · The Node ────────────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'02', title:'The Node', mood:'none' },
+    { id:nid(), type:'label',   content:'Architecture · Primitive Form', mood:'none' },
+    { id:nid(), type:'body',    content:'Everything is a node. A node has a type, content, an id, and a mood. That is the full schema. Eight primitive forms: ~~poster~~, ~~body~~, ~~pull~~, ~~label~~, ~~spec~~, ~~break~~, ~~chapter~~, ~~draft~~. The entire expressive range of the tool lives inside those eight containers.', mood:'none' },
+    { id:nid(), type:'spec',    key:'poster',  val:'The large claim. The thing stated without apology.' },
+    { id:nid(), type:'spec',    key:'body',    val:'The argument forward. Prose that earns the next sentence.' },
+    { id:nid(), type:'spec',    key:'pull',    val:'The truest sentence. Bordered, indented, inevitable.' },
+    { id:nid(), type:'spec',    key:'label',   val:'Small caps. Identity, category, date. The thing named.' },
+    { id:nid(), type:'spec',    key:'spec',    val:'key :: value. The moment prose tips into taxonomy.' },
+    { id:nid(), type:'spec',    key:'break',   val:'A pause. Thematic white space given structure.' },
+    { id:nid(), type:'spec',    key:'chapter', val:'A new register. Numbered, titled, emotionally keyed.' },
+    { id:nid(), type:'spec',    key:'draft',   val:'The raw capture. Unclassified. Waiting to become something.' },
+    { id:nid(), type:'pull',    content:'You cannot make a table. You cannot embed media. You cannot add a comment thread. The tool has decided what thinking looks like — and it is **enforcing that decision typographically**.', mood:'none' },
+    { id:nid(), type:'body',    content:'This is deliberate constraint in the tradition of the best instruments. A piano has 88 keys — not because more keys are impossible, but because 88 is a complete expressive universe. Eight node types is that decision made for prose.', mood:'none' },
 
-    { id:nid(), type:'chapter', num:'03', title:'How to Write in It', mood:'empowered' },
-    { id:nid(), type:'body',    content:'The ● button bottom-right opens quick capture. Or press c. Write the thought as it arrives — do not name it yet. The organizer asks you to name it after. That sequence is intentional.', mood:'empowered' },
-    { id:nid(), type:'spec',    key:'B in capture',     val:'Submits as poster — the large claim' },
-    { id:nid(), type:'spec',    key:'I in capture',     val:'Submits as pull — the truest sentence' },
-    { id:nid(), type:'spec',    key:'U in capture',     val:'Submits as spec — key :: value' },
-    { id:nid(), type:'spec',    key:'· List or 1. List', val:'Each line becomes its own node' },
-    { id:nid(), type:'body',    content:'After you write, you are asked how it feels. Five colours. No labels except the one you hover. Tap the right one — or accept the ambient default and move on. The mood travels with the sentence. Months from now, the spine will tell you something true.', mood:'empowered' },
-    { id:nid(), type:'pull',    content:'Double-click any sentence to edit it in place.', mood:'empowered' },
+    // ── Ch 03 · The Reveal Engine ───────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'03', title:'The Reveal Engine', mood:'empowered' },
+    { id:nid(), type:'label',   content:'Navigation · Presence · Attention', mood:'empowered' },
+    { id:nid(), type:'poster',  content:'You cannot skim your own thinking and call it reading.', mood:'empowered' },
+    { id:nid(), type:'body',    content:'The page does not load fully rendered. Sentences have an opacity state machine: unrevealed, revealed, past, active. Only one sentence is fully alive at a time. The rest exist at 50–55% opacity — a depth field on a flat page. Past thoughts recede. The active thought is foregrounded. Future thoughts wait in dim relief.', mood:'empowered' },
+    { id:nid(), type:'spec',    key:'Step-lock',   val:'Default mode. One sentence at a time. Deliberate.' },
+    { id:nid(), type:'spec',    key:'Free scroll', val:'Right-click or float button. The escape valve.' },
+    { id:nid(), type:'spec',    key:'Neither',     val:'is hidden. The tool is honest about what it believes and what it permits.' },
+    { id:nid(), type:'pull',    content:'The scroll is locked *by default*. That is the thesis. Not a setting. A stance.', mood:'empowered' },
 
-    { id:nid(), type:'chapter', num:'04', title:'What It Is For', mood:'poignant' },
-    { id:nid(), type:'body',    content:'reasonably is for people who think in sentences, not bullets. Who want to know not just what they wrote but what register they were in when they wrote it. Who have tried every other tool and found that none of them believed the sentence was the thing.', mood:'poignant' },
+    // ── Ch 04 · The Capture System ──────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'04', title:'The Capture System', mood:'none' },
+    { id:nid(), type:'label',   content:'Capture · Beckon · Organizer', mood:'none' },
+    { id:nid(), type:'body',    content:'Quick capture is a floating panel. On desktop it becomes the **magnetic beckon field** — an animated bar that physically drifts toward the cursor using a quadratic falloff lerp loop running on requestAnimationFrame. It responds to proximity within a 280px radius. It drifts up to 14px toward the mouse. It retreats slowly on exit.', mood:'none' },
+    { id:nid(), type:'spec',    key:'RADIUS',     val:'280px — the field of influence' },
+    { id:nid(), type:'spec',    key:'MAX_DRIFT',  val:'14px — the furthest lean' },
+    { id:nid(), type:'spec',    key:'LERP_TO',    val:'0.10 — approach speed, quick and responsive' },
+    { id:nid(), type:'spec',    key:'LERP_BACK',  val:'0.055 — retreat speed, slow, it lingers' },
+    { id:nid(), type:'pull',    content:'This is not an easter egg. It is an affordance that communicates: *the tool is ready, it is watching, write now.*', mood:'none' },
+    { id:nid(), type:'body',    content:'After submission comes the organizer. You pick a mood — five swatches, no labels until hover. The ambiguity is intentional. You optionally inject into an existing chapter, append to the end, or begin a new chapter entirely.', mood:'none' },
+    { id:nid(), type:'pull',    content:'**Write first. Name it after.** The sequence is the product\'s core argument about the creative process — and the organizer is where that argument becomes mechanical.', mood:'none' },
+
+    // ── Ch 05 · The Spine ───────────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'05', title:'The Spine', mood:'poignant' },
+    { id:nid(), type:'label',   content:'Emotional Cartography · Document Shape', mood:'poignant' },
+    { id:nid(), type:'poster',  content:'The spine is not a table of contents. It is an emotional record.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'A horizontal timeline that appears on header hover. Each segment is a chapter. Its color is the mood of that chapter. Width scales with sentence count. Hovering a segment surfaces a ghost panel: chapter number, title, sentence count, first snippet, mood tag rendered in the chapter\'s own color.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'You are looking at the shape of an argument — how long each chapter ran, what register it was written in, where the dark ones sit, where the empowered ones rise. A document\'s mood arc is visible before you read a word. No other tool does this. Not because it is technically difficult, but because no other tool believes mood is data worth keeping.', mood:'poignant' },
+    { id:nid(), type:'spec',    key:'Poignant',  val:'Amber shifts. The warm ache of something true.' },
+    { id:nid(), type:'spec',    key:'Perplexed', val:'Cool slate blues. The productive confusion before clarity.' },
+    { id:nid(), type:'spec',    key:'Empowered', val:'Forest greens. The register of forward motion.' },
+    { id:nid(), type:'spec',    key:'Dark',      val:'Near-black, ember accents. The register that does not flinch.' },
+    { id:nid(), type:'spec',    key:'Neutral',   val:'Warm paper. The default. Uncolored intention.' },
+    { id:nid(), type:'pull',    content:'Writing in Dark mode *feels* different from writing in Empowered. That is the point — the context of writing is part of the writing.', mood:'poignant' },
+
+    // ── Ch 06 · The Widget System ───────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'06', title:'The Widget System', mood:'none' },
+    { id:nid(), type:'label',   content:'Compose · Syntax · Positioning Engine', mood:'none' },
+    { id:nid(), type:'body',    content:'Two floating widgets: Compose and Syntax. Both use the same positioning engine — viewport-aware, collision-detecting against each other, anchored to the bottom on mobile. They do not overlap. They do not fall off screen. They know where the other one is.', mood:'none' },
+    { id:nid(), type:'body',    content:'The **Syntax widget** opens on single-click of any sentence. It shows the current type, a suggestion derived from text heuristics — word count, punctuation, capitalization patterns — and a full type grid for reclassification. This is the *name it after* moment made interactive. You wrote it. Now apply the form.', mood:'none' },
+    { id:nid(), type:'spec',    key:'≤ 4 words, initial cap',            val:'→ label' },
+    { id:nid(), type:'spec',    key:'≤ 10 words, terminal punctuation',  val:'→ poster' },
+    { id:nid(), type:'spec',    key:'contains " :: "',                   val:'→ spec' },
+    { id:nid(), type:'spec',    key:'quote marks or em-dash, ≤ 22 words', val:'→ pull' },
+    { id:nid(), type:'spec',    key:'> 22 words',                        val:'→ body' },
+    { id:nid(), type:'pull',    content:'The tool does not ask you to open a new document to change your mind. It asks you to *double-click the sentence*.', mood:'none' },
+
+    // ── Ch 07 · Undo and Time ───────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'07', title:'Undo and Time', mood:'perplexed' },
+    { id:nid(), type:'label',   content:'History · Version · Honesty', mood:'perplexed' },
+    { id:nid(), type:'body',    content:'Full snapshot-based history, 60 states deep. Every node mutation pushes a complete copy of the nodes array, the reveal position, and the active node index. Ctrl+Z restores the previous thought. Ctrl+Y advances to the next.', mood:'perplexed' },
+    { id:nid(), type:'spec',    key:'Dirty state',  val:'Gold dot. "unsaved" label. You know.' },
+    { id:nid(), type:'spec',    key:'Clean state',  val:'Neutral dot. "saved" label.' },
+    { id:nid(), type:'spec',    key:'Auto-clear',   val:'2200ms — enough time to notice, not enough to worry.' },
+    { id:nid(), type:'pull',    content:'The version indicator is not functional. It is *ethical*.', mood:'perplexed' },
+
+    // ── Ch 08 · Typography as Semantics ─────────────────────────────────────
+    { id:nid(), type:'chapter', num:'08', title:'Typography as Semantics', mood:'none' },
+    { id:nid(), type:'label',   content:'Type System · Register · Signal', mood:'none' },
+    { id:nid(), type:'spec',    key:'Cormorant Garamond', val:'Display. Chapter headers, poster sentences, pull quotes. The voice of the argument.' },
+    { id:nid(), type:'spec',    key:'Crimson Pro',        val:'Body text. Open, readable at any weight. The voice of the explanation.' },
+    { id:nid(), type:'spec',    key:'DM Mono',            val:'UI chrome. Spec rows, labels, badges, metadata. The voice of the structure.' },
+    { id:nid(), type:'pull',    content:'You know what kind of thing you are reading *before* you read it — because of the shape of the letters.', mood:'none' },
+    { id:nid(), type:'body',    content:'The font system is a semantic layer running beneath the node type system. Both say the same thing through different channels: this thought belongs to a category, the category has a register, the register has a visual form. When typeface and node type align — Cormorant rendering a poster sentence — the signal doubles. The thought arrives twice.', mood:'none' },
+
+    // ── Ch 09 · Where This Sits ─────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'09', title:'Where This Sits', mood:'empowered' },
+    { id:nid(), type:'label',   content:'Landscape · Adjacent Tools · New Space', mood:'empowered' },
+    { id:nid(), type:'poster',  content:'Most tools want to be platforms. This one wants to be a posture.', mood:'empowered' },
+    { id:nid(), type:'body',    content:'Notion, Obsidian, Roam, Logseq, Bear, Craft, iA Writer — these are solving the retrieval problem. How do you capture everything, connect it, find it later? The graph, the backlink, the daily note are answers to that question.', mood:'empowered' },
+    { id:nid(), type:'pull',    content:'**reasonably is not solving the retrieval problem.** It is solving the composition problem. Not *how do I find what I thought* — but *how do I think well in the first place*.', mood:'empowered' },
+    { id:nid(), type:'spec',    key:'iA Writer',   val:'Similar typographic seriousness. Linear. No node model, no mood, no reveal engine.' },
+    { id:nid(), type:'spec',    key:'Hemingway',   val:'Sentence-level feedback. Prescriptive, editing-focused. Not compositional.' },
+    { id:nid(), type:'spec',    key:'Scrivener',   val:'Structural writing for long-form fiction. Not thought composition.' },
+    { id:nid(), type:'spec',    key:'reasonably',  val:'None of the above. Something else.' },
+    { id:nid(), type:'body',    content:'The space this might be creating could be called *narrative thinking tools*, or *compositional notebooks*, or *sentence-first editors*. The thesis: the paragraph is not the unit of thought. The sentence is. Every tool built before this one treated the sentence as content inside a container rather than as the container itself.', mood:'empowered' },
+
+    // ── Ch 10 · Reception ───────────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'10', title:'Reception', mood:'poignant' },
+    { id:nid(), type:'label',   content:'Thought Leaders · Adjacent Communities · Who Gets It First', mood:'poignant' },
+    { id:nid(), type:'body',    content:'**Maggie Appleton** would immediately recognize the node-type system as a form of personal ontology — classification at the moment of production rather than retroactively. She would write about it as *embodied classification*: the toolbar formats, the mood swatches, the syntax widget are all moments where the tool asks you to make your tacit structure explicit.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'**Andy Matuschak** would be interested and skeptical in equal measure. His evergreen note system depends on atomicity and linkability. reasonably has atomicity but not linkability — no backlinks, no graph. He would ask: what happens to these sentences after you write them? That is the right question. It points toward the next version.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'**Robin Sloan** would call it a *writing instrument* rather than a writing tool — something with resistance and character, like a fountain pen versus a ballpoint. The magnetic beckon field would delight him. The mood spine would become a metaphor in one of his newsletters within two weeks of encountering it.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'**Craig Mod** would respond to the typographic intentionality and the physical metaphor of the spine. He has written at length about how the physical form of books affects the act of reading. reasonably is making that argument in software — the spine as emotional record, the step-lock as reading posture. He might actually use it.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'**Paul Ford** would read the source code and write 3,000 words about the lerp engine and what it means that someone built a gravitational field in JavaScript to tell you to write.', mood:'poignant' },
+    { id:nid(), type:'pull',    content:'The bullet-thinkers will find the node system limiting. The sentence-thinkers will feel seen for the first time. That is a real segmentation — not by demographics, but by *how a person\'s mind moves*.', mood:'poignant' },
+
+    // ── Ch 11 · What This Is, Finally ───────────────────────────────────────
+    { id:nid(), type:'chapter', num:'11', title:'What This Is, Finally', mood:'poignant' },
+    { id:nid(), type:'poster',  content:'The sentence is not content. It is structure.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'The central argument — stated in the onboarding, enforced by every design decision — is that writing is not filing. Classification should follow creation. Mood is not metadata, it is meaning. The form should emerge from the content, not precede it. How a tool *feels* to use shapes what thoughts it is capable of producing.', mood:'poignant' },
+    { id:nid(), type:'spec',    key:'No backend',     val:'You own what you write. Always.' },
+    { id:nid(), type:'spec',    key:'No framework',   val:'The tool is as simple as the thought.' },
+    { id:nid(), type:'spec',    key:'Seed content',   val:'The tool demonstrates itself by existing.' },
+    { id:nid(), type:'spec',    key:'Eight types',    val:'A complete expressive universe. Not a limitation.' },
+    { id:nid(), type:'pull',    content:'Most notebooks hold things. This one builds arguments. Not captured and forgotten. **Captured and committed.**', mood:'poignant' },
+    { id:nid(), type:'body',    content:'The single-file constraint makes it a philosophical statement about complexity. The lack of a backend makes it a statement about ownership. The seed content — a document about itself, in its own syntax — makes it a statement about self-evidence. The tool is the argument. The argument is the tool. There is no separation.', mood:'poignant' },
     { id:nid(), type:'poster',  content:'Write as you think. Then think inline.', mood:'poignant' },
-    { id:nid(), type:'spec',    key:'Ctrl+Z / Ctrl+Y',  val:'Undo / Redo — full history' },
-    { id:nid(), type:'spec',    key:'c',                val:'Capture — always ready' },
-    { id:nid(), type:'spec',    key:'?',                val:'Key reference' },
   ];
   pvReveal = 0;
   commitChange();
@@ -2928,32 +2947,24 @@ document.addEventListener('keydown', function obKey() {
   _updateHistUI();
 })();
 
-// ─── RAIL SIZER ────────────────────────────────────────────────────────────
 function setRailWidth(w, btn) {
   document.documentElement.style.setProperty('--rail-w', w + 'px');
   document.querySelectorAll('.rs-btn').forEach(b => b.classList.toggle('active', b === btn));
-  // re-anchor nav after width change
   setTimeout(updateBottomSpacer, 320);
 }
 
-// ─── BOTTOM SPACER — vertical centering ────────────────────────────────────
 function updateBottomSpacer() {
   const scroll = document.getElementById('page-scroll');
   const spacer = document.getElementById('page-bottom-spacer');
   if (!scroll || !spacer) return;
-  // Half viewport height so last sentence can sit at center
-  const half = Math.round(scroll.clientHeight * 0.5);
-  spacer.style.minHeight = half + 'px';
+  spacer.style.minHeight = Math.round(scroll.clientHeight * 0.5) + 'px';
 }
 window.addEventListener('resize', updateBottomSpacer);
-// Also call after each render — patch renderPage to update spacer
 const _origRenderPage = renderPage;
 renderPage = function() { _origRenderPage(); setTimeout(updateBottomSpacer, 60); };
 setTimeout(updateBottomSpacer, 200);
 
-// ─── SENTENCE EDITOR — double-click opens compose widget ───────────────────
 let _editingNodeIdx = -1;
-// seTextarea/seEditor kept for reference but editing now routes through compose widget
 const seEditor   = document.getElementById('sentence-editor');
 const seTextarea = document.getElementById('se-textarea');
 const seBadge    = document.getElementById('se-badge');
@@ -2962,14 +2973,11 @@ function openSentenceEditor(nIdx) {
   const n = nodes[nIdx];
   if (!n || n.type === 'break') return;
   _editingNodeIdx = nIdx;
-
-  // Populate compose widget fields with existing content
   const w = document.getElementById('compose-widget');
   w.className = 'folio-widget type-' + n.type;
   const meta = TYPE_META[n.type] || { label: n.type, desc: '' };
   document.getElementById('cw-type-pill').textContent = meta.label;
   document.getElementById('cw-type-desc').textContent = 'Editing — ' + meta.desc;
-
   if (n.type === 'chapter') {
     document.getElementById('cw-ch-num').value   = n.num   || '01';
     document.getElementById('cw-ch-title').value = n.title || '';
@@ -2981,27 +2989,19 @@ function openSentenceEditor(nIdx) {
     inp.value = n.content || '';
     inp.placeholder = CW_PLACEHOLDERS[n.type] || '';
   }
-
-  // Swap commit button label and wire save
   const commitBtn = document.getElementById('cw-commit-btn');
   commitBtn.textContent = 'Save →';
   commitBtn._editMode = true;
-
   w.classList.add('w-open');
   requestAnimationFrame(() => {
     positionWidget(w, null);
     if      (n.type === 'spec')    document.getElementById('cw-spec-key').focus();
     else if (n.type === 'chapter') document.getElementById('cw-ch-title').focus();
-    else {
-      const inp = document.getElementById('cw-input');
-      inp.focus();
-      inp.setSelectionRange(inp.value.length, inp.value.length);
-    }
+    else { const inp = document.getElementById('cw-input'); inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length); }
   });
 }
 
 function closeSentenceEditor() {
-  // Reset compose widget out of edit mode
   const commitBtn = document.getElementById('cw-commit-btn');
   commitBtn.textContent = 'Commit →';
   commitBtn._editMode = false;
@@ -3013,7 +3013,6 @@ function saveSentenceEdit() {
   if (_editingNodeIdx < 0) { commitComposeWidget(); return; }
   const n = nodes[_editingNodeIdx];
   if (!n) { closeSentenceEditor(); return; }
-
   if (n.type === 'chapter') {
     n.num   = document.getElementById('cw-ch-num').value.trim()   || n.num;
     n.title = document.getElementById('cw-ch-title').value.trim() || n.title;
@@ -3024,20 +3023,14 @@ function saveSentenceEdit() {
     const raw = document.getElementById('cw-input').value.trim();
     if (raw) n.content = raw;
   }
-
   const idx = _editingNodeIdx;
-  closeSentenceEditor();
-  commitChange();
-
+  closeSentenceEditor(); commitChange();
   setTimeout(() => {
-    const target = document.querySelector(`[data-nidx="${idx + 1}"]`) ||
-                   [...document.querySelectorAll('[data-nidx]')].find(e => parseInt(e.dataset.nidx) >= idx);
+    const target = document.querySelector(`[data-nidx="${idx + 1}"]`) || [...document.querySelectorAll('[data-nidx]')].find(e => parseInt(e.dataset.nidx) >= idx);
     if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 80);
 }
 
-// Double-click listener — patched onto renderPage output
-// We intercept the dblclick at the root level
 document.getElementById('narrative-root').addEventListener('dblclick', e => {
   const el = e.target.closest('.sentence:not(.break)');
   if (!el) return;
@@ -3046,64 +3039,114 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   if (!isNaN(nIdx)) openSentenceEditor(nIdx);
 });
 </script>
+
 <div id="bracket-ghost"><div class="bg-inner"><div class="bg-term" id="bg-term"></div><div class="bg-body" id="bg-body"></div></div></div>
 
 <script>
-// ─── BRACKET GHOST TOOLTIP ─────────────────────────────────────────────────
 (function() {
   const ghost  = document.getElementById('bracket-ghost');
   const bgTerm = document.getElementById('bg-term');
   const bgBody = document.getElementById('bg-body');
   let gx = 0, gy = 0, tx = 0, ty = 0, raf = null, visible = false;
   const LF = 0.13, OX = 14, OY = -28;
-
   function lerp(a, b, t) { return a + (b - a) * t; }
-
   function tick() {
-    gx = lerp(gx, tx, LF);
-    gy = lerp(gy, ty, LF);
-    ghost.style.left = gx + 'px';
-    ghost.style.top  = gy + 'px';
-    if (visible) raf = requestAnimationFrame(tick);
-    else raf = null;
+    gx = lerp(gx, tx, LF); gy = lerp(gy, ty, LF);
+    ghost.style.left = gx + 'px'; ghost.style.top = gy + 'px';
+    if (visible) raf = requestAnimationFrame(tick); else raf = null;
   }
-
   function showGhost(term, e) {
     bgTerm.textContent = term;
-    // Body copy: search spec nodes for a matching key, else show the term itself
-    const spec = window._reasonablyNodes && window._reasonablyNodes()
-      .find(n => n.type === 'spec' && n.key && n.key.toLowerCase() === term.toLowerCase());
+    const spec = window._reasonablyNodes && window._reasonablyNodes().find(n => n.type === 'spec' && n.key && n.key.toLowerCase() === term.toLowerCase());
     bgBody.textContent = spec ? spec.val : term;
-
     const pad = 12;
     tx = Math.min(e.clientX + OX, window.innerWidth - ghost.offsetWidth - pad);
     ty = Math.max(e.clientY + OY, pad);
     if (!visible) { gx = tx; gy = ty; ghost.style.left = gx + 'px'; ghost.style.top = gy + 'px'; }
-    ghost.classList.add('visible');
-    visible = true;
+    ghost.classList.add('visible'); visible = true;
     if (!raf) raf = requestAnimationFrame(tick);
   }
-
-  function hideGhost() {
-    ghost.classList.remove('visible');
-    visible = false;
-  }
-
+  function hideGhost() { ghost.classList.remove('visible'); visible = false; }
   document.addEventListener('mousemove', e => {
     tx = Math.min(e.clientX + OX, window.innerWidth - (ghost.offsetWidth || 200) - 12);
     ty = Math.max(e.clientY + OY, 12);
   }, { passive: true });
-
-  // Wire via delegation — works even after renderPage rebuilds the DOM
   document.getElementById('narrative-root').addEventListener('mouseover', e => {
     const ann = e.target.closest('.bracket-ann');
     if (ann) { showGhost(ann.dataset.term, e); return; }
     if (!e.target.closest('.bracket-ann')) hideGhost();
   });
   document.getElementById('narrative-root').addEventListener('mouseleave', hideGhost);
-
-  // Expose nodes accessor so ghost can look up spec values
   window._reasonablyNodes = () => window.__folio_nodes || [];
+})();
+</script>
+
+<script>
+/* ─── FULL-VIEWPORT PANEL OVERLAY SYSTEM ─────────────────────────────── */
+(function() {
+  const tocEl     = document.getElementById('toc');
+  const composeEl = document.getElementById('compose-panel');
+  const appEl     = document.getElementById('app');
+
+  function isMobile() { return window.innerWidth <= 720; }
+
+  function openPanelOverlay(which) {
+    const el = which === 'toc' ? tocEl : composeEl;
+    if (!el) return;
+    // Close any open panel first
+    closeAllPanels();
+    el.classList.add('panel-overlay');
+    if (which === 'compose') el.classList.add('panel-right');
+    // Force reflow before adding open class for transition
+    el.offsetHeight;
+    el.classList.add('panel-open');
+    document.body.classList.add(which === 'toc' ? 'panel-toc-open' : 'panel-compose-open');
+  }
+
+  function closePanelOverlay(which) {
+    const el = which === 'toc' ? tocEl : composeEl;
+    if (!el) return;
+    el.classList.remove('panel-open');
+    document.body.classList.remove(which === 'toc' ? 'panel-toc-open' : 'panel-compose-open');
+    // Remove overlay class after transition
+    setTimeout(() => {
+      if (!el.classList.contains('panel-open')) {
+        el.classList.remove('panel-overlay', 'panel-right');
+        // On mobile, panels aren't in the grid flow at all — keep them hidden
+        if (isMobile()) {
+          if (which === 'toc') tocEl.style.display = 'none';
+          if (which === 'compose') composeEl.style.display = 'none';
+        }
+      }
+    }, 320);
+  }
+
+  function closeAllPanels() {
+    closePanelOverlay('toc');
+    closePanelOverlay('compose');
+  }
+
+  // Expose globally
+  window.openPanelOverlay  = openPanelOverlay;
+  window.closePanelOverlay = closePanelOverlay;
+  window.closeAllPanels    = closeAllPanels;
+
+  // ESC closes panels
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeAllPanels();
+  });
+
+  // On resize: if going desktop, clean up any mobile overlay state
+  window.addEventListener('resize', () => {
+    if (!isMobile()) {
+      // Remove leftover mobile overlay classes
+      tocEl.classList.remove('panel-overlay', 'panel-open', 'panel-right');
+      composeEl.classList.remove('panel-overlay', 'panel-open', 'panel-right');
+      document.body.classList.remove('panel-toc-open', 'panel-compose-open');
+      tocEl.style.display = '';
+      composeEl.style.display = '';
+    }
+  });
 })();
 </script>
 </body>
