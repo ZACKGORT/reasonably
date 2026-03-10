@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIj4KICA8IS0tIGluayBiYWNrZ3JvdW5kIC0tPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgcng9IjUiIGZpbGw9IiMxMTBkMDgiLz4KCiAgPCEtLSBnaG9zdCBsaW5lcyBhYm92ZSDigJQgcGFzdCBzZW50ZW5jZXMsIGZhZGVkIC0tPgogIDxsaW5lIHgxPSI5IiB5MT0iMTEiIHgyPSIyNiIgeTI9IjExIiBzdHJva2U9IiMyYTIwMTgiIHN0cm9rZS13aWR0aD0iMS4yIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iOSIgeTE9IjE1IiB4Mj0iMjMiIHkyPSIxNSIgc3Ryb2tlPSIjMmEyMDE4IiBzdHJva2Utd2lkdGg9IjEuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0gYWN0aXZlIHNlbnRlbmNlIGxpbmUg4oCUIHBhcnRpYWwsIGZvcm1pbmcgLS0+CiAgPGxpbmUgeDE9IjEyIiB5MT0iMjEiIHgyPSIyNSIgeTI9IjIxIiBzdHJva2U9IiM2YjVjNDIiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIGJyaWdodGVyIHBvcnRpb24g4oCUIHRob3VnaHQgc28gZmFyIC0tPgogIDxsaW5lIHgxPSIxMiIgeTE9IjIxIiB4Mj0iMjAiIHkyPSIyMSIgc3Ryb2tlPSIjYzhiYWE2IiBzdHJva2Utd2lkdGg9IjEuMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0gaGFsbyByaW5nIOKAlCB0aGUgZmllbGQgb2YgcHJlc2VuY2UgLS0+CiAgPGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSI1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2ZTIyMTQiIHN0cm9rZS13aWR0aD0iMC42IiBvcGFjaXR5PSIwLjQiLz4KCiAgPCEtLSBjYXB0dXJlIGRvdCDigJQgdGhlIHJlZCBoZWFydGJlYXQgLS0+CiAgPGNpcmNsZSBjeD0iOCIgY3k9IjIxIiByPSIyLjYiIGZpbGw9IiM2ZTIyMTQiLz4KICA8IS0tIGlubmVyIGhpZ2hsaWdodCAtLT4KICA8Y2lyY2xlIGN4PSI3LjIiIGN5PSIyMC4yIiByPSIwLjgiIGZpbGw9IiNjODQwMmEiIG9wYWNpdHk9IjAuNiIvPgo8L3N2Zz4K">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&family=JetBrains+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
 /* ─── TOKENS ──────────────────────────────────────────────────────────── */
 :root {
@@ -34,7 +34,133 @@
   --f-body:   'Crimson Pro', serif;
   --f-ui:     'DM Mono', monospace;
   --rail-w:   280px;
+  --noise-opacity: 0.032;
+  --noise-blend: multiply;
+  --edge-gradient: rgba(60,42,20,0.08);
 }
+
+/* ── reasonably theme (dark utility) ─────────────────────────────────── */
+body.theme-reasonably {
+  --paper:    #0e0f11;
+  --paper-2:  #141618;
+  --paper-3:  #1c1f23;
+  --shadow:   rgba(0,0,0,0.5);
+  --ink:      #e8eaed;
+  --ink-2:    #b0b8c4;
+  --ink-3:    #6e7a8a;
+  --ink-4:    #424e5c;
+  --ink-5:    #2a333d;
+  --red:      #c0392b;
+  --red-l:    rgba(192,57,43,0.10);
+  --red-m:    rgba(192,57,43,0.30);
+  --gold:     #4a9eff;
+  --gold-l:   rgba(74,158,255,0.10);
+  --rule:     rgba(180,200,220,0.07);
+  --rule-2:   rgba(180,200,220,0.13);
+  --f-disp:   'JetBrains Mono', monospace;
+  --f-body:   'Inter', sans-serif;
+  --f-ui:     'JetBrains Mono', monospace;
+  --noise-opacity: 0;
+  --noise-blend: normal;
+  --edge-gradient: rgba(0,0,0,0);
+}
+
+/* reasonably: tighter, more utilitarian type settings */
+/* ── reasonably-light theme (raw daylight) ───────────────────────────── */
+body.theme-reasonably-light {
+  --paper:    #f4f4f2;
+  --paper-2:  #eceae6;
+  --paper-3:  #e2e0db;
+  --shadow:   rgba(0,0,0,0.08);
+  --ink:      #111214;
+  --ink-2:    #3a3d42;
+  --ink-3:    #6b717a;
+  --ink-4:    #9aa0aa;
+  --ink-5:    #c8cdd4;
+  --red:      #c0392b;
+  --red-l:    rgba(192,57,43,0.08);
+  --red-m:    rgba(192,57,43,0.22);
+  --gold:     #1a6ef5;
+  --gold-l:   rgba(26,110,245,0.08);
+  --rule:     rgba(0,0,0,0.08);
+  --rule-2:   rgba(0,0,0,0.14);
+  --f-disp:   'JetBrains Mono', monospace;
+  --f-body:   'Inter', sans-serif;
+  --f-ui:     'JetBrains Mono', monospace;
+  --noise-opacity: 0;
+  --noise-blend: normal;
+  --edge-gradient: rgba(0,0,0,0);
+}
+body.theme-reasonably-light::before { opacity: 0; }
+body.theme-reasonably-light::after  { background: none; }
+body.theme-reasonably-light .sentence.poster  { font-size: clamp(22px,3.2vw,38px); font-style: normal; font-weight: 400; letter-spacing: -0.02em; }
+body.theme-reasonably-light .sentence.body    { font-size: clamp(14px,1.6vw,17px); line-height: 1.65; font-style: normal; }
+body.theme-reasonably-light .sentence.pull    { font-size: clamp(15px,1.8vw,20px); font-style: normal; font-weight: 400; border-left-color: var(--red-m); }
+body.theme-reasonably-light .ch-num           { font-size: clamp(48px,9vw,80px); -webkit-text-stroke: 1px var(--ink-5); }
+body.theme-reasonably-light .ch-title         { font-size: clamp(18px,2.8vw,32px); font-style: normal; font-weight: 300; letter-spacing: -0.01em; }
+body.theme-reasonably-light .wordmark         { font-family: var(--f-ui); font-style: normal; font-weight: 400; letter-spacing: -0.02em; }
+body.theme-reasonably-light .ob-wordmark      { font-family: var(--f-ui); font-style: normal; font-weight: 300; letter-spacing: -0.03em; }
+body.theme-reasonably-light .ob-tagline       { font-style: normal; font-family: var(--f-ui); font-size: 13px; letter-spacing: 0.01em; line-height: 1.7; }
+body.theme-reasonably-light.mood-poignant  { --paper:#f5f2ec; --paper-2:#ede8dc; --paper-3:#e4ddd0; --gold:#c87820; --red:#c05010; }
+body.theme-reasonably-light.mood-perplexed { --paper:#f0f2f8; --paper-2:#e4e8f4; --paper-3:#d8dff0; --gold:#1a6ef5; --red:#1a50d0; }
+body.theme-reasonably-light.mood-empowered { --paper:#f0f5f0; --paper-2:#e4ede4; --paper-3:#d8e4d8; --gold:#2a8a2a; --red:#1a6a1a; }
+body.theme-reasonably-light.mood-dark      { --paper:#eeece8; --paper-2:#e4e2dc; --paper-3:#d8d6d0; --gold:#555; --red:#c0392b; }
+body.theme-reasonably .sentence.poster {
+  font-size: clamp(22px, 3.2vw, 38px);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+body.theme-reasonably .sentence.body {
+  font-size: clamp(14px, 1.6vw, 17px);
+  line-height: 1.65;
+  font-style: normal;
+}
+body.theme-reasonably .sentence.pull {
+  font-size: clamp(15px, 1.8vw, 20px);
+  font-style: normal;
+  font-weight: 400;
+  border-left-color: var(--red-m);
+}
+body.theme-reasonably .ch-num {
+  font-size: clamp(48px, 9vw, 80px);
+  -webkit-text-stroke: 1px var(--ink-5);
+}
+body.theme-reasonably .ch-title {
+  font-size: clamp(18px, 2.8vw, 32px);
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+body.theme-reasonably .wordmark {
+  font-family: var(--f-ui);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+body.theme-reasonably .ob-wordmark {
+  font-family: var(--f-ui);
+  font-style: normal;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+body.theme-reasonably .ob-tagline {
+  font-style: normal;
+  font-family: var(--f-ui);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  line-height: 1.7;
+}
+
+/* reasonably: no paper texture, clean dark surfaces */
+body.theme-reasonably::before { opacity: 0; }
+body.theme-reasonably::after  { background: none; }
+
+/* reasonably: mood themes shift to saturated-on-dark variants */
+body.theme-reasonably.mood-poignant  { --paper:#0f0e0c; --paper-2:#161410; --paper-3:#1e1a14; --gold:#e8a030; --red:#d05a20; }
+body.theme-reasonably.mood-perplexed { --paper:#0c0e12; --paper-2:#12151c; --paper-3:#181d26; --gold:#4a9eff; --red:#3a7aef; }
+body.theme-reasonably.mood-empowered { --paper:#0b0f0b; --paper-2:#111611; --paper-3:#171f17; --gold:#4aaf4a; --red:#2a8f2a; }
+body.theme-reasonably.mood-dark      { --paper:#070809; --paper-2:#0d0f11; --paper-3:#131618; --gold:#888; --red:#c0392b; }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { height: 100%; }
@@ -54,13 +180,13 @@ body::before {
   content: '';
   position: fixed; inset: 0; z-index: 9999; pointer-events: none;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0/220px;
-  opacity: 0.032;
-  mix-blend-mode: multiply;
+  opacity: var(--noise-opacity);
+  mix-blend-mode: var(--noise-blend);
 }
 body::after {
   content: '';
   position: fixed; top: 0; left: 0; bottom: 0; width: 18px;
-  background: linear-gradient(to right, rgba(60,42,20,0.08), transparent);
+  background: linear-gradient(to right, var(--edge-gradient), transparent);
   z-index: 9998; pointer-events: none;
 }
 
@@ -2005,6 +2131,30 @@ body.panel-compose-open #panel-backdrop {
 
 <script>
 'use strict';
+
+// ─── THEME ────────────────────────────────────────────────────────────────
+// 'frank'             → ifimaybefrank.com  (warm paper, serif, introspective)
+// 'reasonably'        → reasonably.cc dark (mono, utility, precise)
+// 'reasonably-light'  → reasonably.cc light (raw daylight, mono, clean)
+const SITE_THEME = 'reasonably-light';
+document.body.classList.toggle('theme-reasonably',       SITE_THEME === 'reasonably');
+document.body.classList.toggle('theme-reasonably-light', SITE_THEME === 'reasonably-light');
+
+(function applyThemeText() {
+  const isR = SITE_THEME === 'reasonably' || SITE_THEME === 'reasonably-light';
+  document.title = isR ? 'reasonably · A Thinking Notebook' : 'if i may be frank · A Thinking Notebook';
+  const wm = document.querySelector('.wordmark');
+  if (wm) wm.childNodes[0].textContent = isR ? 'reasonably' : 'if i may be frank';
+  const obWm = document.querySelector('.ob-wordmark');
+  if (obWm) obWm.textContent = isR ? 'reasonably' : 'if i may be frank';
+  const obEd = document.querySelector('.ob-edition');
+  if (obEd) obEd.textContent = isR ? 'A Thinking Notebook · Raw Edition' : 'A Thinking Notebook · Self-Portrait Edition';
+  const obTg = document.querySelector('.ob-tagline');
+  if (isR && obTg) obTg.innerHTML = 'The thought arrives.<br>Structure follows.';
+  const obBtn = document.getElementById('ob-btn');
+  if (obBtn) obBtn.textContent = isR ? 'Open the notebook →' : 'Read the self-portrait →';
+})();
+// ──────────────────────────────────────────────────────────────────────────
 
 let nodes = [];
 let activeNode = -1;
