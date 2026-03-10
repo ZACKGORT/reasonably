@@ -1301,17 +1301,26 @@ header::after {
 /* ─── MOBILE SCROLL FOB ──────────────────────────────────────────────── */
 #scroll-fob {
   display: none;
-  position: fixed; top: 64px; right: 14px; z-index: 8400;
-  width: 40px; height: 40px; border-radius: 50%;
+  position: fixed;
+  top: 102px; /* header(52) + beckon-top(12) + beckon-height(38) */
+  right: 14px;
+  z-index: 8400;
+  width: 28px; height: 28px; border-radius: 50%;
   background: var(--paper-2); border: 1px solid var(--rule-2);
-  box-shadow: 0 2px 10px var(--shadow);
+  box-shadow: 0 1px 6px var(--shadow);
   align-items: center; justify-content: center;
-  cursor: pointer; transition: background 0.14s, border-color 0.14s, transform 0.14s;
-  font-size: 17px; color: var(--ink-3);
+  cursor: pointer;
+  transition: background 0.14s, border-color 0.14s, opacity 0.14s, transform 0.18s;
+  font-size: 13px; color: var(--ink-4);
+  opacity: 0.55;
   -webkit-tap-highlight-color: transparent;
 }
-#scroll-fob:active { transform: scale(0.92); background: var(--paper-3); }
-#scroll-fob.active { border-color: var(--gold); color: var(--gold); background: var(--gold-l); }
+#scroll-fob:active { transform: scale(0.88); }
+#scroll-fob:hover  { opacity: 1; }
+#scroll-fob.active {
+  border-color: var(--gold); color: var(--gold);
+  background: var(--gold-l); opacity: 1;
+}
 @media (max-width: 720px) { #scroll-fob { display: flex; } }
 
 body.free-scroll #page-scroll { overflow-y: auto; }
@@ -1772,11 +1781,11 @@ body.panel-compose-open #panel-backdrop {
 
   #app {
     grid-template-columns: 1fr !important;
-    grid-template-rows: 52px 1fr !important;
-    padding-top: 52px; /* compensate for fixed header */
+    grid-template-rows: 1fr !important; /* header is fixed, not in flow */
+    padding-top: 52px; /* push content below fixed header */
   }
   #toc { display: none !important; }
-  #page-wrap { grid-column: 1; grid-row: 2; width: 100%; min-width: 0; }
+  #page-wrap { grid-column: 1; grid-row: 1; width: 100%; min-width: 0; }
   #compose-panel { display: none !important; }
 
   /* Header: stripped to wordmark only on mobile */
