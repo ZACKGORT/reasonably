@@ -4223,11 +4223,17 @@ commitChange = function() {
 // ─── SEED — self-portrait ──────────────────────────────────────────────────
 (function seed() {
   nodes = [
-    // ── Ch 01 · What Was Built ──────────────────────────────────────────────
-    { id:nid(), type:'chapter', num:'01', title:'What Was Built', mood:'poignant' },
-    { id:nid(), type:'poster',  content:'A single file. No framework. No server. No build step. The entire product is the file.', mood:'poignant' },
-    { id:nid(), type:'body',    content:'Approximately 1,600 lines of CSS and 1,200 lines of JavaScript, co-located, self-sufficient. It runs in a browser tab and does not phone home. That is not a technical constraint. It is a **philosophical position stated in code**: the tool should be as atomic as the thought it holds.', mood:'poignant' },
-    { id:nid(), type:'pull',    content:'The form *is* the argument. The file *is* the manifesto.', mood:'poignant' },
+    // ── Ch 01 · Where This Sits ─────────────────────────────────────────────
+    { id:nid(), type:'chapter', num:'01', title:'Where This Sits', mood:'empowered' },
+    { id:nid(), type:'label',   content:'Landscape · Adjacent Tools · New Space', mood:'empowered' },
+    { id:nid(), type:'poster',  content:'Most tools want to be platforms. This one wants to be a posture.', mood:'empowered' },
+    { id:nid(), type:'body',    content:'Notion, Obsidian, Roam, Logseq, Bear, Craft, iA Writer — these are solving the retrieval problem. How do you capture everything, connect it, find it later? The graph, the backlink, the daily note are answers to that question.', mood:'empowered' },
+    { id:nid(), type:'pull',    content:'**reasonably is not solving the retrieval problem.** It is solving the composition problem. Not *how do I find what I thought* — but *how do I think well in the first place*.', mood:'empowered' },
+    { id:nid(), type:'spec',    key:'iA Writer',   val:'Similar typographic seriousness. Linear. No node model, no mood, no reveal engine.' },
+    { id:nid(), type:'spec',    key:'Hemingway',   val:'Sentence-level feedback. Prescriptive, editing-focused. Not compositional.' },
+    { id:nid(), type:'spec',    key:'Scrivener',   val:'Structural writing for long-form fiction. Not thought composition.' },
+    { id:nid(), type:'spec',    key:'reasonably',  val:'None of the above. Something else.' },
+    { id:nid(), type:'body',    content:'The space this might be creating could be called *narrative thinking tools*, or *compositional notebooks*, or *sentence-first editors*. The thesis: the paragraph is not the unit of thought. The sentence is. Every tool built before this one treated the sentence as content inside a container rather than as the container itself.', mood:'empowered' },
 
     // ── Ch 02 · The Node ────────────────────────────────────────────────────
     { id:nid(), type:'chapter', num:'02', title:'The Node', mood:'none' },
@@ -4310,16 +4316,10 @@ commitChange = function() {
     { id:nid(), type:'body',    content:'The font system is a semantic layer running beneath the node type system. Both say the same thing through different channels: this thought belongs to a category, the category has a register, the register has a visual form. When typeface and node type align — Cormorant rendering a poster sentence — the signal doubles. The thought arrives twice.', mood:'none' },
 
     // ── Ch 09 · Where This Sits ─────────────────────────────────────────────
-    { id:nid(), type:'chapter', num:'09', title:'Where This Sits', mood:'empowered' },
-    { id:nid(), type:'label',   content:'Landscape · Adjacent Tools · New Space', mood:'empowered' },
-    { id:nid(), type:'poster',  content:'Most tools want to be platforms. This one wants to be a posture.', mood:'empowered' },
-    { id:nid(), type:'body',    content:'Notion, Obsidian, Roam, Logseq, Bear, Craft, iA Writer — these are solving the retrieval problem. How do you capture everything, connect it, find it later? The graph, the backlink, the daily note are answers to that question.', mood:'empowered' },
-    { id:nid(), type:'pull',    content:'**reasonably is not solving the retrieval problem.** It is solving the composition problem. Not *how do I find what I thought* — but *how do I think well in the first place*.', mood:'empowered' },
-    { id:nid(), type:'spec',    key:'iA Writer',   val:'Similar typographic seriousness. Linear. No node model, no mood, no reveal engine.' },
-    { id:nid(), type:'spec',    key:'Hemingway',   val:'Sentence-level feedback. Prescriptive, editing-focused. Not compositional.' },
-    { id:nid(), type:'spec',    key:'Scrivener',   val:'Structural writing for long-form fiction. Not thought composition.' },
-    { id:nid(), type:'spec',    key:'reasonably',  val:'None of the above. Something else.' },
-    { id:nid(), type:'body',    content:'The space this might be creating could be called *narrative thinking tools*, or *compositional notebooks*, or *sentence-first editors*. The thesis: the paragraph is not the unit of thought. The sentence is. Every tool built before this one treated the sentence as content inside a container rather than as the container itself.', mood:'empowered' },
+    { id:nid(), type:'chapter', num:'09', title:'What Was Built', mood:'poignant' },
+    { id:nid(), type:'poster',  content:'A single file. No framework. No server. No build step. The entire product is the file.', mood:'poignant' },
+    { id:nid(), type:'body',    content:'Approximately 1,600 lines of CSS and 1,200 lines of JavaScript, co-located, self-sufficient. It runs in a browser tab and does not phone home. That is not a technical constraint. It is a **philosophical position stated in code**: the tool should be as atomic as the thought it holds.', mood:'poignant' },
+    { id:nid(), type:'pull',    content:'The form *is* the argument. The file *is* the manifesto.', mood:'poignant' },
 
     // ── Ch 10 · Reception ───────────────────────────────────────────────────
     { id:nid(), type:'chapter', num:'10', title:'Reception', mood:'poignant' },
