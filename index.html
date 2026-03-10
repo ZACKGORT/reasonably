@@ -322,6 +322,14 @@ header::after {
   transform: translateX(-50%) translateY(0);
   opacity: 1; pointer-events: auto;
 }
+@media (max-width: 720px) {
+  #capture-panel {
+    bottom: 56px;
+    width: 100vw;
+    border-radius: 3px 3px 0 0;
+    border-left: none; border-right: none;
+  }
+}
 
 .cp-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -1326,8 +1334,8 @@ body.mood-dark      { --paper:#1a1614; --paper-2:#221e1b; --paper-3:#2a2420; --i
 @media (max-width: 600px) {
   .folio-widget { width: auto !important; left: 8px !important; right: 8px !important; top: auto !important; transform: translateY(14px) scale(1) !important; border-radius: 4px 4px 0 0; }
   .folio-widget.w-open { transform: translateY(0) scale(1) !important; }
-  #syntax-widget  { bottom: var(--sw-bottom, 16px) !important; }
-  #compose-widget { bottom: var(--cw-bottom, 16px) !important; }
+  #syntax-widget  { bottom: calc(56px + var(--sw-bottom, 16px)) !important; }
+  #compose-widget { bottom: calc(56px + var(--cw-bottom, 16px)) !important; }
 }
 
 /* ─── ONBOARDING ──────────────────────────────────────────────────────── */
