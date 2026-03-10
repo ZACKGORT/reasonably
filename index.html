@@ -77,7 +77,7 @@ body::after {
 #app.reading { grid-template-columns: 0px 1fr 0px; }
 #app.reading #capture-fab,
 #app.reading #capture-beckon { opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-body.spine-open #capture-beckon { opacity: 0; pointer-events: none; }
+body.spine-open #capture-beckon { top: calc(var(--spine-h, 0px) + 16px); }
 
 /* ─── HEADER ──────────────────────────────────────────────────────────── */
 header {
@@ -179,7 +179,7 @@ header::after {
   will-change: transform;
   pointer-events: auto;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, top 0.32s cubic-bezier(0.25,1,0.5,1);
 }
 
 .beckon-inner {
@@ -2659,24 +2659,32 @@ function setMood(mood) {
   renderSpine();
 }
 
+function updateSpineBeckon(open) {
+  const sp = document.getElementById('spine-panel');
+  const h = open ? sp.getBoundingClientRect().height : 0;
+  document.documentElement.style.setProperty('--spine-h', h + 'px');
+}
+
 function toggleSpine() {
   spineOpen = !spineOpen;
   document.body.classList.toggle('spine-open', spineOpen);
   renderSpine();
+  // Measure after transition starts (panel is in DOM at full height)
+  requestAnimationFrame(() => updateSpineBeckon(spineOpen));
 }
 
 document.getElementById('main-header').addEventListener('mouseenter', () => {
-  if (!spineOpen) { spineOpen = true; document.body.classList.add('spine-open'); renderSpine(); }
+  if (!spineOpen) { spineOpen = true; document.body.classList.add('spine-open'); renderSpine(); requestAnimationFrame(() => updateSpineBeckon(true)); }
 });
 document.getElementById('main-header').addEventListener('mouseleave', e => {
   const sp = document.getElementById('spine-panel');
   if (sp && sp.contains(e.relatedTarget)) return;
-  if (!document.getElementById('spine-search').matches(':focus')) { spineOpen = false; document.body.classList.remove('spine-open'); }
+  if (!document.getElementById('spine-search').matches(':focus')) { spineOpen = false; document.body.classList.remove('spine-open'); updateSpineBeckon(false); }
 });
 document.getElementById('spine-panel').addEventListener('mouseleave', e => {
   const hdr = document.getElementById('main-header');
   if (hdr.contains(e.relatedTarget)) return;
-  if (!document.getElementById('spine-search').matches(':focus')) { spineOpen = false; document.body.classList.remove('spine-open'); }
+  if (!document.getElementById('spine-search').matches(':focus')) { spineOpen = false; document.body.classList.remove('spine-open'); updateSpineBeckon(false); }
 });
 
 function renderSpine() {
@@ -2714,7 +2722,7 @@ function renderSpine() {
     const ghost = document.createElement('div'); ghost.className = 'spine-ghost';
     ghost.innerHTML = `<div class="sg-mood-bar" style="background:${mc.bar}"></div><div class="sg-ch-num">Chapter · ${String(d.ch.num||ci+1).padStart(2,'0')}</div><div class="sg-ch-title">${d.ch.title||'Untitled'}</div><div class="sg-stats"><div class="sg-stat"><span class="sg-stat-val">${d.sentCount}</span><span class="sg-stat-key">sentences</span></div><div class="sg-stat"><span class="sg-stat-val">${ci+1}</span><span class="sg-stat-key">of ${chapterData.length}</span></div></div>${d.snip?`<div class="sg-snip">${d.snip}${d.snip.length>=80?'…':''}</div>`:''}<span class="sg-mood-tag" style="background:${mc.bar}20;color:${mc.bar};border:1px solid ${mc.bar}40">${mc.tag}</span>`;
     seg.append(bar, num, title, ghost);
-    seg.addEventListener('click', () => { const si = pageIdxOfNode(d.chIdx+1); if(si>=0)goTo(si); spineOpen=false; document.body.classList.remove('spine-open'); });
+    seg.addEventListener('click', () => { const si = pageIdxOfNode(d.chIdx+1); if(si>=0)goTo(si); spineOpen=false; document.body.classList.remove('spine-open'); updateSpineBeckon(false); });
     tl.appendChild(seg);
   });
 }
@@ -2731,7 +2739,7 @@ document.getElementById('spine-search').addEventListener('blur', () => {
   document.querySelectorAll('.spine-seg').forEach(s => s.style.opacity='1');
   setTimeout(() => {
     if (!document.getElementById('main-header').matches(':hover') && !document.getElementById('spine-panel').matches(':hover')) {
-      spineOpen = false; document.body.classList.remove('spine-open');
+      spineOpen = false; document.body.classList.remove('spine-open'); updateSpineBeckon(false);
     }
   }, 200);
 });
