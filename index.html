@@ -2189,6 +2189,24 @@ body.panel-compose-open #panel-backdrop {
 #app.arrange-full #toc { overflow: hidden; pointer-events: none; }
 #compose-panel.arrange-expanded #compose-body { display: none !important; }
 #compose-panel.arrange-expanded #arrange-view { display: flex !important; }
+
+/* ─── VIEW MODE WIDGET ───────────────────────────────────────────────── */
+#view-widget {
+  display: inline-flex; align-items: center; gap: 1px;
+  background: var(--paper-3); border: 1px solid var(--rule-2);
+  border-radius: 3px; padding: 2px;
+  cursor: grab; user-select: none;
+  position: relative; z-index: 100;
+}
+#view-widget.dragging { cursor: grabbing; position: fixed; z-index: 9000; box-shadow: 0 4px 20px var(--shadow); }
+.vw-btn {
+  font-family: var(--f-ui); font-size: 8px; letter-spacing: 0.10em;
+  text-transform: uppercase; background: none; border: none;
+  color: var(--ink-3); padding: 4px 9px; cursor: pointer;
+  border-radius: 2px; transition: all 0.12s; white-space: nowrap;
+}
+.vw-btn:hover { color: var(--ink); background: var(--paper-2); }
+.vw-btn.active { background: var(--ink); color: var(--paper); }
 </style>
 </head>
 <body>
@@ -2246,7 +2264,7 @@ body.panel-compose-open #panel-backdrop {
 <div id="panel-backdrop" onclick="closeAllPanels()"></div>
 
 <!-- ─── APP ─────────────────────────────────────────────────────────── -->
-<div id="app">
+<div id="app" class="no-toc">
 
   <header id="main-header">
     <div class="wordmark">
@@ -2264,11 +2282,13 @@ body.panel-compose-open #panel-backdrop {
         <button class="h-undo-btn" id="btn-undo" onclick="histUndo()" title="Undo (Ctrl+Z)" disabled>↩</button>
         <button class="h-undo-btn" id="btn-redo" onclick="histRedo()" title="Redo (Ctrl+Y)" disabled>↪</button>
       </div>
-      <button class="h-btn" id="btn-toc"  onclick="toggleToc()"     title="Table of contents">☰ Contents</button>
-      <button class="h-btn" id="btn-compose" onclick="toggleCompose()" title="Compose panel">✏ Compose</button>
       <button class="h-btn" id="btn-toc-mobile"  onclick="openPanelOverlay('toc')"     title="Contents">☰</button>
       <button class="h-btn" id="btn-compose-mobile" onclick="openPanelOverlay('compose')" title="Compose">✏</button>
-      <button class="h-btn" id="btn-read" onclick="toggleReading()" title="Preview mode (p)">⊡ Preview</button>
+      <div id="view-widget" title="Drag to reposition">
+        <button class="vw-btn" id="vw-read"  onclick="setViewMode('read')">Read</button>
+        <button class="vw-btn" id="vw-write" onclick="setViewMode('write')">Write</button>
+        <button class="vw-btn" id="vw-both"  onclick="setViewMode('both')">Both</button>
+      </div>
       <button class="h-btn" id="btn-export" onclick="exportRaw()">↗ Export</button>
       <button class="h-btn" id="btn-keys"  onclick="toggleKeys()">? Keys</button>
     </div>
@@ -3477,8 +3497,69 @@ function toggleCompose() {
 function toggleReading() {
   readMode = !readMode;
   document.getElementById('app').classList.toggle('reading', readMode);
-  document.getElementById('btn-read').classList.toggle('active', readMode);
+  if (document.getElementById('btn-read')) document.getElementById('btn-read').classList.toggle('active', readMode);
 }
+
+// ── View mode widget ──────────────────────────────────────────────────
+let _viewMode = 'write';
+function setViewMode(mode) {
+  _viewMode = mode;
+  const app = document.getElementById('app');
+  // Clear all rail states
+  app.classList.remove('no-toc', 'no-comp', 'reading');
+  readMode = false;
+  if (mode === 'read')  { app.classList.add('no-comp'); }
+  if (mode === 'write') { app.classList.add('no-toc'); }
+  // 'both' — both rails open, nothing added
+  document.querySelectorAll('.vw-btn').forEach(b => b.classList.remove('active'));
+  const active = document.getElementById('vw-' + mode);
+  if (active) active.classList.add('active');
+}
+
+// ── Widget drag ───────────────────────────────────────────────────────
+(function() {
+  const w = document.getElementById('view-widget');
+  let dragging = false, ox = 0, oy = 0, startX = 0, startY = 0, moved = false;
+
+  w.addEventListener('pointerdown', e => {
+    if (e.target.classList.contains('vw-btn')) return;
+    dragging = true; moved = false;
+    const r = w.getBoundingClientRect();
+    ox = e.clientX - r.left; oy = e.clientY - r.top;
+    startX = e.clientX; startY = e.clientY;
+    w.setPointerCapture(e.pointerId);
+  });
+
+  window.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    if (Math.abs(e.clientX - startX) + Math.abs(e.clientY - startY) > 4) moved = true;
+    if (!moved) return;
+    if (!w.classList.contains('dragging')) {
+      w.classList.add('dragging');
+      // Freeze size before detaching
+      const r = w.getBoundingClientRect();
+      w.style.width = r.width + 'px';
+    }
+    w.style.left = (e.clientX - ox) + 'px';
+    w.style.top  = (e.clientY - oy) + 'px';
+  });
+
+  window.addEventListener('pointerup', () => {
+    if (!dragging) return;
+    dragging = false;
+    if (!moved) { w.classList.remove('dragging'); w.style.width = ''; }
+    else {
+      // Keep it floating — don't snap back
+      w.classList.remove('dragging');
+      w.style.position = 'fixed';
+      w.style.zIndex   = '9000';
+    }
+  });
+})();
+
+// Init to write mode
+setViewMode('write');
+
 function toggleKeys() { document.getElementById('key-help').classList.toggle('show'); }
 
 function toggleFreeScroll() {
