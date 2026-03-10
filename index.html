@@ -2917,7 +2917,7 @@ function renderPage() {
   updateNav(); updateToc(); updateChapterLabel();
 }
 
-function applyReveal(upTo) {
+function applyReveal(upTo, forceScroll) {
   pvReveal = upTo;
   pvEls.forEach((el, s) => {
     el.classList.remove('active','past','revealed');
@@ -2946,7 +2946,7 @@ function applyReveal(upTo) {
   document.querySelectorAll('.line-num').forEach((ln, idx) => ln.classList.toggle('active', idx === upTo));
   const total = pvEls.length;
   document.getElementById('reading-progress-bar').style.width = Math.min(total ? ((upTo+1)/total)*100 : 0, 100) + '%';
-  if (pvEls[upTo] && !freeScroll) pvEls[upTo].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  if (pvEls[upTo] && (!freeScroll || forceScroll)) pvEls[upTo].scrollIntoView({ behavior: 'smooth', block: 'center' });
   if (typeof setImage === 'function') {
     const activeImgEl = pvEls[upTo];
     if (activeImgEl && activeImgEl.dataset.img !== undefined) {
@@ -2959,7 +2959,7 @@ function applyReveal(upTo) {
   document.querySelectorAll('.toc-node-item').forEach(el => { el.classList.toggle('active', parseInt(el.dataset.sidx) === upTo); });
 }
 
-function goTo(n) { if(n<0)n=0; if(n>=pvEls.length)n=pvEls.length-1; applyReveal(n); }
+function goTo(n, forceScroll) { if(n<0)n=0; if(n>=pvEls.length)n=pvEls.length-1; applyReveal(n, forceScroll); }
 function next()  { goTo(pvReveal + 1); }
 function prev()  { goTo(pvReveal - 1); }
 
@@ -2998,7 +2998,7 @@ function updateToc() {
       const ch = document.createElement('div'); ch.className = 'toc-ch';
       ch.innerHTML = `<div class="toc-ch-num">Chapter · ${String(n.num||chCount).padStart(2,'0')}</div>`;
       const name = document.createElement('span'); name.className = 'toc-ch-name'; name.textContent = n.title||'Untitled';
-      name.onclick = () => { const si = pageIdxOfNode(nidx+1); if(si>=0)goTo(si); else goTo(0); };
+      name.onclick = () => { const si = pageIdxOfNode(nidx+1); if(si>=0)goTo(si,true); else goTo(0,true); };
       ch.appendChild(name);
       const nodeList = document.createElement('div'); nodeList.className = 'toc-ch-nodes';
       ch.appendChild(nodeList); body.appendChild(ch); currentChEl = nodeList; return;
@@ -3009,7 +3009,7 @@ function updateToc() {
     item.dataset.sidx = pvEls.findIndex((e,_) => parseInt(e.dataset.nidx) === nidx);
     const txt = n.content || (n.key ? `${n.key} :: ${n.val}` : n.type);
     item.textContent = txt.length > 34 ? txt.slice(0,32)+'…' : txt;
-    item.onclick = () => { const si = pageIdxOfNode(nidx); if(si>=0)goTo(si); };
+    item.onclick = () => { const si = pageIdxOfNode(nidx); if(si>=0)goTo(si,true); };
     currentChEl.appendChild(item);
   });
 
