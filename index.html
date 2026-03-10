@@ -1612,6 +1612,22 @@ header::after {
 #float-scroll-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-l); }
 #float-scroll-btn.active { border-color: var(--gold); color: var(--gold); background: var(--gold-l); }
 
+/* ─── MOBILE SCROLL FOB ──────────────────────────────────────────────── */
+#scroll-fob {
+  display: none;
+  position: fixed; top: 64px; right: 14px; z-index: 8400;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--paper-2); border: 1px solid var(--rule-2);
+  box-shadow: 0 2px 10px var(--shadow);
+  align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.14s, border-color 0.14s, transform 0.14s;
+  font-size: 17px; color: var(--ink-3);
+  -webkit-tap-highlight-color: transparent;
+}
+#scroll-fob:active { transform: scale(0.92); background: var(--paper-3); }
+#scroll-fob.active { border-color: var(--gold); color: var(--gold); background: var(--gold-l); }
+@media (max-width: 720px) { #scroll-fob { display: flex; } }
+
 body.free-scroll #page-scroll { overflow-y: auto; }
 body.free-scroll .sentence { opacity: 0.65 !important; transform: none !important; transition: opacity 0.2s; }
 body.free-scroll .sentence:hover { opacity: 1 !important; }
@@ -2325,6 +2341,7 @@ body.panel-compose-open #panel-backdrop {
   </div>
 
   <div id="page-wrap">
+    <button id="scroll-fob" onclick="toggleFreeScroll()" title="Toggle free scroll" aria-label="Toggle free scroll">⇅</button>
     <button id="theme-toggle-btn" onclick="toggleLightTheme()" title="Toggle light / dark">
       <span id="theme-toggle-icon">●</span>
     </button>
@@ -3566,8 +3583,23 @@ function toggleFreeScroll() {
   freeScroll = !freeScroll;
   document.body.classList.toggle('free-scroll', freeScroll);
   const btn = document.getElementById('float-scroll-btn');
-  btn.classList.toggle('active', freeScroll);
-  document.getElementById('fsb-label').textContent = freeScroll ? 'Step mode' : 'Free scroll';
+  if (btn) btn.classList.toggle('active', freeScroll);
+  const fsbl = document.getElementById('fsb-label');
+  if (fsbl) fsbl.textContent = freeScroll ? 'Step mode' : 'Free scroll';
+  const fob = document.getElementById('scroll-fob');
+  if (fob) fob.classList.toggle('active', freeScroll);
+
+  if (!freeScroll && pvEls.length > 0) {
+    const mid = window.innerHeight / 2;
+    let closest = 0, closestDist = Infinity;
+    pvEls.forEach((el, i) => {
+      const r = el.getBoundingClientRect();
+      const dist = Math.abs(r.top + r.height / 2 - mid);
+      if (dist < closestDist) { closestDist = dist; closest = i; }
+    });
+    pvReveal = closest;
+    applyReveal(pvReveal);
+  }
 }
 
 // ── Light / dark theme toggle ──────────────────────────────────────────────
@@ -4509,37 +4541,29 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   };
 
   window.hudActivate = function(mode) {
-    // Deactivate all hud buttons
     document.querySelectorAll('.hud-btn').forEach(b => b.classList.remove('active'));
     const btn = document.getElementById('hud-' + mode);
     if (btn) btn.classList.add('active');
     hudActive = mode;
 
-    // Close any open overlays first
     const toc = document.getElementById('toc');
     const cp  = document.getElementById('compose-panel');
-    toc.classList.remove('panel-open');
-    cp.classList.remove('panel-open');
+    if (toc) toc.classList.remove('panel-open');
+    if (cp)  cp.classList.remove('panel-open');
     document.body.classList.remove('panel-toc-open', 'panel-compose-open');
-    setTimeout(() => {
-      if (!toc.classList.contains('panel-open')) toc.classList.remove('panel-overlay','panel-right');
-      if (!cp.classList.contains('panel-open'))  cp.classList.remove('panel-overlay','panel-right');
-    }, 320);
 
     if (mode === 'read') {
-      // Just the reading view — nothing extra
-    } else if (mode === 'capture') {
-      openCapture();
-      hudActive = 'read'; // snap back after opening
-      if (btn) { setTimeout(() => { btn.classList.remove('active'); document.getElementById('hud-read').classList.add('active'); }, 300); }
-    } else if (mode === 'contents') {
-      openPanelOverlay('toc');
-    } else if (mode === 'compose') {
+      // pure story stream — close everything
+    } else if (mode === 'write') {
       openPanelOverlay('compose');
       setTimeout(() => setPanelMode('compose'), 50);
-    } else if (mode === 'arrange') {
+    } else if (mode === 'file') {
       openPanelOverlay('compose');
       setTimeout(() => setPanelMode('arrange'), 50);
+    } else if (mode === 'capture') {
+      openCapture();
+      hudActive = 'read';
+      if (btn) { setTimeout(() => { btn.classList.remove('active'); const rb = document.getElementById('hud-read'); if (rb) rb.classList.add('active'); }, 300); }
     }
   };
 
@@ -4812,29 +4836,21 @@ document.addEventListener('keydown', e => {
 <!-- ─── MOBILE BOTTOM HUD ────────────────────────────────────────────── -->
 <div id="mobile-hud">
   <div class="hud-inner">
-    <button class="hud-btn active" id="hud-read"    onclick="hudActivate('read')">
+    <button class="hud-btn active" id="hud-read" onclick="hudActivate('read')">
       <span class="hud-icon">⊡</span>
       <span class="hud-label">Read</span>
+    </button>
+    <button class="hud-btn" id="hud-write" onclick="hudActivate('write')">
+      <span class="hud-icon">✏</span>
+      <span class="hud-label">Write</span>
+    </button>
+    <button class="hud-btn" id="hud-file" onclick="hudActivate('file')">
+      <span class="hud-icon">⠿</span>
+      <span class="hud-label">File</span>
     </button>
     <button class="hud-btn" id="hud-capture" onclick="hudActivate('capture')">
       <span class="hud-icon">●</span>
       <span class="hud-label">Capture</span>
-    </button>
-    <button class="hud-btn" id="hud-contents" onclick="hudActivate('contents')">
-      <span class="hud-icon">☰</span>
-      <span class="hud-label">Contents</span>
-    </button>
-    <button class="hud-btn" id="hud-compose" onclick="hudActivate('compose')">
-      <span class="hud-icon">✏</span>
-      <span class="hud-label">Compose</span>
-    </button>
-    <button class="hud-btn" id="hud-arrange" onclick="hudActivate('arrange')">
-      <span class="hud-icon">⠿</span>
-      <span class="hud-label">Arrange</span>
-    </button>
-    <button class="hud-btn" id="hud-freescroll" onclick="hudToggleFreeScroll()">
-      <span class="hud-icon">⇅</span>
-      <span class="hud-label">Free</span>
     </button>
   </div>
 </div>
