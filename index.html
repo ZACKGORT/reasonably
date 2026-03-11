@@ -665,11 +665,11 @@ header::after {
 }
 .toc-ch-name {
   font-family: var(--f-disp); font-size: 15px; font-weight: 600;
-  font-style: italic; color: var(--ink); opacity: 0.75; line-height: 1.2;
-  cursor: pointer; transition: opacity 0.14s, color 0.14s; display: block;
+  font-style: italic; color: var(--ink-2); line-height: 1.2;
+  cursor: pointer; transition: color 0.14s; display: block;
 }
-.toc-ch-name:hover { opacity: 1; color: var(--red); }
-.toc-ch.active .toc-ch-name { opacity: 1; color: var(--ink); }
+.toc-ch-name:hover { color: var(--red); }
+.toc-ch.active .toc-ch-name { color: var(--ink); }
 .toc-ch.active .toc-ch-num { color: var(--red); }
 .toc-ch-nodes { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
 .toc-node-item {
@@ -677,10 +677,10 @@ header::after {
   color: var(--ink); opacity: 0.6;
   padding: 3px 0 3px 10px;
   border-left: 1px solid var(--rule);
-  cursor: pointer; transition: opacity 0.12s, border-color 0.12s;
+  cursor: pointer; transition: color 0.12s, border-color 0.12s;
   overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
-.toc-node-item:hover { opacity: 1; border-left-color: var(--gold); }
+.toc-node-item:hover { color: var(--ink-2); border-left-color: var(--gold); }
 .toc-node-item.active { opacity: 1; color: var(--red); border-left-color: var(--red); }
 
 .toc-footer {
@@ -1483,8 +1483,8 @@ body.mood-dark      { --paper:#f5f4f2; --paper-2:#edece8; --paper-3:#e3e2dc; --g
 @media (max-width: 600px) {
   .folio-widget { width: auto !important; left: 8px !important; right: 8px !important; top: auto !important; transform: translateY(14px) scale(1) !important; border-radius: 4px 4px 0 0; }
   .folio-widget.w-open { transform: translateY(0) scale(1) !important; }
-  #syntax-widget  { bottom: calc(56px + env(safe-area-inset-bottom, 0px) + var(--sw-bottom, 16px)) !important; }
-  #compose-widget { bottom: calc(56px + env(safe-area-inset-bottom, 0px) + var(--cw-bottom, 16px)) !important; }
+  #syntax-widget  { bottom: calc(56px + var(--sw-bottom, 16px)) !important; }
+  #compose-widget { bottom: calc(56px + var(--cw-bottom, 16px)) !important; }
 }
 
 /* ─── ONBOARDING ──────────────────────────────────────────────────────── */
@@ -1578,18 +1578,6 @@ body.mood-dark      { --paper:#f5f4f2; --paper-2:#edece8; --paper-3:#e3e2dc; --g
   border-left: 2px solid var(--red);
 }
 #sentence-editor.open { transform: translateX(0); }
-
-@media (max-width: 720px) {
-  #sentence-editor {
-    position: fixed;
-    inset: 52px 0 calc(56px + env(safe-area-inset-bottom, 0px)) 0;
-    border-left: none;
-    border-top: 2px solid var(--red);
-    z-index: 8200;
-    transform: translateY(100%);
-  }
-  #sentence-editor.open { transform: translateY(0); }
-}
 
 .se-header {
   padding: 12px 14px 8px;
@@ -1807,7 +1795,7 @@ body.panel-compose-open #panel-backdrop {
   .wordmark-sub { display: none; }
   .wordmark-rule { display: none; }
 
-  #page-scroll { padding: 72px 20px calc(80px + env(safe-area-inset-bottom, 0px)) 28px; }
+  #page-scroll { padding: 72px 20px 80px 28px; }
   #page-wrap::after { left: 16px; }
   #key-help { display: none; }
   #page-nav { right: 0; bottom: 72px; top: auto; transform: none; }
@@ -2770,6 +2758,19 @@ function applyReveal(upTo, forceScroll) {
     }
   }
   updateNav(); updateChapterLabel();
+  // Re-highlight active chapter in TOC rail
+  const activeSent = pvEls[upTo];
+  let activeChNidx = -1;
+  if (activeSent) {
+    let p = activeSent.closest('.node-wrap') && activeSent.closest('.node-wrap').previousElementSibling;
+    while (p) {
+      if (p.classList && p.classList.contains('ch-block')) { activeChNidx = parseInt(p.dataset.nidx); break; }
+      p = p.previousElementSibling;
+    }
+  }
+  document.querySelectorAll('.toc-ch').forEach(ch => {
+    ch.classList.toggle('active', parseInt(ch.dataset.nidx) === activeChNidx && activeChNidx >= 0);
+  });
   document.querySelectorAll('.toc-node-item').forEach(el => { el.classList.toggle('active', parseInt(el.dataset.sidx) === upTo); });
 }
 
@@ -2806,10 +2807,27 @@ function updateToc() {
   let chCount = 0, sentCount = 0;
   let currentChEl = null;
 
+  // Determine active chapter by walking backwards from active sentence in the DOM
+  const activeEl = pvEls[pvReveal];
+  let activeChNidx = -1;
+  if (activeEl) {
+    let prev = activeEl.closest('.node-wrap') && activeEl.closest('.node-wrap').previousElementSibling;
+    while (prev) {
+      if (prev.classList && prev.classList.contains('ch-block')) {
+        activeChNidx = parseInt(prev.dataset.nidx);
+        break;
+      }
+      prev = prev.previousElementSibling;
+    }
+  }
+
   nodes.forEach((n, nidx) => {
     if (n.type === 'chapter') {
       chCount++;
-      const ch = document.createElement('div'); ch.className = 'toc-ch';
+      const ch = document.createElement('div');
+      const isActive = nidx === activeChNidx;
+      ch.className = 'toc-ch' + (isActive ? ' active' : '');
+      ch.dataset.nidx = nidx;
       ch.innerHTML = `<div class="toc-ch-num">Chapter · ${String(n.num||chCount).padStart(2,'0')}</div>`;
       const name = document.createElement('span'); name.className = 'toc-ch-name'; name.textContent = n.title||'Untitled';
       name.onclick = () => { jumpToChapter(n); };
@@ -2820,15 +2838,17 @@ function updateToc() {
     if (n.type === 'break' || !currentChEl) return;
     sentCount++;
     const item = document.createElement('div'); item.className = 'toc-node-item';
-    item.dataset.sidx = pvEls.findIndex((e,_) => parseInt(e.dataset.nidx) === nidx);
+    const si = pageIdxOfNode(nidx);
+    item.dataset.sidx = si;
     const txt = n.content || (n.key ? `${n.key} :: ${n.val}` : n.type);
     item.textContent = txt.length > 34 ? txt.slice(0,32)+'…' : txt;
-    item.onclick = () => { const si = pageIdxOfNode(nidx); if(si>=0)goTo(si,true); };
+    item.onclick = () => { if (si >= 0) goTo(si, true); };
     currentChEl.appendChild(item);
   });
 
   countEl.textContent = chCount ? `${chCount} ch` : '—';
   footer.textContent = `${chCount} chapters · ${sentCount} sentences`;
+  document.querySelectorAll('.toc-node-item').forEach(el => { el.classList.toggle('active', parseInt(el.dataset.sidx) === pvReveal); });
   renderSpine();
 }
 
@@ -4158,22 +4178,6 @@ function openSentenceEditor(nIdx) {
   const n = nodes[nIdx];
   if (!n || n.type === 'break') return;
   _editingNodeIdx = nIdx;
-
-  // On mobile, use the dedicated sentence editor panel (slides up from bottom)
-  if (window.innerWidth <= 720) {
-    seBadge.textContent = n.type;
-    if (n.type === 'spec') {
-      seTextarea.value = (n.key || '') + ' :: ' + (n.val || '');
-    } else if (n.type === 'chapter') {
-      seTextarea.value = (n.title || '');
-    } else {
-      seTextarea.value = n.content || '';
-    }
-    seEditor.classList.add('open');
-    setTimeout(() => { seTextarea.focus(); seTextarea.setSelectionRange(seTextarea.value.length, seTextarea.value.length); }, 80);
-    return;
-  }
-
   const w = document.getElementById('compose-widget');
   w.className = 'folio-widget type-' + n.type;
   const meta = TYPE_META[n.type] || { label: n.type, desc: '' };
@@ -4203,7 +4207,6 @@ function openSentenceEditor(nIdx) {
 }
 
 function closeSentenceEditor() {
-  seEditor.classList.remove('open');
   const commitBtn = document.getElementById('cw-commit-btn');
   commitBtn.textContent = 'Commit →';
   commitBtn._editMode = false;
@@ -4215,36 +4218,16 @@ function saveSentenceEdit() {
   if (_editingNodeIdx < 0) { commitComposeWidget(); return; }
   const n = nodes[_editingNodeIdx];
   if (!n) { closeSentenceEditor(); return; }
-
-  // Mobile uses seTextarea directly; desktop uses compose widget inputs
-  if (seEditor.classList.contains('open')) {
-    // Mobile path
-    const raw = seTextarea.value.trim();
-    if (raw) {
-      if (n.type === 'spec') {
-        const parts = raw.split('::');
-        n.key = (parts[0] || '').trim();
-        n.val = (parts.slice(1).join('::') || '').trim();
-      } else if (n.type === 'chapter') {
-        n.title = raw;
-      } else {
-        n.content = raw;
-      }
-    }
+  if (n.type === 'chapter') {
+    n.num   = document.getElementById('cw-ch-num').value.trim()   || n.num;
+    n.title = document.getElementById('cw-ch-title').value.trim() || n.title;
+  } else if (n.type === 'spec') {
+    n.key = document.getElementById('cw-spec-key').value.trim();
+    n.val = document.getElementById('cw-spec-val').value.trim();
   } else {
-    // Desktop path
-    if (n.type === 'chapter') {
-      n.num   = document.getElementById('cw-ch-num').value.trim()   || n.num;
-      n.title = document.getElementById('cw-ch-title').value.trim() || n.title;
-    } else if (n.type === 'spec') {
-      n.key = document.getElementById('cw-spec-key').value.trim();
-      n.val = document.getElementById('cw-spec-val').value.trim();
-    } else {
-      const raw = document.getElementById('cw-input').value.trim();
-      if (raw) n.content = raw;
-    }
+    const raw = document.getElementById('cw-input').value.trim();
+    if (raw) n.content = raw;
   }
-
   const idx = _editingNodeIdx;
   closeSentenceEditor(); commitChange();
   setTimeout(() => {
@@ -4260,34 +4243,6 @@ document.getElementById('narrative-root').addEventListener('dblclick', e => {
   const nIdx = parseInt(el.dataset.nidx);
   if (!isNaN(nIdx)) openSentenceEditor(nIdx);
 });
-
-// se-textarea keyboard handling (mobile sentence editor)
-seTextarea.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeSentenceEditor(); return; }
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); saveSentenceEdit(); return; }
-});
-
-// Mobile double-tap to edit (dblclick unreliable on touch)
-(function() {
-  let lastTap = 0, lastTarget = null;
-  document.getElementById('narrative-root').addEventListener('touchend', e => {
-    const el = e.target.closest('.sentence:not(.break)');
-    if (!el) return;
-    const now = Date.now();
-    const dt = now - lastTap;
-    const sameTarget = lastTarget === el;
-    lastTap = now;
-    lastTarget = el;
-    if (dt < 400 && dt > 40 && sameTarget) {
-      e.preventDefault();
-      const nIdx = parseInt(el.dataset.nidx);
-      if (!isNaN(nIdx)) {
-        // Small delay to avoid interfering with scroll
-        setTimeout(() => openSentenceEditor(nIdx), 30);
-      }
-    }
-  }, { passive: false });
-})();
 </script>
 
 <div id="bracket-ghost"><div class="bg-inner"><div class="bg-term" id="bg-term"></div><div class="bg-body" id="bg-body"></div></div></div>
@@ -4400,13 +4355,7 @@ seTextarea.addEventListener('keydown', e => {
     document.body.classList.remove('panel-toc-open', 'panel-compose-open');
 
     if (mode === 'read') {
-      // Ensure narrative is visible and rendered
-      setTimeout(() => {
-        if (pvEls.length === 0) { renderPage(); }
-        applyReveal(pvReveal, false);
-        const active = pvEls[pvReveal];
-        if (active) active.scrollIntoView({ block: 'center' });
-      }, 80);
+      // pure story stream — close everything
     } else if (mode === 'write') {
       openPanelOverlay('compose');
       setTimeout(() => setPanelMode('compose'), 50);
