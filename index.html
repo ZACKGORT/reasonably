@@ -1958,6 +1958,9 @@ body.panel-compose-open #panel-backdrop {
 #node-ghost-overlay.ngo-open {
   opacity: 1; pointer-events: auto;
 }
+@media (max-width: 720px) {
+  #node-ghost-overlay { display: none !important; }
+}
 #ngo-backdrop {
   position: absolute; inset: 0;
   background: var(--paper);
@@ -2004,9 +2007,6 @@ body.panel-compose-open #panel-backdrop {
 #ngo-hint kbd {
   font-family: var(--f-ui); font-style: normal;
   color: var(--ink-4); font-size: 7px;
-}
-@media (max-width: 720px) {
-  #node-ghost-overlay { display: none !important; }
 }
 </style>
 </head>
@@ -4710,6 +4710,7 @@ document.addEventListener('keydown', e => {
   const canvasEl = document.getElementById('node-canvas');
   if (canvasEl) {
     canvasEl.addEventListener('focusin', e => {
+      if (window.innerWidth <= 720) return;
       const inp = e.target;
       if (!inp || inp.tagName !== 'INPUT') return;
       clearTimeout(_ngoBlurTimer);
@@ -4737,6 +4738,11 @@ document.addEventListener('keydown', e => {
 
   window.openNodeGhost  = openNodeGhost;
   window.closeNodeGhost = closeNodeGhost;
+
+  // Close ghost if viewport shrinks to mobile
+  window.addEventListener('resize', () => {
+    if (window.innerWidth <= 720 && _ngoOpen) closeNodeGhost(false);
+  });
 })();
 
 <!-- ─── MOBILE BOTTOM HUD ────────────────────────────────────────────── -->
