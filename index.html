@@ -1620,8 +1620,18 @@ body.field-open #field-overlay { opacity: 1; pointer-events: auto; }
   opacity: 0.28; cursor: pointer; transition: all 0.2s;
   border: 1.5px solid transparent;
 }
+.fcp-all {
+  width: auto; height: auto; border-radius: 3px;
+  font-family: var(--mono); font-size: 7px;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-3); background: transparent !important;
+  padding: 3px 7px; border: 1px solid var(--border-2);
+  opacity: 0.5;
+}
 .fcp:hover { opacity: 0.7; transform: scale(1.2); }
+.fcp-all:hover { opacity: 0.85; transform: none; color: var(--ink); border-color: var(--ink-3); }
 .fcp.active { opacity: 1; transform: scale(1.3); border-color: var(--bg); box-shadow: 0 0 0 1.5px currentColor; }
+.fcp-all.active { opacity: 1; transform: none; color: var(--ink); border-color: var(--ink-2); box-shadow: none; }
 
 /* ── Canvas ── */
 .field-canvas-wrap { flex:1; position:relative; overflow:hidden; cursor:default; }
@@ -1637,11 +1647,53 @@ body.field-open #field-overlay { opacity: 1; pointer-events: auto; }
   background-size:32px 32px; opacity:0.5;
 }
 
+/* ── Field axis system ── */
+.field-axis-hline {
+  position: absolute; left: 6%; right: 2%;
+  height: 1px; background: var(--border);
+  opacity: 0.35; pointer-events: none;
+  transform: translateY(-50%);
+}
+.field-axis-ylabel {
+  position: absolute; left: 6%;
+  transform: translate(0, -50%);
+  font-family: var(--mono); font-size: 6px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); opacity: 0.55;
+  pointer-events: none; white-space: nowrap;
+  padding-left: 4px;
+}
+.field-axis-xlabel {
+  position: absolute; bottom: 3%;
+  font-family: var(--mono); font-size: 6px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink-3); opacity: 0.45;
+  pointer-events: none;
+}
+.field-axis-xlabel-l { left: 8%; }
+.field-axis-xlabel-r { right: 8%; }
+.field-axis-title-x {
+  position: absolute; bottom: 3%; left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono); font-size: 6px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3); opacity: 0.35;
+  pointer-events: none; white-space: nowrap;
+}
+.field-axis-title-y {
+  position: absolute; left: 1%; top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-family: var(--mono); font-size: 6px;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-3); opacity: 0.35;
+  pointer-events: none; white-space: nowrap;
+}
+
 /* ── Lily pad node dots ── */
 .field-node-dot {
   position:absolute; transform:translate(-50%,-50%);
   display:flex; flex-direction:column; align-items:center;
-  cursor:pointer; isolation:isolate;
+  cursor:pointer;
 }
 .fnd-wrap { position:relative; width:16px; height:16px; flex-shrink:0; }
 .fnd-wrap.major { width:24px; height:24px; }
@@ -1679,6 +1731,11 @@ body.field-open #field-overlay { opacity: 1; pointer-events: auto; }
 }
 .field-node-dot:hover .fnd-pad { opacity:1; transform:scale(1.4); }
 .field-node-dot:hover .fnd-label { opacity:1; }
+.field-node-dot:hover { z-index: 999; }
+.field-node-dot:hover .fnd-ghost {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 /* ghost tooltip */
 .fnd-ghost {
   position:absolute; bottom:calc(100% + 16px); left:50%;
@@ -1686,7 +1743,9 @@ body.field-open #field-overlay { opacity: 1; pointer-events: auto; }
   width:200px; background:var(--bg-2); border:1px solid var(--border-2);
   border-radius:6px; padding:10px 12px;
   box-shadow:0 8px 28px rgba(0,0,0,0.15);
-  opacity:1; pointer-events:none;
+  opacity:0; pointer-events:none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateX(-50%) translateY(4px);
   z-index:100;
 }
 .fnd-ghost::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:var(--border-2); }
@@ -2132,23 +2191,22 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
     </div>
 </div>
 
-<!-- ═══ FIELD OVERLAY (single-cluster scatter) ═══ -->
+<!-- ═══ FIELD OVERLAY ═══ -->
 <div id="field-overlay">
   <div class="field-overlay-hud">
-    <button class="field-cycle-btn" id="field-cycle-prev" onclick="cycleFieldCluster(-1)">‹</button>
     <div class="field-hud-center">
-      <span class="field-cluster-name" id="field-cluster-name">Media</span>
-      <span class="field-overlay-count"><span id="field-node-count">4</span> nodes</span>
+      <span class="field-cluster-name" id="field-cluster-name">All nodes</span>
+      <span class="field-overlay-count"><span id="field-node-count">0</span> nodes</span>
     </div>
-    <button class="field-cycle-btn" id="field-cycle-next" onclick="cycleFieldCluster(1)">›</button>
     <button class="field-overlay-close" onclick="closeField()">✕</button>
   </div>
-  <!-- cluster pip dots -->
+  <!-- cluster filter row -->
   <div class="field-cluster-pips" id="field-cluster-pips">
-    <span class="fcp" data-cluster="media" style="background:var(--c-media)" onclick="setFieldCluster('media')"></span>
+    <span class="fcp fcp-all active" data-cluster="all" onclick="setFieldCluster('all')">all</span>
     <span class="fcp" data-cluster="notes" style="background:var(--c-notes)" onclick="setFieldCluster('notes')"></span>
     <span class="fcp" data-cluster="tasks" style="background:var(--c-tasks)" onclick="setFieldCluster('tasks')"></span>
     <span class="fcp" data-cluster="long"  style="background:var(--c-long)"  onclick="setFieldCluster('long')"></span>
+    <span class="fcp" data-cluster="media" style="background:var(--c-media)" onclick="setFieldCluster('media')"></span>
   </div>
   <div class="field-canvas-wrap" id="field-canvas-wrap">
     <div class="field-canvas-inner" id="field-canvas-inner">
@@ -2812,7 +2870,7 @@ let nextId = 23;
 let composeNoteType = 'body';
 let composeNoteCluster = 'notes';
 let composeTaskPri = 'med';
-let fieldCluster = 'media'; // active cluster shown in field view
+let fieldCluster = 'all'; // 'all' = timeline landscape, cluster key = isolated view
 
 // ═══ THEME ═══
 function toggleRails() {
@@ -3929,48 +3987,120 @@ function computeFieldPositions(contentNodes) {
   return positions;
 }
 
+// ── Type weight map: Y axis (0=top/light, 1=bottom/heavy) ──
+const TYPE_WEIGHT = {
+  pull:     0.12,
+  label:    0.25,
+  poster:   0.38,
+  body:     0.52,
+  image:    0.60,
+  media:    0.68,
+  spec:     0.75,
+  longform: 0.88,
+};
+
 function renderFieldNodes() {
   const layer = document.getElementById('field-nodes-layer');
   if (!layer) return;
 
-  // Filter to active cluster only — the guardrail
-  const clusterNodes = nodes.filter(n => n.type !== 'ch' && n.type !== 'label' && n.cluster === fieldCluster);
+  const isAll = fieldCluster === 'all';
 
-  // Positions distributed across the full visible canvas
-  const SINGLE_ZONE = { cx:0.5, cy:0.5, r:0.35 };
+  // Node set
+  const allNodes = nodes.filter(n => n.type !== 'ch' && n.type !== 'label');
+  const displayNodes = isAll
+    ? allNodes
+    : allNodes.filter(n => n.cluster === fieldCluster);
+
+  if (displayNodes.length === 0) { layer.innerHTML = ''; return; }
+
+  let axisHtml = '';
   const positions = [];
-  const MIN_DIST = 0.07;
 
-  clusterNodes.forEach((node, i) => {
-    const rand = seededRand(node.id * 2654435761);
-    let best = null, bestDist = -1;
-    for (let attempt = 0; attempt < 16; attempt++) {
-      const angle = rand() * Math.PI * 2;
-      const radius = SINGLE_ZONE.r * (0.2 + rand() * 0.8);
-      const cx = SINGLE_ZONE.cx + Math.cos(angle) * radius;
-      const cy = SINGLE_ZONE.cy + Math.sin(angle) * radius;
-      const fx = Math.max(0.08, Math.min(0.90, cx));
-      const fy = Math.max(0.10, Math.min(0.88, cy));
-      let minD = Infinity;
-      positions.forEach(p => { if (!p) return; const d = Math.hypot(fx-p.fx, fy-p.fy); if (d<minD) minD=d; });
-      if (minD > bestDist) { bestDist = minD; best = {fx, fy}; }
-      if (minD > MIN_DIST) break;
-    }
-    positions.push(best || { fx: 0.3 + rand()*0.4, fy: 0.2 + rand()*0.6 });
-  });
+  if (isAll) {
+    // ── TIMELINE MODE ──
+    const ids = allNodes.map(n => Number(n.id)).filter(id => !isNaN(id));
+    const minId = Math.min(...ids);
+    const maxId = Math.max(...ids);
+    const idRange = maxId - minId || 1;
+    const X_PAD_L = 0.08, X_PAD_R = 0.08;
+    const Y_PAD_T = 0.10, Y_PAD_B = 0.10;
 
-  const cc = CLUSTERS[fieldCluster]?.color || 'var(--accent)';
-  let html = '';
-  clusterNodes.forEach((node, i) => {
+    const Y_BANDS = [
+      { label: 'pull · aphorism',      y: 0.12 },
+      { label: 'poster · declaration', y: 0.38 },
+      { label: 'body · prose',         y: 0.52 },
+      { label: 'media · rich',         y: 0.68 },
+      { label: 'longform · depth',     y: 0.88 },
+    ];
+    Y_BANDS.forEach(band => {
+      const yPct = (Y_PAD_T + band.y * (1 - Y_PAD_T - Y_PAD_B)) * 100;
+      axisHtml += `<div class="field-axis-hline" style="top:${yPct.toFixed(1)}%"></div>
+      <div class="field-axis-ylabel" style="top:${yPct.toFixed(1)}%">${band.label}</div>`;
+    });
+    axisHtml += `<div class="field-axis-xlabel field-axis-xlabel-l">earliest</div>`;
+    axisHtml += `<div class="field-axis-xlabel field-axis-xlabel-r">latest</div>`;
+    axisHtml += `<div class="field-axis-title-x">— thought timeline →</div>`;
+    axisHtml += `<div class="field-axis-title-y">↑ light · heavy ↓</div>`;
+
+    displayNodes.forEach((node) => {
+      const nodeId = Number(node.id);
+      const rawX = isNaN(nodeId) ? 0.5 : (nodeId - minId) / idRange;
+      const rand = seededRand((node.id * 2654435761) >>> 0);
+      const jitterX = (rand() - 0.5) * 0.04;
+      const jitterY = (rand() - 0.5) * 0.04;
+      const baseY = TYPE_WEIGHT[node.type] ?? 0.5;
+      const fx = Math.max(0.04, Math.min(0.96, X_PAD_L + rawX * (1 - X_PAD_L - X_PAD_R) + jitterX));
+      const fy = Math.max(0.04, Math.min(0.96, Y_PAD_T + baseY * (1 - Y_PAD_T - Y_PAD_B) + jitterY));
+      positions.push({ fx, fy });
+    });
+
+  } else {
+    // ── ISOLATED / EVEN SPACING MODE ──
+    // Sort by type weight for a readable top-to-bottom ordering
+    const sorted = [...displayNodes].sort((a, b) => {
+      const wa = TYPE_WEIGHT[a.type] ?? 0.5;
+      const wb = TYPE_WEIGHT[b.type] ?? 0.5;
+      return wa - wb;
+    });
+    displayNodes.length = 0;
+    sorted.forEach(n => displayNodes.push(n));
+
+    const count = displayNodes.length;
+    const PAD = 0.10;
+    const usableW = 1 - PAD * 2;
+    const usableH = 1 - PAD * 2;
+
+    // Find best grid columns to fill space evenly
+    const cols = Math.ceil(Math.sqrt(count * 1.6));
+    const rows = Math.ceil(count / cols);
+
+    displayNodes.forEach((node, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      // Center the last partial row
+      const rowCount = (row === rows - 1) ? count - row * cols : cols;
+      const rowOffset = (cols - rowCount) / 2;
+      const fx = PAD + ((col + rowOffset + 0.5) / cols) * usableW;
+      const fy = PAD + ((row + 0.5) / rows) * usableH;
+      positions.push({ fx, fy });
+    });
+  }
+
+  // ── RENDER NODES ──
+  let nodesHtml = '';
+  displayNodes.forEach((node, i) => {
     const pos = positions[i]; if (!pos) return;
+    const cc = CLUSTERS[node.cluster]?.color || 'var(--accent)';
     const isMajor = node.type === 'poster' || node.type === 'longform';
     const wrapClass = isMajor ? 'fnd-wrap major' : 'fnd-wrap';
-    const ghostTitle = (node.title || node.text || node.key || '').substring(0, 40);
-    const ghostText  = (node.text || node.val || node.excerpt || '').substring(0, 60);
+    const ghostTitle = (node.title || node.text || node.key || '').substring(0, 48);
+    const ghostText  = (node.text || node.val || node.excerpt || '').substring(0, 72);
+    const clLabel = CLUSTERS[node.cluster]?.label || node.cluster;
     const d1 = ((i * 0.37) % 3.4).toFixed(2);
     const d2 = (+d1 + 0.95).toFixed(2);
     const d3 = (+d1 + 1.90).toFixed(2);
-    html += `<div class="field-node-dot" style="left:${(pos.fx*100).toFixed(1)}%;top:${(pos.fy*100).toFixed(1)}%;color:${cc}" onclick="fieldNodeClick(${node.id})">
+
+    nodesHtml += `<div class="field-node-dot" style="left:${(pos.fx*100).toFixed(1)}%;top:${(pos.fy*100).toFixed(1)}%;color:${cc}" onclick="fieldNodeClick(${node.id})">
       <div class="${wrapClass}">
         <div class="fnd-pad"></div>
         <div class="fnd-ripple fnd-ripple-1" style="animation-delay:${d1}s"></div>
@@ -3979,21 +4109,25 @@ function renderFieldNodes() {
       </div>
       <div class="fnd-label">${node.type}</div>
       <div class="fnd-ghost">
-        <div class="fnd-ghost-type">${CLUSTERS[fieldCluster]?.label||fieldCluster} · ${node.type}</div>
+        <div class="fnd-ghost-type" style="color:${cc}">${clLabel} · ${node.type}</div>
         <div class="fnd-ghost-title">${ghostTitle}</div>
         ${ghostText ? `<div class="fnd-ghost-text">${ghostText}</div>` : ''}
       </div>
     </div>`;
   });
-  layer.innerHTML = html;
 
-  // Update HUD
+  layer.innerHTML = axisHtml + nodesHtml;
+
+  // ── UPDATE HUD ──
   const nameEl = document.getElementById('field-cluster-name');
   const countEl = document.getElementById('field-node-count');
-  if (nameEl) { nameEl.textContent = CLUSTERS[fieldCluster]?.label || fieldCluster; nameEl.style.color = cc; }
-  if (countEl) countEl.textContent = clusterNodes.length;
+  if (nameEl) {
+    nameEl.textContent = isAll ? 'All nodes' : (CLUSTERS[fieldCluster]?.label || fieldCluster);
+    nameEl.style.color = isAll ? 'var(--ink)' : (CLUSTERS[fieldCluster]?.color || 'var(--ink)');
+  }
+  if (countEl) countEl.textContent = displayNodes.length;
 
-  // Update pips
+  // ── UPDATE PIPS ──
   document.querySelectorAll('.fcp').forEach(el => {
     el.classList.toggle('active', el.dataset.cluster === fieldCluster);
   });
@@ -4050,8 +4184,9 @@ function renderFieldNodes() {
 })();
 
 function fieldNodeClick(nodeId) {
-  // Filter stream to this cluster and close field, then open detail
-  filterAndClose(fieldCluster);
+  const node = nodes.find(n => n.id === nodeId);
+  if (node) filterAndClose(node.cluster);
+  else filterAndClose(fieldCluster);
   setTimeout(() => openDetail(nodeId), 300);
 }
 
@@ -4061,8 +4196,9 @@ function setFieldCluster(cl) {
   renderFieldNodes();
 }
 function cycleFieldCluster(dir) {
-  const idx = CLUSTER_ORDER.indexOf(fieldCluster);
-  fieldCluster = CLUSTER_ORDER[(idx + dir + CLUSTER_ORDER.length) % CLUSTER_ORDER.length];
+  const opts = ['all', ...CLUSTER_ORDER];
+  const idx = opts.indexOf(fieldCluster);
+  fieldCluster = opts[(idx + dir + opts.length) % opts.length];
   renderFieldNodes();
 }
 
@@ -4070,8 +4206,7 @@ function cycleFieldCluster(dir) {
 function openField() {
   closeBeckon();
   closeDetail();
-  // Seed field to active cluster (default media if showing 'all')
-  if (activeFilter !== 'all') fieldCluster = activeFilter;
+  fieldCluster = 'all';
   renderFieldNodes();
   document.body.classList.add('field-open');
 }
