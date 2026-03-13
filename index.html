@@ -471,7 +471,7 @@ body.cluster-media #stream-hud { border-bottom-color: rgba(74,126,175,0.22); }
 .gallery-close:hover { border-color:var(--accent); color:var(--accent); }
 
 /* ── NC attach image button ── */
-.nc-attach-row { display:flex; align-items:center; gap:8px; padding:6px 0 2px; }
+.nc-attach-row { display:flex; align-items:center; gap:8px; padding:6px 14px 2px; }
 .nc-attach-btn { font-family:var(--mono); font-size:8px; letter-spacing:0.1em; text-transform:uppercase; background:none; border:1px solid var(--border-2); color:var(--ink-3); padding:4px 10px; border-radius:3px; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; gap:5px; }
 .nc-attach-btn:hover { border-color:var(--c-notes); color:var(--c-notes); }
 .nc-attach-btn.has-image { border-color:var(--c-media); color:var(--c-media); }
@@ -1095,7 +1095,8 @@ body.cluster-notes #hud-new-btn { display: none !important; }
 /* Format toolbar */
 #nc-fmt-bar {
   display: flex; align-items: center; gap: 3px;
-  padding: 6px 32px 8px;
+  padding: 6px 14px 8px;
+  border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
 /* Export / clear action buttons in fmt bar */
@@ -1143,30 +1144,38 @@ body.cluster-notes #hud-new-btn { display: none !important; }
 #nc-stream::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
 #nc-stream-inner { max-width: 620px; margin: 0 auto; }
 
-/* Controls block — sits between stream and input */
-#nc-controls {
+/* ── Unified compose container ── */
+#nc-compose-wrap {
   flex-shrink: 0;
-  border-top: 1px solid var(--border);
-  background: var(--bg-4);
+  padding: 16px 32px 24px;
+  background: var(--bg);
+}
+#nc-compose-box {
+  max-width: 620px;
+  margin: 0 auto;
+  border: 1px solid var(--border-2);
+  border-radius: 6px;
+  background: var(--bg-2);
+  overflow: hidden;
 }
 
 /* Floating type bar — hovers above the input line */
 #nc-type-bar {
   display: flex; align-items: center; gap: 4px;
-  padding: 8px 32px 0;
+  padding: 10px 14px 0;
   flex-shrink: 0;
   flex-wrap: wrap;
 }
 #nc-input-wrap {
-  padding: 14px 32px 24px;
+  padding: 0;
   flex-shrink: 0;
   max-width: 100%;
-  border-top: 1px solid var(--border);
+  border-top: none;
 }
 #nc-input-inner {
-  max-width: 620px; margin: 0 auto;
-  padding-top: 16px;
+  padding: 12px 14px 14px;
   position: relative;
+  border-top: 1px solid var(--border);
 }
 .nc-input-foot {
   display: flex; align-items: center; justify-content: space-between;
@@ -2540,42 +2549,45 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
       <div id="nc-stream">
         <div id="nc-stream-inner"></div>
       </div>
-      <!-- Controls: type selector + format toolbar + export/clear — above write line -->
-      <div id="nc-controls">
-        <div id="nc-type-bar">
-          <button class="nc-type-btn"         data-ntype="poster" onclick="ncSetType(this)">poster</button>
-          <button class="nc-type-btn active"   data-ntype="body"   onclick="ncSetType(this)">body</button>
-          <button class="nc-type-btn"         data-ntype="pull"   onclick="ncSetType(this)">pull</button>
-          <button class="nc-type-btn"         data-ntype="label"  onclick="ncSetType(this)">label</button>
-        </div>
-        <div class="nc-attach-row">
-          <input type="file" id="nc-attach-file" accept="image/*" style="display:none" onchange="ncAttachFile(this)">
-          <button class="nc-attach-btn" id="nc-attach-btn" onclick="document.getElementById('nc-attach-file').click()">⊕ attach image</button>
-          <img id="nc-attach-preview" class="nc-attach-preview" alt="">
-          <button id="nc-attach-clear" style="display:none;background:none;border:none;color:var(--ink-3);cursor:pointer;font-size:10px;padding:2px 4px;" onclick="ncClearAttach()">✕</button>
-        </div>
-        <div id="nc-fmt-bar">
-          <button class="nc-fmt-btn" title="Bold (⌘B)" onclick="ncFmt('bold')"><b>B</b></button>
-          <button class="nc-fmt-btn" title="Italic (⌘I)" onclick="ncFmt('italic')"><i>I</i></button>
-          <button class="nc-fmt-btn" title="Underline (⌘U)" onclick="ncFmt('underline')"><u>U</u></button>
-          <button class="nc-fmt-btn" title="Strikethrough" onclick="ncFmt('strikeThrough')"><s>S</s></button>
-          <div class="nc-fmt-sep"></div>
-          <button class="nc-undo-btn" title="Undo" onclick="document.execCommand('undo')">↩</button>
-          <button class="nc-undo-btn" title="Redo" onclick="document.execCommand('redo')">↪</button>
-          <div style="flex:1"></div>
-          <button class="nc-action-btn" title="Export notes as text" onclick="ncExport()">↓ export</button>
-          <button class="nc-action-btn nc-action-danger" title="Clear all notes" onclick="ncClear()">✕ clear</button>
-        </div>
-      </div>
-      <!-- Write line (writing surface) -->
-      <div id="nc-input-wrap">
-        <div id="nc-input-inner">
-          <div id="nc-input" class="style-body" contenteditable="true"
-            data-placeholder="Write the sentence."
-            onkeydown="ncKeydown(event)"></div>
-          <div class="nc-input-foot">
-            <span class="nc-commit-hint"><kbd class="kbd">⌘↵</kbd> to commit</span>
-            <button class="nc-commit-btn" onclick="ncCommit()">Commit node →</button>
+      <!-- Unified compose container -->
+      <div id="nc-compose-wrap">
+        <div id="nc-compose-box">
+          <!-- Type pills -->
+          <div id="nc-type-bar">
+            <button class="nc-type-btn"         data-ntype="poster" onclick="ncSetType(this)">poster</button>
+            <button class="nc-type-btn active"   data-ntype="body"   onclick="ncSetType(this)">body</button>
+            <button class="nc-type-btn"         data-ntype="pull"   onclick="ncSetType(this)">pull</button>
+            <button class="nc-type-btn"         data-ntype="label"  onclick="ncSetType(this)">label</button>
+          </div>
+          <!-- Attach -->
+          <div class="nc-attach-row">
+            <input type="file" id="nc-attach-file" accept="image/*" style="display:none" onchange="ncAttachFile(this)">
+            <button class="nc-attach-btn" id="nc-attach-btn" onclick="document.getElementById('nc-attach-file').click()">⊕ attach image</button>
+            <img id="nc-attach-preview" class="nc-attach-preview" alt="">
+            <button id="nc-attach-clear" style="display:none;background:none;border:none;color:var(--ink-3);cursor:pointer;font-size:10px;padding:2px 4px;" onclick="ncClearAttach()">✕</button>
+          </div>
+          <!-- Format bar -->
+          <div id="nc-fmt-bar">
+            <button class="nc-fmt-btn" title="Bold (⌘B)" onclick="ncFmt('bold')"><b>B</b></button>
+            <button class="nc-fmt-btn" title="Italic (⌘I)" onclick="ncFmt('italic')"><i>I</i></button>
+            <button class="nc-fmt-btn" title="Underline (⌘U)" onclick="ncFmt('underline')"><u>U</u></button>
+            <button class="nc-fmt-btn" title="Strikethrough" onclick="ncFmt('strikeThrough')"><s>S</s></button>
+            <div class="nc-fmt-sep"></div>
+            <button class="nc-undo-btn" title="Undo" onclick="document.execCommand('undo')">↩</button>
+            <button class="nc-undo-btn" title="Redo" onclick="document.execCommand('redo')">↪</button>
+            <div style="flex:1"></div>
+            <button class="nc-action-btn" title="Export notes as text" onclick="ncExport()">↓ export</button>
+            <button class="nc-action-btn nc-action-danger" title="Clear all notes" onclick="ncClear()">✕ clear</button>
+          </div>
+          <!-- Write surface -->
+          <div id="nc-input-inner">
+            <div id="nc-input" class="style-body" contenteditable="true"
+              data-placeholder="Write the sentence."
+              onkeydown="ncKeydown(event)"></div>
+            <div class="nc-input-foot">
+              <span class="nc-commit-hint"><kbd class="kbd">⌘↵</kbd> to commit</span>
+              <button class="nc-commit-btn" onclick="ncCommit()">Commit node →</button>
+            </div>
           </div>
         </div>
       </div>
