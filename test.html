@@ -1816,6 +1816,9 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
     border-left: none; border-right: none;
     bottom: 56px;
   }
+  body.cluster-notes #compose-panel {
+    bottom: 0;
+  }
 }
 
 /* compose heartbeat dot */
@@ -2037,9 +2040,9 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
   .compose-commit-bar { padding:10px 18px calc(var(--sab) + 10px); }
   .compose-commit-btn { padding:10px 18px; }
 
-  /* Notes input: push above dock */
+  /* Notes input: dock is hidden in notes mode, so no extra bottom clearance needed */
   #nc-input-wrap {
-    padding-bottom: calc(var(--sab) + 90px);
+    padding-bottom: calc(var(--sab) + 16px);
   }
 
   /* LFE arrange add strip: always visible, prominent on mobile */
@@ -2110,6 +2113,7 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
 
 @media (max-width: 767px) {
   .scroll-nudge { display: flex; }
+  body.cluster-notes .scroll-nudge { display: none; }
   #dive-sheet { display: block; }
   .compose-backdrop-mobile { display: block; }
   .compose-handle { display: block; }
