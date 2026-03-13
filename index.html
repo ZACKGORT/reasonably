@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>reasonably · wolfie.life</title>
+<title>reasonably · made with wolfie.love · zackgort.com</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Serif+Text:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Nunito:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -2046,9 +2046,91 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
   #hud-brand { display: flex; }
   #stream-hud { display: flex; }
 }
+
+/* ===== PAGE LOADER ===== */
+#pageLoader {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    pointer-events: all;
+    transition: opacity 0.6s ease;
+}
+#pageLoader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+#pageLoader video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+}
+.loader-overlay {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    pointer-events: none;
+    user-select: none;
+}
+.loader-paw {
+    font-size: 40px;
+    animation: loaderPawPulse 1.4s ease-in-out infinite;
+}
+@keyframes loaderPawPulse {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.18); opacity: 1; }
+}
+.loader-wordmark {
+    font-family: var(--ui-font);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.9;
+}
+.loader-bar-track {
+    width: 120px;
+    height: 2px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.loader-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    width: 0%;
+    animation: loaderBarSweep 1.8s ease-in-out forwards;
+}
+@keyframes loaderBarSweep {
+    0%   { width: 0%; }
+    60%  { width: 75%; }
+    85%  { width: 90%; }
+    100% { width: 100%; }
+}
 </style>
 </head>
 <body>
+
+<!-- ════ PAGE LOADER ════ -->
+<div id="pageLoader">
+    <video src="https://raw.githubusercontent.com/ZACKGORT/ifimaybefrank/main/mp4/soferocious.mp4"
+           muted autoplay loop playsinline preload="auto" aria-hidden="true"></video>
+    <div class="loader-overlay">
+        <span class="loader-paw">🐾</span>
+        <span class="loader-wordmark">reasonably.cc</span>
+        <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+    </div>
+</div>
 
 <!-- ═══ FIELD OVERLAY (single-cluster scatter) ═══ -->
 <div id="field-overlay">
@@ -2786,7 +2868,8 @@ function loadState() {
     if (state.userNodes?.length) state.userNodes.forEach(n => {
       if (!nodes.find(x=>x.id===n.id)) { n._user=true; nodes.push(n); nextId=Math.max(nextId,n.id+1); }
     });
-    if (state.activeFilter) activeFilter = state.activeFilter;
+    if (state.activeFilter && (state.activeFilter === 'all' || CLUSTERS[state.activeFilter])) activeFilter = state.activeFilter;
+    else activeFilter = 'all';
   } catch(e){}
 }
 
@@ -5067,6 +5150,8 @@ function lfeMobileArrangeCommit() {
 function init() {
   loadTheme();
   loadState();
+  // Guarantee valid initial filter — first-visit safety net
+  if (activeFilter !== 'all' && !CLUSTERS[activeFilter]) activeFilter = 'all';
   // Set initial mental state body class
   document.body.classList.add('cluster-' + activeFilter);
   // Restore filter UI state
@@ -5076,6 +5161,7 @@ function init() {
     if (dockEl) { document.querySelectorAll('.dock-cluster').forEach(e=>e.classList.remove('active')); dockEl.classList.add('active'); }
   }
   renderStream();
+  renderNcStream();
   renderSpine();
   renderAllSpine();
   updateNavCounts();
@@ -5109,6 +5195,31 @@ function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+// ═══ PAGE LOADER ═══
+document.addEventListener('DOMContentLoaded', function() {
+    (function initPageLoader() {
+        const loader = document.getElementById('pageLoader');
+        if (!loader) return;
+        function dismissLoader() {
+            loader.classList.add('fade-out');
+            setTimeout(() => { loader.remove(); }, 700);
+        }
+        const MIN_DISPLAY = 2600;
+        const startTime = Date.now();
+        function tryDismiss() {
+            const elapsed = Date.now() - startTime;
+            const remaining = Math.max(0, MIN_DISPLAY - elapsed);
+            setTimeout(dismissLoader, remaining);
+        }
+        if (document.readyState === 'complete') {
+            tryDismiss();
+        } else {
+            window.addEventListener('load', tryDismiss, { once: true });
+            setTimeout(dismissLoader, 5000);
+        }
+    })();
+});
 </script>
 
 <!-- ═══ LONGFORM EDITOR OVERLAY ═══ -->
