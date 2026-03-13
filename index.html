@@ -867,7 +867,8 @@ body.rails-hidden #spine {
   scrollbar-width: none;
 }
 #all-spine::-webkit-scrollbar { display: none; }
-body.cluster-all #all-spine { display: flex; }
+/* all-spine hidden in all modes — cluster tabs removed from HUD */
+/* body.cluster-all #all-spine { display: flex; } */
 
 .all-spine-inner {
   display: flex; align-items: stretch;
@@ -923,8 +924,16 @@ body.cluster-all #all-spine { display: flex; }
     transition: max-height 0.28s cubic-bezier(0.25,1,0.5,1), opacity 0.22s ease;
     overflow: hidden;
   }
-  body.cluster-all #all-spine {
+  /* body.cluster-all #all-spine {
     max-height: 56px; opacity: 1; overflow-x: auto; overflow-y: hidden;
+  } */
+}
+
+/* Mobile only: show cluster nav strip in Notes so user can navigate away */
+@media (max-width: 767px) {
+  body.cluster-notes #all-spine {
+    display: flex; max-height: 56px; opacity: 1;
+    overflow-x: auto; overflow-y: hidden;
   }
 }
 
