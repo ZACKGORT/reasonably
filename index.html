@@ -63,54 +63,7 @@ body.dark {
   --c-long:    #a07cc0;
 }
 
-/* ── Keep theme ── */
-body.theme-keep {
-  --bg:        #ffffff;
-  --bg-2:      #f1f3f4;
-  --bg-3:      #e8eaed;
-  --bg-4:      #ffffff;
-  --ink:       #202124;
-  --ink-2:     #5f6368;
-  --ink-3:     #9aa0a6;
-  --accent:    #fbbc04;
-  --accent-l:  rgba(251,188,4,0.15);
-  --border:    rgba(0,0,0,0.10);
-  --border-2:  rgba(0,0,0,0.16);
-  --border-3:  rgba(0,0,0,0.26);
-  --c-media:   #1a73e8;
-  --c-notes:   #e8710a;
-  --c-tasks:   #1e8e3e;
-  --c-long:    #9334e6;
-}
-body.theme-keep #stream { background: var(--bg-2); }
-body.theme-keep #sidebar { background: var(--bg); border-right-color: var(--border); }
-body.theme-keep #stream-hud { background: var(--bg-2); }
-body.theme-keep .node.body,
-body.theme-keep .node.poster { border-radius: 8px; border: 1px solid var(--border-2); padding: 12px 16px; margin: 4px 0; background: var(--bg); box-shadow: 0 1px 3px rgba(0,0,0,0.08); transition: box-shadow 0.18s; }
-body.theme-keep .node.body:hover,
-body.theme-keep .node.poster:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.13); }
-body.theme-keep .node.poster { border-left: 3px solid var(--c-notes); }
-body.theme-keep .node.pull { border-radius: 8px; border: 1px solid rgba(251,188,4,0.35); background: rgba(251,188,4,0.07); border-left: 3px solid var(--accent); font-style: normal; font-size: 17px; padding: 12px 16px; margin: 4px 0; }
-body.theme-keep .node.spec { border-radius: 8px; border: 1px solid rgba(30,142,62,0.22); background: rgba(30,142,62,0.04); padding: 10px 16px; margin: 4px 0; }
-body.theme-keep .node.label { font-size: 9px; letter-spacing: 0.12em; color: var(--ink-3); padding: 14px 4px 4px; }
-body.theme-keep .media-card { border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.09); }
-body.theme-keep .polaroid { border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.10); }
-body.theme-keep .note-thumb { border-radius: 5px; }
-body.theme-keep .hud-ctrl-btn { border-radius: 20px; }
-body.theme-keep #nc-stream-inner .node.body,
-body.theme-keep #nc-stream-inner .node.poster { border-radius: 8px; border: 1px solid var(--border-2); padding: 12px 16px; margin: 4px 0; background: var(--bg); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
-body.theme-keep,
-body.theme-keep .node.body,
-body.theme-keep .node.poster,
-body.theme-keep .node.pull,
-body.theme-keep .node.spec,
-body.theme-keep .node.label { font-family: 'Nunito', 'Segoe UI', sans-serif; }
-body.theme-keep #nc-input,
-body.theme-keep #spe-input,
-body.theme-keep .lfe-input { font-family: 'Nunito', 'Segoe UI', sans-serif; }
-body.theme-keep .node.body { font-size: 13.5px; line-height: 1.65; }
-body.theme-keep .node.poster { font-size: 16px; font-weight: 600; line-height: 1.4; }
-body.theme-keep .node.pull { font-size: 16px; font-weight: 500; line-height: 1.5; }
+
 
 body {
   font-family: var(--mono);
@@ -487,26 +440,38 @@ body.cluster-media #stream-hud { border-bottom-color: rgba(74,126,175,0.22); }
    Always shows all nodes across all clusters
 ══════════════════════════════════════════ */
 #spine {
-  width: 220px;
+  width: 0;
   flex-shrink: 0;
   height: 100%;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--border);
+  border-left: 1px solid transparent;
   background: var(--bg-4);
   transition: width 0.28s cubic-bezier(0.4,0,0.2,1), border-color 0.28s, opacity 0.28s, background 0.3s;
   overflow: hidden;
+  opacity: 0;
+}
+#spine.spine-open {
+  width: 220px;
+  border-left-color: var(--border);
+  opacity: 1;
+}
+#spine.toc-mode {
+  width: 320px;
 }
 body.rails-hidden #spine {
   width: 0 !important;
-  border-left-color: transparent;
-  opacity: 0;
+  border-left-color: transparent !important;
+  opacity: 0 !important;
 }
 .spine-header {
   padding: 10px 14px 8px;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
-  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  display: flex; flex-direction: column; gap: 7px;
+}
+.spine-header-top {
+  display: flex; align-items: center; justify-content: space-between;
 }
 .spine-header-left { display: flex; flex-direction: column; gap: 1px; }
 .spine-label {
@@ -516,14 +481,23 @@ body.rails-hidden #spine {
 .spine-cluster-name {
   font-family: var(--disp); font-size: 13px; color: var(--ink);
 }
-.spine-mode-toggle {
-  font-size: 7px; letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 3px 8px; border: 1px solid var(--border-2); border-radius: 20px;
-  background: none; color: var(--ink-3); cursor: pointer;
-  transition: all 0.14s; white-space: nowrap; flex-shrink: 0;
+.spine-close-btn {
+  font-size: 9px; color: var(--ink-3); background: none; border: none;
+  cursor: pointer; padding: 2px 4px; line-height: 1;
+  transition: color 0.12s;
 }
-.spine-mode-toggle:hover { border-color: var(--accent); color: var(--accent); }
-.spine-mode-toggle.active { background: rgba(255,255,255,0.07); color: var(--ink); border-color: var(--border-3); }
+.spine-close-btn:hover { color: var(--ink); }
+.spine-mode-pills {
+  display: flex; gap: 5px;
+}
+.spine-pill {
+  font-size: 7px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 10px; border: 1px solid var(--border-2); border-radius: 20px;
+  background: none; color: var(--ink-3); cursor: pointer;
+  transition: all 0.14s; white-space: nowrap;
+}
+.spine-pill:hover { border-color: var(--accent); color: var(--accent); }
+.spine-pill.active { background: var(--accent-l); color: var(--accent); border-color: var(--accent); }
 
 .spine-body {
   flex: 1; overflow-y: auto; overflow-x: hidden;
@@ -567,6 +541,14 @@ body.rails-hidden #spine {
 .spine-node-text {
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;
 }
+#spine.toc-mode .spine-node-text {
+  white-space: normal; text-overflow: unset; overflow: visible;
+  line-height: 1.5; font-size: 10px;
+}
+#spine.toc-mode .spine-node {
+  align-items: flex-start; padding: 5px 18px 5px 26px;
+}
+#spine.toc-mode .spine-node-type { padding-top: 2px; }
 .spine-divider {
   height: 1px; background: var(--border); margin: 6px 18px; opacity: 0.5;
 }
@@ -2654,14 +2636,20 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
     <button id="fab" onclick="fabAction()" title="New node (N)">+</button>
   </div>
 
-  <!-- ── SPINE — holistic node log (right rail, desktop) ── -->
+  <!-- ── SPINE — right rail, opt-in ── -->
   <div id="spine">
     <div class="spine-header">
-      <div class="spine-header-left">
-        <div class="spine-label">Log</div>
-        <div class="spine-cluster-name" id="spine-cluster-name">All nodes</div>
+      <div class="spine-header-top">
+        <div class="spine-header-left">
+          <div class="spine-label" id="spine-label">Arrange</div>
+          <div class="spine-cluster-name" id="spine-cluster-name">All nodes</div>
+        </div>
+        <button class="spine-close-btn" onclick="closeSpine()" title="Close">✕</button>
       </div>
-      <button class="spine-mode-toggle" id="spine-toggle-btn" onclick="toggleSpineMode()">Arrange</button>
+      <div class="spine-mode-pills">
+        <button class="spine-pill active" id="spine-pill-arrange" onclick="setSpineMode('arrange')">Arrange</button>
+        <button class="spine-pill" id="spine-pill-toc" onclick="setSpineMode('toc')">TOC</button>
+      </div>
     </div>
     <div class="spine-body" id="spine-body">
       <!-- Rendered by JS -->
@@ -2898,7 +2886,7 @@ function toggleRails() {
   try { localStorage.setItem('cortex-rails-hidden', hidden ? '1' : '0'); } catch(e) {}
 }
 
-const THEMES = ['light', 'dark', 'keep'];
+const THEMES = ['light', 'dark'];
 function toggleTheme() {
   const current = document.body.dataset.theme || 'light';
   const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
@@ -2907,10 +2895,9 @@ function toggleTheme() {
 }
 function applyTheme(t) {
   document.body.dataset.theme = t;
-  document.body.classList.remove('dark', 'theme-keep');
+  document.body.classList.remove('dark');
   if (t === 'dark') document.body.classList.add('dark');
-  if (t === 'keep') document.body.classList.add('theme-keep');
-  const labels = { light: 'dark', dark: 'keep', keep: 'light' };
+  const labels = { light: 'dark', dark: 'light' };
   const badge = document.getElementById('theme-badge');
   if (badge) badge.textContent = labels[t];
 }
@@ -3168,10 +3155,13 @@ function hudNewAction() {
   fabAction();
 }
 
-// ═══ SPINE — holistic node log ═══
+// ═══ SPINE — holistic node log / TOC ═══
 function renderSpine() {
   const body = document.getElementById('spine-body');
   if (!body) return;
+
+  const isTOC = document.getElementById('spine')?.classList.contains('toc-mode');
+  const trim = (s, n) => isTOC ? (s||'') : (s||'').substring(0, n);
 
   let html = '';
   CLUSTER_ORDER.forEach((cl, ci) => {
@@ -3188,10 +3178,10 @@ function renderSpine() {
       if (node.type === 'label') {
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})" style="color:${c.color};opacity:0.6">
           <span class="spine-node-type" style="color:${c.color}">label</span>
-          <span class="spine-node-text">${(node.text||'').substring(0,36)}</span>
+          <span class="spine-node-text">${trim(node.text, 36)}</span>
         </div>`;
       } else if (['body','poster','pull'].includes(node.type)) {
-        const preview = (node.text||'').replace(/\*\*/g,'').replace(/\*/g,'').substring(0,36);
+        const preview = trim((node.text||'').replace(/\*\*/g,'').replace(/\*/g,''), 36);
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">${node.type}</span>
           <span class="spine-node-text">${preview}</span>
@@ -3199,17 +3189,17 @@ function renderSpine() {
       } else if (node.type === 'spec') {
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})"${node.done?' style="opacity:0.3;text-decoration:line-through"':''}>
           <span class="spine-node-type">task</span>
-          <span class="spine-node-text">${(node.val||'').substring(0,36)}</span>
+          <span class="spine-node-text">${trim(node.val, 36)}</span>
         </div>`;
       } else if (node.type === 'longform') {
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">long</span>
-          <span class="spine-node-text">${(node.title||'').substring(0,36)}</span>
+          <span class="spine-node-text">${trim(node.title, 36)}</span>
         </div>`;
       } else if (node.type === 'media') {
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">media</span>
-          <span class="spine-node-text">${(node.title||node.url||'').substring(0,36)}</span>
+          <span class="spine-node-text">${trim(node.title||node.url, 36)}</span>
         </div>`;
       } else if (node.type === 'image') {
         html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
@@ -3226,32 +3216,76 @@ function renderSpine() {
   _updateSpineToggle();
 }
 
-function _updateSpineToggle() {
-  const btn = document.getElementById('spine-toggle-btn');
-  if (!btn) return;
+// ── Spine open/close/mode ──
+let _spineMode = 'arrange'; // 'arrange' | 'toc'
+
+function openSpine(mode) {
+  mode = mode || _spineMode || 'arrange';
+  _spineMode = mode;
   const spine = document.getElementById('spine');
-  if (activeFilter === 'tasks') {
-    btn.textContent = spine.classList.contains('archive-mode') ? 'Log' : 'Archive';
-    btn.style.display = '';
-  } else if (activeFilter === 'notes') {
-    btn.textContent = spine.classList.contains('arrange-mode') ? 'Log' : 'Arrange';
-    btn.style.display = '';
+  if (!spine) return;
+  spine.classList.add('spine-open');
+  spine.classList.toggle('toc-mode', mode === 'toc');
+  spine.classList.toggle('arrange-mode', mode === 'arrange' && activeFilter === 'notes');
+  spine.classList.toggle('archive-mode', mode === 'arrange' && activeFilter === 'tasks');
+  _syncSpinePills(mode);
+  if (mode === 'arrange') {
+    if (activeFilter === 'notes') renderSpineArrange();
+    else if (activeFilter === 'tasks') renderSpineArchive();
   } else {
-    btn.style.display = 'none';
-    spine.classList.remove('arrange-mode','archive-mode');
+    renderSpine();
   }
 }
 
-function toggleSpineMode() {
+function closeSpine() {
   const spine = document.getElementById('spine');
-  if (activeFilter === 'notes') {
-    const isArrange = spine.classList.toggle('arrange-mode');
-    if (isArrange) renderSpineArrange();
-  } else if (activeFilter === 'tasks') {
-    const isArchive = spine.classList.toggle('archive-mode');
-    if (isArchive) renderSpineArchive();
+  if (!spine) return;
+  spine.classList.remove('spine-open','toc-mode','arrange-mode','archive-mode');
+}
+
+function setSpineMode(mode) {
+  _spineMode = mode;
+  const spine = document.getElementById('spine');
+  if (!spine) return;
+  spine.classList.add('spine-open');
+  spine.classList.toggle('toc-mode', mode === 'toc');
+  // arrange-mode / archive-mode drive which sub-panel shows
+  if (mode === 'arrange') {
+    if (activeFilter === 'notes') {
+      spine.classList.add('arrange-mode');
+      spine.classList.remove('archive-mode');
+      renderSpineArrange();
+    } else if (activeFilter === 'tasks') {
+      spine.classList.add('archive-mode');
+      spine.classList.remove('arrange-mode');
+      renderSpineArchive();
+    } else {
+      spine.classList.remove('arrange-mode','archive-mode');
+    }
+  } else {
+    spine.classList.remove('arrange-mode','archive-mode');
+    renderSpine();
   }
-  _updateSpineToggle();
+  _syncSpinePills(mode);
+  const labelEl = document.getElementById('spine-label');
+  if (labelEl) labelEl.textContent = mode === 'toc' ? 'TOC' : 'Arrange';
+}
+
+function _syncSpinePills(mode) {
+  document.getElementById('spine-pill-arrange')?.classList.toggle('active', mode === 'arrange');
+  document.getElementById('spine-pill-toc')?.classList.toggle('active', mode === 'toc');
+}
+
+function _updateSpineToggle() {
+  // Legacy stub — pills now handle state. Keep for renderSpine calls.
+  const spine = document.getElementById('spine');
+  if (!spine || !spine.classList.contains('spine-open')) return;
+  // Refresh active pill highlight
+  _syncSpinePills(_spineMode);
+}
+
+function toggleSpineMode() {
+  // Legacy — now a no-op; pills drive mode
 }
 
 function renderSpineArrange() {
