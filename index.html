@@ -204,6 +204,107 @@ body.rails-hidden #sidebar {
 }
 .sidebar-date { font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
 
+/* ── Floating spine widget — appears on scroll, fixed right edge ── */
+#floating-spine {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) translateX(100%);
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  width: 28px;
+  height: 60vh;
+  background: var(--bg-4);
+  border-left: 1px solid var(--border-2);
+  border-radius: 4px 0 0 4px;
+  box-shadow: -2px 0 16px rgba(0,0,0,0.08);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.35s ease;
+}
+#floating-spine.visible {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+/* When spine rail is open, offset floating spine */
+body:not(.rails-hidden) #spine.spine-open ~ #floating-spine {
+  right: 220px;
+}
+.fsp-seg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+.fsp-seg.active {
+  border-left-color: currentColor;
+  background: rgba(128,128,128,0.05);
+}
+.fsp-seg-label {
+  font-family: var(--mono);
+  font-size: 6px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: 0.4;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s;
+  user-select: none;
+}
+.fsp-seg.active .fsp-seg-label,
+.fsp-seg:hover .fsp-seg-label { opacity: 1; }
+.fsp-seg::after {
+  content: attr(data-label);
+  position: absolute;
+  right: calc(100% + 8px);
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg-4);
+  border: 1px solid var(--border-2);
+  border-radius: 3px;
+  padding: 4px 8px;
+  font-family: var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  color: var(--ink-2);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+.fsp-seg:hover::after { opacity: 1; }
+
+/* ── Header scatter canvas ── */
+#hud-scatter {
+  flex: 1;
+  height: 36px;
+  position: relative;
+  cursor: crosshair;
+  border-radius: 4px;
+  overflow: visible;
+  min-width: 0;
+  border: 1px solid var(--border);
+  background: var(--bg-3);
+}
+#hud-scatter-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 3px;
+}
+
 /* ── FAB — floating action button in content area ── */
 #fab {
   position: absolute;
@@ -239,9 +340,14 @@ body.rails-hidden #sidebar {
 }
 .hud-cs-item:hover { opacity: 0.85; background: rgba(255,255,255,0.05); }
 .hud-cs-item.active { opacity: 1; background: rgba(255,255,255,0.06); }
+.hud-cs-label {
+  font-family: var(--mono); font-size: 7px; letter-spacing: 0.1em; text-transform: uppercase;
+}
 .hud-cs-count {
   font-family: var(--mono); font-size: 8px; opacity: 0.7;
 }
+/* Strip only renders in Notes mode (JS-gated), hide via CSS in all other modes too */
+body:not(.cluster-notes) #hud-cluster-strip { display: none; }
 
 /* When spine is visible on desktop, clamp FAB to not overlap it */
 @media (min-width: 768px) {
@@ -283,11 +389,16 @@ body.cluster-media #stream-hud { border-bottom-color: rgba(74,126,175,0.22); }
 }
 
 #stream-hud {
-  padding: 16px 32px;
+  padding: 10px 24px 10px 32px;
   border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 14px;
   flex-shrink: 0;
   background: var(--bg);
+  height: 56px;
+}
+.hud-identity {
+  display: flex; flex-direction: column; gap: 2px;
+  flex-shrink: 0;
 }
 .hud-filter { font-size: 8px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
 .hud-filter span { color: var(--accent); }
@@ -551,6 +662,47 @@ body.rails-hidden #spine {
 #spine.toc-mode .spine-node-type { padding-top: 2px; }
 .spine-divider {
   height: 1px; background: var(--border); margin: 6px 18px; opacity: 0.5;
+}
+
+/* ── TOC ghost layer — appears on node hover ── */
+.spine-node {
+  position: relative;
+}
+.spine-node-ghost {
+  display: none;
+  position: fixed;
+  z-index: 9000;
+  left: auto;
+  background: var(--bg-4);
+  border: 1px solid var(--border-2);
+  border-radius: 5px;
+  padding: 10px 14px;
+  width: 220px;
+  pointer-events: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  opacity: 0;
+  transform: translateY(4px);
+}
+.spine-node-ghost.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.sng-type {
+  font-family: var(--mono);
+  font-size: 6px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 5px;
+}
+.sng-text {
+  font-family: var(--text);
+  font-size: 12px; line-height: 1.55;
+  color: var(--ink-2); font-style: italic;
+}
+.sng-cluster {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 6px; letter-spacing: 0.18em; text-transform: uppercase;
+  opacity: 0.55;
 }
 
 /* ── Notes arrange panel (opt-in) ── */
@@ -1917,8 +2069,11 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
   #detail { display: none !important; }
   #main { height: 100vh; display: flex; flex-direction: column; }
 
-  #stream-hud { padding: calc(var(--sat) + 14px) 18px 10px; background: linear-gradient(to bottom, var(--bg) 60%, transparent); border-bottom: none; }
+  #stream-hud { padding: calc(var(--sat) + 14px) 18px 10px; background: linear-gradient(to bottom, var(--bg) 60%, transparent); border-bottom: none; height: auto; }
   .hud-filter { display: none; }
+  #hud-scatter { display: none; }
+  .hud-identity { display: none; }
+  #floating-spine { display: none; }
 
   #fab { display: none; }
 
@@ -2404,6 +2559,25 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
   </div>
 </div>
 
+<!-- ═══ FLOATING SPINE — appears on scroll, cluster-colored segments ═══ -->
+<div id="floating-spine">
+  <div class="fsp-seg active" data-cluster="all"   data-label="All nodes"    style="color:var(--ink-3)"   onclick="floatingSpineClick('all')">
+    <span class="fsp-seg-label">all</span>
+  </div>
+  <div class="fsp-seg" data-cluster="media"  data-label="Media"       style="color:var(--c-media)" onclick="floatingSpineClick('media')">
+    <span class="fsp-seg-label">med</span>
+  </div>
+  <div class="fsp-seg" data-cluster="notes"  data-label="Notes"       style="color:var(--c-notes)" onclick="floatingSpineClick('notes')">
+    <span class="fsp-seg-label">nts</span>
+  </div>
+  <div class="fsp-seg" data-cluster="tasks"  data-label="Tasks"       style="color:var(--c-tasks)" onclick="floatingSpineClick('tasks')">
+    <span class="fsp-seg-label">tsk</span>
+  </div>
+  <div class="fsp-seg" data-cluster="long"   data-label="Long-form"   style="color:var(--c-long)"  onclick="floatingSpineClick('long')">
+    <span class="fsp-seg-label">lng</span>
+  </div>
+</div>
+
 <!-- ═══ MAIN LAYOUT ═══ -->
 <div id="layout">
 
@@ -2492,11 +2666,14 @@ body.compose-open.compose-longform #compose-panel { max-height: 90vh; }
       <div id="hud-brand" onclick="toggleTheme()" title="Toggle theme">
         <span class="hud-brand-word">reasonably</span><span class="hud-brand-dot">·</span>
       </div>
-      <!-- Desktop filter label -->
-      <span class="hud-filter" id="hud-filter-label">All clusters · <span id="hud-count">16</span> nodes</span>
-      <!-- Cluster mini-dashboard strip -->
-      <div id="hud-cluster-strip">
-        <!-- Rendered by JS -->
+      <!-- Desktop identity -->
+      <div class="hud-identity">
+        <span class="hud-filter" id="hud-filter-label">All clusters · <span id="hud-count">16</span> nodes</span>
+        <div id="hud-cluster-strip"></div>
+      </div>
+      <!-- Scatter map — holistic node timeline, jump-navigable -->
+      <div id="hud-scatter" title="All nodes · click to jump">
+        <canvas id="hud-scatter-canvas"></canvas>
       </div>
       <div class="hud-right-controls">
         <button class="hud-ctrl-btn" id="hud-rails-btn" onclick="toggleRails()" title="Toggle rails">⊢⊣</button>
@@ -3056,6 +3233,8 @@ function renderStream() {
   renderSpine();
   renderAllSpine();
   updateProgress();
+  // Signal scatter canvas to redraw
+  document.dispatchEvent(new CustomEvent('reasonably:rendered'));
 }
 
 // ═══ NODE CLICK — desktop = detail rail, mobile = dive ═══
@@ -3163,6 +3342,18 @@ function renderSpine() {
   const isTOC = document.getElementById('spine')?.classList.contains('toc-mode');
   const trim = (s, n) => isTOC ? (s||'') : (s||'').substring(0, n);
 
+  // Helper: build ghost layer HTML for TOC mode
+  function ghostLayer(node, c) {
+    if (!isTOC) return '';
+    const rawText = (node.text || node.title || node.val || node.excerpt || '').replace(/\*\*/g,'').replace(/\*/g,'');
+    const preview = rawText.substring(0, 120) + (rawText.length > 120 ? '…' : '');
+    return `<div class="spine-node-ghost" data-ghost-id="${node.id}">
+      <div class="sng-type" style="color:${c.color}">${c.icon} ${node.type}</div>
+      <div class="sng-text">${preview}</div>
+      <div class="sng-cluster" style="color:${c.color}">${c.label}</div>
+    </div>`;
+  }
+
   let html = '';
   CLUSTER_ORDER.forEach((cl, ci) => {
     const c = CLUSTERS[cl];
@@ -3176,35 +3367,41 @@ function renderSpine() {
     </div>`;
     clNodes.forEach(node => {
       if (node.type === 'label') {
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})" style="color:${c.color};opacity:0.6">
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})" style="color:${c.color};opacity:0.6">
           <span class="spine-node-type" style="color:${c.color}">label</span>
           <span class="spine-node-text">${trim(node.text, 36)}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       } else if (['body','poster','pull'].includes(node.type)) {
         const preview = trim((node.text||'').replace(/\*\*/g,'').replace(/\*/g,''), 36);
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">${node.type}</span>
           <span class="spine-node-text">${preview}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       } else if (node.type === 'spec') {
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})"${node.done?' style="opacity:0.3;text-decoration:line-through"':''}>
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})"${node.done?' style="opacity:0.3;text-decoration:line-through"':''}>
           <span class="spine-node-type">task</span>
           <span class="spine-node-text">${trim(node.val, 36)}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       } else if (node.type === 'longform') {
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">long</span>
           <span class="spine-node-text">${trim(node.title, 36)}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       } else if (node.type === 'media') {
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})">
           <span class="spine-node-type">media</span>
           <span class="spine-node-text">${trim(node.title||node.url, 36)}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       } else if (node.type === 'image') {
-        html += `<div class="spine-node" onclick="spineScrollTo(${node.id})">
-          <span class="spine-node-type" style="color:var(--c-media);border-color:var(--c-media)">image</span>
-          <span class="spine-node-text">${(node.title||'').substring(0,36)}</span>
+        html += `<div class="spine-node" data-node-id="${node.id}" onclick="spineScrollTo(${node.id})">
+          <span class="spine-node-type" style="color:var(--c-media)">image</span>
+          <span class="spine-node-text">${trim(node.title||'', 36)}</span>
+          ${ghostLayer(node, c)}
         </div>`;
       }
     });
@@ -3212,8 +3409,53 @@ function renderSpine() {
 
   body.innerHTML = html || '<div style="padding:20px 18px;font-size:10px;color:var(--ink-3)">No nodes yet.</div>';
 
-  // Also update toggle button label based on active cluster
+  // Attach ghost hover listeners when in TOC mode
+  if (isTOC) {
+    _attachTOCGhostHovers();
+  }
+
   _updateSpineToggle();
+}
+
+function _attachTOCGhostHovers() {
+  const spineBody = document.getElementById('spine-body');
+  if (!spineBody) return;
+  const spineEl = document.getElementById('spine');
+  let _ghostHideTimer = null;
+  let _activeGhost = null;
+
+  spineBody.querySelectorAll('.spine-node').forEach(row => {
+    const ghost = row.querySelector('.spine-node-ghost');
+    if (!ghost) return;
+
+    // Mount ghost to body for fixed positioning (avoids clip)
+    ghost.style.display = 'block';
+    document.body.appendChild(ghost);
+
+    row.addEventListener('mouseenter', () => {
+      clearTimeout(_ghostHideTimer);
+      if (_activeGhost && _activeGhost !== ghost) {
+        _activeGhost.classList.remove('visible');
+        _activeGhost.style.opacity = '0';
+      }
+      _activeGhost = ghost;
+      // Position: left of spine, vertically centered on row
+      const rect = row.getBoundingClientRect();
+      const spineRect = spineEl.getBoundingClientRect();
+      ghost.style.right = (window.innerWidth - spineRect.left + 10) + 'px';
+      ghost.style.left = 'auto';
+      ghost.style.top = Math.max(8, rect.top - 10) + 'px';
+      ghost.style.display = 'block';
+      requestAnimationFrame(() => ghost.classList.add('visible'));
+    });
+
+    row.addEventListener('mouseleave', () => {
+      _ghostHideTimer = setTimeout(() => {
+        ghost.classList.remove('visible');
+        _activeGhost = null;
+      }, 80);
+    });
+  });
 }
 
 // ── Spine open/close/mode ──
@@ -3350,13 +3592,16 @@ function restoreTask(nodeId) {
 function renderHudStrip() {
   const strip = document.getElementById('hud-cluster-strip');
   if (!strip) return;
+  // Only visible in Notes mode — cross-cluster quick-switcher
+  if (activeFilter !== 'notes') { strip.innerHTML = ''; return; }
   strip.innerHTML = CLUSTER_ORDER.map(cl => {
     const c = CLUSTERS[cl];
     const count = nodes.filter(n => n.cluster === cl && n.type !== 'ch').length;
     const isActive = activeFilter === cl;
     return `<div class="hud-cs-item${isActive?' active':''}" style="color:${c.color}" onclick="filterCluster('${cl}')">
       <span>${c.icon}</span>
-      <span class="hud-cs-count">${count}</span>
+      <span class="hud-cs-label">${c.label}</span>
+      <span class="hud-cs-count">${count} nodes</span>
     </div>`;
   }).join('');
 }
@@ -6768,6 +7013,319 @@ document.addEventListener('keydown', e => {
     if (bc && bc.classList.contains('open')) lfeBeckonClose();
   }
 }, true);
+
+// ═══════════════════════════════════════
+// HEADER SCATTER CANVAS
+// Holistic visual reference of all nodes
+// X-axis = sequential position in stream
+// Y-axis = node type (poster high, spec low)
+// Color = cluster color
+// Click = jump to node
+// ═══════════════════════════════════════
+(function initHeaderScatter() {
+  const canvas = document.getElementById('hud-scatter-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0, hovered = -1;
+  let tipEl = null;
+  let _scatterNodes = [];
+
+  const CLUSTER_COLORS_RAW = {
+    media: '--c-media',
+    notes: '--c-notes',
+    tasks: '--c-tasks',
+    long:  '--c-long',
+  };
+
+  // Y position by node type (0=top, 1=bottom)
+  const TYPE_Y = {
+    poster: 0.15, pull: 0.28, body: 0.45,
+    label: 0.60,  spec: 0.72, media: 0.30,
+    image: 0.38,  longform: 0.20, ch: -1
+  };
+
+  const CLUSTER_BAND_Y = {
+    notes: 0.22, tasks: 0.55, media: 0.38, long: 0.18
+  };
+
+  function resolveColor(cssVar) {
+    return getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim() || '#888';
+  }
+
+  function buildScatterNodes() {
+    // Flatten all nodes in render order, excluding ch headers
+    const flat = [];
+    CLUSTER_ORDER.forEach(cl => {
+      nodes.filter(n => n.cluster === cl && n.type !== 'ch').forEach(n => flat.push(n));
+    });
+    const total = flat.length || 1;
+    _scatterNodes = flat.map((n, i) => {
+      const xNorm = (i + 0.5) / total;
+      // Y: jitter slightly per cluster band + type offset
+      const bandY = CLUSTER_BAND_Y[n.cluster] || 0.5;
+      const typeY = TYPE_Y[n.type] !== undefined ? TYPE_Y[n.type] : 0.45;
+      const yNorm = (bandY * 0.5 + typeY * 0.5);
+      const colorVar = CLUSTER_COLORS_RAW[n.cluster] || '--ink-3';
+      const label = (n.text || n.title || n.val || '').replace(/\*\*/g,'').replace(/\*/g,'').substring(0, 28) || n.type;
+      const isMajor = ['poster','longform'].includes(n.type);
+      return { id: n.id, xNorm, yNorm, colorVar, label, isMajor, cluster: n.cluster };
+    });
+  }
+
+  function draw() {
+    if (!ctx) return;
+    const dpr = window.devicePixelRatio || 1;
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    if (!W || !H) return;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W, H);
+
+    buildScatterNodes();
+    const isDark = document.body.classList.contains('dark');
+    const inkAlpha = isDark ? 'rgba(240,237,230,' : 'rgba(26,22,18,';
+
+    // Cluster band backgrounds
+    const bandColors = {
+      notes: CLUSTER_COLORS_RAW.notes,
+      tasks: CLUSTER_COLORS_RAW.tasks,
+      long:  CLUSTER_COLORS_RAW.long,
+      media: CLUSTER_COLORS_RAW.media,
+    };
+    CLUSTER_ORDER.forEach(cl => {
+      const nodesInCl = _scatterNodes.filter(n => n.cluster === cl);
+      if (!nodesInCl.length) return;
+      const xs = nodesInCl.map(n => n.xNorm * W);
+      const x0 = Math.min(...xs) - 4;
+      const x1 = Math.max(...xs) + 4;
+      const c = resolveColor(bandColors[cl]);
+      ctx.fillStyle = c + (isDark ? '12' : '0a');
+      ctx.beginPath();
+      ctx.roundRect(x0, 0, x1 - x0, H, 2);
+      ctx.fill();
+    });
+
+    // Center axis line
+    ctx.strokeStyle = inkAlpha + '0.07)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, H * 0.5);
+    ctx.lineTo(W, H * 0.5);
+    ctx.stroke();
+
+    // Cluster separator dividers
+    let prevCl = null;
+    _scatterNodes.forEach(n => {
+      if (prevCl && prevCl !== n.cluster) {
+        const xDiv = n.xNorm * W - 3;
+        ctx.strokeStyle = inkAlpha + '0.09)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([2, 3]);
+        ctx.beginPath();
+        ctx.moveTo(xDiv, 3);
+        ctx.lineTo(xDiv, H - 3);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      prevCl = n.cluster;
+    });
+
+    // Draw nodes
+    _scatterNodes.forEach((n, i) => {
+      const x = n.xNorm * W;
+      const y = n.yNorm * H;
+      const r = n.isMajor ? 4.5 : 3;
+      const color = resolveColor(n.colorVar);
+      const isHov = i === hovered;
+
+      if (isHov) {
+        ctx.beginPath();
+        ctx.arc(x, y, r + 5, 0, Math.PI * 2);
+        ctx.fillStyle = color + '28';
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.globalAlpha = isHov ? 1 : (n.isMajor ? 0.72 : 0.5);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+  }
+
+  function getTip() {
+    if (!tipEl) {
+      tipEl = document.createElement('div');
+      tipEl.style.cssText = 'position:fixed;background:var(--bg-4);border:1px solid var(--border-2);border-radius:4px;padding:5px 9px;font-family:var(--mono);font-size:7px;letter-spacing:0.1em;color:var(--ink-2);pointer-events:none;z-index:9000;opacity:0;transition:opacity 0.13s;white-space:nowrap;';
+      document.body.appendChild(tipEl);
+    }
+    return tipEl;
+  }
+
+  function getNodeAt(mx, my) {
+    const hitR = 8;
+    return _scatterNodes.findIndex(n => {
+      const x = n.xNorm * W;
+      const y = n.yNorm * H;
+      return Math.hypot(mx - x, my - y) <= hitR;
+    });
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const idx = getNodeAt(mx, my);
+    if (idx !== hovered) { hovered = idx; draw(); }
+    const tip = getTip();
+    if (idx >= 0) {
+      tip.textContent = _scatterNodes[idx].label;
+      tip.style.opacity = '1';
+      tip.style.left = (e.clientX + 12) + 'px';
+      tip.style.top  = (e.clientY - 26) + 'px';
+      canvas.style.cursor = 'pointer';
+    } else {
+      tip.style.opacity = '0';
+      canvas.style.cursor = 'crosshair';
+    }
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    hovered = -1; draw();
+    if (tipEl) tipEl.style.opacity = '0';
+    canvas.style.cursor = 'crosshair';
+  });
+
+  // Safety: reset if mouse leaves canvas fast
+  document.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const inside = e.clientX >= rect.left && e.clientX <= rect.right &&
+                   e.clientY >= rect.top  && e.clientY <= rect.bottom;
+    if (!inside && hovered !== -1) { hovered = -1; draw(); if (tipEl) tipEl.style.opacity = '0'; }
+  }, { passive: true });
+
+  canvas.addEventListener('click', e => {
+    const rect = canvas.getBoundingClientRect();
+    const idx = getNodeAt(e.clientX - rect.left, e.clientY - rect.top);
+    if (idx < 0) return;
+    const sn = _scatterNodes[idx];
+    // Switch to that cluster if needed
+    if (activeFilter !== 'all' && activeFilter !== sn.cluster) {
+      filterCluster(sn.cluster);
+      setTimeout(() => spineScrollTo(sn.id), 60);
+    } else {
+      spineScrollTo(sn.id);
+    }
+  });
+
+  const ro = new ResizeObserver(() => draw());
+  ro.observe(canvas);
+
+  // Expose redraw for theme changes
+  window._scatterDraw = draw;
+  requestAnimationFrame(draw);
+
+  // Redraw whenever nodes change — patch renderStream
+  const _origRenderStream = window.renderStream;
+  // Hook: redraw scatter after any stream render
+  const _scatterAfterRender = () => requestAnimationFrame(draw);
+  document.addEventListener('reasonably:rendered', _scatterAfterRender);
+
+  // Also redraw on theme toggle
+  const origToggleTheme = window.toggleTheme;
+  window.toggleTheme = function() {
+    if (origToggleTheme) origToggleTheme();
+    requestAnimationFrame(draw);
+  };
+})();
+
+// ═══════════════════════════════════════
+// FLOATING SPINE WIDGET
+// Appears when user scrolls; tracks cluster
+// ═══════════════════════════════════════
+(function initFloatingSpine() {
+  const fsp = document.getElementById('floating-spine');
+  const stream = document.getElementById('stream');
+  if (!fsp || !stream) return;
+
+  let _visible = false;
+  let _scrollTimer = null;
+
+  function showFsp() {
+    if (!_visible) { _visible = true; fsp.classList.add('visible'); }
+  }
+  function hideFsp() {
+    if (_visible) { _visible = false; fsp.classList.remove('visible'); }
+  }
+
+  // Show after a small scroll threshold
+  stream.addEventListener('scroll', () => {
+    if (stream.scrollTop > 60) showFsp(); else hideFsp();
+
+    // Update active segment based on which cluster is in view
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(updateFspActive, 80);
+  }, { passive: true });
+
+  function updateFspActive() {
+    // Find which cluster block is most visible
+    const streamRect = stream.getBoundingClientRect();
+    let bestCl = 'all';
+    let bestOverlap = 0;
+    CLUSTER_ORDER.forEach(cl => {
+      const el = document.getElementById('ch-block-' + cl);
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const overlap = Math.max(0, Math.min(r.bottom, streamRect.bottom) - Math.max(r.top, streamRect.top));
+      if (overlap > bestOverlap) { bestOverlap = overlap; bestCl = cl; }
+    });
+
+    fsp.querySelectorAll('.fsp-seg').forEach(seg => {
+      seg.classList.toggle('active', seg.dataset.cluster === bestCl || (bestCl === 'all' && seg.dataset.cluster === 'all'));
+    });
+  }
+
+  // Offset when right rail is open
+  function updateFspOffset() {
+    const spineEl = document.getElementById('spine');
+    const isOpen = spineEl && spineEl.classList.contains('spine-open');
+    const isRailsHidden = document.body.classList.contains('rails-hidden');
+    if (!isRailsHidden && isOpen) {
+      fsp.style.right = '220px';
+    } else {
+      fsp.style.right = '0';
+    }
+  }
+
+  // Watch spine open/close
+  const spineEl = document.getElementById('spine');
+  if (spineEl) {
+    new MutationObserver(updateFspOffset).observe(spineEl, { attributes: true, attributeFilter: ['class'] });
+    new MutationObserver(updateFspOffset).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+  updateFspOffset();
+})();
+
+// Click handler for floating spine segments
+function floatingSpineClick(cluster) {
+  if (cluster === 'all') {
+    filterCluster('all');
+    document.getElementById('stream')?.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    if (activeFilter !== 'all' && activeFilter !== cluster) filterCluster(cluster);
+    const el = document.getElementById('ch-block-' + cluster);
+    if (el) {
+      const stream = document.getElementById('stream');
+      if (stream) {
+        const offset = el.offsetTop - 16;
+        stream.scrollTo({ top: offset, behavior: 'smooth' });
+      }
+    }
+  }
+}
 </script>
   <!-- ── Gallery overlay — canvas grid across all image sources ── -->
   <div id="gallery-overlay" role="dialog" aria-label="Gallery">
