@@ -11,7 +11,7 @@
 html,body{width:100%;height:100%;overflow:hidden;background:#030308;transition:background 0.6s;}
 body.light{background:#f0ece4;}
 #bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;}
-canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;}
+canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;touch-action:none;}
 #brand{position:fixed;top:24px;left:28px;z-index:100;pointer-events:none;font-family:'DM Mono',monospace;}
 #brand-name{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(180,210,255,0.65);transition:color 0.5s;}
 #brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(180,210,255,0.24);margin-top:5px;transition:color 0.5s;}
@@ -31,15 +31,16 @@ body.light #brand-sub{color:rgba(10,14,30,0.50);font-size:8.5px;}
   background:none;border:none;cursor:pointer;
   color:rgba(180,210,255,0.32);
   font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.18em;
-  text-transform:uppercase;padding:9px 18px;
+  text-transform:uppercase;padding:12px 18px;
   border-right:1px solid rgba(180,210,255,0.08);
   transition:color 0.2s,background 0.2s;
+  -webkit-tap-highlight-color:transparent;
 }
 .hud-btn:last-child{border-right:none;}
 .hud-btn:hover{color:rgba(180,210,255,0.75);background:rgba(180,210,255,0.05);}
 .hud-btn.active{color:#b4d2ff;background:rgba(180,210,255,0.08);}
 /* zoom buttons — tighter, no letter-spacing */
-.hud-zoom{padding:9px 14px;font-size:13px;letter-spacing:0;color:rgba(180,210,255,0.28);}
+.hud-zoom{padding:12px 14px;font-size:13px;letter-spacing:0;color:rgba(180,210,255,0.28);min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;}
 .hud-zoom:hover{color:rgba(180,210,255,0.80);}
 /* separator rule between layer pills and zoom controls */
 .hud-sep{width:1px;background:rgba(180,210,255,0.14);align-self:stretch;flex-shrink:0;margin:6px 0;}
@@ -71,7 +72,8 @@ body.light .tt-ring{color:rgba(10,14,30,0.55);font-size:8px;}
 body.light .tt-title{color:rgba(10,14,30,0.92);font-size:16px;}
 body.light .tt-type{color:rgba(10,14,30,0.55);font-size:7.5px;}
 #ghost{position:fixed;z-index:700;width:320px;pointer-events:none;opacity:0;right:28px;top:50%;transform:translateY(-50%) translateX(18px) scale(0.97);transition:opacity 0.30s,transform 0.30s;}
-#ghost.on{opacity:1;transform:translateY(-50%) translateX(0) scale(1);pointer-events:all;}
+#ghost.on{opacity:1;transform:translateY(-50%) translateX(0) scale(1);}
+#ghost.on .gc{pointer-events:all;}
 .gc{background:rgba(4,6,18,0.97);border:1px solid rgba(180,210,255,0.10);border-radius:6px;box-shadow:0 18px 62px rgba(0,0,0,0.9),0 0 0 1px rgba(180,210,255,0.03);backdrop-filter:blur(26px);overflow:hidden;}
 .gcscroll{max-height:82vh;overflow-y:auto;scrollbar-width:none;}
 .gcscroll::-webkit-scrollbar{display:none;}
@@ -119,7 +121,7 @@ body.light .leg-label{color:rgba(10,14,30,0.65);font-size:8px;}
 #msheet{display:none;position:fixed;bottom:0;left:0;right:0;z-index:700;background:rgba(4,6,18,0.98);border-top:1px solid rgba(180,210,255,0.08);border-radius:14px 14px 0 0;max-height:72vh;overflow-y:auto;scrollbar-width:none;transform:translateY(100%);transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);backdrop-filter:blur(28px);}
 #msheet::-webkit-scrollbar{display:none;}
 #msheet.on{transform:translateY(0);}
-.mshandle{width:36px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;margin:12px auto 6px;}
+.mshandle{width:48px;height:5px;background:rgba(255,255,255,0.18);border-radius:3px;margin:14px auto 8px;cursor:pointer;}
 .msbar{height:2px;width:100%;transition:background 0.4s;}
 .mshead{padding:16px 20px 12px;border-bottom:1px solid rgba(180,210,255,0.06);}
 .msring{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.28);margin-bottom:6px;}
@@ -1050,10 +1052,20 @@ function exitFocus(){
   isFocused=false;focusNode=null;scenePivotTgt.set(0,0,0);
   camTarget.radius=ORRERY_VIEW.radius;camTarget.phi=ORRERY_VIEW.phi;
   document.getElementById('focus-hint').classList.remove('vis');document.getElementById('hint').style.opacity='1';
-  document.getElementById('ghost').classList.remove('on');document.getElementById('msheet').classList.remove('on');
+  const ghost=document.getElementById('ghost');ghost.classList.remove('on');ghost.classList.remove('pinned');
+  document.getElementById('msheet').classList.remove('on');
   clearMoons();clearClusterFilter();
 }
 window.closePanel=function(){exitFocus();};
+
+// Ghost: allow mouse to enter the panel without it closing, but release on explicit close
+(function(){
+  const ghost=document.getElementById('ghost');
+  ghost.addEventListener('mouseenter',()=>{if(ghost.classList.contains('on'))ghost.classList.add('pinned');});
+  ghost.addEventListener('mouseleave',()=>{ghost.classList.remove('pinned');});
+  const gcclose=ghost.querySelector('.gcclose');
+  if(gcclose)gcclose.addEventListener('click',()=>{exitFocus();});
+})();
 
 const tooltip=document.getElementById('tooltip');
 let hoveredMesh=null,mouse=new THREE.Vector2(),drag=false,lastDragX=0,lastDragY=0,isDragging=false,hintFaded=false;
@@ -1069,18 +1081,53 @@ function checkHover(){
   if(hits.length){const hit=hits[0].object,obj=nodeObjects.find(o=>o.mesh===hit);if(obj&&hoveredMesh!==hit){hoveredMesh=hit;const n=obj.node,cfg=dcfg(n.domain);document.getElementById('tt-ring').textContent=n.era||RING_NAMES[n.tier];document.getElementById('tt-title').textContent=n.title;document.getElementById('tt-title').style.color=isLight?cfg.lightHex:cfg.hex;document.getElementById('tt-type').textContent=cfg.label;tooltip.classList.add('vis');}document.body.style.cursor='pointer';}else{if(hoveredMesh){hoveredMesh=null;tooltip.classList.remove('vis');}document.body.style.cursor='default';}
 }
 
-cvs.addEventListener('pointerdown',e=>{if(e.button===2)return;isDragging=false;drag=false;lastDragX=e.clientX;lastDragY=e.clientY;cvs.setPointerCapture(e.pointerId);});
+// ── Pointer / touch event handling ──
+// dragDist tracks total movement so tiny touch jitter won't eat taps
+let pointerDownX=0,pointerDownY=0,dragDist=0;
+const DRAG_THRESHOLD=8; // px — below this = tap, above = drag
+
+cvs.addEventListener('pointerdown',e=>{
+  if(e.button===2)return;
+  isDragging=false;drag=false;
+  pointerDownX=e.clientX;pointerDownY=e.clientY;dragDist=0;
+  lastDragX=e.clientX;lastDragY=e.clientY;
+  try{cvs.setPointerCapture(e.pointerId);}catch(_){}
+});
+
 cvs.addEventListener('pointermove',e=>{
   const rect=cvs.getBoundingClientRect();
-  mouse.x=(e.clientX-rect.left)/rect.width*2-1;mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;lastXY={x:e.clientX,y:e.clientY};posTooltip(e.clientX,e.clientY);
-  if(e.buttons&&e.button!==2){isDragging=true;drag=true;camTarget.theta-=(e.clientX-lastDragX)*0.005;camTarget.phi=Math.max(0.02,Math.min(Math.PI*0.48,camTarget.phi+(e.clientY-lastDragY)*0.005));lastDragX=e.clientX;lastDragY=e.clientY;}else{checkHover();}
+  mouse.x=(e.clientX-rect.left)/rect.width*2-1;
+  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+  lastXY={x:e.clientX,y:e.clientY};
+  posTooltip(e.clientX,e.clientY);
+  if(e.buttons){
+    const dx=e.clientX-lastDragX,dy=e.clientY-lastDragY;
+    dragDist+=Math.sqrt(dx*dx+dy*dy);
+    if(dragDist>DRAG_THRESHOLD){
+      isDragging=true;drag=true;
+      camTarget.theta-=dx*0.005;
+      camTarget.phi=Math.max(0.02,Math.min(Math.PI*0.48,camTarget.phi+dy*0.005));
+    }
+    lastDragX=e.clientX;lastDragY=e.clientY;
+  } else {
+    checkHover();
+  }
 });
+
 cvs.addEventListener('pointerup',e=>{
   if(e.button===2)return;
+  // Refresh mouse coords to the up-position for accurate raycasting on mobile
+  const rect=cvs.getBoundingClientRect();
+  mouse.x=(e.clientX-rect.left)/rect.width*2-1;
+  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
+
   if(!drag){
     if(handleGalaxyClick(mouse)){if(!hintFaded){document.getElementById('hint').style.opacity='0.06';hintFaded=true;}return;}
     raycaster.setFromCamera(mouse,cam);
-    if(isFocused&&moonMeshList.length){const mHits=raycaster.intersectObjects(moonMeshList);if(mHits.length){const mo=activeMoons.find(m=>m.mesh===mHits[0].object);if(mo){enterFocus(mo.targetNode);return;}}}
+    if(isFocused&&moonMeshList.length){
+      const mHits=raycaster.intersectObjects(moonMeshList);
+      if(mHits.length){const mo=activeMoons.find(m=>m.mesh===mHits[0].object);if(mo){enterFocus(mo.targetNode);return;}}
+    }
     const hits=raycaster.intersectObjects(nodeObjects.map(o=>o.mesh));
     if(hits.length){const obj=nodeObjects.find(o=>o.mesh===hits[0].object);if(obj)enterFocus(obj.node);}
     else if(isFocused)exitFocus();
