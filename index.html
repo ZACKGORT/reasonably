@@ -71,10 +71,15 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
 .key-save:hover{opacity:0.82;}
 .key-note{font-family:var(--mono);font-size:9px;letter-spacing:0.07em;color:var(--ink-3);white-space:nowrap;}
 
+/* global thin scrollbar */
+*{scrollbar-width:thin;scrollbar-color:var(--border-2) transparent;}
+::-webkit-scrollbar{width:2px;height:2px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:1px;}
+::-webkit-scrollbar-thumb:hover{background:var(--border-3);}
+
 /* THREAD */
 #thread{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);transition:background .2s;}
-#thread::-webkit-scrollbar{width:4px;}
-#thread::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
 .thread-inner{max-width:700px;margin:0 auto;padding:40px 24px 20px;display:flex;flex-direction:column;}
 #empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;gap:12px;text-align:center;padding:48px 20px;}
 .e-glyph{font-size:36px;color:var(--accent);opacity:0.45;line-height:1;}
@@ -112,90 +117,154 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
 .tcursor{display:inline-block;width:2px;height:14px;background:var(--accent);vertical-align:text-bottom;animation:blink .85s infinite;margin-left:1px;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ─── CTX OVERLAY ─── */
-#ctx-ov{
-  position:fixed;z-index:200;
+/* ─── CTX WIDGETS — draggable ─── */
+.ctx-widget{
+  position:fixed;z-index:210;width:242px;
   background:var(--bg-chrome);
-  border:1px solid var(--border-2);
-  border-bottom:none;
-  border-radius:14px 14px 0 0;
-  box-shadow:var(--shadow-ov);
+  border:1px solid var(--border-2);border-radius:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.09),0 1px 5px rgba(0,0,0,0.05);
   overflow:hidden;
   opacity:0;pointer-events:none;
-  transform:translateY(12px);
-  transition:opacity .18s ease,transform .18s ease,background .2s,border-color .2s;
+  transform:translateY(8px) scale(0.98);
+  transition:opacity .16s ease,transform .16s ease,box-shadow .16s,background .2s,border-color .2s;
 }
-#ctx-ov.open{opacity:1;pointer-events:all;transform:translateY(0);}
+[data-theme="dark"] .ctx-widget{box-shadow:0 4px 28px rgba(0,0,0,0.55),0 1px 6px rgba(0,0,0,0.35);}
+.ctx-widget.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.ctx-widget.dragging-now{box-shadow:0 12px 40px rgba(0,0,0,0.16),0 3px 12px rgba(0,0,0,0.08);transition:box-shadow .12s;}
+[data-theme="dark"] .ctx-widget.dragging-now{box-shadow:0 12px 48px rgba(0,0,0,0.7),0 3px 14px rgba(0,0,0,0.5);}
+body.is-dragging *{user-select:none;}
+
 .ov-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 18px 10px;
+  display:flex;align-items:center;gap:7px;
+  padding:10px 12px 9px;
   border-bottom:1px solid var(--border);
+  cursor:grab;background:var(--bg-chrome);
+  transition:background .2s;
 }
+.ov-head:active{cursor:grabbing;}
+.ov-grip{font-size:11px;color:var(--ink-3);line-height:1;flex-shrink:0;letter-spacing:-1px;}
 .ov-title{
   font-family:var(--mono);font-size:9px;letter-spacing:0.22em;
-  text-transform:uppercase;color:var(--ink-2);
+  text-transform:uppercase;color:var(--ink-2);flex:1;
 }
 .ov-x{
-  width:24px;height:24px;border:none;background:transparent;cursor:pointer;
-  color:var(--ink-3);font-size:14px;display:flex;align-items:center;justify-content:center;
-  border-radius:4px;transition:all .13s;padding:0;
+  width:20px;height:20px;border:none;background:transparent;cursor:pointer;
+  color:var(--ink-3);font-size:12px;display:flex;align-items:center;justify-content:center;
+  border-radius:3px;transition:all .13s;padding:0;flex-shrink:0;
 }
 .ov-x:hover{background:var(--bg-3);color:var(--ink);}
-.ov-body{padding:14px 18px 10px;display:flex;flex-direction:column;gap:12px;}
+.ov-body{padding:11px 13px 8px;display:flex;flex-direction:column;gap:9px;}
 
-/* preset chips inside overlay */
-.ov-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.ov-chips{display:flex;flex-wrap:wrap;gap:5px;}
 .ov-chip{
-  font-family:var(--mono);font-size:10px;letter-spacing:0.08em;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.08em;
   color:var(--ink-2);border:1px solid var(--border-2);border-radius:4px;
-  padding:5px 11px;cursor:pointer;background:transparent;
+  padding:4px 9px;cursor:pointer;background:transparent;
   transition:all .13s;user-select:none;
 }
 .ov-chip:hover{border-color:var(--border-3);color:var(--ink);background:var(--bg-3);}
 .ov-chip.sel{background:var(--accent-l);border-color:var(--accent-b);color:var(--accent);}
 
-/* overlay textarea */
-#ov-ta{
+.ov-ta{
   width:100%;background:var(--bg-2);border:1px solid var(--border-2);
-  border-radius:7px;padding:10px 13px;
-  font-family:var(--sans);font-size:13.5px;color:var(--ink);
-  line-height:1.65;outline:none;resize:none;
-  min-height:72px;max-height:140px;
+  border-radius:6px;padding:8px 10px;
+  font-family:var(--sans);font-size:13px;color:var(--ink);
+  line-height:1.6;outline:none;resize:none;
+  min-height:58px;max-height:110px;
   transition:border-color .15s,background .2s,color .2s;
 }
-#ov-ta:focus{border-color:var(--accent);}
-#ov-ta::placeholder{color:var(--ink-3);}
+.ov-ta:focus{border-color:var(--accent);}
+.ov-ta::placeholder{color:var(--ink-3);}
 
-/* suggestions (recent / archetype) */
-.ov-sug-wrap{display:flex;flex-direction:column;gap:6px;}
+.ov-sug-wrap{display:flex;flex-direction:column;gap:5px;}
 .ov-sug-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);}
-.ov-sugs{display:flex;flex-wrap:wrap;gap:5px;}
+.ov-sugs{display:flex;flex-wrap:wrap;gap:4px;}
 .ov-sug{
-  font-family:var(--mono);font-size:10px;letter-spacing:0.06em;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.06em;
   color:var(--ink-3);border:1px solid var(--border);border-radius:4px;
-  padding:4px 10px;cursor:pointer;background:transparent;
-  transition:all .13s;user-select:none;
+  padding:3px 8px;cursor:pointer;background:transparent;transition:all .13s;user-select:none;
 }
 .ov-sug:hover{border-color:var(--border-2);color:var(--ink-2);}
 
-/* overlay footer */
 .ov-foot{
-  padding:10px 18px 14px;
+  padding:8px 13px 11px;
   display:flex;align-items:center;justify-content:space-between;
   border-top:1px solid var(--border);
 }
 .ov-discard{
   font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
   color:var(--ink-3);background:transparent;border:1px solid var(--border);
-  border-radius:5px;padding:7px 13px;cursor:pointer;transition:all .14s;
+  border-radius:4px;padding:5px 10px;cursor:pointer;transition:all .14s;
 }
 .ov-discard:hover{border-color:var(--border-2);color:var(--ink-2);background:var(--bg-3);}
 .ov-declare{
   font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
   color:#fff;background:var(--accent);border:none;
-  border-radius:5px;padding:7px 16px;cursor:pointer;transition:opacity .14s;
+  border-radius:4px;padding:5px 13px;cursor:pointer;transition:opacity .14s;
 }
 .ov-declare:hover{opacity:0.84;}
+
+/* ─── MOBILE BACKDROP ─── */
+#mob-backdrop{
+  display:none;position:fixed;inset:0;z-index:209;
+  background:rgba(20,16,12,0.28);
+  backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);
+  opacity:0;transition:opacity .2s;
+}
+#mob-backdrop.on{display:block;opacity:1;}
+[data-theme="dark"] #mob-backdrop{background:rgba(0,0,0,0.46);}
+
+/* ─── MOBILE ─── */
+@media(max-width:699px){
+  /* intent bar: horizontal scroll, no wrap */
+  .intent-bar{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-right:12px;scrollbar-width:none;}
+  .intent-bar::-webkit-scrollbar{display:none;}
+  .i-lbl{flex-shrink:0;}
+  .ic{flex-shrink:0;padding:7px 13px;min-height:34px;}
+
+  /* ctx cells: titles only on mobile */
+  .ctx-cell{min-height:40px;padding:10px 12px;justify-content:center;}
+  .ctx-val{display:none;}
+  .ctx-lbl{font-size:9px;}
+
+  /* widget as bottom sheet */
+  .ctx-widget{
+    width:100%!important;
+    left:0!important;
+    right:0!important;
+    bottom:0!important;
+    top:auto!important;
+    border-radius:18px 18px 0 0!important;
+    border-bottom:none!important;
+    border-left:none!important;
+    border-right:none!important;
+    transform:translateY(16px) scale(1)!important;
+  }
+  .ctx-widget.open{transform:translateY(0) scale(1)!important;}
+
+  /* sheet drag handle bar */
+  .ov-head::before{
+    content:'';display:block;position:absolute;
+    top:8px;left:50%;transform:translateX(-50%);
+    width:32px;height:3px;border-radius:2px;
+    background:var(--border-3);
+  }
+  .ov-head{position:relative;padding-top:18px;cursor:default;}
+
+  /* 16px minimum prevents iOS keyboard zoom-in */
+  .ov-ta{font-size:16px!important;min-height:80px;}
+
+  /* larger tap targets for chips and buttons */
+  .ov-chip{padding:8px 13px;font-size:10px;min-height:36px;display:inline-flex;align-items:center;}
+  .ov-declare{padding:10px 18px;font-size:10px;min-height:40px;}
+  .ov-discard{padding:10px 14px;font-size:10px;min-height:40px;}
+  .ov-sug{padding:7px 12px;font-size:10px;min-height:34px;display:inline-flex;align-items:center;}
+  .ov-foot{padding:10px 14px 20px;}
+
+  /* composer footer buttons */
+  .ghost,.model-pill{padding:8px 12px;min-height:36px;}
+  .send-btn{width:38px;height:38px;border-radius:10px;font-size:18px;}
+}
 
 /* ─── COMPOSER ─── */
 #composer{flex-shrink:0;padding:10px 18px 14px;background:var(--bg);border-top:1px solid var(--border);transition:background .2s,border-color .2s;}
@@ -359,6 +428,21 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
 .phil-remember input{
   accent-color:var(--accent);cursor:pointer;width:13px;height:13px;
 }
+
+/* ─── DEMO BANNER ─── */
+#demo-bar{
+  flex-shrink:0;display:none;align-items:center;justify-content:center;gap:10px;
+  padding:7px 16px;
+  background:var(--ia-bg);border-bottom:1px solid var(--ia-b);
+  font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--ia-ink);transition:background .2s,border-color .2s,color .2s;
+}
+#demo-bar.on{display:flex;}
+.demo-dot{width:6px;height:6px;border-radius:50%;background:currentColor;animation:dpulse 2s infinite;flex-shrink:0;}
+@keyframes dpulse{0%,100%{opacity:1}50%{opacity:0.35}}
+.demo-exit{background:transparent;border:1px solid var(--ia-b);border-radius:3px;font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ia-ink);padding:3px 9px;cursor:pointer;margin-left:4px;transition:all .14s;}
+.demo-exit:hover{border-color:currentColor;}
+.hdr-btn.demo-on{color:var(--ia-ink);border-color:var(--ia-b);background:var(--ia-bg);}
 </style>
 </head>
 <body>
@@ -373,6 +457,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
   <div class="hdr-right">
     <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">◑</button>
     <button class="hdr-btn" onclick="newChat()">new chat</button>
+    <button class="hdr-btn" id="demo-btn" onclick="toggleDemo()">try demo</button>
     <button class="hdr-btn" id="key-badge" onclick="toggleKeyPanel()">api key</button>
   </div>
 </div>
@@ -387,6 +472,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
     <button class="key-save" onclick="saveKey()">save</button>
     <span class="key-note">stored locally · never sent anywhere but api.anthropic.com</span>
   </div>
+</div>
+
+<div id="demo-bar">
+  <span class="demo-dot"></span>
+  demo mode · no api key required · responses are simulated
+  <button class="demo-exit" onclick="toggleDemo()">exit demo</button>
 </div>
 
 <div id="thread">
@@ -446,16 +537,45 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
   </div>
 </div>
 
-<!-- CTX OVERLAY — positioned by JS above the composer -->
-<div id="ctx-ov">
-  <div class="ov-head">
-    <span class="ov-title" id="ov-title">format</span>
-    <button class="ov-x" onclick="closeOv()">✕</button>
+<div id="mob-backdrop" onclick="['f','c','a'].forEach(closeWidget)"></div>
+
+<!-- CTX WIDGETS — three independent draggable panels -->
+<div class="ctx-widget" id="ov-f">
+  <div class="ov-head" onmousedown="startDrag(event,'f')" ontouchstart="startDragTouch(event,'f')">
+    <span class="ov-grip">⠿</span>
+    <span class="ov-title">format</span>
+    <button class="ov-x" onclick="closeWidget('f')">✕</button>
   </div>
-  <div class="ov-body" id="ov-body"></div>
+  <div class="ov-body" id="ov-body-f"></div>
   <div class="ov-foot">
-    <button class="ov-discard" onclick="closeOv()">close without declaring</button>
-    <button class="ov-declare" onclick="declareCtx()">declare →</button>
+    <button class="ov-discard" onclick="closeWidget('f')">close</button>
+    <button class="ov-declare" onclick="declareCtx('f')">declare →</button>
+  </div>
+</div>
+
+<div class="ctx-widget" id="ov-c">
+  <div class="ov-head" onmousedown="startDrag(event,'c')" ontouchstart="startDragTouch(event,'c')">
+    <span class="ov-grip">⠿</span>
+    <span class="ov-title">constraint</span>
+    <button class="ov-x" onclick="closeWidget('c')">✕</button>
+  </div>
+  <div class="ov-body" id="ov-body-c"></div>
+  <div class="ov-foot">
+    <button class="ov-discard" onclick="closeWidget('c')">close</button>
+    <button class="ov-declare" onclick="declareCtx('c')">declare →</button>
+  </div>
+</div>
+
+<div class="ctx-widget" id="ov-a">
+  <div class="ov-head" onmousedown="startDrag(event,'a')" ontouchstart="startDragTouch(event,'a')">
+    <span class="ov-grip">⠿</span>
+    <span class="ov-title">audience</span>
+    <button class="ov-x" onclick="closeWidget('a')">✕</button>
+  </div>
+  <div class="ov-body" id="ov-body-a"></div>
+  <div class="ov-foot">
+    <button class="ov-discard" onclick="closeWidget('a')">close</button>
+    <button class="ov-declare" onclick="declareCtx('a')">declare →</button>
   </div>
 </div>
 
@@ -509,7 +629,6 @@ let hist=[];
 let busy=false;
 let theme=localStorage.getItem('sc_theme')||'light';
 let declared={f:null,c:null,a:null};
-let ovField=null;
 
 const SYS={
   write:'You are a precise writing assistant. Match the user\'s requested format and voice. Be direct.',
@@ -537,150 +656,236 @@ if(apiKey){document.getElementById('api-key-input').value='•'.repeat(Math.min(
 if(localStorage.getItem('r_phil_hide')==='1') document.getElementById('phil-card').classList.add('hidden');
 document.getElementById('prompt').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();send();}});
 document.getElementById('prompt').addEventListener('input',grow);
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovField) closeOv();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape') ['f','c','a'].forEach(closeWidget);});
 document.addEventListener('click',e=>{
   const p=document.getElementById('mpick'),b=document.getElementById('mpill');
   if(p.classList.contains('open')&&!p.contains(e.target)&&!b.contains(e.target)) p.classList.remove('open');
-  // close overlay if click outside both overlay and composer
-  const ov=document.getElementById('ctx-ov'),comp=document.getElementById('composer');
-  if(ovField&&!ov.contains(e.target)&&!comp.contains(e.target)) closeOv();
 });
-window.addEventListener('resize',()=>{if(ovField) positionOv();});
+window.addEventListener('resize',repositionOpenWidgets);
 
 function applyTheme(t){document.documentElement.dataset.theme=t;const btn=document.getElementById('theme-btn');if(btn)btn.textContent=t==='light'?'◑':'◐';}
 function toggleTheme(){theme=theme==='light'?'dark':'light';localStorage.setItem('sc_theme',theme);applyTheme(theme);}
-
 function toggleKeyPanel(){const p=document.getElementById('key-panel');p.classList.toggle('open');if(p.classList.contains('open'))setTimeout(()=>document.getElementById('api-key-input').focus(),50);}
 function toggleKeyVis(){const i=document.getElementById('api-key-input');i.type=i.type==='password'?'text':'password';}
 function saveKey(){const i=document.getElementById('api-key-input'),v=i.value.trim();if(!v||v.startsWith('•')){toast('paste your key first','err');return;}apiKey=v;localStorage.setItem('sc_key',v);i.type='password';i.value='•'.repeat(Math.min(v.length,24));i.dataset.f='1';updateKB();document.getElementById('key-panel').classList.remove('open');toast('key saved','ok');}
 function updateKB(){const b=document.getElementById('key-badge');if(apiKey){b.textContent='key ✓';b.classList.add('key-ok');}else{b.textContent='api key';b.classList.remove('key-ok');}}
 document.getElementById('api-key-input').addEventListener('focus',function(){if(this.dataset.f){this.value=apiKey;this.type='text';}});
 document.getElementById('api-key-input').addEventListener('blur',function(){if(apiKey&&this.value===apiKey){this.type='password';this.value='•'.repeat(Math.min(apiKey.length,24));}});
+function setI(name){intent=name===intent?null:name;document.querySelectorAll('.ic').forEach(c=>{c.className='ic';if(c.dataset.i===intent)c.classList.add({write:'aw',debug:'ad',explain:'ae',analyze:'aa',create:'ac'}[intent]);});document.getElementById('prompt').placeholder=intent?PH[intent]:'what do you need?';}
 
-function setI(name){
-  intent=name===intent?null:name;
-  document.querySelectorAll('.ic').forEach(c=>{c.className='ic';if(c.dataset.i===intent)c.classList.add({write:'aw',debug:'ad',explain:'ae',analyze:'aa',create:'ac'}[intent]);});
-  document.getElementById('prompt').placeholder=intent?PH[intent]:'what do you need?';
+// ─── DRAGGABLE CTX WIDGETS ────────────────────────────────
+const ovOpen={f:false,c:false,a:false};
+const widgetPos={f:null,c:null,a:null};
+const WIDGET_W=242,WIDGET_GAP=12;
+const COLS={f:0,c:1,a:2};
+let topZ=210,drag=null;
+
+function bringToFront(field){topZ++;document.getElementById('ov-'+field).style.zIndex=topZ;}
+
+function defaultPos(field){
+  const cr=document.getElementById('composer').getBoundingClientRect();
+  const totalW=WIDGET_W*3+WIDGET_GAP*2;
+  const startX=cr.left+(cr.width-totalW)/2;
+  const el=document.getElementById('ov-'+field);
+  const elH=el.offsetHeight||200;
+  const x=Math.max(8,Math.min(window.innerWidth-WIDGET_W-8,startX+COLS[field]*(WIDGET_W+WIDGET_GAP)));
+  const y=Math.max(8,cr.top-elH-8);
+  return{x,y};
 }
 
-// ─── CTX OVERLAY ─────────────────────────────────────────
 function openOv(field){
-  // if same field already open, close it
-  if(ovField===field){closeOv();return;}
-  ovField=field;
+  if(window.innerWidth<700) ['f','c','a'].forEach(f=>{if(f!==field)closeWidget(f);});
+  const el=document.getElementById('ov-'+field);
+  if(ovOpen[field]){bringToFront(field);return;}
+  ovOpen[field]=true;
+  buildWidgetBody(field);
 
-  // mark cell active
-  document.querySelectorAll('.ctx-cell').forEach(c=>c.classList.remove('active-ov'));
-  document.getElementById('cell-'+field).classList.add('active-ov');
-
-  document.getElementById('ov-title').textContent=CTX_TITLES[field];
-  buildOvBody(field);
-  positionOv();
-  document.getElementById('ctx-ov').classList.add('open');
-  setTimeout(()=>{const ta=document.getElementById('ov-ta');if(ta){ta.focus();ta.selectionStart=ta.selectionEnd=ta.value.length;}},60);
-}
-
-function buildOvBody(field){
-  const body=document.getElementById('ov-body');
-  const cur=declared[field]||'';
-
-  if(field==='f'){
-    const chips=FORMAT_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}')">${p}</span>`).join('');
-    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>`;
-  } else if(field==='c'){
-    const recents=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');
-    const sugs=recents.length?`<div class="ov-sug-wrap"><span class="ov-sug-lbl">recent</span><div class="ov-sugs">${recents.map(r=>`<span class="ov-sug" onclick="pickSug('${r.replace(/'/g,"&#39;")}')">${esc(r)}</span>`).join('')}</div></div>`:'';
-    body.innerHTML=`<textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>${sugs}`;
+  if(window.innerWidth<700){
+    // bottom sheet — position is handled entirely by CSS, just ensure no stale top/left
+    el.style.removeProperty('top');el.style.removeProperty('left');
+    el.style.removeProperty('bottom');el.style.removeProperty('width');
+    document.getElementById('mob-backdrop').classList.add('on');
   } else {
-    const chips=AUDIENCE_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}')">${p}</span>`).join('');
-    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>`;
+    const pos=widgetPos[field]||defaultPos(field);
+    el.style.left=pos.x+'px';el.style.top=pos.y+'px';el.style.bottom='auto';
   }
 
-  // auto-grow textarea on input
-  const ta=document.getElementById('ov-ta');
-  if(ta) ta.addEventListener('input',()=>{
-    // deselect chips if user types custom value
-    document.querySelectorAll('.ov-chip').forEach(c=>{c.classList.remove('sel');if(ta.value===c.textContent) c.classList.add('sel');});
-    ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';
+  bringToFront(field);
+  el.classList.add('open');
+  document.getElementById('cell-'+field).classList.add('active-ov');
+
+  setTimeout(()=>{
+    if(window.innerWidth>=700&&!widgetPos[field]){const p=defaultPos(field);el.style.top=p.y+'px';}
+    const ta=document.getElementById('ov-ta-'+field);
+    if(ta){ta.focus();ta.selectionStart=ta.selectionEnd=ta.value.length;}
+  },40);
+}
+
+function closeWidget(field){
+  if(!ovOpen[field]) return;
+  ovOpen[field]=false;
+  document.getElementById('ov-'+field).classList.remove('open');
+  document.getElementById('cell-'+field).classList.remove('active-ov');
+  if(!['f','c','a'].some(f=>ovOpen[f]))
+    document.getElementById('mob-backdrop').classList.remove('on');
+}
+
+function closeOv(){['f','c','a'].forEach(closeWidget);}
+
+function repositionOpenWidgets(){
+  ['f','c','a'].forEach(field=>{
+    if(ovOpen[field]&&!widgetPos[field]){
+      const p=defaultPos(field);const el=document.getElementById('ov-'+field);
+      el.style.left=p.x+'px';el.style.top=p.y+'px';
+    }
   });
 }
 
-function positionOv(){
-  const comp=document.getElementById('composer');
-  const cr=comp.getBoundingClientRect();
-  const ov=document.getElementById('ctx-ov');
-  ov.style.left=cr.left+'px';
-  ov.style.width=cr.width+'px';
-  ov.style.bottom=(window.innerHeight-cr.top)+'px';
-  ov.style.maxWidth=cr.width+'px';
-}
-
-function pickChip(el,val){
-  const ta=document.getElementById('ov-ta');
-  if(!ta) return;
-  const already=ta.value===val;
-  document.querySelectorAll('.ov-chip').forEach(c=>c.classList.remove('sel'));
-  if(already){ta.value='';} // toggle off
-  else{ta.value=val;el.classList.add('sel');}
-  ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';
-}
-
-function pickSug(val){
-  const ta=document.getElementById('ov-ta');
-  if(ta){ta.value=val;ta.focus();}
-}
-
-function declareCtx(){
-  const ta=document.getElementById('ov-ta');
-  const val=ta?ta.value.trim():'';
-  declared[ovField]=val||null;
-  updateCtxCell(ovField);
-
-  // persist constraint recents
-  if(ovField==='c'&&val){
-    const r=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');
-    localStorage.setItem(CTX_RECENT_KEY,JSON.stringify([val,...r.filter(x=>x!==val)].slice(0,6)));
+function buildWidgetBody(field){
+  const body=document.getElementById('ov-body-'+field),cur=declared[field]||'';
+  // mobile keyboard hints: constraint=technical(no autocorrect), others=natural language
+  const taAttrs = field==='c'
+    ? 'autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"'
+    : 'autocomplete="off" autocapitalize="sentences" spellcheck="false"';
+  if(field==='f'){
+    const chips=FORMAT_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}','f')">${p}</span>`).join('');
+    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta-f" class="ov-ta" placeholder="${CTX_PH.f}" ${taAttrs}>${esc(cur)}</textarea>`;
+  } else if(field==='c'){
+    const recents=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');
+    const sugs=recents.length?`<div class="ov-sug-wrap"><span class="ov-sug-lbl">recent</span><div class="ov-sugs">${recents.map(r=>`<span class="ov-sug" onclick="pickSug('${r.replace(/'/g,'&#39;')}','c')">${esc(r)}</span>`).join('')}</div></div>`:'';
+    body.innerHTML=`<textarea id="ov-ta-c" class="ov-ta" placeholder="${CTX_PH.c}" ${taAttrs}>${esc(cur)}</textarea>${sugs}`;
+  } else {
+    const chips=AUDIENCE_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}','a')">${p}</span>`).join('');
+    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta-a" class="ov-ta" placeholder="${CTX_PH.a}" ${taAttrs}>${esc(cur)}</textarea>`;
   }
-  closeOv();
+  const ta=document.getElementById('ov-ta-'+field);
+  if(ta) ta.addEventListener('input',()=>{
+    document.querySelectorAll('#ov-body-'+field+' .ov-chip').forEach(c=>{c.classList.remove('sel');if(ta.value===c.textContent)c.classList.add('sel');});
+    ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,110)+'px';
+  });
 }
 
-function closeOv(){
-  document.getElementById('ctx-ov').classList.remove('open');
-  document.querySelectorAll('.ctx-cell').forEach(c=>c.classList.remove('active-ov'));
-  ovField=null;
+// visualViewport: keep bottom sheets above the keyboard
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize',()=>{
+    if(window.innerWidth>=700) return;
+    // browser handles fixed positioning with visual viewport on most modern mobile
+    // this nudge forces a repaint so the sheet re-anchors above the keyboard
+    ['f','c','a'].forEach(field=>{
+      if(ovOpen[field]){
+        const el=document.getElementById('ov-'+field);
+        el.style.bottom='0px';
+      }
+    });
+  });
+}
+
+function pickChip(el,val,field){
+  const ta=document.getElementById('ov-ta-'+field);if(!ta) return;
+  const already=ta.value===val;
+  document.querySelectorAll('#ov-body-'+field+' .ov-chip').forEach(c=>c.classList.remove('sel'));
+  ta.value=already?'':val;if(!already)el.classList.add('sel');
+  ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,110)+'px';
+}
+function pickSug(val,field){const ta=document.getElementById('ov-ta-'+field);if(ta){ta.value=val;ta.focus();}}
+
+function declareCtx(field){
+  const ta=document.getElementById('ov-ta-'+field),val=ta?ta.value.trim():'';
+  declared[field]=val||null;updateCtxCell(field);
+  if(field==='c'&&val){const r=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');localStorage.setItem(CTX_RECENT_KEY,JSON.stringify([val,...r.filter(x=>x!==val)].slice(0,6)));}
+  closeWidget(field);
 }
 
 function updateCtxCell(field){
-  const cell=document.getElementById('cell-'+field);
-  const valEl=document.getElementById('val-'+field);
-  const val=declared[field];
-  if(val){
-    cell.classList.add('declared');
-    valEl.textContent=val.length>38?val.slice(0,36)+'…':val;
-  } else {
-    cell.classList.remove('declared');
-    valEl.textContent=CTX_PLACEHOLDERS[field];
-  }
+  const cell=document.getElementById('cell-'+field),valEl=document.getElementById('val-'+field),val=declared[field];
+  if(val){cell.classList.add('declared');valEl.textContent=val.length>38?val.slice(0,36)+'…':val;}
+  else{cell.classList.remove('declared');valEl.textContent=CTX_PLACEHOLDERS[field];}
 }
 
-function clearCtx(){
-  declared={f:null,c:null,a:null};
-  ['f','c','a'].forEach(updateCtxCell);
-  if(ovField) closeOv();
-}
-
+function clearCtx(){declared={f:null,c:null,a:null};['f','c','a'].forEach(f=>{updateCtxCell(f);closeWidget(f);});}
 function getCtx(){return{f:declared.f||'',c:declared.c||'',a:declared.a||''};}
 
-// MODEL
+// ─── DRAG ─────────────────────────────────────────────────
+function startDrag(e,field){
+  if(e.button!==0) return;
+  const el=document.getElementById('ov-'+field),rect=el.getBoundingClientRect();
+  el.style.top=rect.top+'px';el.style.bottom='auto';el.style.transition='none';
+  drag={field,startX:e.clientX,startY:e.clientY,origX:rect.left,origY:rect.top};
+  el.classList.add('dragging-now');document.body.classList.add('is-dragging');
+  bringToFront(field);e.preventDefault();
+}
+function startDragTouch(e,field){
+  const t=e.touches[0];
+  startDrag({button:0,clientX:t.clientX,clientY:t.clientY,preventDefault:()=>e.preventDefault()},field);
+}
+function onDragMove(cx,cy){
+  if(!drag) return;
+  const el=document.getElementById('ov-'+drag.field);
+  const nx=Math.max(0,Math.min(window.innerWidth-el.offsetWidth,drag.origX+cx-drag.startX));
+  const ny=Math.max(0,Math.min(window.innerHeight-el.offsetHeight,drag.origY+cy-drag.startY));
+  el.style.left=nx+'px';el.style.top=ny+'px';
+  widgetPos[drag.field]={x:nx,y:ny};
+}
+function endDrag(){
+  if(!drag) return;
+  const el=document.getElementById('ov-'+drag.field);
+  el.classList.remove('dragging-now');el.style.transition='';
+  document.body.classList.remove('is-dragging');drag=null;
+}
+document.addEventListener('mousemove',e=>{if(drag) onDragMove(e.clientX,e.clientY);});
+document.addEventListener('mouseup',endDrag);
+document.addEventListener('touchmove',e=>{if(drag){onDragMove(e.touches[0].clientX,e.touches[0].clientY);e.preventDefault();}},{passive:false});
+document.addEventListener('touchend',endDrag);
 function togglePick(){const p=document.getElementById('mpick'),b=document.getElementById('mpill');p.classList.toggle('open');if(p.classList.contains('open')){const r=b.getBoundingClientRect();p.style.bottom=(window.innerHeight-r.top+6)+'px';p.style.right=(window.innerWidth-r.right)+'px';}}
 function selModel(el){model=el.dataset.m;document.querySelectorAll('.mopt').forEach(o=>o.classList.remove('act'));el.classList.add('act');document.getElementById('mpill').textContent=el.textContent+' ∨';document.getElementById('mpick').classList.remove('open');}
+
+// DEMO MODE
+let demoMode=false;
+const DEMO={
+  debug:'Looking at this, the root cause is a **scope issue** — the function is defined inside an IIFE but called from outside it.\n\nHere\'s the fix:\n\n```javascript\n// BEFORE — initOverlay trapped inside IIFE\n(function() {\n  function initOverlay() { ... }\n})();\nwindow.addEventListener(\'DOMContentLoaded\', initOverlay); // undefined\n\n// AFTER — move the listener inside\n(function() {\n  function initOverlay() { ... }\n  window.addEventListener(\'DOMContentLoaded\', initOverlay); // ✓\n})();\n```\n\nThe `reachFade` and `baseRotX` null errors are secondary — they\'re accessed before the DOM is ready. Wrap them in a null-check or move them inside `initOverlay`.',
+
+  explain:'**Scope** is about where a variable or function is *visible* from.\n\nIn JavaScript, there are three main scopes:\n\n- **Global** — visible everywhere. Avoid these.\n- **Function** — visible only inside the function it\'s declared in.\n- **Block** — visible only inside the `{}` it\'s declared in (`let`/`const` only).\n\nThe classic trap:\n\n```javascript\nfunction outer() {\n  function inner() { return 42; }\n}\ninner(); // ReferenceError — inner doesn\'t exist out here\n```\n\nIIFEs create their own scope bubble on purpose — they\'re a pattern for keeping things private. The tradeoff is that nothing inside is reachable from outside unless you explicitly return or assign it.',
+
+  write:'Here\'s a draft based on what you\'ve described:\n\n---\n\n**Subject: Quick update on the timeline**\n\nHey [name],\n\nWanted to flag that we\'re tracking about a week behind on the initial estimate. The core work is solid — it\'s the integration step that\'s taking longer than expected.\n\nCurrent plan: finish integration by Thursday, buffer the weekend for edge cases, ship Monday.\n\nHappy to jump on a call if you\'d rather talk through it. Otherwise I\'ll send a proper status update Thursday afternoon.\n\n— Z\n\n---\n\nLet me know if you want a different register (more formal, shorter, different framing on the delay).',
+
+  analyze:'**Recommendation: go with the approach that keeps the existing API surface.**\n\nHere\'s the breakdown:\n\n**Option A — rewrite with new API**\n- Pros: cleaner abstractions, easier to test, future-proof\n- Cons: breaks all current integrations, migration cost on consumers, high risk surface\n\n**Option B — extend current API**\n- Pros: zero migration cost, ship faster, reversible\n- Cons: carries forward some awkward naming, harder to clean up later\n\nThe key trade-off is *reversibility*. A bad abstraction you can extend is recoverable. A migration you\'ve forced on downstream consumers is not. At this stage, that asymmetry points to B.\n\nRevisit in 6 months when you have more signal on usage patterns.',
+
+  create:'```javascript\n// particle field — paste into a .html file and open in browser\nconst canvas = document.createElement(\'canvas\');\ndocument.body.appendChild(canvas);\ndocument.body.style.cssText = \'margin:0;background:#0a0a0a;overflow:hidden\';\nconst ctx = canvas.getContext(\'2d\');\nlet W, H, pts = [], mouse = {x:-999,y:-999};\n\nfunction resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }\nresize(); addEventListener(\'resize\', resize);\naddEventListener(\'mousemove\', e => { mouse.x=e.clientX; mouse.y=e.clientY; });\n\nfor (let i=0; i<120; i++)\n  pts.push({x:Math.random()*W, y:Math.random()*H,\n    vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4, r:Math.random()*2+1});\n\nfunction draw() {\n  ctx.fillStyle = \'rgba(10,10,10,0.18)\';\n  ctx.fillRect(0,0,W,H);\n  pts.forEach(p => {\n    const dx=mouse.x-p.x, dy=mouse.y-p.y, d=Math.sqrt(dx*dx+dy*dy);\n    if (d < 120) { p.vx -= dx/d*.4; p.vy -= dy/d*.4; }\n    p.vx*=.98; p.vy*=.98;\n    p.x+=p.vx; p.y+=p.vy;\n    if(p.x<0||p.x>W) p.vx*=-1;\n    if(p.y<0||p.y>H) p.vy*=-1;\n    ctx.beginPath();\n    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);\n    ctx.fillStyle = \'hsla(\'+(200+d*.2)+\',70%,65%,0.8)\';\n    ctx.fill();\n  });\n  requestAnimationFrame(draw);\n}\ndraw();\n```\n\nParticles repel from the cursor within a 120px radius. Copy the above into a `<script>` tag in any blank HTML file.',
+
+  default:'That\'s a reasonable question. Here\'s how I\'d think about it:\n\nThe short answer depends on what you\'re optimizing for. If it\'s speed, the first option is almost always faster to ship. If it\'s correctness over time, the second tends to age better.\n\nThe thing most people miss is that the decision usually *looks* like a technical tradeoff but is actually a social one — whoever has to maintain this in six months is the real stakeholder, and they\'re rarely in the room when the choice gets made.\n\nWhat\'s the actual constraint you\'re working against? That would help me be more specific.'
+};
+
+function toggleDemo(){
+  demoMode=!demoMode;
+  document.getElementById('demo-bar').classList.toggle('on',demoMode);
+  document.getElementById('demo-btn').classList.toggle('demo-on',demoMode);
+  document.getElementById('demo-btn').textContent=demoMode?'demo on':'try demo';
+  if(demoMode) toast('demo mode — no key needed','ok');
+}
+
+async function simulateStream(bel,text){
+  const words=text.split('');
+  let i=0,full='';
+  return new Promise(resolve=>{
+    function tick(){
+      if(!busy){resolve();return;}
+      const chunk=words.slice(i,i+4).join('');
+      full+=chunk;i+=4;
+      bel.innerHTML=md(full)+'<span class="tcursor"></span>';
+      scrollT();
+      if(i>=words.length){bel.innerHTML=md(full);resolve();}
+      else setTimeout(tick,18+Math.random()*14);
+    }
+    tick();
+  });
+}
 
 // SEND
 async function send(){
   if(busy) return;
   const ta=document.getElementById('prompt'),txt=ta.value.trim();
   if(!txt) return;
-  if(!apiKey){toggleKeyPanel();toast('add your api key first','err');return;}
+  if(!demoMode&&!apiKey){toggleKeyPanel();toast('add your api key — or try demo mode','err');return;}
   if(ovField) closeOv();
 
   const ctx=getCtx();
@@ -693,9 +898,6 @@ async function send(){
 
   let sys='You are a helpful, precise assistant.';
   if(intent&&SYS[intent]) sys=SYS[intent];
-  if(ctx.f) sys+=' Format: '+ctx.f+'.';
-  if(ctx.c) sys+=' Constraints: '+ctx.c+'.';
-  if(ctx.a) sys+=' Audience: '+ctx.a+'.';
 
   document.getElementById('empty')?.remove();
   hist.push({role:'user',content:uc});
@@ -706,12 +908,21 @@ async function send(){
   busy=true;document.getElementById('sb').disabled=true;
 
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:2048,system:sys,stream:true,messages:hist.map(m=>({role:m.role,content:m.content}))})});
-    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
-    const rdr=r.body.getReader(),dec=new TextDecoder();let full='';
-    while(true){const{done,value}=await rdr.read();if(done)break;for(const line of dec.decode(value,{stream:true}).split('\n')){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')break;try{const ev=JSON.parse(d);if(ev.type==='content_block_delta'&&ev.delta?.text){full+=ev.delta.text;bel.innerHTML=md(full)+'<span class="tcursor"></span>';scrollT();}if(ev.type==='message_stop')bel.innerHTML=md(full);}catch(_){}}}
-    bel.innerHTML=md(full);hist.push({role:'assistant',content:full});
-  }catch(e){bel.innerHTML='<span style="color:var(--ic-ink);font-family:var(--mono);font-size:12px">⚠ '+esc(e.message)+'</span>';hist.pop();toast(e.message.length>90?e.message.slice(0,90)+'…':e.message,'err');}
+    if(demoMode){
+      const response=DEMO[intent]||DEMO.default;
+      await simulateStream(bel,response);
+      hist.push({role:'assistant',content:response});
+    } else {
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:2048,system:sys,stream:true,messages:hist.map(m=>({role:m.role,content:m.content}))})});
+      if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+      const rdr=r.body.getReader(),dec=new TextDecoder();let full='';
+      while(true){const{done,value}=await rdr.read();if(done)break;for(const line of dec.decode(value,{stream:true}).split('\n')){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')break;try{const ev=JSON.parse(d);if(ev.type==='content_block_delta'&&ev.delta?.text){full+=ev.delta.text;bel.innerHTML=md(full)+'<span class="tcursor"></span>';scrollT();}if(ev.type==='message_stop')bel.innerHTML=md(full);}catch(_){}}}
+      bel.innerHTML=md(full);hist.push({role:'assistant',content:full});
+    }
+  }catch(e){
+    bel.innerHTML='<span style="color:var(--ic-ink);font-family:var(--mono);font-size:12px">⚠ '+esc(e.message)+'</span>';
+    hist.pop();toast(e.message.length>90?e.message.slice(0,90)+'…':e.message,'err');
+  }
   busy=false;document.getElementById('sb').disabled=false;scrollT();
 }
 
