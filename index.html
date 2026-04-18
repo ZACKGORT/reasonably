@@ -269,6 +269,96 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 #toast.err{color:var(--ic-ink);background:var(--ic-bg);border-color:var(--ic-b);}
 #toast.ok{color:var(--iw-ink);background:var(--iw-bg);border-color:var(--iw-b);}
+
+/* ─── PHILOSOPHY CARD ─── */
+#phil-card{
+  margin-bottom:32px;
+  animation:fi .32s ease;
+}
+#phil-card.hidden{display:none;}
+.phil-inner{
+  border:1px solid var(--border-2);
+  border-radius:14px;
+  background:var(--bg-2);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:background .2s,border-color .2s;
+}
+.phil-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 0;
+}
+.phil-eyebrow{
+  font-family:var(--mono);font-size:8px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--ink-3);
+}
+.phil-close{
+  width:22px;height:22px;border:none;background:transparent;cursor:pointer;
+  color:var(--ink-3);font-size:13px;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;transition:all .13s;padding:0;
+}
+.phil-close:hover{background:var(--bg-3);color:var(--ink);}
+.phil-hed{
+  font-family:var(--serif);font-size:20px;color:var(--ink);
+  line-height:1.35;letter-spacing:-0.015em;
+  padding:12px 18px 0;
+  transition:color .2s;
+}
+.phil-body{
+  padding:14px 18px 0;
+  display:flex;flex-direction:column;gap:12px;
+}
+.phil-body>p{
+  font-size:13.5px;line-height:1.72;color:var(--ink-2);
+  transition:color .2s;
+}
+.phil-dims{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;
+  border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+  background:var(--border);
+}
+.phil-dim{
+  background:var(--bg-2);
+  padding:11px 14px;
+  display:flex;flex-direction:column;gap:4px;
+  transition:background .2s;
+}
+.phil-dim-label{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--accent);
+}
+.phil-dim-desc{
+  font-size:12.5px;line-height:1.65;color:var(--ink-2);
+  transition:color .2s;
+}
+.phil-note{
+  font-size:12.5px;line-height:1.7;color:var(--ink-3) !important;
+  border-left:2px solid var(--accent-b);
+  padding-left:12px;
+  transition:color .2s,border-color .2s;
+}
+.phil-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+  border-top:1px solid var(--border);
+  margin-top:14px;
+}
+.phil-got-it{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;
+  background:var(--accent);color:#fff;border:none;
+  border-radius:5px;padding:7px 16px;cursor:pointer;transition:opacity .14s;
+}
+.phil-got-it:hover{opacity:0.84;}
+.phil-remember{
+  display:flex;align-items:center;gap:7px;
+  font-family:var(--mono);font-size:9px;letter-spacing:0.1em;
+  color:var(--ink-3);cursor:pointer;user-select:none;
+}
+.phil-remember input{
+  accent-color:var(--accent);cursor:pointer;width:13px;height:13px;
+}
 </style>
 </head>
 <body>
@@ -301,6 +391,46 @@ body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;
 
 <div id="thread">
   <div class="thread-inner" id="ti">
+
+    <!-- PHILOSOPHY CARD -->
+    <div id="phil-card">
+      <div class="phil-inner">
+        <div class="phil-top">
+          <span class="phil-eyebrow">reasonably · intent</span>
+          <button class="phil-close" onclick="dismissPhil()" title="dismiss">✕</button>
+        </div>
+        <p class="phil-hed"><em>most bad prompts aren't badly written.<br>they're badly shaped.</em></p>
+        <div class="phil-body">
+          <p>Before you write, you declare the shape of what you need. Four dimensions:</p>
+          <div class="phil-dims">
+            <div class="phil-dim">
+              <span class="phil-dim-label">intent</span>
+              <span class="phil-dim-desc">what kind of work is this — write, debug, explain, analyze, create. sets the cognitive mode Claude enters.</span>
+            </div>
+            <div class="phil-dim">
+              <span class="phil-dim-label">format</span>
+              <span class="phil-dim-desc">how you want it back. inline edits vs. prose vs. a diff are three completely different responses to the same question.</span>
+            </div>
+            <div class="phil-dim">
+              <span class="phil-dim-label">constraint</span>
+              <span class="phil-dim-desc">what Claude can't touch. the guardrail that lives in your head and never makes it into the prompt — until now.</span>
+            </div>
+            <div class="phil-dim">
+              <span class="phil-dim-label">audience</span>
+              <span class="phil-dim-desc">who's actually reading. changes register, density, assumed knowledge.</span>
+            </div>
+          </div>
+          <p class="phil-note"><em>declare</em> means commit. closing without declaring means you considered it and chose not to constrain. both are valid. the difference matters.</p>
+        </div>
+        <div class="phil-foot">
+          <button class="phil-got-it" onclick="dismissPhil()">got it →</button>
+          <label class="phil-remember">
+            <input type="checkbox" id="phil-no-show" /> don't show again
+          </label>
+        </div>
+      </div>
+    </div>
+
     <div id="empty">
       <div class="e-glyph">✳</div>
       <div class="e-hed">what are you working through?</div>
@@ -402,6 +532,9 @@ const CTX_PLACEHOLDERS={f:'inline edits / prose / bullets…',c:'keep X · avoid
 applyTheme(theme);
 updateKB();
 if(apiKey){document.getElementById('api-key-input').value='•'.repeat(Math.min(apiKey.length,24));document.getElementById('api-key-input').dataset.f='1';}
+
+// philosophy card
+if(localStorage.getItem('r_phil_hide')==='1') document.getElementById('phil-card').classList.add('hidden');
 document.getElementById('prompt').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();send();}});
 document.getElementById('prompt').addEventListener('input',grow);
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovField) closeOv();});
@@ -595,8 +728,24 @@ function md(t){t=t.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,l,c)=>'<pre><code>'+es
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function grow(){const e=document.getElementById('prompt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,220)+'px';}
 function scrollT(){document.getElementById('thread').scrollTop=999999;}
-function newChat(){hist=[];document.getElementById('ti').innerHTML=`<div id="empty"><div class="e-glyph">✳</div><div class="e-hed">what are you working through?</div><div class="e-sub">pick an intent · declare context · send</div><div class="sc-row"><div class="sc-chip" onclick="qs('debug')">debug something broken</div><div class="sc-chip" onclick="qs('explain')">explain a concept</div><div class="sc-chip" onclick="qs('write')">draft a document</div><div class="sc-chip" onclick="qs('analyze')">analyze a tradeoff</div><div class="sc-chip" onclick="qs('create')">build something new</div></div></div>`;const ta=document.getElementById('prompt');ta.value='';ta.style.height='';}
+function newChat(){
+  hist=[];
+  const hide=localStorage.getItem('r_phil_hide')==='1';
+  document.getElementById('ti').innerHTML=`
+    ${hide?'':'<div id="phil-card"><div class="phil-inner"><div class="phil-top"><span class="phil-eyebrow">reasonably · intent</span><button class="phil-close" onclick="dismissPhil()" title="dismiss">✕</button></div><p class="phil-hed"><em>most bad prompts aren\'t badly written.<br>they\'re badly shaped.</em></p><div class="phil-body"><p>Before you write, you declare the shape of what you need. Four dimensions:</p><div class="phil-dims"><div class="phil-dim"><span class="phil-dim-label">intent</span><span class="phil-dim-desc">what kind of work is this — write, debug, explain, analyze, create. sets the cognitive mode Claude enters.</span></div><div class="phil-dim"><span class="phil-dim-label">format</span><span class="phil-dim-desc">how you want it back. inline edits vs. prose vs. a diff are three completely different responses to the same question.</span></div><div class="phil-dim"><span class="phil-dim-label">constraint</span><span class="phil-dim-desc">what Claude can\'t touch. the guardrail that lives in your head and never makes it into the prompt — until now.</span></div><div class="phil-dim"><span class="phil-dim-label">audience</span><span class="phil-dim-desc">who\'s actually reading. changes register, density, assumed knowledge.</span></div></div><p class="phil-note"><em>declare</em> means commit. closing without declaring means you considered it and chose not to constrain. both are valid. the difference matters.</p></div><div class="phil-foot"><button class="phil-got-it" onclick="dismissPhil()">got it →</button><label class="phil-remember"><input type="checkbox" id="phil-no-show" /> don\'t show again</label></div></div></div>'}
+    <div id="empty"><div class="e-glyph">✳</div><div class="e-hed">what are you working through?</div><div class="e-sub">Initiate by intent · declare context · send</div><div class="sc-row"><div class="sc-chip" onclick="qs('debug')">debug something broken</div><div class="sc-chip" onclick="qs('explain')">explain a concept</div><div class="sc-chip" onclick="qs('write')">draft a document</div><div class="sc-chip" onclick="qs('analyze')">analyze a tradeoff</div><div class="sc-chip" onclick="qs('create')">build something new</div></div></div>`;
+  const ta=document.getElementById('prompt');ta.value='';ta.style.height='';
+}
 function qs(i){setI(i);document.getElementById('prompt').focus();}
+function dismissPhil(){
+  const card=document.getElementById('phil-card');
+  if(!card) return;
+  if(document.getElementById('phil-no-show')?.checked)
+    localStorage.setItem('r_phil_hide','1');
+  card.style.transition='opacity .2s,transform .2s';
+  card.style.opacity='0';card.style.transform='translateY(-6px)';
+  setTimeout(()=>card.classList.add('hidden'),210);
+}
 function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='';t.offsetWidth;if(type)t.classList.add(type);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 </script>
 </body>
