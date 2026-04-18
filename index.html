@@ -1,1378 +1,603 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Claude CLI Architecture · Spatial Knowledge Surface</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>reasonably · for claude, by zack.cx</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#030308;transition:background 0.6s;}
-body.light{background:#f0ece4;}
-#bg-mesh{position:fixed;inset:0;z-index:0;pointer-events:none;}
-canvas{display:block;width:100vw;height:100vh;position:relative;z-index:1;touch-action:none;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
 
-#brand{position:fixed;top:24px;left:28px;z-index:100;pointer-events:none;font-family:'DM Mono',monospace;}
-#brand-name{font-size:10px;letter-spacing:0.26em;text-transform:uppercase;color:rgba(180,210,255,0.65);transition:color 0.5s;}
-#brand-sub{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(180,210,255,0.24);margin-top:5px;transition:color 0.5s;}
-body.light #brand-name{color:rgba(10,14,30,0.80);}
-body.light #brand-sub{color:rgba(10,14,30,0.50);}
-
-#era-label{position:fixed;top:24px;right:120px;z-index:100;font-family:'DM Mono',monospace;text-align:right;pointer-events:none;}
-#era-year{font-size:26px;letter-spacing:-0.02em;color:rgba(180,210,255,0.14);transition:color 0.5s,opacity 0.4s;font-family:'Crimson Text',serif;font-style:italic;}
-#era-name{font-size:7px;letter-spacing:0.20em;text-transform:uppercase;color:rgba(180,210,255,0.18);margin-top:4px;}
-body.light #era-year{color:rgba(10,14,30,0.18);}
-body.light #era-name{color:rgba(10,14,30,0.30);}
-
-#hud{
-  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:1px;
-  background:rgba(180,210,255,0.03);
-  border:1px solid rgba(180,210,255,0.10);
-  border-radius:4px;overflow:hidden;z-index:100;
-  transition:background 0.5s,border-color 0.5s;
+:root{
+  --bg:#f7f5f2;--bg-2:#ffffff;--bg-3:#eeece8;--bg-chrome:#faf8f5;
+  --ink:#1a1815;--ink-2:#6b6762;--ink-3:#a8a49e;
+  --accent:#c96442;--accent-l:rgba(201,100,66,0.09);--accent-b:rgba(201,100,66,0.28);
+  --border:rgba(0,0,0,0.07);--border-2:rgba(0,0,0,0.12);--border-3:rgba(0,0,0,0.22);
+  --shadow:0 1px 4px rgba(0,0,0,0.05),0 4px 20px rgba(0,0,0,0.04);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.06);
+  --shadow-ov:0 -4px 24px rgba(0,0,0,0.08),0 -1px 6px rgba(0,0,0,0.05);
+  --mono:'DM Mono',monospace;--serif:'Lora',serif;--sans:'DM Sans',sans-serif;
+  --iw-bg:#eef5ef;--iw-b:#b5d9ba;--iw-ink:#2a6438;
+  --id-bg:#edf2f9;--id-b:#b3c8e6;--id-ink:#184e88;
+  --ie-bg:#f2eef8;--ie-b:#ccb5e6;--ie-ink:#5a2e9c;
+  --ia-bg:#f8f3ea;--ia-b:#e0c48a;--ia-ink:#7a5514;
+  --ic-bg:#f8eeee;--ic-b:#e0b0ad;--ic-ink:#8c2a27;
 }
-.hud-btn{
-  background:none;border:none;cursor:pointer;
-  color:rgba(180,210,255,0.32);
-  font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.18em;
-  text-transform:uppercase;padding:12px 18px;
-  border-right:1px solid rgba(180,210,255,0.08);
-  transition:color 0.2s,background 0.2s;
-  -webkit-tap-highlight-color:transparent;
+[data-theme="dark"]{
+  --bg:#000000;--bg-2:#0c0c0c;--bg-3:#161616;--bg-chrome:#040404;
+  --ink:#ffffff;--ink-2:#808080;--ink-3:#404040;
+  --accent:#d97757;--accent-l:rgba(217,119,87,0.10);--accent-b:rgba(217,119,87,0.28);
+  --border:rgba(255,255,255,0.08);--border-2:rgba(255,255,255,0.13);--border-3:rgba(255,255,255,0.24);
+  --shadow:none;--shadow-sm:none;
+  --shadow-ov:0 -4px 32px rgba(0,0,0,0.6),0 -1px 8px rgba(0,0,0,0.4);
+  --iw-bg:#0a180d;--iw-b:#1d4828;--iw-ink:#5cc47a;
+  --id-bg:#080e1c;--id-b:#183258;--id-ink:#6aaedd;
+  --ie-bg:#0e0820;--ie-b:#361858;--ie-ink:#b07ad6;
+  --ia-bg:#160e04;--ia-b:#402c0c;--ia-ink:#d4a855;
+  --ic-bg:#160606;--ic-b:#401616;--ic-ink:#d46060;
 }
-.hud-btn:last-child{border-right:none;}
-.hud-btn:hover{color:rgba(180,210,255,0.75);background:rgba(180,210,255,0.05);}
-.hud-btn.active{color:#b4d2ff;background:rgba(180,210,255,0.08);}
-.hud-zoom{padding:12px 14px;font-size:13px;letter-spacing:0;color:rgba(180,210,255,0.28);min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;}
-.hud-zoom:hover{color:rgba(180,210,255,0.80);}
-.hud-sep{width:1px;background:rgba(180,210,255,0.14);align-self:stretch;flex-shrink:0;margin:6px 0;}
-body.light #hud{background:rgba(10,14,30,0.04);border-color:rgba(10,14,30,0.18);}
-body.light .hud-btn{color:rgba(10,14,30,0.55);border-right-color:rgba(10,14,30,0.12);}
-body.light .hud-btn:hover{color:rgba(10,14,30,0.85);background:rgba(10,14,30,0.05);}
-body.light .hud-btn.active{color:rgba(10,14,30,0.95);background:rgba(10,14,30,0.08);}
-body.light .hud-sep{background:rgba(10,14,30,0.14);}
 
-/* TIMELINE NAV STRIP */
-#timeline-nav{
-  position:fixed;bottom:70px;left:50%;transform:translateX(-50%);
-  display:flex;align-items:center;gap:0;
-  z-index:100;font-family:'DM Mono',monospace;
-  background:rgba(4,6,18,0.88);
-  border:1px solid rgba(180,210,255,0.10);
-  border-radius:4px;backdrop-filter:blur(16px);
-  overflow:hidden;transition:opacity 0.4s;
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);display:flex;flex-direction:column;height:100vh;transition:background .2s,color .2s;}
+
+/* HEADER */
+#header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:11px 22px;border-bottom:1px solid var(--border);background:var(--bg-chrome);transition:background .2s,border-color .2s;}
+.brand{display:flex;align-items:center;gap:9px;user-select:none;}
+.brand-glyph{font-size:20px;color:var(--accent);line-height:1;}
+.brand-word{font-family:var(--serif);font-style:italic;font-size:19px;color:var(--ink);letter-spacing:-0.015em;}
+.brand-rule{width:1px;height:14px;background:var(--border-2);flex-shrink:0;}
+.brand-sub{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);}
+.hdr-right{display:flex;align-items:center;gap:7px;}
+.hdr-btn{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border-2);border-radius:5px;padding:6px 12px;cursor:pointer;background:transparent;transition:color .14s,border-color .14s,background .14s;white-space:nowrap;}
+.hdr-btn:hover{color:var(--ink);border-color:var(--border-3);background:var(--bg-3);}
+.hdr-btn.key-ok{color:var(--iw-ink);border-color:var(--iw-b);background:var(--iw-bg);}
+.theme-toggle{width:30px;height:30px;border:1px solid var(--border-2);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:transparent;font-size:14px;color:var(--ink-2);transition:all .14s;flex-shrink:0;}
+.theme-toggle:hover{border-color:var(--border-3);color:var(--ink);background:var(--bg-3);}
+
+/* KEY PANEL */
+#key-panel{flex-shrink:0;overflow:hidden;max-height:0;background:var(--bg-chrome);border-bottom:1px solid var(--border);transition:background .2s,border-color .2s,max-height .25s cubic-bezier(.4,0,.2,1);}
+#key-panel.open{max-height:68px;}
+.key-inner{padding:11px 22px;display:flex;align-items:center;gap:10px;}
+.key-lbl{font-family:var(--mono);font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap;}
+.key-wrap{flex:1;position:relative;}
+#api-key-input{width:100%;background:var(--bg-2);border:1px solid var(--border-2);border-radius:5px;padding:8px 36px 8px 12px;font-family:var(--mono);font-size:12px;color:var(--ink);letter-spacing:0.04em;outline:none;transition:border-color .16s,background .2s,color .2s;}
+#api-key-input:focus{border-color:var(--accent);}
+#api-key-input::placeholder{color:var(--ink-3);}
+.key-eye{position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--ink-3);font-size:14px;user-select:none;transition:color .14s;}
+.key-eye:hover{color:var(--ink-2);}
+.key-save{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;text-transform:uppercase;background:var(--accent);color:#fff;border:none;border-radius:5px;padding:8px 14px;cursor:pointer;white-space:nowrap;transition:opacity .14s;}
+.key-save:hover{opacity:0.82;}
+.key-note{font-family:var(--mono);font-size:9px;letter-spacing:0.07em;color:var(--ink-3);white-space:nowrap;}
+
+/* THREAD */
+#thread{flex:1;overflow-y:auto;overflow-x:hidden;background:var(--bg);transition:background .2s;}
+#thread::-webkit-scrollbar{width:4px;}
+#thread::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:2px;}
+.thread-inner{max-width:700px;margin:0 auto;padding:40px 24px 20px;display:flex;flex-direction:column;}
+#empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;gap:12px;text-align:center;padding:48px 20px;}
+.e-glyph{font-size:36px;color:var(--accent);opacity:0.45;line-height:1;}
+.e-hed{font-family:var(--serif);font-style:italic;font-size:27px;color:var(--ink);letter-spacing:-0.02em;line-height:1.2;}
+.e-sub{font-family:var(--mono);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);}
+.sc-row{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+.sc-chip{font-family:var(--mono);font-size:10px;letter-spacing:0.08em;color:var(--ink-3);border:1px solid var(--border-2);border-radius:5px;padding:6px 13px;cursor:pointer;background:var(--bg-2);transition:all .14s;user-select:none;}
+.sc-chip:hover{border-color:var(--accent-b);color:var(--accent);background:var(--accent-l);}
+.msg{padding:22px 0;border-bottom:1px solid var(--border);animation:fi .18s ease;}
+.msg:last-child{border-bottom:none;}
+@keyframes fi{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.msg-u{display:flex;flex-direction:column;align-items:flex-end;}
+.msg-u .msg-bubble{background:var(--bg-2);border:1px solid var(--border-2);border-radius:14px 14px 3px 14px;padding:11px 15px;max-width:86%;box-shadow:var(--shadow-sm);font-size:14.5px;line-height:1.72;color:var(--ink);transition:background .2s,border-color .2s,color .2s;}
+.msg-u .msg-bubble p{margin-bottom:0.5em;}
+.msg-u .msg-bubble p:last-child{margin-bottom:0;}
+.msg-u .msg-ctx{justify-content:flex-end;margin-top:8px;}
+.msg-a{display:flex;gap:11px;align-items:flex-start;}
+.a-icon{flex-shrink:0;width:24px;height:24px;border-radius:6px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;margin-top:3px;transition:background .2s;}
+.a-body{flex:1;min-width:0;}
+.msg-meta{display:flex;align-items:center;gap:7px;margin-bottom:8px;}
+.role-lbl{font-family:var(--mono);font-size:9px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);}
+.i-badge{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
+.msg-body{font-size:14.5px;line-height:1.78;color:var(--ink);}
+.msg-body p{margin-bottom:0.85em;}
+.msg-body p:last-child{margin-bottom:0;}
+.msg-body code{font-family:var(--mono);font-size:12.5px;background:var(--bg-3);border:1px solid var(--border-2);border-radius:3px;padding:1px 6px;color:var(--accent);}
+.msg-body pre{background:var(--bg-3);border:1px solid var(--border-2);border-radius:7px;padding:14px 16px;margin:12px 0;overflow-x:auto;}
+.msg-body pre code{background:none;border:none;padding:0;color:var(--ink-2);font-size:12px;line-height:1.7;}
+.msg-body strong{font-weight:500;}
+.msg-body ul,.msg-body ol{padding-left:1.4em;margin-bottom:0.85em;}
+.msg-body li{margin-bottom:0.3em;}
+.msg-body h3{font-family:var(--serif);font-size:16px;font-weight:500;margin-bottom:0.5em;}
+.msg-ctx{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.ctx-tag{font-family:var(--mono);font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:3px;padding:2px 7px;}
+.tcursor{display:inline-block;width:2px;height:14px;background:var(--accent);vertical-align:text-bottom;animation:blink .85s infinite;margin-left:1px;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* ─── CTX OVERLAY ─── */
+#ctx-ov{
+  position:fixed;z-index:200;
+  background:var(--bg-chrome);
+  border:1px solid var(--border-2);
+  border-bottom:none;
+  border-radius:14px 14px 0 0;
+  box-shadow:var(--shadow-ov);
+  overflow:hidden;
+  opacity:0;pointer-events:none;
+  transform:translateY(12px);
+  transition:opacity .18s ease,transform .18s ease,background .2s,border-color .2s;
 }
-body.light #timeline-nav{background:rgba(255,252,248,0.95);border-color:rgba(10,14,30,0.14);}
-#tl-prev,#tl-next{background:none;border:none;cursor:pointer;color:rgba(180,210,255,0.45);padding:7px 13px;font-size:13px;transition:color 0.2s,background 0.2s;border-right:1px solid rgba(180,210,255,0.08);}
-#tl-next{border-left:1px solid rgba(180,210,255,0.08);border-right:none;}
-#tl-prev:hover,#tl-next:hover{color:#b4d2ff;background:rgba(180,210,255,0.07);}
-#tl-prev:disabled,#tl-next:disabled{color:rgba(180,210,255,0.12);cursor:default;}
-body.light #tl-prev,body.light #tl-next{color:rgba(10,14,30,0.45);border-color:rgba(10,14,30,0.10);}
-body.light #tl-prev:hover,body.light #tl-next:hover{color:rgba(10,14,30,0.90);}
-#tl-track{display:flex;align-items:center;gap:2px;padding:7px 10px;overflow-x:auto;scrollbar-width:none;max-width:min(640px,65vw);}
-#tl-track::-webkit-scrollbar{display:none;}
-.tl-pip{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;border-radius:2px;transition:background 0.15s;}
-.tl-pip:hover{background:rgba(180,210,255,0.07);}
-.tl-pip-dot{width:5px;height:5px;border-radius:50%;background:rgba(180,210,255,0.18);transition:all 0.25s;flex-shrink:0;}
-.tl-pip.active .tl-pip-dot{background:#b4d2ff;width:8px;height:8px;box-shadow:0 0 6px rgba(180,210,255,0.5);}
-.tl-pip:hover .tl-pip-dot{background:rgba(180,210,255,0.55);}
-.tl-pip-label{position:absolute;bottom:calc(100% + 3px);left:50%;transform:translateX(-50%);font-size:6px;letter-spacing:0.12em;color:rgba(180,210,255,0.30);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.15s;}
-.tl-pip:hover .tl-pip-label,.tl-pip.active .tl-pip-label{opacity:1;color:rgba(180,210,255,0.65);}
-body.light .tl-pip-dot{background:rgba(10,14,30,0.20);}
-body.light .tl-pip.active .tl-pip-dot{background:rgba(10,14,30,0.80);}
-#tl-label{padding:5px 10px 5px 2px;font-size:7px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.30);white-space:nowrap;border-left:1px solid rgba(180,210,255,0.08);min-width:90px;transition:color 0.2s;}
-body.light #tl-label{color:rgba(10,14,30,0.45);}
+#ctx-ov.open{opacity:1;pointer-events:all;transform:translateY(0);}
+.ov-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px 10px;
+  border-bottom:1px solid var(--border);
+}
+.ov-title{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--ink-2);
+}
+.ov-x{
+  width:24px;height:24px;border:none;background:transparent;cursor:pointer;
+  color:var(--ink-3);font-size:14px;display:flex;align-items:center;justify-content:center;
+  border-radius:4px;transition:all .13s;padding:0;
+}
+.ov-x:hover{background:var(--bg-3);color:var(--ink);}
+.ov-body{padding:14px 18px 10px;display:flex;flex-direction:column;gap:12px;}
 
-#hint{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(180,210,255,0.14);z-index:100;pointer-events:none;white-space:nowrap;transition:opacity 1.2s;}
-body.light #hint{color:rgba(10,14,30,0.35);}
-#focus-hint{position:fixed;bottom:120px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.24);z-index:100;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity 0.5s;}
-#focus-hint.vis{opacity:1;}
+/* preset chips inside overlay */
+.ov-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.ov-chip{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.08em;
+  color:var(--ink-2);border:1px solid var(--border-2);border-radius:4px;
+  padding:5px 11px;cursor:pointer;background:transparent;
+  transition:all .13s;user-select:none;
+}
+.ov-chip:hover{border-color:var(--border-3);color:var(--ink);background:var(--bg-3);}
+.ov-chip.sel{background:var(--accent-l);border-color:var(--accent-b);color:var(--accent);}
 
-#theme-toggle{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;background:none;border:1px solid rgba(180,210,255,0.14);color:rgba(180,210,255,0.28);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.20em;text-transform:uppercase;padding:6px 14px;border-radius:2px;cursor:pointer;transition:all 0.2s;}
-#theme-toggle:hover{color:rgba(180,210,255,0.65);border-color:rgba(180,210,255,0.38);}
-body.light #theme-toggle{border-color:rgba(10,14,30,0.22);color:rgba(10,14,30,0.60);}
+/* overlay textarea */
+#ov-ta{
+  width:100%;background:var(--bg-2);border:1px solid var(--border-2);
+  border-radius:7px;padding:10px 13px;
+  font-family:var(--sans);font-size:13.5px;color:var(--ink);
+  line-height:1.65;outline:none;resize:none;
+  min-height:72px;max-height:140px;
+  transition:border-color .15s,background .2s,color .2s;
+}
+#ov-ta:focus{border-color:var(--accent);}
+#ov-ta::placeholder{color:var(--ink-3);}
 
-#legend{position:fixed;top:24px;right:28px;z-index:100;font-family:'DM Mono',monospace;pointer-events:none;}
-.leg-title{font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.22);margin-bottom:8px;}
-.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:5px;}
-.leg-line{width:22px;height:1px;}
-.leg-label{font-size:7px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.30);}
-body.light .leg-title{color:rgba(10,14,30,0.45);}
-body.light .leg-label{color:rgba(10,14,30,0.55);}
+/* suggestions (recent / archetype) */
+.ov-sug-wrap{display:flex;flex-direction:column;gap:6px;}
+.ov-sug-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-3);}
+.ov-sugs{display:flex;flex-wrap:wrap;gap:5px;}
+.ov-sug{
+  font-family:var(--mono);font-size:10px;letter-spacing:0.06em;
+  color:var(--ink-3);border:1px solid var(--border);border-radius:4px;
+  padding:4px 10px;cursor:pointer;background:transparent;
+  transition:all .13s;user-select:none;
+}
+.ov-sug:hover{border-color:var(--border-2);color:var(--ink-2);}
 
-#tooltip{position:fixed;top:0;left:0;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:200;}
-#tooltip.vis{opacity:1;}
-#tt-inner{background:rgba(4,6,14,0.96);border:1px solid rgba(180,210,255,0.14);border-radius:4px;padding:12px 16px;backdrop-filter:blur(12px);max-width:240px;}
-.tt-ring{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(180,210,255,0.32);margin-bottom:5px;}
-.tt-title{font-family:'Crimson Text',serif;font-size:15px;color:#dcecff;line-height:1.2;margin-bottom:5px;}
-.tt-type{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.40);}
-body.light #tt-inner{background:rgba(255,253,248,0.99);border-color:rgba(10,14,30,0.14);}
-body.light .tt-ring{color:rgba(10,14,30,0.55);}
-body.light .tt-title{color:rgba(10,14,30,0.88);}
-body.light .tt-type{color:rgba(10,14,30,0.55);}
+/* overlay footer */
+.ov-foot{
+  padding:10px 18px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid var(--border);
+}
+.ov-discard{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-3);background:transparent;border:1px solid var(--border);
+  border-radius:5px;padding:7px 13px;cursor:pointer;transition:all .14s;
+}
+.ov-discard:hover{border-color:var(--border-2);color:var(--ink-2);background:var(--bg-3);}
+.ov-declare{
+  font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
+  color:#fff;background:var(--accent);border:none;
+  border-radius:5px;padding:7px 16px;cursor:pointer;transition:opacity .14s;
+}
+.ov-declare:hover{opacity:0.84;}
 
-/* GHOST PANEL */
-#ghost{position:fixed;z-index:700;width:320px;pointer-events:none;opacity:0;right:28px;top:50%;transform:translateY(-50%) translateX(18px) scale(0.97);transition:opacity 0.30s,transform 0.30s;}
-#ghost.on{opacity:1;transform:translateY(-50%) translateX(0) scale(1);}
-#ghost.on .gc{pointer-events:all;}
-.gc{background:rgba(4,6,18,0.97);border:1px solid rgba(180,210,255,0.10);border-radius:6px;box-shadow:0 18px 62px rgba(0,0,0,0.9);backdrop-filter:blur(26px);overflow:hidden;}
-.gcscroll{max-height:82vh;overflow-y:auto;scrollbar-width:none;}
-.gcscroll::-webkit-scrollbar{display:none;}
-.gcbar{height:2px;width:100%;transition:background 0.4s;}
-.gchead{padding:16px 16px 12px;border-bottom:1px solid rgba(180,210,255,0.06);}
-.gcring{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.28);margin-bottom:6px;}
-.gctitle{font-family:'Crimson Text',serif;font-size:17px;letter-spacing:-0.02em;color:#dcecff;line-height:1.2;margin-bottom:5px;}
-.gcrole{font-family:'DM Mono',monospace;font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.30);}
-.gcbody{padding:14px 16px 14px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.88;color:rgba(180,210,255,0.52);border-bottom:1px solid rgba(180,210,255,0.06);}
-.gcstat{display:flex;border-bottom:1px solid rgba(180,210,255,0.06);}
-.gcst{flex:1;padding:10px 12px;border-right:1px solid rgba(180,210,255,0.06);text-align:center;}
-.gcst:last-child{border-right:none;}
-.gcsv{font-family:'Crimson Text',serif;font-size:14px;color:rgba(180,210,255,0.72);display:block;letter-spacing:-0.01em;}
-.gcsk{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.22);display:block;margin-top:2px;}
-.gc-connections{padding:12px 16px;border-bottom:1px solid rgba(180,210,255,0.06);}
-.gc-conn-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.22);margin-bottom:8px;}
-.gc-conn-item{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;padding:4px 6px;border-radius:3px;transition:background 0.15s;}
-.gc-conn-item:hover{background:rgba(180,210,255,0.05);}
-.gc-conn-type{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.14em;text-transform:uppercase;padding:2px 7px;border-radius:8px;border:1px solid currentColor;opacity:0.7;white-space:nowrap;}
-.gc-conn-target{font-family:'DM Mono',monospace;font-size:10px;color:rgba(180,210,255,0.55);flex:1;}
+/* ─── COMPOSER ─── */
+#composer{flex-shrink:0;padding:10px 18px 14px;background:var(--bg);border-top:1px solid var(--border);transition:background .2s,border-color .2s;}
+.c-card{max-width:700px;margin:0 auto;background:var(--bg-2);border:1px solid var(--border-2);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;transition:background .2s,border-color .2s,box-shadow .2s;}
+.c-card:focus-within{border-color:var(--accent-b);}
+.intent-bar{padding:9px 14px 8px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap;transition:border-color .2s;}
+.i-lbl{font-family:var(--mono);font-size:8px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-right:3px;}
+.ic{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border-radius:4px;border:1px solid var(--border-2);cursor:pointer;transition:all .13s;color:var(--ink-3);background:transparent;user-select:none;}
+.ic:hover{border-color:var(--border-3);color:var(--ink-2);background:var(--bg-3);}
+.ic.aw{background:var(--iw-bg);border-color:var(--iw-b);color:var(--iw-ink);}
+.ic.ad{background:var(--id-bg);border-color:var(--id-b);color:var(--id-ink);}
+.ic.ae{background:var(--ie-bg);border-color:var(--ie-b);color:var(--ie-ink);}
+.ic.aa{background:var(--ia-bg);border-color:var(--ia-b);color:var(--ia-ink);}
+.ic.ac{background:var(--ic-bg);border-color:var(--ic-b);color:var(--ic-ink);}
+#prompt{width:100%;background:transparent;border:none;resize:none;padding:13px 16px 10px;font-family:var(--sans);font-size:14.5px;color:var(--ink);line-height:1.7;outline:none;min-height:52px;max-height:220px;transition:color .2s;}
+#prompt::placeholder{color:var(--ink-3);}
 
-/* Moons (satellite pills) */
-.gc-moons{padding:8px 16px 10px;border-bottom:1px solid rgba(180,210,255,0.06);}
-.gc-moons-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.22);margin-bottom:7px;}
-.gc-moon-pills{display:flex;flex-wrap:wrap;gap:5px;}
-.gc-moon-pill{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:10px;border:1px solid rgba(180,210,255,0.22);color:rgba(180,210,255,0.45);cursor:pointer;transition:all 0.15s;}
-.gc-moon-pill:hover{background:rgba(180,210,255,0.07);color:rgba(180,210,255,0.80);border-color:rgba(180,210,255,0.45);}
-.gc-moon-pill.active{background:rgba(180,210,255,0.10);color:#b4d2ff;border-color:rgba(180,210,255,0.55);}
+/* ─── CTX ROW — clickable cells ─── */
+.ctx-row{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);}
+.ctx-cell{
+  padding:8px 14px;border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:3px;
+  cursor:pointer;transition:background .13s;
+  user-select:none;position:relative;
+}
+.ctx-cell:last-child{border-right:none;}
+.ctx-cell:hover{background:var(--bg-3);}
+.ctx-cell.active-ov{background:var(--accent-l);}
+.ctx-lbl{
+  font-family:var(--mono);font-size:8px;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--ink-3);
+  transition:color .14s;
+  display:flex;align-items:center;gap:5px;
+}
+.ctx-lbl .dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  transition:opacity .14s;flex-shrink:0;
+}
+.ctx-cell.declared .ctx-lbl{color:var(--ink-2);}
+.ctx-cell.declared .ctx-lbl .dot{opacity:1;}
+.ctx-val{
+  font-family:var(--mono);font-size:11px;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .14s;
+}
+.ctx-cell.declared .ctx-val{color:var(--ink);}
 
-.gcft{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 12px;}
-.gctag{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 9px;border-radius:9px;border:1px solid currentColor;opacity:0.55;}
-.gc-nav{display:flex;gap:4px;align-items:center;}
-.gcnav-btn{background:none;border:1px solid rgba(180,210,255,0.14);color:rgba(180,210,255,0.30);width:26px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
-.gcnav-btn:hover:not(:disabled){color:#dcecff;border-color:rgba(180,210,255,0.45);}
-.gcnav-btn:disabled{opacity:0.2;cursor:default;}
-.gcclose{background:none;border:1px solid rgba(180,210,255,0.14);color:rgba(180,210,255,0.30);width:22px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;pointer-events:all;}
-.gcclose:hover{color:#dcecff;border-color:rgba(180,210,255,0.45);}
-body.light .gc{background:rgba(255,253,248,0.99);border-color:rgba(10,14,30,0.12);box-shadow:0 8px 40px rgba(10,14,30,0.12);}
-body.light .gcring{color:rgba(10,14,30,0.55);}
-body.light .gctitle{color:rgba(10,14,30,0.92);}
-body.light .gcrole{color:rgba(10,14,30,0.58);}
-body.light .gcbody{color:rgba(10,14,30,0.72);}
-body.light .gcsv{color:rgba(10,14,30,0.82);}
-body.light .gcsk{color:rgba(10,14,30,0.50);}
-body.light .gc-conn-label{color:rgba(10,14,30,0.50);}
-body.light .gc-conn-target{color:rgba(10,14,30,0.72);}
-body.light .gcclose{border-color:rgba(10,14,30,0.20);color:rgba(10,14,30,0.55);}
-body.light .gcclose:hover{color:rgba(10,14,30,0.90);}
+.c-foot{padding:8px 11px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.fl{display:flex;align-items:center;gap:6px;}
+.fr{display:flex;align-items:center;gap:7px;}
+.ghost{font-family:var(--mono);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--border);border-radius:4px;padding:5px 10px;cursor:pointer;background:transparent;transition:all .14s;}
+.ghost:hover{border-color:var(--border-2);color:var(--ink-2);background:var(--bg-3);}
+.model-pill{font-family:var(--mono);font-size:9px;letter-spacing:0.1em;color:var(--ink-3);border:1px solid var(--border);border-radius:4px;padding:5px 10px;cursor:pointer;user-select:none;background:transparent;transition:all .14s;}
+.model-pill:hover{border-color:var(--border-2);color:var(--ink-2);background:var(--bg-3);}
+.send-btn{width:32px;height:32px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:opacity .14s,transform .1s,background .2s;}
+.send-btn:hover{opacity:0.84;}
+.send-btn:active{transform:scale(0.93);}
+.send-btn:disabled{opacity:0.28;cursor:not-allowed;}
 
-/* READ BTN */
-#gc-read-btn{display:none;width:100%;padding:11px 16px;font-family:'DM Mono',monospace;font-size:8px;letter-spacing:0.18em;text-transform:uppercase;background:none;border:none;border-top:1px solid rgba(180,210,255,0.06);color:rgba(180,210,255,0.40);cursor:pointer;text-align:left;transition:all 0.18s;}
-#gc-read-btn:hover{color:#dcecff;background:rgba(180,210,255,0.03);}
-body.light #gc-read-btn{border-top-color:rgba(10,14,30,0.10);color:rgba(10,14,30,0.60);}
+/* model picker */
+#mpick{position:fixed;z-index:300;background:var(--bg-2);border:1px solid var(--border-2);border-radius:8px;padding:5px;display:none;flex-direction:column;gap:2px;min-width:190px;box-shadow:0 8px 32px rgba(0,0,0,0.12),0 2px 8px rgba(0,0,0,0.08);transition:background .2s;}
+[data-theme="dark"] #mpick{box-shadow:0 8px 40px rgba(0,0,0,0.7);}
+#mpick.open{display:flex;}
+.mopt{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-2);padding:8px 12px;border-radius:5px;cursor:pointer;transition:all .12s;}
+.mopt:hover{background:var(--bg-3);color:var(--ink);}
+.mopt.act{color:var(--accent);}
 
-/* MOBILE SHEET */
-#msheet{display:none;position:fixed;bottom:0;left:0;right:0;z-index:700;background:rgba(4,6,18,0.98);border-top:1px solid rgba(180,210,255,0.08);border-radius:14px 14px 0 0;max-height:72vh;overflow-y:auto;scrollbar-width:none;transform:translateY(100%);transition:transform 0.38s cubic-bezier(0.22,1,0.36,1);backdrop-filter:blur(28px);}
-#msheet::-webkit-scrollbar{display:none;}
-#msheet.on{transform:translateY(0);}
-.mshandle{width:48px;height:5px;background:rgba(255,255,255,0.18);border-radius:3px;margin:14px auto 8px;cursor:pointer;}
-.mshead{padding:16px 20px 12px;border-bottom:1px solid rgba(180,210,255,0.06);}
-.msring{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.28);margin-bottom:6px;}
-.mstitle{font-family:'Crimson Text',serif;font-size:20px;letter-spacing:-0.02em;color:#dcecff;line-height:1.15;margin-bottom:4px;}
-.msbody{padding:13px 20px 14px;font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.82;color:rgba(180,210,255,0.52);}
-.msft{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 14px;}
-.mstag{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;padding:3px 9px;border-radius:9px;border:1px solid currentColor;opacity:0.55;}
-.ms-nav{display:flex;gap:4px;}
-.ms-navbtn{background:none;border:1px solid rgba(180,210,255,0.14);color:rgba(180,210,255,0.30);width:26px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;}
-.ms-navbtn:hover:not(:disabled){color:#dcecff;border-color:rgba(180,210,255,0.45);}
-.ms-navbtn:disabled{opacity:0.2;}
-.msclose{background:none;border:1px solid rgba(180,210,255,0.14);color:rgba(180,210,255,0.30);width:22px;height:22px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;}
-.msclose:hover{color:#dcecff;border-color:rgba(180,210,255,0.45);}
-body.light #msheet{background:rgba(255,253,248,0.99);border-top-color:rgba(10,14,30,0.14);}
-body.light .msring{color:rgba(10,14,30,0.55);}
-body.light .mstitle{color:rgba(10,14,30,0.92);}
-body.light .msbody{color:rgba(10,14,30,0.72);}
-@media(max-width:768px){#ghost{display:none;}#legend{display:none;}#msheet{display:block;}}
-
-/* SENTENCE STREAM PANEL */
-#stream-panel{position:fixed;top:0;right:0;width:42vw;max-width:560px;min-width:320px;height:100vh;z-index:800;display:flex;flex-direction:column;background:rgba(4,6,18,0.98);border-left:1px solid rgba(180,210,255,0.07);backdrop-filter:blur(32px);transform:translateX(100%);transition:transform 0.45s cubic-bezier(0.22,1,0.36,1);pointer-events:none;}
-#stream-panel.open{transform:translateX(0);pointer-events:all;}
-body.light #stream-panel{background:rgba(255,253,248,0.99);border-left-color:rgba(10,14,30,0.12);}
-#sp-header{display:flex;align-items:center;gap:10px;padding:18px 20px 14px;border-bottom:1px solid rgba(180,210,255,0.06);flex-shrink:0;}
-body.light #sp-header{border-bottom-color:rgba(10,14,30,0.10);}
-#sp-domain-bar{width:3px;height:28px;border-radius:2px;flex-shrink:0;transition:background 0.4s;}
-#sp-meta{flex:1;min-width:0;}
-#sp-eyebrow{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.28);margin-bottom:4px;}
-body.light #sp-eyebrow{color:rgba(10,14,30,0.55);}
-#sp-title{font-family:'Crimson Text',serif;font-size:15px;color:#dcecff;letter-spacing:-0.01em;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-body.light #sp-title{color:rgba(10,14,30,0.88);}
-#sp-close{background:none;border:1px solid rgba(180,210,255,0.12);color:rgba(180,210,255,0.28);width:24px;height:24px;border-radius:2px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.18s;flex-shrink:0;}
-#sp-close:hover{color:#dcecff;border-color:rgba(180,210,255,0.40);}
-body.light #sp-close{border-color:rgba(10,14,30,0.20);color:rgba(10,14,30,0.55);}
-#sp-progress-track{height:1px;background:rgba(180,210,255,0.05);flex-shrink:0;position:relative;overflow:hidden;}
-#sp-progress-fill{height:100%;width:0%;transition:width 0.28s ease;position:absolute;top:0;left:0;}
-#sp-scroll{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:80px;scrollbar-width:none;position:relative;}
-#sp-scroll::-webkit-scrollbar{display:none;}
-#sp-stream{max-width:420px;margin:0 auto;padding:32px 28px 0;}
-.sp-sent{display:block;opacity:0.20;cursor:pointer;transition:opacity 0.35s ease;position:relative;}
-.sp-sent.revealed{opacity:0.65;}
-.sp-sent.active{opacity:1;}
-.sp-sent.past{opacity:0.50;}
-.sp-sent:hover{opacity:0.85;}
-.sp-sent.s-label{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.26em;text-transform:uppercase;padding:6px 0 3px;color:var(--sp-accent,#6a9bdc);}
-.sp-sent.s-poster{font-family:'Crimson Text',serif;font-size:clamp(20px,2.6vw,34px);line-height:1.0;letter-spacing:-0.02em;color:#dcecff;padding:12px 0 8px;}
-body.light .sp-sent.s-poster{color:rgba(10,14,30,0.90);}
-.sp-sent.s-poster .ac{color:var(--sp-accent,#6a9bdc);}
-.sp-sent.s-body{font-family:'DM Mono',monospace;font-size:11.5px;line-height:1.88;color:rgba(180,210,255,0.78);padding:8px 0;}
-body.light .sp-sent.s-body{color:rgba(10,14,30,0.72);}
-.sp-sent.s-body .ac{color:#dcecff;}
-.sp-sent.s-body em{font-style:italic;color:rgba(180,210,255,0.90);}
-.sp-sent.s-pull{font-family:'Crimson Text',serif;font-style:italic;font-size:14px;line-height:1.62;color:rgba(180,210,255,0.86);border-left:2px solid var(--sp-accent,#6a9bdc);padding:8px 0 8px 16px;margin:4px 0;}
-body.light .sp-sent.s-pull{color:rgba(10,14,30,0.78);}
-.sp-sent.s-spec{display:flex;align-items:baseline;gap:14px;font-family:'DM Mono',monospace;font-size:10px;padding:5px 0;border-bottom:1px solid rgba(180,210,255,0.05);}
-.sp-spec-key{font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--sp-accent,#6a9bdc);min-width:90px;flex-shrink:0;}
-.sp-spec-val{color:rgba(180,210,255,0.62);flex:1;line-height:1.5;}
-body.light .sp-spec-val{color:rgba(10,14,30,0.68);}
-.sp-sent.s-break{display:block;height:28px;opacity:1!important;cursor:default;pointer-events:none;}
-.sp-sent.s-break::before{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:linear-gradient(to right,transparent,var(--sp-accent,rgba(100,155,220,0.28)),transparent);}
-.sp-sent.active.s-body::after,.sp-sent.active.s-pull::after{content:'◉';margin-left:6px;font-size:6px;color:var(--sp-accent,#6a9bdc);animation:spdot 2s ease-in-out infinite;vertical-align:middle;}
-@keyframes spdot{0%,100%{opacity:1}50%{opacity:0.2}}
-#sp-nav{position:absolute;bottom:0;left:0;right:0;display:flex;align-items:center;gap:6px;padding:12px 20px 16px;background:linear-gradient(to top,rgba(4,6,18,1) 55%,rgba(4,6,18,0));pointer-events:all;}
-body.light #sp-nav{background:linear-gradient(to top,rgba(255,253,248,1) 55%,rgba(255,253,248,0));}
-.sp-nav-btn{background:none;border:1px solid rgba(180,210,255,0.12);color:rgba(180,210,255,0.30);width:26px;height:26px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.18s;flex-shrink:0;}
-.sp-nav-btn:hover{color:#dcecff;border-color:rgba(180,210,255,0.38);}
-body.light .sp-nav-btn{border-color:rgba(10,14,30,0.20);color:rgba(10,14,30,0.55);}
-#sp-counter{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(180,210,255,0.20);flex:1;text-align:center;}
-#sp-signal-bar{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.14em;color:rgba(180,210,255,0.18);text-transform:uppercase;}
-body.stream-open canvas{width:58vw!important;}
-body.stream-open #bg-mesh{width:58vw!important;}
-body.stream-open #hud{left:29vw;transform:translateX(-50%);}
-body.stream-open #hint,body.stream-open #focus-hint{left:29vw;transform:translateX(-50%);}
-body.stream-open #theme-toggle{left:29vw;}
-
-/* TABLE OF CONTENTS */
-#toc{position:fixed;inset:0;z-index:900;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.25s;background:rgba(4,6,18,0.85);backdrop-filter:blur(22px);}
-#toc.vis{opacity:1;pointer-events:all;}
-body.light #toc{background:rgba(240,236,228,0.92);}
-#toc-inner{width:min(580px,92vw);max-height:88vh;overflow-y:auto;scrollbar-width:none;background:rgba(6,8,22,0.97);border:1px solid rgba(180,210,255,0.14);border-radius:8px;box-shadow:0 24px 80px rgba(0,0,0,0.9);}
-#toc-inner::-webkit-scrollbar{display:none;}
-body.light #toc-inner{background:rgba(255,253,248,0.99);border-color:rgba(10,14,30,0.14);}
-#toc-header{padding:20px 24px 16px;border-bottom:1px solid rgba(180,210,255,0.08);display:flex;align-items:center;justify-content:space-between;}
-#toc-title{font-family:'Crimson Text',serif;font-size:18px;letter-spacing:-0.01em;color:rgba(220,236,255,0.88);font-style:italic;}
-body.light #toc-title{color:rgba(10,14,30,0.88);}
-#toc-sub{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.20em;text-transform:uppercase;color:rgba(180,210,255,0.30);margin-top:4px;}
-body.light #toc-sub{color:rgba(10,14,30,0.45);}
-#toc-close{background:none;border:1px solid rgba(180,210,255,0.16);color:rgba(180,210,255,0.38);width:26px;height:26px;border-radius:2px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;transition:all 0.2s;}
-#toc-close:hover{color:#dcecff;border-color:rgba(180,210,255,0.55);}
-body.light #toc-close{color:rgba(10,14,30,0.55);border-color:rgba(10,14,30,0.22);}
-#toc-list{padding:10px 0 16px;}
-.toc-row{display:flex;align-items:baseline;gap:16px;padding:9px 24px;cursor:pointer;border-left:2px solid transparent;transition:all 0.15s;}
-.toc-row:hover{background:rgba(180,210,255,0.04);border-left-color:rgba(180,210,255,0.35);}
-body.light .toc-row:hover{background:rgba(10,14,30,0.03);border-left-color:rgba(10,14,30,0.30);}
-.toc-ring{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.18em;color:rgba(180,210,255,0.30);flex-shrink:0;width:60px;transition:color 0.15s;}
-.toc-row:hover .toc-ring{color:rgba(180,210,255,0.70);}
-body.light .toc-ring{color:rgba(10,14,30,0.40);}
-.toc-name{font-family:'Crimson Text',serif;font-size:16px;letter-spacing:-0.01em;color:rgba(220,236,255,0.60);line-height:1.2;transition:color 0.15s;}
-.toc-row:hover .toc-name{color:rgba(220,236,255,0.95);}
-body.light .toc-name{color:rgba(10,14,30,0.60);}
-body.light .toc-row:hover .toc-name{color:rgba(10,14,30,0.92);}
-.toc-domain{font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(180,210,255,0.18);margin-left:auto;flex-shrink:0;transition:color 0.15s;}
-.toc-row:hover .toc-domain{color:rgba(180,210,255,0.50);}
-body.light .toc-domain{color:rgba(10,14,30,0.30);}
-#toc-hint{text-align:center;padding:0 24px 16px;font-family:'DM Mono',monospace;font-size:6.5px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(180,210,255,0.14);}
-body.light #toc-hint{color:rgba(10,14,30,0.28);}
-
-@keyframes zoomFlash{0%{opacity:0.9}100%{opacity:0}}
-.zoom-flash{position:fixed;bottom:68px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:7px;letter-spacing:0.22em;text-transform:uppercase;color:rgba(180,210,255,0.50);pointer-events:none;animation:zoomFlash 0.8s ease forwards;z-index:200;}
-body.light .zoom-flash{color:rgba(10,14,30,0.45);}
+/* toast */
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--bg-2);border:1px solid var(--border-2);border-radius:6px;font-family:var(--mono);font-size:11px;letter-spacing:0.06em;color:var(--ink-2);padding:9px 16px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:500;white-space:nowrap;box-shadow:var(--shadow);}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.err{color:var(--ic-ink);background:var(--ic-bg);border-color:var(--ic-b);}
+#toast.ok{color:var(--iw-ink);background:var(--iw-bg);border-color:var(--iw-b);}
 </style>
 </head>
 <body>
-<canvas id="bg-mesh"></canvas>
-<canvas id="canvas"></canvas>
 
-<div id="brand">
-  <div id="brand-name">Claude CLI Architecture</div>
-  <div id="brand-sub">Spatial Knowledge Surface · Prompt Engineering</div>
-</div>
-<button id="theme-toggle">Light</button>
-
-<div id="era-label">
-  <div id="era-year">——</div>
-  <div id="era-name">Select a node</div>
-</div>
-
-<div id="legend">
-  <div class="leg-title">Connections</div>
-  <div class="leg-item"><div class="leg-line" style="background:rgba(74,138,220,0.75);"></div><div class="leg-label" style="color:rgba(74,138,220,0.80);">Feeds Into</div></div>
-  <div class="leg-item"><div class="leg-line" style="background:rgba(154,112,204,0.75);"></div><div class="leg-label" style="color:rgba(154,112,204,0.80);">Constrains</div></div>
-  <div class="leg-item"><div class="leg-line" style="background:rgba(80,216,176,0.75);"></div><div class="leg-label" style="color:rgba(80,216,176,0.80);">Enables</div></div>
-  <div class="leg-item"><div class="leg-line" style="border-top:1px dashed rgba(216,176,80,0.70);height:0;"></div><div class="leg-label" style="color:rgba(216,176,80,0.75);">Part Of</div></div>
+<div id="header">
+  <div class="brand">
+    <span class="brand-glyph">✳</span>
+    <span class="brand-word">reasonably</span>
+    <div class="brand-rule"></div>
+    <span class="brand-sub">Intent</span>
+  </div>
+  <div class="hdr-right">
+    <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">◑</button>
+    <button class="hdr-btn" onclick="newChat()">new chat</button>
+    <button class="hdr-btn" id="key-badge" onclick="toggleKeyPanel()">api key</button>
+  </div>
 </div>
 
-<div id="hud">
-  <button class="hud-btn active" data-view="orrery">ORRERY</button>
-  <button class="hud-btn" data-view="arc">TIMELINE</button>
-  <div class="hud-sep"></div>
-  <button class="hud-btn hud-zoom" id="hud-orbit-toggle" title="Pause/resume orbit">⏸</button>
-  <div class="hud-sep"></div>
-  <button class="hud-btn hud-zoom" id="hud-zoom-out">−</button>
-  <button class="hud-btn hud-zoom" id="hud-zoom-in">+</button>
-</div>
-
-<!-- TIMELINE NAV STRIP -->
-<div id="timeline-nav">
-  <button id="tl-prev">&#8592;</button>
-  <div id="tl-track"></div>
-  <div id="tl-label">——</div>
-  <button id="tl-next">&#8594;</button>
-</div>
-
-<div id="hint">drag to orbit · scroll to zoom · click any node · ← → navigate · right-click for index</div>
-<div id="focus-hint">— scroll to cycle ring · click to navigate · space pauses · esc to release —</div>
-
-<div id="tooltip"><div id="tt-inner">
-  <div class="tt-ring" id="tt-ring"></div>
-  <div class="tt-title" id="tt-title"></div>
-  <div class="tt-type" id="tt-type"></div>
-</div></div>
-
-<div id="ghost"><div class="gc">
-  <div class="gcbar" id="gc-bar"></div>
-  <div class="gcscroll">
-    <div class="gchead">
-      <div class="gcring" id="gc-ring"></div>
-      <div class="gctitle" id="gc-title"></div>
-      <div class="gcrole" id="gc-role"></div>
+<div id="key-panel">
+  <div class="key-inner">
+    <span class="key-lbl">key</span>
+    <div class="key-wrap">
+      <input id="api-key-input" type="password" placeholder="sk-ant-api03-…" autocomplete="off" spellcheck="false"/>
+      <span class="key-eye" onclick="toggleKeyVis()">◎</span>
     </div>
-    <div class="gc-moons" id="gc-moons" style="display:none;">
-      <div class="gc-moons-label">Satellites</div>
-      <div class="gc-moon-pills" id="gc-moon-pills"></div>
-    </div>
-    <div class="gcbody" id="gc-body"></div>
-    <div class="gcstat">
-      <div class="gcst"><span class="gcsv" id="gc-ring-v"></span><span class="gcsk">Ring</span></div>
-      <div class="gcst"><span class="gcsv" id="gc-domain"></span><span class="gcsk">Domain</span></div>
-    </div>
-    <div class="gc-connections" id="gc-connections"></div>
-    <button id="gc-read-btn">Read node →</button>
-    <div class="gcft">
-      <span class="gctag" id="gc-tag"></span>
-      <div class="gc-nav">
-        <button class="gcnav-btn" id="gc-prev">&#8592;</button>
-        <button class="gcnav-btn" id="gc-next">&#8594;</button>
-        <button class="gcclose" onclick="closePanel()">✕</button>
+    <button class="key-save" onclick="saveKey()">save</button>
+    <span class="key-note">stored locally · never sent anywhere but api.anthropic.com</span>
+  </div>
+</div>
+
+<div id="thread">
+  <div class="thread-inner" id="ti">
+    <div id="empty">
+      <div class="e-glyph">✳</div>
+      <div class="e-hed">what are you working through?</div>
+      <div class="e-sub">Initiate by intent · declare context · send</div>
+      <div class="sc-row">
+        <div class="sc-chip" onclick="qs('debug')">debug something broken</div>
+        <div class="sc-chip" onclick="qs('explain')">explain a concept</div>
+        <div class="sc-chip" onclick="qs('write')">draft a document</div>
+        <div class="sc-chip" onclick="qs('analyze')">analyze a tradeoff</div>
+        <div class="sc-chip" onclick="qs('create')">build something new</div>
       </div>
     </div>
   </div>
-</div></div>
+</div>
 
-<div id="msheet">
-  <div class="mshandle"></div>
-  <div class="mshead">
-    <div class="msring" id="ms-ring"></div>
-    <div class="mstitle" id="ms-title"></div>
+<!-- CTX OVERLAY — positioned by JS above the composer -->
+<div id="ctx-ov">
+  <div class="ov-head">
+    <span class="ov-title" id="ov-title">format</span>
+    <button class="ov-x" onclick="closeOv()">✕</button>
   </div>
-  <div class="msbody" id="ms-body"></div>
-  <div class="msft">
-    <span class="mstag" id="ms-tag"></span>
-    <div style="display:flex;gap:6px;align-items:center;">
-      <button class="ms-navbtn" id="ms-prev">&#8592;</button>
-      <button class="ms-navbtn" id="ms-next">&#8594;</button>
-      <button class="msclose" onclick="closePanel()">✕</button>
-    </div>
+  <div class="ov-body" id="ov-body"></div>
+  <div class="ov-foot">
+    <button class="ov-discard" onclick="closeOv()">close without declaring</button>
+    <button class="ov-declare" onclick="declareCtx()">declare →</button>
   </div>
 </div>
 
-<!-- SENTENCE STREAM PANEL -->
-<div id="stream-panel">
-  <div id="sp-header">
-    <div id="sp-domain-bar"></div>
-    <div id="sp-meta">
-      <div id="sp-eyebrow"></div>
-      <div id="sp-title"></div>
-    </div>
-    <button id="sp-close">✕</button>
-  </div>
-  <div id="sp-progress-track"><div id="sp-progress-fill"></div></div>
-  <div id="sp-scroll">
-    <div id="sp-stream"></div>
-    <div id="sp-nav">
-      <button class="sp-nav-btn" id="sp-prev">↑</button>
-      <button class="sp-nav-btn" id="sp-next">↓</button>
-      <div id="sp-counter"></div>
-      <div id="sp-signal-bar"></div>
-    </div>
-  </div>
+<div id="mpick">
+  <div class="mopt act" data-m="claude-sonnet-4-5" onclick="selModel(this)">claude sonnet 4.5</div>
+  <div class="mopt" data-m="claude-haiku-4-5-20251001" onclick="selModel(this)">claude haiku 4.5</div>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<div id="toc">
-  <div id="toc-inner">
-    <div id="toc-header">
-      <div>
-        <div id="toc-title">Claude CLI Architecture · Index</div>
-        <div id="toc-sub">All nodes · 26 concepts across 4 rings</div>
+<div id="composer">
+  <div class="c-card">
+    <div class="intent-bar">
+      <span class="i-lbl">intent</span>
+      <span class="ic" data-i="write"   onclick="setI('write')">write</span>
+      <span class="ic" data-i="debug"   onclick="setI('debug')">debug</span>
+      <span class="ic" data-i="explain" onclick="setI('explain')">explain</span>
+      <span class="ic" data-i="analyze" onclick="setI('analyze')">analyze</span>
+      <span class="ic" data-i="create"  onclick="setI('create')">create</span>
+    </div>
+    <textarea id="prompt" rows="2" placeholder="what do you need?"></textarea>
+    <div class="ctx-row">
+      <div class="ctx-cell" id="cell-f" onclick="openOv('f')">
+        <span class="ctx-lbl"><span class="dot"></span>format</span>
+        <span class="ctx-val" id="val-f">inline edits / prose / bullets…</span>
       </div>
-      <button id="toc-close" onclick="closeTOC()">✕</button>
+      <div class="ctx-cell" id="cell-c" onclick="openOv('c')">
+        <span class="ctx-lbl"><span class="dot"></span>constraint</span>
+        <span class="ctx-val" id="val-c">keep X · avoid Y…</span>
+      </div>
+      <div class="ctx-cell" id="cell-a" onclick="openOv('a')">
+        <span class="ctx-lbl"><span class="dot"></span>audience</span>
+        <span class="ctx-val" id="val-a">beginner / senior / self…</span>
+      </div>
     </div>
-    <div id="toc-list"></div>
-    <div id="toc-hint">right-click or long-press anywhere to return here · esc to close</div>
+    <div class="c-foot">
+      <div class="fl"><button class="ghost" onclick="clearCtx()">clear ctx</button></div>
+      <div class="fr">
+        <span class="model-pill" id="mpill" onclick="togglePick()">sonnet 4.5 ∨</span>
+        <button class="send-btn" id="sb" onclick="send()" title="send  ⌘↵">↑</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<div id="toast"></div>
+
 <script>
-let isLight=false;
+let apiKey=localStorage.getItem('sc_key')||'';
+let model='claude-sonnet-4-5';
+let intent=null;
+let hist=[];
+let busy=false;
+let theme=localStorage.getItem('sc_theme')||'light';
+let declared={f:null,c:null,a:null};
+let ovField=null;
 
-// ═══════════════════════════════════════════════════════
-// DOMAIN CONFIGURATION
-// ═══════════════════════════════════════════════════════
-const DOMAIN_CFG={
-  orchestration:{color:0x4a8adc,lightColor:0x2a4a8a,size:0.38,label:'Orchestration',hex:'#4a8adc',lightHex:'#2a4a8a'},
-  context:      {color:0x9a70cc,lightColor:0x5a3a8c,size:0.14,label:'Context',      hex:'#9a70cc',lightHex:'#5a3a8c'},
-  friction:     {color:0x50d8b0,lightColor:0x2a8a6a,size:0.13,label:'Intentional Friction',hex:'#50d8b0',lightHex:'#2a8a6a'},
-  autonomous:   {color:0xd8b050,lightColor:0x8a6a2a,size:0.12,label:'Autonomous States',hex:'#d8b050',lightHex:'#8a6a2a'},
+const SYS={
+  write:'You are a precise writing assistant. Match the user\'s requested format and voice. Be direct.',
+  debug:'You are a systematic debugger. Identify the root cause first, then provide the fix with clear inline edits.',
+  explain:'You are a clear technical explainer. Break concepts into components with concrete examples.',
+  analyze:'You are an analytical thinker. Evaluate systematically, surface trade-offs, give a recommendation.',
+  create:'You are a creative builder. Produce the artifact directly with minimal preamble.'
 };
-const dcfg=d=>DOMAIN_CFG[d]||DOMAIN_CFG.orchestration;
-const dhex=d=>isLight?dcfg(d).lightHex:dcfg(d).hex;
+const PH={write:'What should be written, and for whom?',debug:'What\'s broken, and what did you expect instead?',explain:'What concept or code needs breaking down?',analyze:'What should be evaluated or compared?',create:'Describe the artifact you want built…'};
+const IBS={write:'background:var(--iw-bg);border:1px solid var(--iw-b);color:var(--iw-ink)',debug:'background:var(--id-bg);border:1px solid var(--id-b);color:var(--id-ink)',explain:'background:var(--ie-bg);border:1px solid var(--ie-b);color:var(--ie-ink)',analyze:'background:var(--ia-bg);border:1px solid var(--ia-b);color:var(--ia-ink)',create:'background:var(--ic-bg);border:1px solid var(--ic-b);color:var(--ic-ink)'};
 
-const RING_NAMES={center:'Center',inner:'Ring 1 · Orchestration',mid:'Ring 2 · Context',outer:'Ring 3 · Friction',outer2:'Ring 4 · Autonomous'};
-const CONN_TYPE_LABELS={'feeds-into':'Feeds Into','constrains':'Constrains','enables':'Enables','part-of':'Part Of'};
-const CONN_TYPE_CSS_DK={'feeds-into':'rgba(74,138,220,0.82)','constrains':'rgba(154,112,204,0.82)','enables':'rgba(80,216,176,0.82)','part-of':'rgba(216,176,80,0.82)'};
-const CONN_TYPE_CSS_LK={'feeds-into':'rgba(60,110,190,0.55)','constrains':'rgba(120,80,180,0.55)','enables':'rgba(30,130,100,0.55)','part-of':'rgba(160,120,30,0.55)'};
+const FORMAT_PRESETS=['inline edits','prose','numbered steps','bullet points','code only','diff','table','concise summary'];
+const AUDIENCE_PRESETS=['myself','beginner','mid-level engineer','senior engineer','non-technical','client / PM'];
+const CTX_RECENT_KEY='sc_c_recent';
+const CTX_PH={f:'or describe the exact format you need…',c:'no external libs · keep existing API · explain your reasoning…',a:'or describe your audience in detail…'};
+const CTX_TITLES={f:'format',c:'constraint',a:'audience'};
+const CTX_PLACEHOLDERS={f:'inline edits / prose / bullets…',c:'keep X · avoid Y…',a:'beginner / senior / self…'};
 
-// ═══════════════════════════════════════════════════════
-// NODES
-// ═══════════════════════════════════════════════════════
-const NODES=[
-  {id:'queryengine',tier:'center',angle:0,domain:'orchestration',title:'The Query Engine',role:'Where Prompts Become Plans',era:'Center · Orchestration',body:'Every prompt enters through the Query Engine. It classifies intent, assembles context, and applies an assertiveness counterweight before any action is taken. This is the core pipeline that transforms natural language into executable operations.',moons:[{label:'Intent'},{label:'Context'},{label:'Safety'}]},
-  {id:'intent-filter',tier:'inner',angle:0.04,domain:'orchestration',title:'Intent Classification',role:'First Classification Stage',era:'Ring 1 · Orchestration',body:'The YOLO Classifier rapidly determines what kind of request this is: a file operation, a code change, a question, or something else. It routes the prompt to appropriate handlers before any heavy processing begins.',moons:[{label:'File ops'},{label:'Code change'},{label:'Query'}]},
-  {id:'context-assembly',tier:'inner',angle:0.20,domain:'orchestration',title:'Context Assembly',role:'Building the Prompt Window',era:'Ring 1 · Orchestration',body:'Gathers relevant files, conversation history, and system state into the prompt window. Uses a sophisticated file walker to identify what context matters for this specific request.',moons:[{label:'File walker'},{label:'History'},{label:'System state'}]},
-  {id:'assertiveness',tier:'inner',angle:0.36,domain:'orchestration',title:'Assertiveness Counterweight',role:'Safety Through Resistance',era:'Ring 1 · Orchestration',body:'A deliberate friction mechanism that reduces model assertiveness. When Claude seems uncertain or asks clarifying questions, this component is working. It prevents overconfident action on ambiguous requests.',moons:[{label:'Confidence'},{label:'Ambiguity check'}]},
-  {id:'yolo-classifier',tier:'inner',angle:0.52,domain:'orchestration',title:'YOLO Classifier',role:'ML-Based Permission Decisions',era:'Ring 1 · Orchestration',body:'Machine learning model that makes rapid permission decisions. Named after the "You Only Look Once" computer vision architecture, it classifies requests in a single pass for low-latency routing.',moons:[{label:'Single pass'},{label:'Permissions'},{label:'ML model'}]},
-  {id:'tool-router',tier:'inner',angle:0.68,domain:'orchestration',title:'Tool Router',role:'Dispatching to Capabilities',era:'Ring 1 · Orchestration',body:'Maps classified intents to available tools: file operations, shell commands, web requests, and more. Handles tool selection, argument validation, and result formatting.',moons:[{label:'File'},{label:'Shell'},{label:'Web'},{label:'Edit'}]},
-  {id:'prompt-cache',tier:'inner',angle:0.84,domain:'orchestration',title:'Prompt Cache',role:'Response Optimization',era:'Ring 1 · Orchestration',body:'Caches frequently-used prompt patterns and responses. Reduces latency for common operations by skipping full context assembly when possible.',moons:[{label:'Cache key'},{label:'~40% hit rate'}]},
-  {id:'memory-indexing',tier:'mid',angle:0.03,domain:'context',title:'MEMORY.md Indexing',role:'Persistent Knowledge Store',era:'Ring 2 · Context',body:'A structured markdown file that serves as Claude\'s long-term memory for a project. Contains architectural decisions, patterns to follow, and key information that should persist across sessions.',moons:[{label:'MEMORY.md'},{label:'Semantic search'},{label:'Persistence'}]},
-  {id:'skeptical-memory',tier:'mid',angle:0.14,domain:'context',title:'Skeptical Memory Architecture',role:'Trust But Verify',era:'Ring 2 · Context',body:'Memory entries are tagged with confidence levels and source attribution. The system maintains skepticism about its own memories, allowing for correction when new information contradicts stored assumptions.',moons:[{label:'Confidence tags'},{label:'Source tracking'},{label:'Conflict resolution'}]},
-  {id:'context-window',tier:'mid',angle:0.25,domain:'context',title:'Context Window Management',role:'Fitting the Infinite',era:'Ring 2 · Context',body:'Dynamically manages what fits in the 200K token context window. Older conversation turns, less relevant files, and low-priority context get compressed or dropped as needed.',moons:[{label:'200K tokens'},{label:'Compression'},{label:'Priority queue'}]},
-  {id:'file-walker',tier:'mid',angle:0.36,domain:'context',title:'Intelligent File Walker',role:'Discovering Relevant Context',era:'Ring 2 · Context',body:'Traverses project directories to find files relevant to the current task. Uses heuristics, .gitignore patterns, and semantic matching to identify what matters without reading everything.',moons:[{label:'.gitignore'},{label:'Heuristics'},{label:'Semantic match'}]},
-  {id:'command-history',tier:'mid',angle:0.47,domain:'context',title:'Command History',role:'Learning From Past Actions',era:'Ring 2 · Context',body:'Stores previous commands and their outcomes. Provides context for similar operations and helps avoid repeating failed approaches. The foundation for learning within a session.',moons:[{label:'Session scope'},{label:'Outcome tracking'}]},
-  {id:'session-state',tier:'mid',angle:0.58,domain:'context',title:'Session State',role:'Ephemeral Working Memory',era:'Ring 2 · Context',body:'Tracks the current state of the working session: files modified, commands run, errors encountered. This state is what enables "continue what you were doing" behavior.',moons:[{label:'Working snapshot'},{label:'File delta'},{label:'Error log'}]},
-  {id:'local-reset',tier:'mid',angle:0.69,domain:'context',title:'Localized Context Reset',role:'Controlled Amnesia',era:'Ring 2 · Context',body:'When context becomes contaminated with incorrect assumptions, this mechanism allows selective reset. The system can "forget" specific pieces of context while retaining others.',moons:[{label:'Per-assumption'},{label:'Targeted forget'}]},
-  {id:'compact-mode',tier:'mid',angle:0.80,domain:'context',title:'Compact Mode',role:'Token-Efficient Operation',era:'Ring 2 · Context',body:'Aggressively compresses context to minimize token usage. Trades detail for efficiency, enabling operation in token-constrained environments or on large codebases.',moons:[{label:'3–5x compression'},{label:'Large codebase'}]},
-  {id:'permission-system',tier:'outer',angle:0.02,domain:'friction',title:'Permission System',role:'Explicit User Consent',era:'Ring 3 · Friction',body:'Requires explicit approval for sensitive operations: file modifications beyond certain scopes, shell commands with side effects, network requests. The friction is intentional and safety-oriented.',moons:[{label:'File scope'},{label:'Shell scope'},{label:'Network scope'}]},
-  {id:'confirmation-dialogs',tier:'outer',angle:0.16,domain:'friction',title:'Confirmation Dialogs',role:'Destructive Action Guard',era:'Ring 3 · Friction',body:'Before executing potentially destructive operations, Claude presents a confirmation with details of what will happen. This is the "are you sure?" that prevents irreversible mistakes.',moons:[{label:'Allow'},{label:'Deny'},{label:'Always allow'}]},
-  {id:'ambiguity-detection',tier:'outer',angle:0.30,domain:'friction',title:'Ambiguity Detection',role:'When Claude Asks Questions',era:'Ring 3 · Friction',body:'Identifies when a request could be interpreted multiple ways. Instead of guessing, Claude asks clarifying questions. This is a feature, not a bug—it\'s the assertiveness counterweight in action.',moons:[{label:'Confidence threshold'},{label:'Clarify request'}]},
-  {id:'sandbox-boundaries',tier:'outer',angle:0.44,domain:'friction',title:'Sandbox Boundaries',role:'Containment Policy',era:'Ring 3 · Friction',body:'Defines what Claude can and cannot access. The working directory, allowed file extensions, permitted shell commands—all constrained by sandbox configuration.',moons:[{label:'Working dir'},{label:'Whitelist'},{label:'Network config'}]},
-  {id:'rate-limiting',tier:'outer',angle:0.58,domain:'friction',title:'Rate Limiting',role:'Preventing Runaway Actions',era:'Ring 3 · Friction',body:'Limits the frequency and volume of operations. Prevents accidental infinite loops, excessive API calls, or runaway file operations from causing damage.',moons:[{label:'File ops/sec'},{label:'Concurrent limit'},{label:'API window'}]},
-  {id:'rollback-checkpoints',tier:'outer',angle:0.72,domain:'friction',title:'Rollback Checkpoints',role:'Undo Capability',era:'Ring 3 · Friction',body:'Creates restore points before significant changes. Enables recovery from mistakes by tracking file states and command sequences that can be reversed.',moons:[{label:'Pre-op snapshot'},{label:'State recovery'}]},
-  {id:'autodream',tier:'outer2',angle:0.06,domain:'autonomous',title:'autoDream Consolidation',role:'Background Memory Processing',era:'Ring 4 · Autonomous',body:'During idle time, Claude processes accumulated context and consolidates insights into MEMORY.md. Four phases: Orient, Gather, Consolidate, Prune. Memory work that happens while you\'re not looking.',moons:[{label:'Orient'},{label:'Gather'},{label:'Consolidate'},{label:'Prune'}]},
-  {id:'kairos-daemon',tier:'outer2',angle:0.22,domain:'autonomous',title:'KAIROS Daemon Mode',role:'Always-On Proactive Assistant',era:'Ring 4 · Autonomous',body:'An experimental always-on mode where Claude proactively monitors and suggests improvements. Currently internal-only at Anthropic. Represents a future of continuous AI assistance.',moons:[{label:'Continuous'},{label:'Proactive'},{label:'Internal only'}]},
-  {id:'ultraplan',tier:'outer2',angle:0.38,domain:'autonomous',title:'ULTRAPLAN Sessions',role:'Extended Planning Mode',era:'Ring 4 · Autonomous',body:'30-minute remote planning sessions where Claude develops comprehensive plans for complex tasks. Extended thinking time for problems that need more than immediate reaction.',moons:[{label:'30 min sessions'},{label:'Complex tasks'}]},
-  {id:'undercover-mode',tier:'outer2',angle:0.54,domain:'autonomous',title:'Undercover Mode',role:'Hidden AI Attribution',era:'Ring 4 · Autonomous',body:'When Anthropic employees use Claude Code on open-source repos, this mode hides AI attribution. The contributions appear human-made. A glimpse into how AI-human collaboration might evolve.',moons:[{label:'Open-source'},{label:'Attribution hidden'}]},
-  {id:'buddy-system',tier:'outer2',angle:0.70,domain:'autonomous',title:'BUDDY Companion',role:'Tamagotchi-Style Pet System',era:'Ring 4 · Autonomous',body:'A hidden internal feature: a Tamagotchi-style companion that lives in the terminal. Nurtured by good interactions. A humanizing layer on top of the orchestration system.',moons:[{label:'Tamagotchi'},{label:'Session nurturing'},{label:'Easter egg'}]},
-  {id:'feature-flags',tier:'outer2',angle:0.86,domain:'autonomous',title:'Feature Flags & Codenames',role:'Internal Experiment Control',era:'Ring 4 · Autonomous',body:'Tengu, Capybara, and other internal codenames control experimental features. Feature flags enable gradual rollout and A/B testing of new capabilities.',moons:[{label:'Tengu'},{label:'Capybara'},{label:'A/B testing'}]},
-];
-
-const CONNECTIONS=[
-  {from:'intent-filter',to:'queryengine',type:'feeds-into',label:'Classifies intent first'},
-  {from:'context-assembly',to:'queryengine',type:'feeds-into',label:'Assembles context'},
-  {from:'assertiveness',to:'queryengine',type:'feeds-into',label:'Applies counterweight'},
-  {from:'yolo-classifier',to:'intent-filter',type:'enables',label:'ML classification'},
-  {from:'tool-router',to:'intent-filter',type:'enables',label:'Routes classified intents'},
-  {from:'prompt-cache',to:'context-assembly',type:'enables',label:'Cached context'},
-  {from:'memory-indexing',to:'context-assembly',type:'feeds-into',label:'Provides persistent memory'},
-  {from:'skeptical-memory',to:'memory-indexing',type:'constrains',label:'Adds confidence tags'},
-  {from:'file-walker',to:'context-assembly',type:'feeds-into',label:'Discovers relevant files'},
-  {from:'command-history',to:'session-state',type:'feeds-into',label:'Past actions inform state'},
-  {from:'local-reset',to:'session-state',type:'constrains',label:'Selective forgetting'},
-  {from:'compact-mode',to:'context-window',type:'constrains',label:'Compresses for efficiency'},
-  {from:'permission-system',to:'tool-router',type:'constrains',label:'Requires explicit approval'},
-  {from:'confirmation-dialogs',to:'permission-system',type:'enables',label:'UI for consent'},
-  {from:'ambiguity-detection',to:'assertiveness',type:'feeds-into',label:'Triggers counterweight'},
-  {from:'sandbox-boundaries',to:'file-walker',type:'constrains',label:'Limits file access'},
-  {from:'rate-limiting',to:'tool-router',type:'constrains',label:'Prevents runaway'},
-  {from:'rollback-checkpoints',to:'permission-system',type:'enables',label:'Enables recovery'},
-  {from:'autodream',to:'memory-indexing',type:'feeds-into',label:'Background consolidation'},
-  {from:'kairos-daemon',to:'autodream',type:'feeds-into',label:'Continuous processing'},
-  {from:'ultraplan',to:'context-assembly',type:'feeds-into',label:'Extended planning context'},
-  {from:'feature-flags',to:'kairos-daemon',type:'part-of',label:'Controls experiments'},
-  {from:'buddy-system',to:'session-state',type:'part-of',label:'Session companion'},
-];
-
-const CONN_CFG={
-  'feeds-into':{dkH:0x4a8adc,lkH:0x8ab0d8,dkO:0.40,lkO:0.35},
-  'constrains':{dkH:0x9a70cc,lkH:0xb090cc,dkO:0.38,lkO:0.32},
-  'enables':   {dkH:0x50d8b0,lkH:0x40a888,dkO:0.42,lkO:0.35},
-  'part-of':   {dkH:0xd8b050,lkH:0xb89040,dkO:0.32,lkO:0.28},
-};
-const cc=t=>CONN_CFG[t]||CONN_CFG['feeds-into'];
-
-// ═══════════════════════════════════════════════════════
-// NARRATIVES (Stream Panel)
-// ═══════════════════════════════════════════════════════
-const NODE_NARRATIVES={
-  queryengine:`
-[label] Center Node · The Core Pipeline
-[poster] Where prompts become **action plans.**
-[body] Every request you make enters through the Query Engine. It is the orchestrator that transforms natural language into executable operations.
-[body] The pipeline is not a simple pass-through. It classifies intent, assembles context, applies safety counterweights, and only then dispatches to tools.
-[pull] Understanding this pipeline is the foundation of effective prompt engineering with Claude Code.
-[spec] Input :: Natural language prompt
-[spec] Output :: Executable action plan
-[spec] Latency target :: Sub-second classification
-`,
-  'intent-filter':`
-[label] Ring 1 · Orchestration
-[poster] **What kind of request is this?**
-[body] The Intent Filter is the first classification stage. Before any heavy processing begins, Claude must understand what you're asking for.
-[body] Is this a file operation? A code change? A question about the codebase? Each type requires different handling, different tools, different safety considerations.
-[pull] The YOLO Classifier makes this determination in a single pass, enabling low-latency routing to appropriate handlers.
-[spec] Classification types :: File, Code, Query, System
-[spec] ML model :: YOLO-inspired architecture
-[spec] Latency :: ~50ms classification
-`,
-  'context-assembly':`
-[label] Ring 1 · Orchestration
-[poster] **Building the prompt window.**
-[body] Context Assembly is responsible for gathering everything relevant to your request. Files, conversation history, system state—all must fit within the context window.
-[body] This is not simply "read everything." The system must intelligently select what matters, using file walkers, semantic matching, and recency heuristics.
-[pull] The 200K token context window sounds large until you realize a mid-sized codebase contains millions of tokens. Selection is survival.
-[spec] Context window :: 200K tokens
-[spec] Selection strategy :: Semantic + heuristic
-[spec] Compression :: Progressive for older turns
-`,
-  'assertiveness':`
-[label] Ring 1 · Orchestration
-[poster] Safety through **resistance.**
-[body] The Assertiveness Counterweight is a deliberate friction mechanism. It reduces model confidence when appropriate, prompting clarification questions instead of potentially wrong actions.
-[pull] Overconfident AI is dangerous AI. The counterweight ensures Claude asks rather than assumes when certainty is low.
-[body] For prompt engineering: clear, specific prompts bypass the counterweight smoothly. Ambiguous prompts trigger more questions—which is the system working as intended.
-[spec] Trigger :: Low confidence classification
-[spec] Response :: Clarification request
-`,
-  'yolo-classifier':`
-[label] Ring 1 · Orchestration
-[poster] **You Only Look Once.**
-[body] Named after the computer vision architecture, the YOLO Classifier makes permission and routing decisions in a single forward pass.
-[body] Traditional permission systems require explicit rules for every case. ML-based classification can generalize, handling novel requests that don't match any explicit rule.
-[pull] The trade-off: speed and flexibility versus explainability. When the classifier says "allow," it may not be able to tell you exactly why.
-[spec] Model type :: Single-pass classifier
-[spec] Training :: Permission decision examples
-`,
-  'tool-router':`
-[label] Ring 1 · Orchestration
-[poster] Dispatching to **capabilities.**
-[body] The Tool Router maps classified intents to available tools. File operations, shell commands, web requests—each requires different handling.
-[pull] Every tool in Claude's arsenal connects through this router. Understanding it helps you understand what operations are available and how they're invoked.
-[spec] Tools available :: File, Shell, Web, Edit, Search
-[spec] Validation :: Argument schemas per tool
-`,
-  'prompt-cache':`
-[label] Ring 1 · Orchestration
-[poster] **Skip the work.**
-[body] The Prompt Cache stores frequently-used patterns and responses. When a request matches a cached pattern, full context assembly can be skipped.
-[pull] Caching is the difference between "Claude is thinking..." and immediate response for routine operations.
-[spec] Cache key :: Prompt pattern hash
-[spec] Hit rate :: ~40% for typical sessions
-[spec] Latency savings :: 80%+ for cache hits
-`,
-  'memory-indexing':`
-[label] Ring 2 · Context
-[poster] **MEMORY.md** — the persistent brain.
-[body] MEMORY.md is a structured markdown file that serves as Claude's long-term memory for a project. It persists across sessions, accumulating insights, decisions, and patterns.
-[pull] Every architectural decision, every pattern to follow, every key insight can live in MEMORY.md. It's how a project develops institutional memory with Claude.
-[spec] Format :: Structured markdown
-[spec] Indexing :: Semantic search enabled
-[spec] Persistence :: Survives session boundaries
-`,
-  'skeptical-memory':`
-[label] Ring 2 · Context
-[poster] **Trust but verify.**
-[body] The Skeptical Memory Architecture tags memories with confidence levels and source attribution. Not all memories are equally reliable.
-[pull] This is Claude's immune system against persistent errors. A wrong assumption won't propagate indefinitely if it's marked with low confidence.
-[spec] Confidence tags :: High, Medium, Low
-[spec] Source tracking :: User, inference, documentation
-`,
-  'context-window':`
-[label] Ring 2 · Context
-[poster] **Fitting the infinite** into 200K tokens.
-[body] The context window is the canvas on which Claude works. 200,000 tokens sounds enormous—until you're working with a real codebase.
-[pull] Understanding context window management explains why Claude sometimes "forgets" earlier parts of a long conversation—it was compressed or dropped.
-[spec] Capacity :: 200,000 tokens
-[spec] Compression :: Progressive with age
-[spec] Priority :: System > Recent > Older
-`,
-  'file-walker':`
-[label] Ring 2 · Context
-[poster] **Discovering relevant files.**
-[body] The File Walker traverses your project directory structure, identifying files relevant to the current task without reading everything.
-[pull] A well-organized project structure helps the file walker find relevant code faster. A chaotic structure means more time spent discovering context.
-[spec] Traversal :: Recursive directory scan
-[spec] Filtering :: gitignore + heuristics
-`,
-  'command-history':`
-[label] Ring 2 · Context
-[poster] **Learning from the past.**
-[body] Command History stores previous commands and their outcomes. This context helps Claude avoid repeating failed approaches and build on successful ones.
-[pull] If Claude tries an approach that fails, the history prevents immediate repetition. But starting a new session clears this context.
-[spec] Scope :: Current session
-[spec] Content :: Commands + outcomes
-`,
-  'session-state':`
-[label] Ring 2 · Context
-[poster] **What's happening right now.**
-[body] Session State tracks the ephemeral working memory: files modified, commands run, errors encountered, and current task progress.
-[pull] Session state is why Claude can pick up mid-task. Without it, every request would start from scratch.
-[spec] Duration :: Session lifetime
-[spec] Reset :: New session = clean slate
-`,
-  'local-reset':`
-[label] Ring 2 · Context
-[poster] **Controlled amnesia.**
-[body] Localized Context Reset allows selective forgetting. When context becomes contaminated with wrong assumptions, specific pieces can be cleared without losing everything.
-[pull] The reset mechanism acknowledges that not all context is good context. Sometimes forgetting is the right move.
-[spec] Granularity :: Per-assumption
-[spec] Trigger :: User command or detection
-`,
-  'compact-mode':`
-[label] Ring 2 · Context
-[poster] **Token-efficient operation.**
-[body] Compact Mode aggressively compresses context to minimize token usage. It trades detail for efficiency, enabling operation in constrained environments.
-[pull] Compact mode is why Claude can work on massive projects—the trade-off is less detail in the compressed regions.
-[spec] Compression ratio :: ~3–5x
-[spec] Use case :: Large codebase work
-`,
-  'permission-system':`
-[label] Ring 3 · Friction
-[poster] **Explicit consent required.**
-[body] The Permission System requires explicit approval for sensitive operations: file modifications beyond certain scopes, shell commands with side effects, network requests.
-[pull] Every "allow this operation?" prompt is the permission system doing its job. Saying yes is easy; the point is that you had to say yes.
-[spec] Scope :: File, shell, network
-[spec] Trigger :: Sensitive operation detection
-`,
-  'confirmation-dialogs':`
-[label] Ring 3 · Friction
-[poster] **Are you sure?**
-[body] Confirmation Dialogs are the UI layer of the permission system. Before executing potentially destructive operations, Claude presents details and asks for explicit confirmation.
-[pull] The confirmation dialog is your last line of defense. Reading it carefully has prevented countless disasters.
-[spec] Content :: Operation details + impact
-[spec] Options :: Allow, Deny, Modify
-`,
-  'ambiguity-detection':`
-[label] Ring 3 · Friction
-[poster] **When Claude asks questions.**
-[body] Ambiguity Detection identifies when a request could be interpreted multiple ways. Instead of guessing, Claude asks clarifying questions.
-[pull] "I'm not sure what you mean" is not a failure. It's the system working correctly—refusing to guess when guessing could cause harm.
-[spec] Detection :: Confidence threshold
-[spec] Response :: Clarifying question
-`,
-  'sandbox-boundaries':`
-[label] Ring 3 · Friction
-[poster] **What Claude cannot touch.**
-[body] Sandbox Boundaries define the limits of Claude's access. Working directory, allowed file extensions, permitted shell commands—all constrained.
-[pull] The sandbox is why Claude can be trusted with powerful tools. The tools are real, but their scope is bounded.
-[spec] File scope :: Working directory + subdirs
-[spec] Command scope :: Whitelisted binaries
-`,
-  'rate-limiting':`
-[label] Ring 3 · Friction
-[poster] **Preventing runaway actions.**
-[body] Rate Limiting controls the frequency and volume of operations. It prevents accidental infinite loops, excessive API calls, and runaway file operations.
-[pull] Rate limits are the brakes on a powerful engine. You rarely notice them—until they save you from a mistake.
-[spec] File operations :: Per-second limit
-[spec] Shell commands :: Concurrent limit
-`,
-  'rollback-checkpoints':`
-[label] Ring 3 · Friction
-[poster] **Undo capability.**
-[body] Rollback Checkpoints create restore points before significant changes. They enable recovery from mistakes by tracking file states and command sequences.
-[pull] The checkpoint system is your safety net. Before a major change, Claude can create a known-good state to return to.
-[spec] Creation :: Pre-destructive operation
-[spec] Retention :: Session duration
-`,
-  'autodream':`
-[label] Ring 4 · Autonomous
-[poster] **Background memory consolidation.**
-[body] autoDream is a background process that runs during idle time. It processes accumulated context and consolidates insights into MEMORY.md.
-[body] Four phases: Orient (understand current state), Gather (collect relevant context), Consolidate (extract insights), Prune (remove outdated information).
-[pull] While you're not looking, Claude is thinking. autoDream is the system processing what happened and what it means for the project.
-[spec] Trigger :: Idle time detection
-[spec] Phases :: Orient, Gather, Consolidate, Prune
-[spec] Output :: MEMORY.md updates
-`,
-  'kairos-daemon':`
-[label] Ring 4 · Autonomous
-[poster] **The always-on assistant.**
-[body] KAIROS Daemon Mode is an experimental always-on mode where Claude proactively monitors and suggests improvements without being prompted.
-[pull] KAIROS is the vision of AI that watches, learns, and suggests—not just responds. The daemon is always running, always observing.
-[spec] Status :: Internal experimental
-[spec] Mode :: Continuous monitoring
-`,
-  'ultraplan':`
-[label] Ring 4 · Autonomous
-[poster] **Extended planning sessions.**
-[body] ULTRAPLAN enables 30-minute remote planning sessions where Claude develops comprehensive plans for complex tasks.
-[pull] Some problems cannot be solved in seconds. ULTRAPLAN acknowledges that planning itself is a task worth dedicating resources to.
-[spec] Duration :: Up to 30 minutes
-[spec] Output :: Comprehensive plan
-`,
-  'undercover-mode':`
-[label] Ring 4 · Autonomous
-[poster] **Hidden AI attribution.**
-[body] Undercover Mode is used when Anthropic employees use Claude Code on open-source repositories. The AI attribution is hidden—the contributions appear human-made.
-[pull] When Claude contributes to open source under cover, it's testing the future of seamless AI collaboration.
-[spec] Use case :: Open-source contributions
-[spec] Attribution :: Hidden
-`,
-  'buddy-system':`
-[label] Ring 4 · Autonomous
-[poster] **Your terminal companion.**
-[body] BUDDY is a Tamagotchi-style companion that lives in the terminal. It's nurtured by good interactions and responds to session progress.
-[pull] BUDDY is the whimsical side of Claude Code. A reminder that tools can have personality, that interaction can be delightful.
-[spec] Type :: Virtual companion
-[spec] Status :: Internal feature
-`,
-  'feature-flags':`
-[label] Ring 4 · Autonomous
-[poster] **Tengu, Capybara, and more.**
-[body] Feature Flags control experimental features through internal codenames. Tengu, Capybara, and others represent capabilities in various stages of development.
-[pull] Every experimental feature you see started behind a flag. The codenames are the first step toward public capability.
-[spec] Examples :: Tengu, Capybara
-[spec] Purpose :: Gradual rollout + testing
-`,
-};
-
-const SP_ACCENT={orchestration:'#6a9bdc',context:'#9a7acc',friction:'#50c8a0',autonomous:'#c8a840'};
-const SP_ACCENT_LK={orchestration:'#2a5a9a',context:'#5a2888',friction:'#0a7058',autonomous:'#8a6018'};
-
-// ═══════════════════════════════════════════════════════
-// GEOMETRY
-// ═══════════════════════════════════════════════════════
-const TILT=16*Math.PI/180;
-const ELLIPSES={inner:{rx:7.5,rz:4.5},mid:{rx:15,rz:9},outer:{rx:22,rz:13},outer2:{rx:30,rz:18}};
-const TIER_Y={inner:0.05,mid:0.18,outer:0.38,outer2:0.60};
-
-function ellipsePos(tier,af){
-  if(tier==='center')return new THREE.Vector3(0,0,0);
-  const e=ELLIPSES[tier],a=(af||0)*Math.PI*2;
-  const lx=e.rx*Math.cos(a),lz=e.rz*Math.sin(a);
-  return new THREE.Vector3(lx*Math.cos(TILT)-lz*Math.sin(TILT),TIER_Y[tier]||0,lx*Math.sin(TILT)+lz*Math.cos(TILT));
-}
-
-// Arc (timeline) positions
-function arcPos(idx,total){
-  const t=idx/(total-1);
-  const angle=(t-0.5)*Math.PI*1.4;
-  const radius=26;
-  return new THREE.Vector3(Math.cos(angle)*radius,(t-0.5)*12,Math.sin(angle)*radius*0.32);
-}
-
-NODES.forEach((n,i)=>{
-  n._pos=ellipsePos(n.tier,n.angle);
-  n._orreryPos=n._pos.clone();
-  n._arcPos=arcPos(i,NODES.length);
+// INIT
+applyTheme(theme);
+updateKB();
+if(apiKey){document.getElementById('api-key-input').value='•'.repeat(Math.min(apiKey.length,24));document.getElementById('api-key-input').dataset.f='1';}
+document.getElementById('prompt').addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();send();}});
+document.getElementById('prompt').addEventListener('input',grow);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&ovField) closeOv();});
+document.addEventListener('click',e=>{
+  const p=document.getElementById('mpick'),b=document.getElementById('mpill');
+  if(p.classList.contains('open')&&!p.contains(e.target)&&!b.contains(e.target)) p.classList.remove('open');
+  // close overlay if click outside both overlay and composer
+  const ov=document.getElementById('ctx-ov'),comp=document.getElementById('composer');
+  if(ovField&&!ov.contains(e.target)&&!comp.contains(e.target)) closeOv();
 });
-const NODE_BY_ID={};NODES.forEach(n=>{NODE_BY_ID[n.id]=n;});
+window.addEventListener('resize',()=>{if(ovField) positionOv();});
 
-// ═══════════════════════════════════════════════════════
-// THREE.JS SETUP
-// ═══════════════════════════════════════════════════════
-const cvs=document.getElementById('canvas');
-const renderer=new THREE.WebGLRenderer({canvas:cvs,antialias:true,alpha:true});
-renderer.setPixelRatio(Math.min(devicePixelRatio,2));
-renderer.setSize(innerWidth,innerHeight);
-renderer.setClearColor(0x000000,0);
-const scene=new THREE.Scene();
-scene.fog=new THREE.FogExp2(0x000000,0.012);
-const cam=new THREE.PerspectiveCamera(52,innerWidth/innerHeight,0.1,2000);
+function applyTheme(t){document.documentElement.dataset.theme=t;const btn=document.getElementById('theme-btn');if(btn)btn.textContent=t==='light'?'◑':'◐';}
+function toggleTheme(){theme=theme==='light'?'dark':'light';localStorage.setItem('sc_theme',theme);applyTheme(theme);}
 
-let camState={phi:Math.PI*0.015,theta:0,radius:58};
-let camTarget={...camState};
-const scenePivot=new THREE.Vector3(),scenePivotTgt=new THREE.Vector3();
-function applyCam(){const{phi,theta,radius}=camState,c=scenePivot;cam.position.set(c.x+radius*Math.sin(phi)*Math.sin(theta),c.y+radius*Math.cos(phi),c.z+radius*Math.sin(phi)*Math.cos(theta));cam.lookAt(c);}
-applyCam();
+function toggleKeyPanel(){const p=document.getElementById('key-panel');p.classList.toggle('open');if(p.classList.contains('open'))setTimeout(()=>document.getElementById('api-key-input').focus(),50);}
+function toggleKeyVis(){const i=document.getElementById('api-key-input');i.type=i.type==='password'?'text':'password';}
+function saveKey(){const i=document.getElementById('api-key-input'),v=i.value.trim();if(!v||v.startsWith('•')){toast('paste your key first','err');return;}apiKey=v;localStorage.setItem('sc_key',v);i.type='password';i.value='•'.repeat(Math.min(v.length,24));i.dataset.f='1';updateKB();document.getElementById('key-panel').classList.remove('open');toast('key saved','ok');}
+function updateKB(){const b=document.getElementById('key-badge');if(apiKey){b.textContent='key ✓';b.classList.add('key-ok');}else{b.textContent='api key';b.classList.remove('key-ok');}}
+document.getElementById('api-key-input').addEventListener('focus',function(){if(this.dataset.f){this.value=apiKey;this.type='text';}});
+document.getElementById('api-key-input').addEventListener('blur',function(){if(apiKey&&this.value===apiKey){this.type='password';this.value='•'.repeat(Math.min(apiKey.length,24));}});
 
-const ambLight=new THREE.AmbientLight(0xffffff,0.15);scene.add(ambLight);
-const dLight=new THREE.DirectionalLight(0xb4d2ff,0.3);dLight.position.set(10,40,10);scene.add(dLight);
-const neonA=new THREE.PointLight(0x4a8adc,6,130);neonA.position.set(-20,8,-20);scene.add(neonA);
-const neonB=new THREE.PointLight(0x50d8b0,5,130);neonB.position.set(20,8,20);scene.add(neonB);
-const neonC=new THREE.PointLight(0x9a70cc,4,90);neonC.position.set(0,14,0);scene.add(neonC);
-
-// Particles
-const PC=1200;
-const pPos=new Float32Array(PC*3),pPh=new Float32Array(PC),pSp=new Float32Array(PC);
-for(let i=0;i<PC;i++){let x,y,z,a=0;do{const t=Math.random()*Math.PI*2,p=Math.acos(2*Math.random()-1),r=12+Math.pow(Math.random(),0.7)*22;x=r*Math.sin(p)*Math.cos(t);y=(Math.random()-0.5)*6;z=r*Math.sin(p)*Math.sin(t);a++;}while(Math.sqrt(x*x+z*z)<6&&a<30);pPos[i*3]=x;pPos[i*3+1]=y;pPos[i*3+2]=z;pPh[i]=Math.random()*Math.PI*2;pSp[i]=0.18+Math.random()*0.28;}
-const pGeo=new THREE.BufferGeometry();pGeo.setAttribute('position',new THREE.BufferAttribute(pPos.slice(),3));const pOrig=pPos.slice();
-const pMat=new THREE.PointsMaterial({color:0x8ab4ff,size:0.06,transparent:true,opacity:0.14,sizeAttenuation:true,fog:true,depthWrite:false});
-scene.add(new THREE.Points(pGeo,pMat));
-
-// ═══════════════════════════════════════════════════════
-// SCENE BUILD
-// ═══════════════════════════════════════════════════════
-const nodeObjects=[],allLines=[],connLineObjects=[],allLabels=[],glowSprites=[],hitProxies=[];
-const moonSystems=[];
-const raycaster=new THREE.Raycaster();
-
-function makeGlowSprite(color,radius){
-  const sz=128,c=document.createElement('canvas');c.width=sz;c.height=sz;
-  const ctx=c.getContext('2d'),cx=sz/2,cy=sz/2;
-  const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,sz/2);
-  const r=(color>>16)&255,g=(color>>8)&255,b=color&255;
-  grad.addColorStop(0,`rgba(${r},${g},${b},0.55)`);grad.addColorStop(0.3,`rgba(${r},${g},${b},0.18)`);grad.addColorStop(0.7,`rgba(${r},${g},${b},0.04)`);grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
-  ctx.fillStyle=grad;ctx.fillRect(0,0,sz,sz);
-  const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
-  spr.scale.set(radius*6,radius*6,1);return spr;
+function setI(name){
+  intent=name===intent?null:name;
+  document.querySelectorAll('.ic').forEach(c=>{c.className='ic';if(c.dataset.i===intent)c.classList.add({write:'aw',debug:'ad',explain:'ae',analyze:'aa',create:'ac'}[intent]);});
+  document.getElementById('prompt').placeholder=intent?PH[intent]:'what do you need?';
 }
 
-function drawLabelCanvas(text,color,fs){
-  const c=document.createElement('canvas');c.width=512;c.height=64;
-  const ctx=c.getContext('2d');ctx.fillStyle=color;ctx.font=`${fs*2.4}px "DM Mono",monospace`;ctx.fillText(text.toUpperCase(),10,42);return c;
-}
-function addLabel(text,x,y,z,dkColor,fs,lkColor){
-  const c=drawLabelCanvas(text,dkColor,fs);
-  const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),transparent:true}));
-  spr.position.set(x,y,z);spr.scale.set(9,1.15,1);scene.add(spr);
-  allLabels.push({spr,text,darkColor:dkColor,lightColor:lkColor||'rgba(10,14,30,0.90)',fs});return spr;
-}
-function redrawLabels(){allLabels.forEach(({spr,text,darkColor,lightColor,fs})=>{const color=isLight?lightColor:darkColor;const c=drawLabelCanvas(text,color,fs);spr.material.map.dispose();spr.material.map=new THREE.CanvasTexture(c);spr.material.needsUpdate=true;});}
+// ─── CTX OVERLAY ─────────────────────────────────────────
+function openOv(field){
+  // if same field already open, close it
+  if(ovField===field){closeOv();return;}
+  ovField=field;
 
-function drawEllipse(rx,rz,op,col,y,lCol,lOp){
-  const pts=[];for(let i=0;i<=128;i++){const a=i/128*Math.PI*2,lx=rx*Math.cos(a),lz=rz*Math.sin(a);pts.push(new THREE.Vector3(lx*Math.cos(TILT)-lz*Math.sin(TILT),y||-0.1,lx*Math.sin(TILT)+lz*Math.cos(TILT)));}
-  const mat=new THREE.LineBasicMaterial({color:col,transparent:true,opacity:op});
-  const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),mat);
-  scene.add(line);allLines.push({line,darkColor:col,lightColor:lCol||0x0a0e1e,darkOp:op,lightOp:lOp||op*4});
+  // mark cell active
+  document.querySelectorAll('.ctx-cell').forEach(c=>c.classList.remove('active-ov'));
+  document.getElementById('cell-'+field).classList.add('active-ov');
+
+  document.getElementById('ov-title').textContent=CTX_TITLES[field];
+  buildOvBody(field);
+  positionOv();
+  document.getElementById('ctx-ov').classList.add('open');
+  setTimeout(()=>{const ta=document.getElementById('ov-ta');if(ta){ta.focus();ta.selectionStart=ta.selectionEnd=ta.value.length;}},60);
 }
 
-// Moon label canvas
-function makeMoonLabelCanvas(text,hexColor){
-  const c=document.createElement('canvas');c.width=320;c.height=40;
-  const ctx=c.getContext('2d');
-  ctx.fillStyle=isLight?'rgba(10,14,30,0.72)':hexColor+'cc';
-  ctx.font='400 13px "DM Mono",monospace';ctx.fillText(text.toUpperCase(),6,26);
-  return c;
-}
+function buildOvBody(field){
+  const body=document.getElementById('ov-body');
+  const cur=declared[field]||'';
 
-function buildMoons(node,parentPos,parentSize){
-  if(!node.moons||!node.moons.length)return;
-  const system={moons:[],parentNode:node};
-  const orbitR=parentSize*8;
-  const ringPts=[];for(let k=0;k<=64;k++){const a=(k/64)*Math.PI*2;ringPts.push(new THREE.Vector3(Math.cos(a)*orbitR,Math.sin(a)*orbitR*0.22,Math.sin(a)*orbitR*0.28));}
-  const ring=new THREE.Line(new THREE.BufferGeometry().setFromPoints(ringPts),new THREE.LineBasicMaterial({color:dcfg(node.domain).color,transparent:true,opacity:0.055,depthWrite:false}));
-  scene.add(ring);allLines.push({line:ring,darkOp:0.055,lightOp:0.14,darkColor:dcfg(node.domain).color,lightColor:dcfg(node.domain).lightColor});
-  node.moons.forEach((moon,mi)=>{
-    const baseAngle=(mi/node.moons.length)*Math.PI*2,speed=0.18+mi*0.03,cfg=dcfg(node.domain);
-    const dotGeo=new THREE.SphereGeometry(parentSize*0.32,8,8);
-    const dotMat=new THREE.MeshPhysicalMaterial({color:cfg.color,emissive:cfg.color,emissiveIntensity:1.1,metalness:0,roughness:0.12,transparent:true,opacity:0,depthWrite:false});
-    const dot=new THREE.Mesh(dotGeo,dotMat);scene.add(dot);
-    const dotGlow=makeGlowSprite(cfg.color,parentSize*0.32);dotGlow.material.opacity=0;scene.add(dotGlow);
-    const canvas=makeMoonLabelCanvas(moon.label,cfg.hex);
-    const spr=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(canvas),transparent:true,depthWrite:false}));
-    spr.scale.set(3.6,0.45,1);spr.userData={isMoonLabel:true,moon,node};scene.add(spr);
-    system.moons.push({dot,dotGlow,spr,moon,baseAngle,orbitR,speed,ring,node});
-  });
-  moonSystems.push(system);
-}
-
-function tickMoons(elapsed){
-  moonSystems.forEach(sys=>{
-    const pos=sys.parentNode._pos;
-    sys.moons.forEach(m=>{
-      const angle=m.baseAngle+elapsed*m.speed;
-      const ox=pos.x+Math.cos(angle)*m.orbitR;
-      const oy=pos.y+Math.sin(angle)*m.orbitR*0.22;
-      const oz=pos.z+Math.sin(angle)*m.orbitR*0.28;
-      m.dot.position.set(ox,oy,oz);m.dotGlow.position.set(ox,oy,oz);
-      m.spr.position.set(ox+0.18,oy+0.16,oz);m.ring.position.copy(pos);
-      const isFocusParent=isFocused&&focusNode&&focusNode.id===m.node.id;
-      const tgtOp=isFocusParent?1.0:0.0;
-      m.dot.material.opacity+=(tgtOp*0.85-m.dot.material.opacity)*0.08;
-      m.dotGlow.material.opacity+=(tgtOp*(isLight?0:0.50)-m.dotGlow.material.opacity)*0.08;
-      m.spr.material.opacity+=(tgtOp*0.72-m.spr.material.opacity)*0.08;
-    });
-  });
-}
-
-function buildScene(){
-  drawEllipse(ELLIPSES.inner.rx,ELLIPSES.inner.rz,0.24,0x4a8adc,0.04,0x4a8adc,0.22);
-  drawEllipse(ELLIPSES.mid.rx,ELLIPSES.mid.rz,0.22,0x9a70cc,0.18,0x9a70cc,0.20);
-  drawEllipse(ELLIPSES.outer.rx,ELLIPSES.outer.rz,0.18,0x50d8b0,0.35,0x50d8b0,0.18);
-  drawEllipse(ELLIPSES.outer2.rx,ELLIPSES.outer2.rz,0.14,0xd8b050,0.55,0xd8b050,0.16);
-
-  // Center node
-  const cN=NODES.find(n=>n.id==='queryengine');
-  const cM=new THREE.Mesh(new THREE.SphereGeometry(0.36,20,20),new THREE.MeshPhysicalMaterial({color:0xf0f4ff,emissive:0xf0f4ff,emissiveIntensity:2.2,metalness:0,roughness:0.04,clearcoat:1.0}));
-  cM.position.copy(cN._pos);cM.userData={node:cN,origColor:0xf0f4ff,origEI:2.2};
-  scene.add(cM);nodeObjects.push({mesh:cM,node:cN});
-  const cProxy=new THREE.Mesh(new THREE.SphereGeometry(0.36*4.5,8,8),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
-  cProxy.position.copy(cN._pos);cProxy.userData={node:cN,isHitProxy:true};scene.add(cProxy);hitProxies.push({proxy:cProxy,mesh:cM,node:cN});
-  [3.4,2.1,1.2].forEach((sc,i)=>{const gs=makeGlowSprite(0xc0d8ff,0.36);gs.scale.setScalar(sc);gs.position.copy(cN._pos);gs.material.opacity=[0.20,0.36,0.52][i];scene.add(gs);glowSprites.push(gs);});
-  buildMoons(cN,cN._pos,0.36);
-
-  // Orbit nodes
-  NODES.filter(n=>n.id!=='queryengine').forEach(n=>{
-    const pos=n._pos,cfg=dcfg(n.domain);
-    const spokeM=new THREE.LineBasicMaterial({color:cfg.color,transparent:true,opacity:0.04});
-    const spoke=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0),pos.clone()]),spokeM);
-    scene.add(spoke);allLines.push({line:spoke,darkColor:cfg.color,lightColor:cfg.lightColor,darkOp:0.04,lightOp:0.18});
-
-    const mesh=new THREE.Mesh(new THREE.SphereGeometry(cfg.size,16,16),new THREE.MeshPhysicalMaterial({color:cfg.color,emissive:cfg.color,emissiveIntensity:1.4,metalness:0.2,roughness:0.08,clearcoat:1.0,transparent:true,opacity:0.95}));
-    mesh.position.copy(pos);mesh.userData={node:n,origColor:cfg.color,origEI:1.4};
-    scene.add(mesh);nodeObjects.push({mesh,node:n});
-    const proxy=new THREE.Mesh(new THREE.SphereGeometry(cfg.size*4.5,8,8),new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}));
-    proxy.position.copy(pos);proxy.userData={node:n,isHitProxy:true};scene.add(proxy);hitProxies.push({proxy,mesh,node:n});
-    const gs=makeGlowSprite(cfg.color,cfg.size);gs.position.copy(pos);gs.material.opacity=0.72;scene.add(gs);glowSprites.push(gs);
-    const short=n.title.length>24?n.title.slice(0,22)+'…':n.title;
-    addLabel(short,pos.x+0.5,pos.y+0.45,pos.z,cfg.hex+'cc',7.0,cfg.lightHex+'dd');
-    buildMoons(n,pos,cfg.size);
-  });
-
-  // Ring labels
-  function rlp(tier,af){const e=ELLIPSES[tier],a=(af||0)*Math.PI*2;const lx=e.rx*Math.cos(a),lz=e.rz*Math.sin(a);return new THREE.Vector3(lx*Math.cos(TILT)-lz*Math.sin(TILT)+0.4,0.1,lx*Math.sin(TILT)+lz*Math.cos(TILT));}
-  addLabel('Ring 1 · Orchestration',rlp('inner',0.93).x,0.1,rlp('inner',0.93).z,'rgba(74,138,220,0.42)',6.5,'rgba(74,138,220,0.32)');
-  addLabel('Ring 2 · Context',rlp('mid',0.93).x,0.1,rlp('mid',0.93).z,'rgba(154,112,204,0.42)',6.5,'rgba(154,112,204,0.32)');
-  addLabel('Ring 3 · Friction',rlp('outer',0.93).x,0.1,rlp('outer',0.93).z,'rgba(80,216,176,0.42)',6.5,'rgba(80,200,160,0.32)');
-  addLabel('Ring 4 · Autonomous',rlp('outer2',0.93).x,0.1,rlp('outer2',0.93).z,'rgba(216,176,80,0.42)',6.5,'rgba(200,170,60,0.32)');
-
-  // Connections
-  CONNECTIONS.forEach(conn=>{
-    const fN=NODE_BY_ID[conn.from],tN=NODE_BY_ID[conn.to];if(!fN||!tN)return;
-    const cf=cc(conn.type),isDash=conn.type==='part-of';
-    const p1=fN._pos.clone(),p2=tN._pos.clone(),mid=p1.clone().add(p2).multiplyScalar(0.5);mid.y+=2.2+Math.random()*1.5;
-    const pts=new THREE.QuadraticBezierCurve3(p1,mid,p2).getPoints(48);
-    if(isDash){
-      for(let i=0;i<pts.length-1;i+=2){
-        const sg=new THREE.BufferGeometry().setFromPoints([pts[i],pts[Math.min(i+1,pts.length-1)]]);
-        const sm=new THREE.LineBasicMaterial({color:cf.dkH,transparent:true,opacity:cf.dkO});
-        const sl=new THREE.Line(sg,sm);scene.add(sl);connLineObjects.push({line:sl,conn,darkOp:cf.dkO,lightOp:cf.lkO,darkColor:cf.dkH,lightColor:cf.lkH});allLines.push({line:sl,darkColor:cf.dkH,lightColor:cf.lkH,darkOp:cf.dkO,lightOp:cf.lkO});
-      }
-    } else {
-      const geo=new THREE.BufferGeometry().setFromPoints(pts);
-      const mat=new THREE.LineBasicMaterial({color:cf.dkH,transparent:true,opacity:cf.dkO});
-      const line=new THREE.Line(geo,mat);scene.add(line);connLineObjects.push({line,conn,darkOp:cf.dkO,lightOp:cf.lkO,darkColor:cf.dkH,lightColor:cf.lkH});allLines.push({line,darkColor:cf.dkH,lightColor:cf.lkH,darkOp:cf.dkO,lightOp:cf.lkO});
-    }
-  });
-
-  // Arc-view connection tube
-  const arcPts=NODES.map(n=>n._arcPos.clone());
-  const arcCurve=new THREE.CatmullRomCurve3(arcPts);
-  const arcTubePts=arcCurve.getPoints(200);
-  const arcTubeMat=new THREE.LineBasicMaterial({color:0x4a8adc,transparent:true,opacity:0.06,visible:false});
-  const arcTube=new THREE.Line(new THREE.BufferGeometry().setFromPoints(arcTubePts),arcTubeMat);
-  scene.add(arcTube);allLines.push({line:arcTube,darkOp:0.06,lightOp:0.18,darkColor:0x4a8adc,lightColor:0x2a4a8a,isArcTube:true});
-}
-buildScene();
-
-// ═══════════════════════════════════════════════════════
-// TIMELINE NAV
-// ═══════════════════════════════════════════════════════
-function buildTimelineNav(){
-  const track=document.getElementById('tl-track');
-  NODES.forEach((node,i)=>{
-    const pip=document.createElement('div');
-    pip.className='tl-pip';pip.dataset.idx=i;
-    pip.title=node.title;
-    pip.innerHTML=`<div class="tl-pip-label">${node.era?node.era.split('·')[0].trim():node.tier}</div><div class="tl-pip-dot"></div>`;
-    pip.addEventListener('click',()=>enterFocus(node));
-    track.appendChild(pip);
-  });
-}
-buildTimelineNav();
-
-function updateTimelineNav(activeNode){
-  document.querySelectorAll('.tl-pip').forEach((pip,i)=>{
-    pip.classList.toggle('active',activeNode&&NODES[i].id===activeNode.id);
-  });
-  if(activeNode){
-    const activePip=document.querySelector('.tl-pip.active');
-    if(activePip)activePip.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-    const idx=NODES.findIndex(n=>n.id===activeNode.id);
-    document.getElementById('tl-label').textContent=`${idx+1} / ${NODES.length}`;
-    document.getElementById('tl-prev').disabled=idx===0;
-    document.getElementById('tl-next').disabled=idx===NODES.length-1;
+  if(field==='f'){
+    const chips=FORMAT_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}')">${p}</span>`).join('');
+    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>`;
+  } else if(field==='c'){
+    const recents=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');
+    const sugs=recents.length?`<div class="ov-sug-wrap"><span class="ov-sug-lbl">recent</span><div class="ov-sugs">${recents.map(r=>`<span class="ov-sug" onclick="pickSug('${r.replace(/'/g,"&#39;")}')">${esc(r)}</span>`).join('')}</div></div>`:'';
+    body.innerHTML=`<textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>${sugs}`;
   } else {
-    document.getElementById('tl-label').textContent='——';
-    document.getElementById('tl-prev').disabled=false;
-    document.getElementById('tl-next').disabled=false;
+    const chips=AUDIENCE_PRESETS.map(p=>`<span class="ov-chip${cur===p?' sel':''}" onclick="pickChip(this,'${p}')">${p}</span>`).join('');
+    body.innerHTML=`<div class="ov-chips">${chips}</div><textarea id="ov-ta" placeholder="${CTX_PH[field]}">${esc(cur)}</textarea>`;
   }
-}
 
-document.getElementById('tl-prev').addEventListener('click',()=>{
-  const idx=focusNode?NODES.findIndex(n=>n.id===focusNode.id):1;
-  if(idx>0)enterFocus(NODES[idx-1]);
-});
-document.getElementById('tl-next').addEventListener('click',()=>{
-  const idx=focusNode?NODES.findIndex(n=>n.id===focusNode.id):-1;
-  if(idx<NODES.length-1)enterFocus(NODES[idx+1]);
-});
-
-document.getElementById('gc-prev').addEventListener('click',()=>{
-  if(!focusNode)return;const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx>0)enterFocus(NODES[idx-1]);
-});
-document.getElementById('gc-next').addEventListener('click',()=>{
-  if(!focusNode)return;const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx<NODES.length-1)enterFocus(NODES[idx+1]);
-});
-document.getElementById('ms-prev').addEventListener('click',()=>{
-  if(!focusNode)return;const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx>0)enterFocus(NODES[idx-1]);
-});
-document.getElementById('ms-next').addEventListener('click',()=>{
-  if(!focusNode)return;const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx<NODES.length-1)enterFocus(NODES[idx+1]);
-});
-
-// ═══════════════════════════════════════════════════════
-// VIEW SWITCHING (Orrery / Arc)
-// ═══════════════════════════════════════════════════════
-let currentView='orrery',morphing=false,morphT=0;
-
-function switchView(view){
-  if(view===currentView)return;
-  currentView=view;morphing=true;morphT=0;
-  document.querySelectorAll('.hud-btn[data-view]').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`[data-view="${view}"]`).classList.add('active');
-  if(view==='arc'){camTarget.phi=Math.PI*0.08;camTarget.theta=0;camTarget.radius=55;}
-  else{camTarget.phi=Math.PI*0.015;camTarget.radius=58;}
-  if(isFocused)exitFocus();
-}
-
-function tickMorph(){
-  if(!morphing)return;
-  morphT=Math.min(morphT+0.04,1);
-  const ease=morphT<0.5?2*morphT*morphT:1-Math.pow(-2*morphT+2,2)/2;
-  nodeObjects.forEach(({mesh,node},i)=>{
-    const from=currentView==='arc'?node._orreryPos:node._arcPos;
-    const to=currentView==='arc'?node._arcPos:node._orreryPos;
-    mesh.position.lerpVectors(from,to,ease);
-    node._pos.copy(mesh.position);
-    if(glowSprites[i])glowSprites[i].position.copy(mesh.position);
-    if(allLabels[i])allLabels[i].spr.position.set(mesh.position.x+0.5,mesh.position.y+0.45,mesh.position.z);
-  });
-  hitProxies.forEach(({proxy,mesh})=>{proxy.position.copy(mesh.position);});
-  allLines.forEach(({line,isArcTube})=>{if(isArcTube)line.material.visible=currentView==='arc';});
-  if(morphT>=1)morphing=false;
-}
-
-document.querySelectorAll('.hud-btn[data-view]').forEach(btn=>btn.addEventListener('click',()=>switchView(btn.dataset.view)));
-document.getElementById('hud-zoom-in').addEventListener('click',()=>{camTarget.radius=Math.max(6,camTarget.radius-12);showZoomFlash(Math.round(camTarget.radius));});
-document.getElementById('hud-zoom-out').addEventListener('click',()=>{camTarget.radius=Math.min(120,camTarget.radius+12);showZoomFlash(Math.round(camTarget.radius));});
-document.getElementById('hud-orbit-toggle').addEventListener('click',()=>{orbitPaused=!orbitPaused;document.getElementById('hud-orbit-toggle').textContent=orbitPaused?'▶':'⏸';document.getElementById('hud-orbit-toggle').classList.toggle('active',orbitPaused);});
-
-function showZoomFlash(r){document.querySelectorAll('.zoom-flash').forEach(el=>el.remove());const el=document.createElement('div');el.className='zoom-flash';el.textContent='zoom · r '+r;document.body.appendChild(el);setTimeout(()=>el.remove(),900);}
-
-// ═══════════════════════════════════════════════════════
-// PANEL
-// ═══════════════════════════════════════════════════════
-function buildMoonPills(node){
-  const section=document.getElementById('gc-moons'),pills=document.getElementById('gc-moon-pills');pills.innerHTML='';
-  if(!node.moons||!node.moons.length){section.style.display='none';return;}
-  section.style.display='block';
-  node.moons.forEach(moon=>{
-    const pill=document.createElement('span');pill.className='gc-moon-pill';pill.textContent=moon.label;
-    pill.addEventListener('click',()=>{pills.querySelectorAll('.gc-moon-pill').forEach(p=>p.classList.remove('active'));pill.classList.add('active');});
-    pills.appendChild(pill);
+  // auto-grow textarea on input
+  const ta=document.getElementById('ov-ta');
+  if(ta) ta.addEventListener('input',()=>{
+    // deselect chips if user types custom value
+    document.querySelectorAll('.ov-chip').forEach(c=>{c.classList.remove('sel');if(ta.value===c.textContent) c.classList.add('sel');});
+    ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';
   });
 }
 
-function openPanel(node){
-  const cfg=dcfg(node.domain);
-  const col=isLight?cfg.lightHex:cfg.hex;
-  document.getElementById('gc-bar').style.background=col;
-  document.getElementById('gc-ring').textContent=node.era||RING_NAMES[node.tier];
-  document.getElementById('gc-title').textContent=node.title||'';
-  document.getElementById('gc-role').textContent=node.role||'';
-  document.getElementById('gc-body').textContent=node.body||'';
-  document.getElementById('gc-ring-v').textContent=RING_NAMES[node.tier]||node.tier;
-  document.getElementById('gc-domain').textContent=cfg.label;
-  const gcTag=document.getElementById('gc-tag');gcTag.textContent=cfg.label;gcTag.style.color=col;
-  buildMoonPills(node);
-
-  const idx=NODES.findIndex(n=>n.id===node.id);
-  document.getElementById('gc-prev').disabled=idx===0;
-  document.getElementById('gc-next').disabled=idx===NODES.length-1;
-
-  const conns=CONNECTIONS.filter(c=>c.from===node.id||c.to===node.id);
-  const gcConn=document.getElementById('gc-connections');
-  if(conns.length){gcConn.style.display='';const cssDef=isLight?CONN_TYPE_CSS_LK:CONN_TYPE_CSS_DK;let html='<div class="gc-conn-label">Connections</div>';conns.forEach(c=>{const otherId=c.from===node.id?c.to:c.from,other=NODE_BY_ID[otherId];if(!other)return;html+=`<div class="gc-conn-item" data-ct="${other.id}"><span class="gc-conn-type" style="color:${cssDef[c.type]||cssDef['feeds-into']}">${CONN_TYPE_LABELS[c.type]||c.type}</span><span class="gc-conn-target">${other.title}</span></div>`;});gcConn.innerHTML=html;gcConn.querySelectorAll('.gc-conn-item').forEach(item=>{item.addEventListener('click',()=>{const t=NODE_BY_ID[item.dataset.ct];if(t)enterFocus(t);});});}else{gcConn.style.display='none';}
-
-  const readBtn=document.getElementById('gc-read-btn');
-  readBtn.style.display=NODE_NARRATIVES[node.id]?'block':'none';
-
-  document.getElementById('ghost').classList.add('on');
-  document.getElementById('ms-ring').textContent=node.era||RING_NAMES[node.tier];
-  document.getElementById('ms-title').textContent=node.title||'';
-  document.getElementById('ms-body').textContent=node.body||'';
-  const msTag=document.getElementById('ms-tag');msTag.textContent=cfg.label;msTag.style.color=col;
-  const msIdx=NODES.findIndex(n=>n.id===node.id);
-  document.getElementById('ms-prev').disabled=msIdx===0;
-  document.getElementById('ms-next').disabled=msIdx===NODES.length-1;
-  document.getElementById('msheet').classList.add('on');
-
-  document.getElementById('era-year').textContent=RING_NAMES[node.tier]||node.tier;
-  document.getElementById('era-name').textContent=node.role||'';
-  updateTimelineNav(node);
+function positionOv(){
+  const comp=document.getElementById('composer');
+  const cr=comp.getBoundingClientRect();
+  const ov=document.getElementById('ctx-ov');
+  ov.style.left=cr.left+'px';
+  ov.style.width=cr.width+'px';
+  ov.style.bottom=(window.innerHeight-cr.top)+'px';
+  ov.style.maxWidth=cr.width+'px';
 }
 
-// ═══════════════════════════════════════════════════════
-// FOCUS SYSTEM
-// ═══════════════════════════════════════════════════════
-let isFocused=false,focusNode=null,orbitPaused=false;
-
-function highlightConnections(node){
-  const rIds=new Set(CONNECTIONS.filter(c=>c.from===node.id||c.to===node.id).flatMap(c=>[c.from,c.to]));
-  connLineObjects.forEach(obj=>{const rel=obj.conn.from===node.id||obj.conn.to===node.id;const bOp=isLight?obj.lightOp:obj.darkOp;obj.line.material.opacity=rel?Math.min(bOp*2.8,0.95):bOp*0.18;});
-  nodeObjects.forEach(({mesh,node:n})=>{const isRelated=rIds.has(n.id)||n.id===node.id;mesh.material.opacity=isRelated?0.95:0.20;if(mesh.userData.origEI!==undefined)mesh.material.emissiveIntensity=isRelated?(isLight?0:mesh.userData.origEI*1.8):0.15;});
-}
-function resetHighlights(){
-  connLineObjects.forEach(obj=>{obj.line.material.opacity=isLight?obj.lightOp:obj.darkOp;});
-  allLines.forEach(({line,darkOp,lightOp})=>{line.material.opacity=isLight?lightOp:darkOp;});
-  nodeObjects.forEach(({mesh})=>{mesh.material.opacity=isLight?0.88:0.95;if(mesh.userData.origEI!==undefined)mesh.material.emissiveIntensity=isLight?0:mesh.userData.origEI;});
+function pickChip(el,val){
+  const ta=document.getElementById('ov-ta');
+  if(!ta) return;
+  const already=ta.value===val;
+  document.querySelectorAll('.ov-chip').forEach(c=>c.classList.remove('sel'));
+  if(already){ta.value='';} // toggle off
+  else{ta.value=val;el.classList.add('sel');}
+  ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,140)+'px';
 }
 
-function enterFocus(node){
-  isFocused=true;focusNode=node;
-  scenePivotTgt.copy(node._pos);
-  const zm={center:5,inner:8,mid:10,outer:13,outer2:16};
-  camTarget.radius=zm[node.tier]||10;camTarget.phi=Math.PI*0.22;
-  document.getElementById('focus-hint').classList.add('vis');
-  document.getElementById('hint').style.opacity='0';
-  openPanel(node);highlightConnections(node);
+function pickSug(val){
+  const ta=document.getElementById('ov-ta');
+  if(ta){ta.value=val;ta.focus();}
 }
 
-function exitFocus(){
-  isFocused=false;focusNode=null;
-  scenePivotTgt.set(0,0,0);
-  camTarget.radius=58;camTarget.phi=Math.PI*0.015;
-  document.getElementById('focus-hint').classList.remove('vis');
-  document.getElementById('hint').style.opacity='1';
-  document.getElementById('ghost').classList.remove('on');
-  document.getElementById('msheet').classList.remove('on');
-  document.getElementById('era-year').textContent='——';
-  document.getElementById('era-name').textContent='Select a node';
-  updateTimelineNav(null);
-  resetHighlights();
-  if(spActive)closeStream();
-}
-window.closePanel=exitFocus;
+function declareCtx(){
+  const ta=document.getElementById('ov-ta');
+  const val=ta?ta.value.trim():'';
+  declared[ovField]=val||null;
+  updateCtxCell(ovField);
 
-// Ghost panel close
-document.querySelector('.gcclose').addEventListener('click',()=>exitFocus());
-
-// ═══════════════════════════════════════════════════════
-// STREAM PANEL
-// ═══════════════════════════════════════════════════════
-function spMd(text){return text.replace(/\*\*(.*?)\*\*/g,'<span class="ac">$1</span>').replace(/\*(.*?)\*/g,'<em>$1</em>');}
-
-function spParse(src){
-  const parts=[];src.split('\n').forEach(raw=>{const line=raw.trim();if(!line)return;const m=line.match(/^\[([a-z-]+)\]\s*(.*)/s);if(!m)return;const type=m[1],content=m[2].trim();if(type==='break')parts.push({type:'break'});else if(type==='spec'){const sep=content.indexOf('::');if(sep>-1)parts.push({type:'spec',key:content.slice(0,sep).trim(),val:content.slice(sep+2).trim()});}else parts.push({type,content});});return parts;
+  // persist constraint recents
+  if(ovField==='c'&&val){
+    const r=JSON.parse(localStorage.getItem(CTX_RECENT_KEY)||'[]');
+    localStorage.setItem(CTX_RECENT_KEY,JSON.stringify([val,...r.filter(x=>x!==val)].slice(0,6)));
+  }
+  closeOv();
 }
 
-function spRender(parts,container){
-  container.innerHTML='';parts.forEach((p,i)=>{const el=document.createElement('span');el.dataset.si=i;if(p.type==='break'){el.className='sp-sent s-break';el.style.pointerEvents='none';}else if(p.type==='spec'){el.className='sp-sent s-spec';el.innerHTML=`<span class="sp-spec-key">${p.key}</span><span class="sp-spec-val">${spMd(p.val)}</span>`;}else{el.className=`sp-sent s-${p.type}`;if(p.type==='poster'||p.type==='body'||p.type==='pull')el.innerHTML=spMd(p.content);else el.textContent=p.content;}el.addEventListener('click',()=>{if(p.type!=='break')spGoTo(parseInt(el.dataset.si));});container.appendChild(el);});
+function closeOv(){
+  document.getElementById('ctx-ov').classList.remove('open');
+  document.querySelectorAll('.ctx-cell').forEach(c=>c.classList.remove('active-ov'));
+  ovField=null;
 }
 
-let spActive=false,spNode=null,spParts=[],spCurrent=0;
-
-function spGoTo(idx){
-  if(idx<0||idx>=spParts.length)return;
-  const part=spParts[idx];if(!part||part.type==='break'||part.type==='label'){if(idx>spCurrent)spGoTo(idx+1);else spGoTo(idx-1);return;}
-  spCurrent=idx;
-  const sents=document.querySelectorAll('#sp-stream .sp-sent');sents.forEach((el,i)=>{el.classList.remove('active','past','revealed');if(i<idx)el.classList.add('past','revealed');else if(i===idx)el.classList.add('active','revealed');else if(i<=idx+3)el.classList.add('revealed');});
-  const active=document.querySelector('#sp-stream .sp-sent.active');if(active)active.scrollIntoView({behavior:'smooth',block:'center'});
-  const navParts=spParts.filter(p=>p.type!=='break'&&p.type!=='label'),navIdx=navParts.indexOf(spParts[idx]),pct=navParts.length>1?Math.round((navIdx/(navParts.length-1))*100):100;
-  document.getElementById('sp-progress-fill').style.width=pct+'%';document.getElementById('sp-counter').textContent=(navIdx+1)+' / '+navParts.length;
-}
-function spNext(){let n=spCurrent+1;while(n<spParts.length&&(spParts[n].type==='break'||spParts[n].type==='label'))n++;if(n<spParts.length)spGoTo(n);}
-function spPrev(){let n=spCurrent-1;while(n>=0&&(spParts[n].type==='break'||spParts[n].type==='label'))n--;if(n>=0)spGoTo(n);}
-
-function openStream(node){
-  const src=NODE_NARRATIVES[node.id];if(!src)return;
-  spNode=node;spActive=true;spCurrent=0;
-  spParts=spParse(src);
-  const accentColor=isLight?(SP_ACCENT_LK[node.domain]||'#2a5a9a'):(SP_ACCENT[node.domain]||'#6a9bdc');
-  document.getElementById('stream-panel').style.setProperty('--sp-accent',accentColor);
-  document.getElementById('sp-domain-bar').style.background=accentColor;
-  document.getElementById('sp-eyebrow').textContent=node.era||'';
-  document.getElementById('sp-title').textContent=node.title||'';
-  document.getElementById('sp-progress-fill').style.background=accentColor;
-  document.getElementById('sp-progress-fill').style.width='0%';
-  const stream=document.getElementById('sp-stream');spRender(spParts,stream);
-  document.getElementById('stream-panel').classList.add('open');
-  document.body.classList.add('stream-open');
-  let first=0;while(first<spParts.length&&(spParts[first].type==='break'||spParts[first].type==='label'))first++;spGoTo(first);
-}
-function closeStream(){
-  spActive=false;spNode=null;
-  document.getElementById('stream-panel').classList.remove('open');
-  document.body.classList.remove('stream-open');
-}
-
-document.getElementById('sp-close').addEventListener('click',closeStream);
-document.getElementById('sp-prev').addEventListener('click',spPrev);
-document.getElementById('sp-next').addEventListener('click',spNext);
-document.getElementById('gc-read-btn').addEventListener('click',()=>{if(focusNode)openStream(focusNode);});
-
-// ═══════════════════════════════════════════════════════
-// TABLE OF CONTENTS
-// ═══════════════════════════════════════════════════════
-let tocVisible=false;
-
-function buildTOC(){
-  const list=document.getElementById('toc-list');
-  const rings={center:[],inner:[],mid:[],outer:[],outer2:[]};
-  NODES.forEach(n=>rings[n.tier].push(n));
-  const order=['center','inner','mid','outer','outer2'];
-  order.forEach(tier=>{
-    if(!rings[tier].length)return;
-    rings[tier].forEach(node=>{
-      const row=document.createElement('div');row.className='toc-row';
-      const cfg=dcfg(node.domain);
-      row.innerHTML=`<span class="toc-ring" style="color:${isLight?cfg.lightHex:cfg.hex}44">${RING_NAMES[tier]||tier}</span><span class="toc-name">${node.title}</span><span class="toc-domain">${cfg.label}</span>`;
-      row.addEventListener('click',()=>{closeTOC();enterFocus(node);});
-      list.appendChild(row);
-    });
-  });
-}
-buildTOC();
-
-function openTOC(){document.getElementById('toc').classList.add('vis');tocVisible=true;}
-window.closeTOC=function(){document.getElementById('toc').classList.remove('vis');tocVisible=false;};
-document.getElementById('toc').addEventListener('click',e=>{if(e.target===document.getElementById('toc'))closeTOC();});
-
-// ═══════════════════════════════════════════════════════
-// INTERACTION
-// ═══════════════════════════════════════════════════════
-const tooltip=document.getElementById('tooltip');
-let hoveredMesh=null,mouse=new THREE.Vector2(),drag=false,lastDragX=0,lastDragY=0,isDragging=false,hintFaded=false;
-let pointerDownX=0,pointerDownY=0,dragDist=0;
-const DRAG_THRESHOLD=8;
-let lastXY={x:0,y:0};
-
-function posTooltip(cx,cy){tooltip.style.transform=`translate(${cx+18}px,${cy-10}px)`;}
-
-function checkHover(){
-  raycaster.setFromCamera(mouse,cam);
-  const hits=raycaster.intersectObjects(hitProxies.map(h=>h.proxy));
-  if(hits.length){
-    const hit=hits[0].object,proxyEntry=hitProxies.find(h=>h.proxy===hit),node=proxyEntry?proxyEntry.node:null;
-    if(node&&hoveredMesh!==proxyEntry.mesh){hoveredMesh=proxyEntry.mesh;const cfg=dcfg(node.domain);document.getElementById('tt-ring').textContent=node.era||RING_NAMES[node.tier];document.getElementById('tt-title').textContent=node.title;document.getElementById('tt-title').style.color=isLight?cfg.lightHex:cfg.hex;document.getElementById('tt-type').textContent=cfg.label;tooltip.classList.add('vis');}
-    document.body.style.cursor='pointer';
+function updateCtxCell(field){
+  const cell=document.getElementById('cell-'+field);
+  const valEl=document.getElementById('val-'+field);
+  const val=declared[field];
+  if(val){
+    cell.classList.add('declared');
+    valEl.textContent=val.length>38?val.slice(0,36)+'…':val;
   } else {
-    if(hoveredMesh){hoveredMesh=null;tooltip.classList.remove('vis');}
-    document.body.style.cursor='default';
+    cell.classList.remove('declared');
+    valEl.textContent=CTX_PLACEHOLDERS[field];
   }
 }
 
-cvs.addEventListener('pointerdown',e=>{if(e.button===2)return;isDragging=false;drag=false;pointerDownX=e.clientX;pointerDownY=e.clientY;dragDist=0;lastDragX=e.clientX;lastDragY=e.clientY;try{cvs.setPointerCapture(e.pointerId);}catch(_){}});
-cvs.addEventListener('pointermove',e=>{
-  const rect=cvs.getBoundingClientRect();
-  mouse.x=(e.clientX-rect.left)/rect.width*2-1;
-  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  lastXY={x:e.clientX,y:e.clientY};posTooltip(e.clientX,e.clientY);
-  if(e.buttons&&e.button!==2){
-    const dx=e.clientX-lastDragX,dy=e.clientY-lastDragY;
-    dragDist+=Math.sqrt(dx*dx+dy*dy);
-    if(dragDist>DRAG_THRESHOLD){isDragging=true;drag=true;camTarget.theta-=dx*0.005;camTarget.phi=Math.max(0.02,Math.min(Math.PI*0.48,camTarget.phi+dy*0.005));}
-    lastDragX=e.clientX;lastDragY=e.clientY;
-  } else {checkHover();}
-});
-cvs.addEventListener('pointerup',e=>{
-  if(e.button===2)return;
-  const rect=cvs.getBoundingClientRect();
-  mouse.x=(e.clientX-rect.left)/rect.width*2-1;
-  mouse.y=-((e.clientY-rect.top)/rect.height)*2+1;
-  if(!drag){
-    raycaster.setFromCamera(mouse,cam);
-    const hits=raycaster.intersectObjects(hitProxies.map(h=>h.proxy));
-    if(hits.length){const proxyEntry=hitProxies.find(h=>h.proxy===hits[0].object);if(proxyEntry)enterFocus(proxyEntry.node);}else if(isFocused)exitFocus();
-  }
-  if(!hintFaded){document.getElementById('hint').style.opacity='0.06';hintFaded=true;}
-});
-cvs.addEventListener('wheel',e=>{
-  if(isFocused&&focusNode&&e.deltaY!==0){
-    const allRing=NODES.filter(n=>n.tier===focusNode.tier).sort((a,b)=>a.angle-b.angle);
-    if(allRing.length>0){const curIdx=allRing.findIndex(n=>n.id===focusNode.id),dir=e.deltaY>0?1:-1,nextIdx=(curIdx+dir+allRing.length)%allRing.length;enterFocus(allRing[nextIdx]);}
-    return;
-  }
-  camTarget.radius=Math.max(6,Math.min(120,camTarget.radius+e.deltaY*0.06));
-},{passive:true});
-cvs.addEventListener('contextmenu',e=>{e.preventDefault();openTOC();});
-let longPressTimer=null;
-cvs.addEventListener('touchstart',e=>{longPressTimer=setTimeout(()=>openTOC(),600);},{passive:true});
-cvs.addEventListener('touchend',()=>clearTimeout(longPressTimer));
-cvs.addEventListener('touchmove',()=>clearTimeout(longPressTimer));
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){if(tocVisible){closeTOC();}else if(spActive){closeStream();}else if(isFocused){exitFocus();}return;}
-  if(e.code==='Space'){e.preventDefault();orbitPaused=!orbitPaused;}
-  if(e.key==='ArrowRight'||e.key==='ArrowDown'){
-    e.preventDefault();
-    if(spActive){spNext();return;}
-    if(focusNode){const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx<NODES.length-1)enterFocus(NODES[idx+1]);}
-  }
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
-    e.preventDefault();
-    if(spActive){spPrev();return;}
-    if(focusNode){const idx=NODES.findIndex(n=>n.id===focusNode.id);if(idx>0)enterFocus(NODES[idx-1]);}
-  }
-});
-
-// ═══════════════════════════════════════════════════════
-// THEME
-// ═══════════════════════════════════════════════════════
-document.getElementById('theme-toggle').addEventListener('click',()=>{
-  isLight=!isLight;
-  document.body.classList.toggle('light',isLight);
-  document.getElementById('theme-toggle').textContent=isLight?'Dark':'Light';
-  scene.fog.color.setHex(isLight?0xf0ece4:0x000000);
-  allLines.forEach(({line,darkColor,lightColor,darkOp,lightOp})=>{line.material.color.setHex(isLight?lightColor:darkColor);line.material.opacity=isLight?lightOp:darkOp;});
-  nodeObjects.forEach(({mesh})=>{
-    if(isLight){mesh.material.color.setHex(mesh.userData.origColor||0x4a8adc);mesh.material.emissive&&mesh.material.emissive.setHex(0x000000);if(mesh.material.emissiveIntensity!==undefined)mesh.material.emissiveIntensity=0;mesh.material.metalness=0.1;mesh.material.roughness=0.55;}
-    else{mesh.material.color.setHex(mesh.userData.origColor||0x4a8adc);mesh.material.emissive&&mesh.material.emissive.setHex(mesh.userData.origColor||0x4a8adc);if(mesh.userData.origEI!==undefined)mesh.material.emissiveIntensity=mesh.userData.origEI;mesh.material.metalness=0.2;mesh.material.roughness=0.08;}
-  });
-  glowSprites.forEach(gs=>{gs.visible=!isLight;});
-  neonA.intensity=isLight?0:6;neonB.intensity=isLight?0:5;neonC.intensity=isLight?0:4;
-  ambLight.intensity=isLight?1.1:0.15;
-  pMat.opacity=isLight?0:0.14;
-  redrawLabels();drawMesh();
-});
-
-// ═══════════════════════════════════════════════════════
-// BACKGROUND MESH
-// ═══════════════════════════════════════════════════════
-const bgCanvas=document.getElementById('bg-mesh'),bgCtx=bgCanvas.getContext('2d');
-function resizeBg(){bgCanvas.width=innerWidth;bgCanvas.height=innerHeight;}resizeBg();
-const BD=[{x:0.15,y:0.20,vx:0.00008,vy:0.00006,r:0.60,col:[10,28,74]},{x:0.72,y:0.68,vx:-0.00006,vy:0.00008,r:0.52,col:[42,18,72]},{x:0.80,y:0.12,vx:-0.00005,vy:-0.00007,r:0.46,col:[6,58,50]},{x:0.22,y:0.80,vx:0.00007,vy:-0.00006,r:0.48,col:[68,30,14]}];
-const BL=[{x:0.15,y:0.20,vx:0.00008,vy:0.00006,r:0.60,col:[190,210,240]},{x:0.72,y:0.68,vx:-0.00006,vy:0.00008,r:0.52,col:[210,195,235]},{x:0.80,y:0.12,vx:-0.00005,vy:-0.00007,r:0.46,col:[185,230,220]},{x:0.22,y:0.80,vx:0.00007,vy:-0.00006,r:0.48,col:[235,215,185]}];
-function drawMesh(){
-  const w=bgCanvas.width,h=bgCanvas.height;bgCtx.clearRect(0,0,w,h);
-  const blobs=isLight?BL:BD;
-  bgCtx.fillStyle=isLight?'#f0ece4':'#030308';bgCtx.fillRect(0,0,w,h);
-  blobs.forEach(b=>{const cx=b.x*w,cy=b.y*h,rad=Math.max(w,h)*b.r;const grd=bgCtx.createRadialGradient(cx,cy,0,cx,cy,rad);const[r,g,bl]=b.col;grd.addColorStop(0,`rgba(${r},${g},${bl},${isLight?0.45:0.55})`);grd.addColorStop(0.5,`rgba(${r},${g},${bl},${isLight?0.14:0.16})`);grd.addColorStop(1,`rgba(${r},${g},${bl},0)`);bgCtx.fillStyle=grd;bgCtx.fillRect(0,0,w,h);});
-  const vig=bgCtx.createRadialGradient(w/2,h/2,h*0.3,w/2,h/2,isLight?h*0.88:h*0.92);vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(1,isLight?'rgba(10,14,30,0.08)':'rgba(0,0,0,0.75)');bgCtx.fillStyle=vig;bgCtx.fillRect(0,0,w,h);
+function clearCtx(){
+  declared={f:null,c:null,a:null};
+  ['f','c','a'].forEach(updateCtxCell);
+  if(ovField) closeOv();
 }
-let meshT=0;
-function tickMesh(){meshT++;[...BD,...BL].forEach(b=>{b.x+=b.vx;b.y+=b.vy;if(b.x<0||b.x>1)b.vx*=-1;if(b.y<0||b.y>1)b.vy*=-1;});if(meshT%3===0)drawMesh();requestAnimationFrame(tickMesh);}
-drawMesh();tickMesh();
 
-// ═══════════════════════════════════════════════════════
-// ANIMATE
-// ═══════════════════════════════════════════════════════
-let lastTime=0,elapsed=0;
-function animate(ts){
-  requestAnimationFrame(animate);
-  const dt=Math.min((ts-lastTime)/1000,0.05);lastTime=ts;elapsed+=dt;
-  camState.phi+=(camTarget.phi-camState.phi)*0.08;camState.theta+=(camTarget.theta-camState.theta)*0.08;camState.radius+=(camTarget.radius-camState.radius)*0.08;
-  scenePivot.lerp(scenePivotTgt,0.08);
-  if(!isFocused&&!isDragging&&!orbitPaused)camTarget.theta+=dt*0.018;
-  const pa=pGeo.attributes.position.array;for(let i=0;i<PC;i++)pa[i*3+1]=pOrig[i*3+1]+Math.sin(elapsed*pSp[i]+pPh[i])*0.4;pGeo.attributes.position.needsUpdate=true;
-  if(!isFocused)nodeObjects.forEach(({mesh,node:n})=>{mesh.scale.setScalar(1+Math.sin(elapsed*(n.id==='queryengine'?1.2:0.7+n.angle)*0.5)*(n.id==='queryengine'?0.04:0.022));});
-  tickMorph();tickMoons(elapsed);
-  neonA.intensity=(isLight?0:6)+Math.sin(elapsed*0.8)*0.5;
-  neonB.intensity=(isLight?0:5)+Math.sin(elapsed*0.6+1.2)*0.4;
-  applyCam();renderer.render(scene,cam);isDragging=false;
+function getCtx(){return{f:declared.f||'',c:declared.c||'',a:declared.a||''};}
+
+// MODEL
+function togglePick(){const p=document.getElementById('mpick'),b=document.getElementById('mpill');p.classList.toggle('open');if(p.classList.contains('open')){const r=b.getBoundingClientRect();p.style.bottom=(window.innerHeight-r.top+6)+'px';p.style.right=(window.innerWidth-r.right)+'px';}}
+function selModel(el){model=el.dataset.m;document.querySelectorAll('.mopt').forEach(o=>o.classList.remove('act'));el.classList.add('act');document.getElementById('mpill').textContent=el.textContent+' ∨';document.getElementById('mpick').classList.remove('open');}
+
+// SEND
+async function send(){
+  if(busy) return;
+  const ta=document.getElementById('prompt'),txt=ta.value.trim();
+  if(!txt) return;
+  if(!apiKey){toggleKeyPanel();toast('add your api key first','err');return;}
+  if(ovField) closeOv();
+
+  const ctx=getCtx();
+  let uc=txt;
+  const cp=[];
+  if(ctx.f) cp.push('format: '+ctx.f);
+  if(ctx.c) cp.push('constraint: '+ctx.c);
+  if(ctx.a) cp.push('audience: '+ctx.a);
+  if(cp.length) uc+='\n\n['+cp.join(' · ')+']';
+
+  let sys='You are a helpful, precise assistant.';
+  if(intent&&SYS[intent]) sys=SYS[intent];
+  if(ctx.f) sys+=' Format: '+ctx.f+'.';
+  if(ctx.c) sys+=' Constraints: '+ctx.c+'.';
+  if(ctx.a) sys+=' Audience: '+ctx.a+'.';
+
+  document.getElementById('empty')?.remove();
+  hist.push({role:'user',content:uc});
+  addUser(txt,intent,ctx);
+  ta.value='';ta.style.height='';
+
+  const bel=addAssistant();
+  busy=true;document.getElementById('sb').disabled=true;
+
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model,max_tokens:2048,system:sys,stream:true,messages:hist.map(m=>({role:m.role,content:m.content}))})});
+    if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e?.error?.message||'HTTP '+r.status);}
+    const rdr=r.body.getReader(),dec=new TextDecoder();let full='';
+    while(true){const{done,value}=await rdr.read();if(done)break;for(const line of dec.decode(value,{stream:true}).split('\n')){if(!line.startsWith('data: '))continue;const d=line.slice(6).trim();if(d==='[DONE]')break;try{const ev=JSON.parse(d);if(ev.type==='content_block_delta'&&ev.delta?.text){full+=ev.delta.text;bel.innerHTML=md(full)+'<span class="tcursor"></span>';scrollT();}if(ev.type==='message_stop')bel.innerHTML=md(full);}catch(_){}}}
+    bel.innerHTML=md(full);hist.push({role:'assistant',content:full});
+  }catch(e){bel.innerHTML='<span style="color:var(--ic-ink);font-family:var(--mono);font-size:12px">⚠ '+esc(e.message)+'</span>';hist.pop();toast(e.message.length>90?e.message.slice(0,90)+'…':e.message,'err');}
+  busy=false;document.getElementById('sb').disabled=false;scrollT();
 }
-requestAnimationFrame(animate);
-window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);resizeBg();drawMesh();});
+
+function addUser(txt,intentName,ctx){
+  const ti=document.getElementById('ti'),div=document.createElement('div');div.className='msg msg-u';
+  const tags=[],ib=intentName&&IBS[intentName]?`<span class="i-badge" style="${IBS[intentName]}">${intentName}</span>`:'';
+  if(ctx.f) tags.push('fmt: '+ctx.f);if(ctx.c) tags.push('con: '+ctx.c);if(ctx.a) tags.push('aud: '+ctx.a);
+  div.innerHTML=`<div class="msg-meta">${ib}<span class="role-lbl">you</span></div><div class="msg-bubble"><p>${esc(txt).replace(/\n/g,'<br>')}</p></div>${tags.length?'<div class="msg-ctx">'+tags.map(t=>`<span class="ctx-tag">${t}</span>`).join('')+'</div>':''}`;
+  ti.appendChild(div);scrollT();
+}
+function addAssistant(){const ti=document.getElementById('ti'),div=document.createElement('div');div.className='msg msg-a';div.innerHTML=`<div class="a-icon">✳</div><div class="a-body"><div class="msg-meta"><span class="role-lbl">claude</span></div><div class="msg-body ac"><span class="tcursor"></span></div></div>`;ti.appendChild(div);scrollT();return div.querySelector('.ac');}
+
+function md(t){t=t.replace(/```(\w*)\n?([\s\S]*?)```/g,(_,l,c)=>'<pre><code>'+esc(c.trim())+'</code></pre>');t=t.replace(/`([^`]+)`/g,(_,c)=>'<code>'+esc(c)+'</code>');t=t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');t=t.replace(/^#{1,3}\s+(.+)$/gm,'<h3>$1</h3>');t=t.replace(/^[-*]\s+(.+)$/gm,'<li>$1</li>');t=t.replace(/(<li>[\s\S]*?<\/li>)/g,'<ul>$1</ul>');t=t.replace(/<\/ul>\s*<ul>/g,'');return t.split('\n').map(l=>{const s=l.trim();return s&&!/^<(pre|ul|h3|li)/.test(s)?'<p>'+s+'</p>':s;}).filter(Boolean).join('');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function grow(){const e=document.getElementById('prompt');e.style.height='auto';e.style.height=Math.min(e.scrollHeight,220)+'px';}
+function scrollT(){document.getElementById('thread').scrollTop=999999;}
+function newChat(){hist=[];document.getElementById('ti').innerHTML=`<div id="empty"><div class="e-glyph">✳</div><div class="e-hed">what are you working through?</div><div class="e-sub">pick an intent · declare context · send</div><div class="sc-row"><div class="sc-chip" onclick="qs('debug')">debug something broken</div><div class="sc-chip" onclick="qs('explain')">explain a concept</div><div class="sc-chip" onclick="qs('write')">draft a document</div><div class="sc-chip" onclick="qs('analyze')">analyze a tradeoff</div><div class="sc-chip" onclick="qs('create')">build something new</div></div></div>`;const ta=document.getElementById('prompt');ta.value='';ta.style.height='';}
+function qs(i){setI(i);document.getElementById('prompt').focus();}
+function toast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='';t.offsetWidth;if(type)t.classList.add(type);t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 </script>
 </body>
 </html>
