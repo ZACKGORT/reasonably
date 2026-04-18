@@ -404,11 +404,14 @@ body.is-dragging *{user-select:none;}
 }
 .phil-close:hover{background:var(--bg-3);color:var(--ink);}
 .phil-hed{
-  font-family:var(--serif);font-size:20px;color:var(--ink);
-  line-height:1.35;letter-spacing:-0.015em;
+  font-family:var(--serif);font-size:22px;color:var(--ink);
+  line-height:1.4;letter-spacing:-0.015em;
   padding:12px 18px 0;
   transition:color .2s;
 }
+.phil-hed em{font-style:italic;}
+/* {…} and (…) render in mono to signal structure vs. natural language */
+.phil-hed .mono{font-family:var(--mono);font-size:0.78em;color:var(--accent);font-style:normal;letter-spacing:0.01em;}
 .phil-body{
   padding:14px 18px 0;
   display:flex;flex-direction:column;gap:12px;
@@ -526,9 +529,9 @@ body.is-dragging *{user-select:none;}
           <span class="phil-eyebrow">reasonably · intent</span>
           <button class="phil-close" onclick="dismissPhil()" title="dismiss">✕</button>
         </div>
-        <p class="phil-hed"><em>most bad prompts aren't badly written.<br>they're badly shaped.</em></p>
+        <p class="phil-hed"><em>Shape <span class="mono">{your intent}</span><br>declare <span class="mono">(your structure)</span><br>→ go chat.</em></p>
         <div class="phil-body">
-          <p>Before you write, you declare the shape of what you need. Four dimensions:</p>
+          <p>"Prompt Intentionality", structured.</p>
           <div class="phil-dims">
             <div class="phil-dim">
               <span class="phil-dim-label">intent</span>
@@ -989,7 +992,7 @@ function newChat(){
   hist=[];
   const hide=localStorage.getItem('r_phil_hide')==='1';
   document.getElementById('ti').innerHTML=`
-    ${hide?'':'<div id="phil-card"><div class="phil-inner"><div class="phil-top"><span class="phil-eyebrow">reasonably · intent</span><button class="phil-close" onclick="dismissPhil()" title="dismiss">✕</button></div><p class="phil-hed"><em>most bad prompts aren\'t badly written.<br>they\'re badly shaped.</em></p><div class="phil-body"><p>Before you write, you declare the shape of what you need. Four dimensions:</p><div class="phil-dims"><div class="phil-dim"><span class="phil-dim-label">intent</span><span class="phil-dim-desc">what kind of work is this — write, debug, explain, analyze, create. sets the cognitive mode Claude enters.</span></div><div class="phil-dim"><span class="phil-dim-label">format</span><span class="phil-dim-desc">how you want it back. inline edits vs. prose vs. a diff are three completely different responses to the same question.</span></div><div class="phil-dim"><span class="phil-dim-label">constraint</span><span class="phil-dim-desc">what Claude can\'t touch. the guardrail that lives in your head and never makes it into the prompt — until now.</span></div><div class="phil-dim"><span class="phil-dim-label">audience</span><span class="phil-dim-desc">who\'s actually reading. changes register, density, assumed knowledge.</span></div></div><p class="phil-note"><em>declare</em> means commit. closing without declaring means you considered it and chose not to constrain. both are valid. the difference matters.</p></div><div class="phil-foot"><button class="phil-got-it" onclick="dismissPhil()">got it →</button><label class="phil-remember"><input type="checkbox" id="phil-no-show" /> don\'t show again</label></div></div></div>'}
+    ${hide?'':'<div id="phil-card"><div class="phil-inner"><div class="phil-top"><span class="phil-eyebrow">reasonably · intent</span><button class="phil-close" onclick="dismissPhil()" title="dismiss">✕</button></div><p class="phil-hed"><em>Shape {your intent}<br>declare (your structure)<br>→ go chat.</em></p><div class="phil-body"><p>&ldquo;Prompt Intentionality&rdquo;, structured.</p><div class="phil-dims"><div class="phil-dim"><span class="phil-dim-label">intent</span><span class="phil-dim-desc">what kind of work is this — write, debug, explain, analyze, create. sets the cognitive mode Claude enters.</span></div><div class="phil-dim"><span class="phil-dim-label">format</span><span class="phil-dim-desc">how you want it back. inline edits vs. prose vs. a diff are three completely different responses to the same question.</span></div><div class="phil-dim"><span class="phil-dim-label">constraint</span><span class="phil-dim-desc">what Claude can\'t touch. the guardrail that lives in your head and never makes it into the prompt — until now.</span></div><div class="phil-dim"><span class="phil-dim-label">audience</span><span class="phil-dim-desc">who\'s actually reading. changes register, density, assumed knowledge.</span></div></div><p class="phil-note"><em>declare</em> means commit. closing without declaring means you considered it and chose not to constrain. both are valid. the difference matters.</p></div><div class="phil-foot"><button class="phil-got-it" onclick="dismissPhil()">got it →</button><label class="phil-remember"><input type="checkbox" id="phil-no-show" /> don\'t show again</label></div></div></div>'}
     <div id="empty"><div class="e-glyph">✳</div><div class="e-hed">what are you working through?</div><div class="e-sub">Initiate by intent · declare context · send</div><div class="sc-row"><div class="sc-chip" onclick="qs('debug')">debug something broken</div><div class="sc-chip" onclick="qs('explain')">explain a concept</div><div class="sc-chip" onclick="qs('write')">draft a document</div><div class="sc-chip" onclick="qs('analyze')">analyze a tradeoff</div><div class="sc-chip" onclick="qs('create')">build something new</div></div></div>`;
   const ta=document.getElementById('prompt');ta.value='';ta.style.height='';
 }
