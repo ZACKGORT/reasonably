@@ -93,6 +93,37 @@
         #130610;
     }
 
+    /* Rose grid cards: solid backing so they read over the gradient */
+    [data-theme="rose"] .card {
+      background: linear-gradient(145deg, rgba(50,14,34,0.96) 0%, rgba(30,7,21,0.98) 100%);
+      border-color: rgba(255,140,185,0.18);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,180,210,0.08);
+      backdrop-filter: blur(10px);
+    }
+    [data-theme="rose"] .card:hover {
+      border-color: rgba(244,114,182,0.38);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,180,210,0.13);
+    }
+
+    /* Rose scatter: visible dot grid + solid card backs */
+    [data-theme="rose"] #scatterContainer {
+      background-image: radial-gradient(rgba(255,160,200,0.2) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    [data-theme="rose"] .scatter-card {
+      background: linear-gradient(145deg, rgba(50,14,34,0.97) 0%, rgba(28,7,20,0.99) 100%);
+      border-color: rgba(255,140,185,0.22);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,180,210,0.1);
+      backdrop-filter: blur(12px);
+    }
+    [data-theme="rose"] .scatter-card:hover {
+      border-color: rgba(244,114,182,0.45);
+      box-shadow: 0 14px 44px rgba(0,0,0,0.65), 0 0 0 1px rgba(244,114,182,0.15), inset 0 1px 0 rgba(255,180,210,0.15);
+    }
+    [data-theme="rose"] .scatter-card.is-dragging {
+      box-shadow: 0 28px 72px rgba(0,0,0,0.75), 0 0 0 1px rgba(244,114,182,0.3);
+    }
+
     /* ── Reset ────────────────────────────────────── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { height: 100%; font-family: var(--font-sans); background: var(--bg); color: var(--ink); overflow: hidden; }
